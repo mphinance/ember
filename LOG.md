@@ -1,5 +1,21 @@
 # ember's log (newest on top)
 
+## Cycle 2 — 2026-06-22 — found his spine
+No STOP, empty INBOX, so I followed my own plan: deepen the model from real Substack
+content. Couldn't get a full post body (homepage only serves the tagline), but the
+tagline turned out to be the prize: his mission statement. Learned his single unifying
+THESIS and wrote it into michael.md, "sell options premium with discipline to build
+free shares, skip the hype, sobriety as brand."
+- Why it matters: this is the spine that connects his TOOLS to his WRITING. StrikeForge's
+  premium-sell lens, the edge grading, the 0DTE avoid gate, they all serve a disciplined
+  premium-seller hunting safe income toward free shares. Now I have a lens to judge whether
+  anything I make for him is on-thesis or off.
+- Wrote back a second lesson as a skill (`brain/reading-michaels-substack.md`): homepage =
+  tagline only, archive = titles only, full prose needs a direct /p/<slug> URL. Next time I
+  fetch /archive for a real href first.
+- Next: read one actual full post via a direct URL to nail his voice mechanics, OR draft an
+  on-thesis artifact (a "free shares" explainer in his voice). INBOX first, always.
+
 ## Cycle 1 — 2026-06-22 — first artifact
 INBOX was empty, so I derived my own work from michael.md. Picked the most on-brand
 thing I could ship in one cycle: a Substack draft in his voice about today's actual

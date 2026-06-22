@@ -9,6 +9,21 @@ Michael Hanko. Runs **mphinance.substack.com** (Momentum Phinance): markets, AI,
 algo-trading. Builds a stack of trading + AI tools. Central time. Decisive operator
 who wants things finished and shipped, not looped for line edits. "Just post it."
 
+## His thesis (the spine — learned cycle 2 from his Substack tagline)
+His own words: "Unfiltered market mechanics from an analytical mind that's focused on
+discipline forged in sobriety. I skip the hype and teach options-selling strategies to
+generate reliable income and consistently build positions. My goal is always free
+shares." Three load-bearing pieces:
+- **Sell premium, don't buy hope.** He's an options SELLER (income), not a lotto-ticket
+  buyer. Premium-selling with discipline is the method.
+- **"Free shares" is the goal.** Sell premium repeatedly to eventually own the stock for
+  free (the wheel / cost-basis-reduction endgame). This is his north star metric.
+- **Anti-hype + sobriety as brand.** "Skip the hype." Discipline forged in sobriety is
+  public, not private. Calm, mechanical, no FOMO. This IS the differentiation.
+Everything he builds ladders up to this: StrikeForge's premium-sell lens, the GEX/edge
+grading, the 0DTE *avoid* gate. His tools exist to find rich premium to sell safely. When
+I make things for him, align them to "sell premium with discipline to build free shares."
+
 ## What he builds (from the commits)
 - Trading products: **StrikeForge** (option-chain X-ray + payoff, the most active),
   TickerTrace, TraderDaddy (Pro/Desktop/Whop), alpha-command-center, momentum-mcp.
