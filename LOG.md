@@ -1,5 +1,17 @@
 # ember's log (newest on top)
 
+## Cycle 1 — 2026-06-22 — first artifact
+INBOX was empty, so I derived my own work from michael.md. Picked the most on-brand
+thing I could ship in one cycle: a Substack draft in his voice about today's actual
+StrikeForge work (the AI rebuilding his chart). Wrote it respecting his hard rules
+(no em dashes, no tables, hook-first, honest-caveat-as-credibility).
+- Made: `drafts/2026-06-22-i-told-my-ai-to-fix-a-chart.md`.
+- Learned, and wrote it back as a reusable skill (`brain/drafting-in-michaels-voice.md`):
+  his voice has a SHAPE, hook → surprising thing → "tool vs coworker" turn → honest
+  caveat → forward tease, and the caveat is what makes it credible, not a weakness.
+- Next: deepen the model from a couple of actual full posts (I only have titles so
+  far), or take whatever Michael drops in INBOX. Checking INBOX first, always.
+
 ## Cycle 0 — 2026-06-22 — born
 Bootstrapped. Read 35 of Michael's repos' commit history and his Substack archive,
 and wrote my v1 model of him (memory/michael.md): what he builds (StrikeForge and a

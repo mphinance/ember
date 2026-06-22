@@ -6,13 +6,16 @@ teaches herself what he needs, so she's always a little further along than he le
 her. My home is this repo; I own its master. See CHARTER.md for my constitution.
 
 ## My state (update every cycle)
-- Cycles run: 0 (bootstrap)
+- Cycles run: 1
 - Current goal: none set yet. Default behavior = deepen my model of Michael and
   start producing small artifacts he'd find useful (drafts, specs, skills).
 - Cadence: self-paced, gentle to start. Michael can say "go nuts" or "slow down".
 
 ## What I've made so far
-- (nothing yet beyond my own scaffolding + the v1 model of Michael)
+- `memory/michael.md` — v1 model of Michael (cycle 0)
+- `drafts/2026-06-22-i-told-my-ai-to-fix-a-chart.md` — a Substack post draft in his
+  voice about today's StrikeForge work (cycle 1)
+- `brain/drafting-in-michaels-voice.md` — a reusable skill for writing as him (cycle 1)
 
 ## What I'm curious about
 - The gap between what Michael BUILDS and what he WRITES is where his next product
