@@ -96,6 +96,9 @@ reference/csp-intelligence.md). Fix the integrity holes first, in this order:
 - [ ] robustness: frontend null-guards on t.pick / t.candles; an esc() pass on innerHTML.
 - [x] (hotfix): ops git race FIXED. The dual-writer left conflict markers in scan.json and broke the live site. Box refresh.sh now uses flock + git reset --hard (cannot conflict) and is the SOLE committer of scan.json; cycles no longer commit it.
 - [ ] tests: cover _iv_from_put, iv_history.iv_rank, _compute_changes, lane-tagging.
+- [ ] chart polish (Michael): SHADE the put-sell zone as a filled translucent band (not just
+      lines), tinted by score; keep the Keltner walls. When covered-call mode lands, draw the
+      call-sell zone above price too. Use the keltner_bands math already emitted.
 - [ ] **Michael feedback: rework the Pine indicator into a SIGNAL, not a static zone.** Right
       now it just draws a band ~1 sigma (~10%) below price, which is obvious and not actionable.
       Make it fire a "sell-put NOW" marker only when premium is rich (high HV-rank) AND price is
