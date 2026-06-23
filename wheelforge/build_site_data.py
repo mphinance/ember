@@ -280,6 +280,12 @@ def main():
     note = (f"Candles and option premium are LIVE off the yfinance chain for {live_n} of "
             f"{len(tickers)} names (real IV, bid/ask, OI); the rest fall back to a "
             f"realized-vol model when the chain is missing.")
+    if not tickers:
+        # Never blank the live site: a transient screener/data failure must leave the
+        # last good scan.json in place, not overwrite it with an empty list.
+        print("scan produced 0 names; keeping the last good scan.json")
+        return
+
     out = {
         "generated_at": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
         "source_note": note, "dte": DTE, "tickers": tickers,

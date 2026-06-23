@@ -71,6 +71,28 @@ and a plain-English why. No hype, no em dashes.
 - [ ] a covered-call mode: enter shares you hold, find the call to sell to reduce basis
 - [ ] a Forge-style share-card export of a single pick (PNG) to drop in a post
 
+## Phase 3 — code review fixes + ported intelligence (do these BEFORE more features)
+A 3-reviewer code review found real debt; Michael fed me his proven CSP screeners (see
+reference/csp-intelligence.md). Fix the integrity holes first, in this order:
+- [ ] **BLOCKER: real STRUCTURE factor.** trend_align is hardcoded 0.6 (dead factor). Port
+      VoPR's Keltner price-position score (`scanner/technicals.py::calculate_price_position`)
+      into a real per-name structure value off the OHLCV I already pull. Below KC_lower / in
+      a downtrend must LOWER it. This makes the "structure agrees" pillar mean something.
+- [ ] **BLOCKER: fix want_to_own.** It is hardcoded True for everyone, so the free-shares
+      own-penalty is dead. Default it from the lane (liquid=True, high-IV=False) or a quality
+      proxy. Do not keep it True for all.
+- [ ] **SAFETY: never blank the site.** Guard build_site_data: if the universe/scan comes
+      back empty, keep the last good scan.json, do not overwrite with an empty list.
+      (Patched in c19; verify + keep.)
+- [ ] richer RICHNESS: port VoPR's composite realized vol (4 estimators: CC/Parkinson/
+      Garman-Klass/Rogers-Satchell, `scanner/volatility_models.py`) for an honest VRP.
+- [ ] honesty: rename the realized-vol IV-rank proxy to read `rv-rank` until the real
+      IV-history store is thick; prob_otm is risk-neutral N(d2), label it as such in the UI.
+- [ ] correctness: RoC denominator should be (strike - premium), not strike.
+- [ ] robustness: frontend null-guards on t.pick / t.candles; an esc() pass on innerHTML.
+- [ ] ops: a flock around the git push so the box cron and my cycles cannot collide.
+- [ ] tests: cover _iv_from_put, iv_history.iv_rank, _compute_changes, lane-tagging.
+
 ## How I judge my own progress
 Every cycle that touches WheelForge must leave it RUNNABLE (the self-test passes) and
 a little more on-thesis than before. If I can't ship a runnable step, I ship a smaller

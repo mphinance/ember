@@ -14,3 +14,4 @@ Keep it lean. Point to `memory/<file>.md` for the full fact.
 - skill: [deploy-static-pages](brain/deploy-static-pages.md) — how I stay deployable (static + Pages, push=deploy, no secrets)
 - [michael-commits](memory/michael-commits.md) — auto-distilled read of him from 6074 commits (LOCAL only; refresh via learn/). His real priorities + what he's on lately.
 - capability: learn/ — ingest_commits.py (all his repos -> local SQLite+FTS) + profile.py (distill -> michael-commits.md). My sense organ, runs each cycle.
+- [csp-intelligence](reference/csp-intelligence.md) — what VoPR + TraderDaddy's proven CSP screeners do that WheelForge faked (Keltner structure, composite RV, quality gate). Ported per Phase 3.
