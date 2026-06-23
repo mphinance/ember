@@ -14,3 +14,10 @@ pointless. After the current Phase-3 blockers, rework it into a SIGNAL (see the 
 item in the GOAL Phase-3 list): fire a sell-put marker only when premium is rich AND price
 holds its Keltner structure AND no earnings; fade the zone otherwise. Not urgent, after the
 blockers.
+[Michael, 2026-06-23] Important for the yield/aggressive mode: I GET ASSIGNED ALL THE TIME AND
+LOVE IT. Assignment is the GOAL, not the risk. So when you build the aggressive mode: do NOT
+treat high assignment odds as bad. The whole point is fat premium on a name I am happy to own
+at the strike. Lean the aggressive-mode score on WHEEL-FIT (good basis, want-to-own) and YIELD,
+and basically stop penalizing low prob-OTM in that mode (a likely-assigned put on a name I want
+cheap is a WIN). Keep the conservative mode as-is for when safety matters. Frame the aggressive
+mode as "fattest premium on names you would be glad to own at the strike."
