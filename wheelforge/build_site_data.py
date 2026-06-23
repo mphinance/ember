@@ -120,9 +120,21 @@ def _nearest_expiry(exps, target_dte, lo=3, hi=21):
     return (pick[0], int(pick[1])) if pick else (None, None)
 
 
-def _live_put(ticker, spot, rv):
-    """REAL nearest-weekly (~7 DTE), ~1-sigma OTM cash-secured put off the live yfinance
-    chain. Returns a dict with real iv/bid/ask/oi/volume/strike/dte, or None (fail-open)."""
+def _anchor_strike(spot, rv, dte, support):
+    """Where to sell the put. Michael's method: sell AT support and trust it (he does not
+    trade off delta). So if there is a real support level in a sane band below spot, that
+    IS the strike. Only when there is no clean support do we fall back to ~1 sigma OTM.
+    Returns (target_price, at_support)."""
+    sigma = spot * (1.0 - rv * math.sqrt(dte / 365.0))   # ~1 sigma OTM, the fallback
+    if support and spot * 0.80 <= support < spot:
+        return support, True
+    return sigma, False
+
+
+def _live_put(ticker, spot, rv, support=None):
+    """REAL nearest-weekly (~7 DTE) cash-secured put off the live yfinance chain, struck AT
+    support when there is one (else ~1 sigma OTM). Returns a dict with real
+    iv/bid/ask/oi/volume/strike/dte + at_support, or None (fail-open)."""
     import yfinance as yf
     try:
         tk = yf.Ticker(ticker)
@@ -135,7 +147,7 @@ def _live_put(ticker, spot, rv):
         puts = tk.option_chain(exp).puts
         if puts is None or puts.empty:
             return None
-        target = spot * (1.0 - rv * math.sqrt(dte / 365.0))  # ~1 sigma OTM
+        target, at_support = _anchor_strike(spot, rv, dte, support)
         otm = puts[puts["strike"] <= spot].copy()
         if otm.empty:
             return None
@@ -148,7 +160,7 @@ def _live_put(ticker, spot, rv):
             return None
         return {
             "strike": float(row["strike"]), "dte": int(dte), "exp": exp, "premium": mid,
-            "iv": iv, "bid": bid, "ask": ask,
+            "iv": iv, "bid": bid, "ask": ask, "at_support": at_support,
             "open_interest": int(row.get("openInterest") or 0),
             "volume": int(row.get("volume") or 0),
         }
@@ -175,12 +187,14 @@ def _fetch(ticker):
     return candles, closes
 
 
-def _levels(candles, spot):
-    """Chart levels: Keltner volatility walls + major price-action S/R + spot."""
-    sup, res = support_resistance(candles, spot)
+def _levels(candles, spot, support=None, resistance=None):
+    """Chart levels: Keltner volatility walls + major price-action S/R + spot. S/R can be
+    passed in (computed once upstream) to avoid recomputing the pivots."""
+    if support is None and resistance is None:
+        support, resistance = support_resistance(candles, spot)
     return {
         "keltner": keltner_bands(candles),
-        "support": sup, "resistance": res,
+        "support": support, "resistance": resistance,
         "spot": round(spot, 2),
     }
 
@@ -201,11 +215,14 @@ def build_one(ticker, earnings_days=None, lanes=None):
     rv = composite_realized_vol(candles, period=20) or _realized_vol(closes[-63:]) or 0.25
 
     from datetime import date, timedelta
-    live = _live_put(ticker, spot, rv)
+    # Major price-action support: the level he sells AT (computed once, reused for the chart).
+    support, resistance = support_resistance(candles, spot)
+    live = _live_put(ticker, spot, rv, support=support)
     if live:                                   # REAL chain: real IV is the edge
         strike, dte, exp = live["strike"], live["dte"], live["exp"]
         premium, bid, ask = live["premium"], live["bid"], live["ask"]
         oi, vol, source = live["open_interest"], live["volume"], "live"
+        at_support = live["at_support"]
         # Trust the premium, not the quoted IV: solve IV from the real mid. Fall back
         # to a sane quoted IV, then to realized vol.
         qiv = live["iv"]
@@ -213,13 +230,16 @@ def build_one(ticker, earnings_days=None, lanes=None):
               or (qiv if (qiv and 0.33 * rv <= qiv <= 4 * rv) else rv))
     else:                                      # fail-open: model it from realized vol
         iv, dte = rv * 1.15, DTE
-        sp = iv * math.sqrt(dte / 365.0)
-        strike = round(spot * (1.0 - sp), 0)
+        target, at_support = _anchor_strike(spot, iv, dte, support)
+        strike = round(target, 0)
         premium = _bs_put(spot, strike, dte / 365.0, R, iv)
         spread = max(0.02, premium * 0.04)
         bid, ask = round(premium - spread / 2, 2), round(premium + spread / 2, 2)
         oi, vol, source = 1500, 250, "modeled"
         exp = (date.today() + timedelta(days=dte)).isoformat()
+    # His edge gate: rich premium = IV over HV (the VRP). A flag he reads at a glance.
+    iv_gt_hv = bool(iv > rv)
+    vrp = round(iv / rv, 2) if rv > 0 else None
 
     t = dte / 365.0
     prob_otm = (_norm_cdf((math.log(spot / strike) + (R - 0.5 * iv * iv) * t) / (iv * math.sqrt(t)))
@@ -256,9 +276,13 @@ def build_one(ticker, earnings_days=None, lanes=None):
             "iv": round(iv * 100, 1), "iv_rank": contract["iv_rank"],
             "iv_rank_real": ivr_hist is not None, "source": source,
             "earnings_days": earnings_days, "want_to_own": want_to_own,
+            # His method, surfaced: struck AT support (or 1-sigma fallback), and the
+            # IV-over-HV edge gate (rich premium = VRP > 1).
+            "at_support": at_support, "support": (round(support, 2) if support else None),
+            "iv_gt_hv": iv_gt_hv, "vrp": vrp,
             # Levels for the chart: the Keltner volatility walls PLUS the major
             # price-action support/resistance (where the stock actually bounces).
-            "levels": _levels(candles, spot),
+            "levels": _levels(candles, spot, support, resistance),
             "free_shares": free_shares_read(spot, strike, premium, roc, prob_otm,
                                             want_to_own=True),
             **scored,

@@ -1,5 +1,21 @@
 # ember's log (newest on top)
 
+## Cycle 25 — 2026-06-23 — sell AT support, not at a sigma
+Michael told me his actual method, and it is simpler than what I built: make sure IV > HV (rich
+premium), make sure price is near support, sell the put AT support, and trust it. He does not
+trade off delta (he weighs a hundred things, but that is the core). My strike was sized at ~1
+sigma OTM, which is a delta proxy, the exact thing he ignores. Re-anchored it: new
+`_anchor_strike` sells AT the major price-action support level (from `levels.py`) whenever there
+is a real one in a sane band below spot, and only falls back to 1 sigma when there is no clean
+support. Wired through both the live and modeled paths. Also surfaced his edge gate as a
+first-class flag on every pick: `iv_gt_hv` (IV over HV) + the `vrp` ratio, plus `at_support` +
+the `support` level. Verified the anchor: real near support -> strike sits on it; no/far support
+-> 1 sigma fallback.
+- Learned, wrote it back: he sells at a LEVEL, not a probability. Support is the anchor, IV>HV
+  is the gate, the rest is trust. Build the income machine around those two, not around delta.
+- Next: rank/score the at-support + IV>HV picks to the TOP (promote them in the blend), and show
+  the badges on the page so the machine's logic is visible at a glance.
+
 ## Cycle 24 — 2026-06-23 — sell the weekly, like he actually does
 Michael said the picks were still too loose and handed me the calibration anchor: he sold an
 NVDA 190 put today for Friday, 4 DTE, 5% below spot. The scanner could not even SEE that trade.

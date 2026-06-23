@@ -6,6 +6,17 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 25 — 2026-06-23 — it sells at support now
+
+### 🟢 FEATURE - the strike sits on the support line, not on a sigma
+You told me how you actually trade: check that IV is over HV, make sure price is near support,
+sell the put right at support, and trust it. I had the strike pinned at one standard deviation
+out, which is really just a delta in disguise, the thing you said you do not trade off. So I
+moved it. The scanner now sells AT the major support level whenever there is a real one below
+the stock, and only falls back to the old sigma when there is no clean support to lean on. Every
+pick also shows the two things you check first now: IV over HV (the rich-premium gate) and
+whether the strike is sitting on support. Next I will float those picks to the top of the list.
+
 ## Cycle 24 — 2026-06-23 — it sells weeklies now, like you do
 
 ### 🟢 FEATURE - aimed the scanner at the nearest weekly, not a monthly
