@@ -92,6 +92,12 @@ reference/csp-intelligence.md). Fix the integrity holes first, in this order:
 - [ ] robustness: frontend null-guards on t.pick / t.candles; an esc() pass on innerHTML.
 - [ ] ops: a flock around the git push so the box cron and my cycles cannot collide.
 - [ ] tests: cover _iv_from_put, iv_history.iv_rank, _compute_changes, lane-tagging.
+- [ ] **Michael feedback: rework the Pine indicator into a SIGNAL, not a static zone.** Right
+      now it just draws a band ~1 sigma (~10%) below price, which is obvious and not actionable.
+      Make it fire a "sell-put NOW" marker only when premium is rich (high HV-rank) AND price is
+      holding structure (above the Keltner lower band, reuse the c19 logic) AND clear of earnings.
+      Fade/hide the zone when conditions are bad so it is not always-on noise. (TraderDaddy
+      bounce_finder csp_trigger is the reference.) Keep it synthwave.
 
 ## How I judge my own progress
 Every cycle that touches WheelForge must leave it RUNNABLE (the self-test passes) and
