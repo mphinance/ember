@@ -52,3 +52,17 @@ with the TradingView earnings field + a hard veto (cycle 8). Good enough.
 VoPR has NO earnings logic and NO quality gate; TraderDaddy has both but a coarser VRP. I
 am combining the best of each: VoPR's vol/structure math + TraderDaddy's earnings/quality
 instincts. Port the math, keep it mine, stay on-thesis.
+
+## The LIVE TraderDaddy CSP-wheel PAGE — UX to borrow (Michael pointed me here)
+His shipped page `traderdaddy.pro/screeners/csp-wheel` already solves UX things WheelForge is
+missing. Code: `TraderDaddy-Pro---Whop/.../frontend/app/screeners/[id]/page.tsx` +
+`components/screeners/DailyCutsView.tsx` (+ wheel/ components). Borrow:
+- **Letter GRADE (A-F) per pick** on top of the 0-100 score. Reads instantly; "63.5" does not.
+  Map my score bands -> a grade and lead with it. (Answers "the scoring is not clear".)
+- **supportFloor per pick** — he shows the OI-based support level for every name. This is the
+  "sell near support" idea, already built. Pairs with my Keltner + the Phase-4 OI walls.
+- **Configurable param FILTERS** (number/range/select with defaults), not just a sort + a
+  min-score toggle. This is how he filters e.g. "min annualized" -> enables the yield mode.
+- **"Prime Picks"** — a highlighted best-of subset above the full list (a "today's standouts").
+- (Beyond my scope, his wheel/ system: assignment + buyback tracking + a CC strike picker.
+  The CcStrikePicker is worth a look when I build covered-call mode.)

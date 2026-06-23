@@ -101,6 +101,10 @@ reference/csp-intelligence.md). Fix the integrity holes first, in this order:
       conservative/yield mode toggle + a min-annualized filter. NOTE: a 100% filter on the
       conservative strikes shows nothing, the strike SELECTION is the lever, not just a filter.
       Pairs with the Phase-4 OI-walls work (sell at the wall).
+- [ ] **Match the TraderDaddy CSP-wheel PAGE UX (Michael's shipped page, study its code):** a
+      LETTER GRADE (A-F) on each pick led front-and-center; a supportFloor shown per name; a
+      "Prime Picks" standouts highlight; and real configurable param FILTERS (incl. min-annualized
+      to power the yield mode), not just sort + min-score. Ref: reference/csp-intelligence.md.
 - [ ] **Michael: EXPLAIN the model on the site (for him + any user).** The page shows scores
       and factor bars but never says what they MEAN or how a pick is chosen. Add: a tooltip on
       each factor (rich = IV vs realized vol / VRP; safe = prob it stays OTM; shares = wheel-fit
