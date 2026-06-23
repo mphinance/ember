@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-06-23T16:39:24+00:00",
+  "generated_at": "2026-06-23T16:40:28+00:00",
   "source_note": "Candles and option premium are LIVE off the yfinance chain for 24 of 24 names (real IV, bid/ask, OI); the rest fall back to a realized-vol model when the chain is missing.",
   "dte": 30,
   "tickers": [
     {
       "ticker": "NVDA",
-      "spot": 202.21,
+      "spot": 202.22,
       "candles": [
         {
           "timestamp": 1761192000000,
@@ -1332,8 +1332,8 @@
           "open": 202.16,
           "high": 203.77,
           "low": 200.04,
-          "close": 202.21,
-          "volume": 67635009
+          "close": 202.22,
+          "volume": 67747129
         }
       ],
       "pick": {
@@ -1354,7 +1354,7 @@
             "sma": 210.6,
             "lower": 187.83
           },
-          "spot": 202.21
+          "spot": 202.22
         },
         "free_shares": {
           "assignment_basis": 178.22,
@@ -1367,8 +1367,8 @@
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
-          "richness": 0.522,
-          "safety": 0.856,
+          "richness": 0.523,
+          "safety": 0.857,
           "liquidity": 0.993,
           "free_shares": 0.481,
           "structure": 0.316
@@ -1381,7 +1381,7 @@
     },
     {
       "ticker": "VSH",
-      "spot": 60.06,
+      "spot": 60.12,
       "candles": [
         {
           "timestamp": 1761192000000,
@@ -2708,8 +2708,8 @@
           "open": 59.34,
           "high": 60.7,
           "low": 57.68,
-          "close": 60.06,
-          "volume": 3415864
+          "close": 60.12,
+          "volume": 3425493
         }
       ],
       "pick": {
@@ -2718,8 +2718,8 @@
         "premium": 2.15,
         "annualized_roc": 72.7,
         "prob_otm": 73.8,
-        "iv": 139.4,
-        "iv_rank": 97.7,
+        "iv": 139.7,
+        "iv_rank": 97.5,
         "iv_rank_real": false,
         "source": "live",
         "earnings_days": 50,
@@ -2730,7 +2730,7 @@
             "sma": 58.45,
             "lower": 41.53
           },
-          "spot": 60.06
+          "spot": 60.12
         },
         "free_shares": {
           "assignment_basis": 42.85,
@@ -2739,15 +2739,15 @@
           "wheel_fit": 100.0,
           "summary": "If assigned you own at $42.85, 28.7% below today, earning 72.7% annualized on the cash while you wait."
         },
-        "score": 61.9,
+        "score": 62.0,
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
-          "richness": 0.73,
-          "safety": 0.569,
+          "richness": 0.732,
+          "safety": 0.57,
           "liquidity": 0.495,
           "free_shares": 0.66,
-          "structure": 0.548
+          "structure": 0.549
         },
         "why": "rich premium, ok distance, good free-shares fit if assigned.",
         "lanes": [
@@ -2757,7 +2757,7 @@
     },
     {
       "ticker": "NBIS",
-      "spot": 279.67,
+      "spot": 280.14,
       "candles": [
         {
           "timestamp": 1761192000000,
@@ -4084,46 +4084,46 @@
           "open": 256.39,
           "high": 295.23,
           "low": 255.55,
-          "close": 279.67,
-          "volume": 12934534
+          "close": 280.14,
+          "volume": 12948115
         }
       ],
       "pick": {
-        "strike": 195.0,
+        "strike": 197.5,
         "dte": 31,
-        "premium": 8.47,
-        "annualized_roc": 51.2,
-        "prob_otm": 77.0,
-        "iv": 133.9,
-        "iv_rank": 45.0,
+        "premium": 8.93,
+        "annualized_roc": 53.2,
+        "prob_otm": 76.2,
+        "iv": 133.5,
+        "iv_rank": 44.9,
         "iv_rank_real": false,
         "source": "live",
         "earnings_days": 36,
         "want_to_own": false,
         "levels": {
           "keltner": {
-            "upper": 320.41,
-            "sma": 244.93,
-            "lower": 169.45
+            "upper": 320.43,
+            "sma": 244.95,
+            "lower": 169.47
           },
-          "spot": 279.67
+          "spot": 280.14
         },
         "free_shares": {
-          "assignment_basis": 186.53,
-          "basis_discount_pct": 33.3,
-          "prob_assigned_pct": 23.0,
+          "assignment_basis": 188.57,
+          "basis_discount_pct": 32.7,
+          "prob_assigned_pct": 23.8,
           "wheel_fit": 100.0,
-          "summary": "If assigned you own at $186.53, 33.3% below today, earning 51.2% annualized on the cash while you wait."
+          "summary": "If assigned you own at $188.57, 32.7% below today, earning 53.2% annualized on the cash while you wait."
         },
-        "score": 55.1,
+        "score": 53.9,
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
-          "richness": 0.487,
-          "safety": 0.667,
-          "liquidity": 0.146,
+          "richness": 0.483,
+          "safety": 0.644,
+          "liquidity": 0.104,
           "free_shares": 0.66,
-          "structure": 0.73
+          "structure": 0.733
         },
         "why": "fair premium, safe distance, but illiquid, hard to fill, good free-shares fit if assigned.",
         "lanes": [
@@ -4133,7 +4133,7 @@
     },
     {
       "ticker": "IREN",
-      "spot": 55.9,
+      "spot": 55.94,
       "candles": [
         {
           "timestamp": 1761192000000,
@@ -5460,8 +5460,8 @@
           "open": 53.4,
           "high": 57.54,
           "low": 52.76,
-          "close": 55.9,
-          "volume": 18697710
+          "close": 55.94,
+          "volume": 18722279
         }
       ],
       "pick": {
@@ -5470,7 +5470,7 @@
         "premium": 1.42,
         "annualized_roc": 40.6,
         "prob_otm": 78.5,
-        "iv": 112.8,
+        "iv": 113.0,
         "iv_rank": 39.6,
         "iv_rank_real": false,
         "source": "live",
@@ -5482,7 +5482,7 @@
             "sma": 60.05,
             "lower": 44.49
           },
-          "spot": 55.9
+          "spot": 55.94
         },
         "free_shares": {
           "assignment_basis": 39.59,
@@ -5495,11 +5495,11 @@
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
-          "richness": 0.393,
+          "richness": 0.395,
           "safety": 0.713,
           "liquidity": 0.0,
           "free_shares": 1.0,
-          "structure": 0.367
+          "structure": 0.368
         },
         "why": "fair premium, safe distance, but illiquid, hard to fill, good free-shares fit if assigned.",
         "lanes": [
@@ -5509,7 +5509,7 @@
     },
     {
       "ticker": "MRVL",
-      "spot": 282.29,
+      "spot": 282.45,
       "candles": [
         {
           "timestamp": 1761192000000,
@@ -6836,8 +6836,8 @@
           "open": 279.31,
           "high": 290.95,
           "low": 277.22,
-          "close": 282.29,
-          "volume": 23264120
+          "close": 282.45,
+          "volume": 23291345
         }
       ],
       "pick": {
@@ -6845,8 +6845,8 @@
         "dte": 31,
         "premium": 4.83,
         "annualized_roc": 29.1,
-        "prob_otm": 83.5,
-        "iv": 112.5,
+        "prob_otm": 83.6,
+        "iv": 112.6,
         "iv_rank": 100.0,
         "iv_rank_real": false,
         "source": "live",
@@ -6854,28 +6854,28 @@
         "want_to_own": false,
         "levels": {
           "keltner": {
-            "upper": 351.32,
+            "upper": 351.33,
             "sma": 267.76,
-            "lower": 184.19
+            "lower": 184.2
           },
-          "spot": 282.29
+          "spot": 282.45
         },
         "free_shares": {
           "assignment_basis": 190.18,
-          "basis_discount_pct": 32.6,
-          "prob_assigned_pct": 16.5,
+          "basis_discount_pct": 32.7,
+          "prob_assigned_pct": 16.4,
           "wheel_fit": 92.4,
-          "summary": "If assigned you own at $190.18, 32.6% below today, earning 29.1% annualized on the cash while you wait."
+          "summary": "If assigned you own at $190.18, 32.7% below today, earning 29.1% annualized on the cash while you wait."
         },
-        "score": 53.0,
+        "score": 53.1,
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
-          "richness": 0.444,
+          "richness": 0.445,
           "safety": 0.865,
           "liquidity": 0.074,
           "free_shares": 0.53,
-          "structure": 0.587
+          "structure": 0.588
         },
         "why": "fair premium, safe distance, but illiquid, hard to fill.",
         "lanes": [
@@ -6885,7 +6885,7 @@
     },
     {
       "ticker": "CRDO",
-      "spot": 271.34,
+      "spot": 271.67,
       "candles": [
         {
           "timestamp": 1761192000000,
@@ -8212,8 +8212,8 @@
           "open": 277.64,
           "high": 284.0,
           "low": 265.53,
-          "close": 271.34,
-          "volume": 5486906
+          "close": 271.67,
+          "volume": 5494646
         }
       ],
       "pick": {
@@ -8222,36 +8222,36 @@
         "premium": 5.05,
         "annualized_roc": 32.1,
         "prob_otm": 82.8,
-        "iv": 118.6,
-        "iv_rank": 75.9,
+        "iv": 118.8,
+        "iv_rank": 75.6,
         "iv_rank_real": false,
         "source": "live",
         "earnings_days": 78,
         "want_to_own": false,
         "levels": {
           "keltner": {
-            "upper": 316.7,
-            "sma": 239.94,
-            "lower": 163.18
+            "upper": 316.72,
+            "sma": 239.96,
+            "lower": 163.19
           },
-          "spot": 271.34
+          "spot": 271.67
         },
         "free_shares": {
           "assignment_basis": 179.95,
-          "basis_discount_pct": 33.7,
+          "basis_discount_pct": 33.8,
           "prob_assigned_pct": 17.2,
           "wheel_fit": 96.3,
-          "summary": "If assigned you own at $179.95, 33.7% below today, earning 32.1% annualized on the cash while you wait."
+          "summary": "If assigned you own at $179.95, 33.8% below today, earning 32.1% annualized on the cash while you wait."
         },
-        "score": 52.7,
+        "score": 52.8,
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
-          "richness": 0.381,
-          "safety": 0.843,
+          "richness": 0.382,
+          "safety": 0.844,
           "liquidity": 0.001,
           "free_shares": 0.596,
-          "structure": 0.705
+          "structure": 0.707
         },
         "why": "fair premium, safe distance, but illiquid, hard to fill.",
         "lanes": [
@@ -8261,7 +8261,7 @@
     },
     {
       "ticker": "SMCI",
-      "spot": 34.14,
+      "spot": 34.17,
       "candles": [
         {
           "timestamp": 1761192000000,
@@ -9588,8 +9588,8 @@
           "open": 33.24,
           "high": 34.41,
           "low": 33.03,
-          "close": 34.14,
-          "volume": 33885815
+          "close": 34.17,
+          "volume": 33933942
         }
       ],
       "pick": {
@@ -9598,7 +9598,7 @@
         "premium": 0.38,
         "annualized_roc": 18.4,
         "prob_otm": 87.3,
-        "iv": 95.5,
+        "iv": 95.6,
         "iv_rank": 100.0,
         "iv_rank_real": false,
         "source": "live",
@@ -9610,14 +9610,14 @@
             "sma": 38.01,
             "lower": 27.36
           },
-          "spot": 34.14
+          "spot": 34.17
         },
         "free_shares": {
           "assignment_basis": 23.62,
-          "basis_discount_pct": 30.8,
+          "basis_discount_pct": 30.9,
           "prob_assigned_pct": 12.7,
           "wheel_fit": 78.5,
-          "summary": "If assigned you own at $23.62, 30.8% below today, earning 18.4% annualized on the cash while you wait."
+          "summary": "If assigned you own at $23.62, 30.9% below today, earning 18.4% annualized on the cash while you wait."
         },
         "score": 52.0,
         "direction": "cash-secured put",
@@ -9627,7 +9627,7 @@
           "safety": 0.979,
           "liquidity": 0.017,
           "free_shares": 0.631,
-          "structure": 0.318
+          "structure": 0.32
         },
         "why": "fair premium, safe distance, but illiquid, hard to fill, good free-shares fit if assigned.",
         "lanes": [
@@ -10965,7 +10965,7 @@
           "high": 17.68,
           "low": 16.73,
           "close": 17.59,
-          "volume": 44566731
+          "volume": 44792963
         }
       ],
       "pick": {
@@ -10975,7 +10975,7 @@
         "annualized_roc": 18.7,
         "prob_otm": 82.9,
         "iv": 64.8,
-        "iv_rank": 49.4,
+        "iv_rank": 49.5,
         "iv_rank_real": false,
         "source": "live",
         "earnings_days": 42,
@@ -10999,7 +10999,7 @@
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
-          "richness": 0.313,
+          "richness": 0.314,
           "safety": 0.845,
           "liquidity": 0.103,
           "free_shares": 0.637,
@@ -11013,7 +11013,7 @@
     },
     {
       "ticker": "AAPL",
-      "spot": 298.44,
+      "spot": 298.71,
       "candles": [
         {
           "timestamp": 1761192000000,
@@ -12340,8 +12340,8 @@
           "open": 297.54,
           "high": 301.64,
           "low": 295.18,
-          "close": 298.44,
-          "volume": 18041254
+          "close": 298.71,
+          "volume": 18107211
         }
       ],
       "pick": {
@@ -12349,37 +12349,37 @@
         "dte": 31,
         "premium": 1.41,
         "annualized_roc": 6.0,
-        "prob_otm": 86.2,
-        "iv": 26.1,
-        "iv_rank": 59.8,
+        "prob_otm": 86.3,
+        "iv": 26.2,
+        "iv_rank": 60.0,
         "iv_rank_real": false,
         "source": "live",
         "earnings_days": 37,
         "want_to_own": true,
         "levels": {
           "keltner": {
-            "upper": 323.33,
-            "sma": 302.48,
-            "lower": 281.63
+            "upper": 323.34,
+            "sma": 302.49,
+            "lower": 281.65
           },
-          "spot": 298.44
+          "spot": 298.71
         },
         "free_shares": {
           "assignment_basis": 273.59,
-          "basis_discount_pct": 8.3,
-          "prob_assigned_pct": 13.8,
-          "wheel_fit": 51.2,
-          "summary": "If assigned you own at $273.59, 8.3% below today, earning 6.0% annualized on the cash while you wait."
+          "basis_discount_pct": 8.4,
+          "prob_assigned_pct": 13.7,
+          "wheel_fit": 51.5,
+          "summary": "If assigned you own at $273.59, 8.4% below today, earning 6.0% annualized on the cash while you wait."
         },
-        "score": 51.1,
+        "score": 51.5,
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
-          "richness": 0.292,
-          "safety": 0.946,
+          "richness": 0.3,
+          "safety": 0.948,
           "liquidity": 0.473,
           "free_shares": 0.4,
-          "structure": 0.403
+          "structure": 0.409
         },
         "why": "thin premium, safe distance.",
         "lanes": [
@@ -12389,7 +12389,7 @@
     },
     {
       "ticker": "BMNR",
-      "spot": 15.2,
+      "spot": 15.22,
       "candles": [
         {
           "timestamp": 1761192000000,
@@ -13716,8 +13716,8 @@
           "open": 15.11,
           "high": 15.49,
           "low": 15.01,
-          "close": 15.2,
-          "volume": 13403674
+          "close": 15.22,
+          "volume": 13445606
         }
       ],
       "pick": {
@@ -13726,7 +13726,7 @@
         "premium": 0.39,
         "annualized_roc": 36.7,
         "prob_otm": 75.7,
-        "iv": 83.8,
+        "iv": 84.1,
         "iv_rank": 25.4,
         "iv_rank_real": false,
         "source": "live",
@@ -13734,11 +13734,11 @@
         "want_to_own": true,
         "levels": {
           "keltner": {
-            "upper": 20.7,
+            "upper": 20.71,
             "sma": 17.08,
-            "lower": 13.45
+            "lower": 13.46
           },
-          "spot": 15.2
+          "spot": 15.22
         },
         "free_shares": {
           "assignment_basis": 12.11,
@@ -13747,15 +13747,15 @@
           "wheel_fit": 100.0,
           "summary": "If assigned you own at $12.11, 20.4% below today, earning 36.7% annualized on the cash while you wait."
         },
-        "score": 48.9,
+        "score": 49.0,
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
-          "richness": 0.362,
-          "safety": 0.626,
+          "richness": 0.366,
+          "safety": 0.627,
           "liquidity": 0.023,
           "free_shares": 1.0,
-          "structure": 0.241
+          "structure": 0.243
         },
         "why": "fair premium, safe distance, but illiquid, hard to fill, good free-shares fit if assigned.",
         "lanes": [
@@ -13764,1384 +13764,8 @@
       }
     },
     {
-      "ticker": "AMZN",
-      "spot": 234.72,
-      "candles": [
-        {
-          "timestamp": 1761192000000,
-          "open": 219.0,
-          "high": 221.3,
-          "low": 218.18,
-          "close": 221.09,
-          "volume": 31540000
-        },
-        {
-          "timestamp": 1761278400000,
-          "open": 221.97,
-          "high": 225.4,
-          "low": 221.9,
-          "close": 224.21,
-          "volume": 38685100
-        },
-        {
-          "timestamp": 1761537600000,
-          "open": 227.66,
-          "high": 228.4,
-          "low": 225.54,
-          "close": 226.97,
-          "volume": 38267000
-        },
-        {
-          "timestamp": 1761624000000,
-          "open": 228.22,
-          "high": 231.49,
-          "low": 226.21,
-          "close": 229.25,
-          "volume": 47100000
-        },
-        {
-          "timestamp": 1761710400000,
-          "open": 231.67,
-          "high": 232.82,
-          "low": 227.76,
-          "close": 230.3,
-          "volume": 52036200
-        },
-        {
-          "timestamp": 1761796800000,
-          "open": 227.06,
-          "high": 228.44,
-          "low": 222.75,
-          "close": 222.86,
-          "volume": 102252900
-        },
-        {
-          "timestamp": 1761883200000,
-          "open": 250.1,
-          "high": 250.5,
-          "low": 243.98,
-          "close": 244.22,
-          "volume": 166340800
-        },
-        {
-          "timestamp": 1762146000000,
-          "open": 255.36,
-          "high": 258.6,
-          "low": 252.9,
-          "close": 254.0,
-          "volume": 95997800
-        },
-        {
-          "timestamp": 1762232400000,
-          "open": 250.38,
-          "high": 257.01,
-          "low": 248.66,
-          "close": 249.32,
-          "volume": 51546300
-        },
-        {
-          "timestamp": 1762318800000,
-          "open": 249.03,
-          "high": 251.0,
-          "low": 246.16,
-          "close": 250.2,
-          "volume": 40610700
-        },
-        {
-          "timestamp": 1762405200000,
-          "open": 249.16,
-          "high": 250.38,
-          "low": 242.17,
-          "close": 243.04,
-          "volume": 46004200
-        },
-        {
-          "timestamp": 1762491600000,
-          "open": 242.9,
-          "high": 244.9,
-          "low": 238.49,
-          "close": 244.41,
-          "volume": 46374300
-        },
-        {
-          "timestamp": 1762750800000,
-          "open": 248.34,
-          "high": 251.75,
-          "low": 245.59,
-          "close": 248.4,
-          "volume": 36476500
-        },
-        {
-          "timestamp": 1762837200000,
-          "open": 248.41,
-          "high": 249.75,
-          "low": 247.23,
-          "close": 249.1,
-          "volume": 23564100
-        },
-        {
-          "timestamp": 1762923600000,
-          "open": 250.24,
-          "high": 250.37,
-          "low": 243.75,
-          "close": 244.2,
-          "volume": 31190100
-        },
-        {
-          "timestamp": 1763010000000,
-          "open": 243.05,
-          "high": 243.75,
-          "low": 236.5,
-          "close": 237.58,
-          "volume": 41401700
-        },
-        {
-          "timestamp": 1763096400000,
-          "open": 235.06,
-          "high": 238.73,
-          "low": 232.89,
-          "close": 234.69,
-          "volume": 38956700
-        },
-        {
-          "timestamp": 1763355600000,
-          "open": 233.25,
-          "high": 234.6,
-          "low": 229.19,
-          "close": 232.87,
-          "volume": 59919000
-        },
-        {
-          "timestamp": 1763442000000,
-          "open": 228.1,
-          "high": 230.2,
-          "low": 222.42,
-          "close": 222.55,
-          "volume": 60608400
-        },
-        {
-          "timestamp": 1763528400000,
-          "open": 223.74,
-          "high": 223.74,
-          "low": 218.52,
-          "close": 222.69,
-          "volume": 58335600
-        },
-        {
-          "timestamp": 1763614800000,
-          "open": 227.05,
-          "high": 227.41,
-          "low": 216.74,
-          "close": 217.14,
-          "volume": 50309000
-        },
-        {
-          "timestamp": 1763701200000,
-          "open": 216.35,
-          "high": 222.21,
-          "low": 215.18,
-          "close": 220.69,
-          "volume": 68490500
-        },
-        {
-          "timestamp": 1763960400000,
-          "open": 222.56,
-          "high": 227.33,
-          "low": 222.27,
-          "close": 226.28,
-          "volume": 54318400
-        },
-        {
-          "timestamp": 1764046800000,
-          "open": 226.38,
-          "high": 230.52,
-          "low": 223.8,
-          "close": 229.67,
-          "volume": 39379300
-        },
-        {
-          "timestamp": 1764133200000,
-          "open": 230.74,
-          "high": 231.75,
-          "low": 228.77,
-          "close": 229.16,
-          "volume": 38497900
-        },
-        {
-          "timestamp": 1764306000000,
-          "open": 231.24,
-          "high": 233.29,
-          "low": 230.22,
-          "close": 233.22,
-          "volume": 20292300
-        },
-        {
-          "timestamp": 1764565200000,
-          "open": 233.22,
-          "high": 235.8,
-          "low": 232.25,
-          "close": 233.88,
-          "volume": 42904000
-        },
-        {
-          "timestamp": 1764651600000,
-          "open": 235.01,
-          "high": 238.97,
-          "low": 233.55,
-          "close": 234.42,
-          "volume": 45785400
-        },
-        {
-          "timestamp": 1764738000000,
-          "open": 233.35,
-          "high": 233.38,
-          "low": 230.61,
-          "close": 232.38,
-          "volume": 35495100
-        },
-        {
-          "timestamp": 1764824400000,
-          "open": 232.77,
-          "high": 233.5,
-          "low": 226.8,
-          "close": 229.11,
-          "volume": 45683200
-        },
-        {
-          "timestamp": 1764910800000,
-          "open": 230.32,
-          "high": 231.24,
-          "low": 228.55,
-          "close": 229.53,
-          "volume": 33117400
-        },
-        {
-          "timestamp": 1765170000000,
-          "open": 229.59,
-          "high": 230.83,
-          "low": 226.27,
-          "close": 226.89,
-          "volume": 35019200
-        },
-        {
-          "timestamp": 1765256400000,
-          "open": 226.84,
-          "high": 228.57,
-          "low": 225.11,
-          "close": 227.92,
-          "volume": 25841700
-        },
-        {
-          "timestamp": 1765342800000,
-          "open": 228.81,
-          "high": 232.42,
-          "low": 228.46,
-          "close": 231.78,
-          "volume": 38790700
-        },
-        {
-          "timestamp": 1765429200000,
-          "open": 230.71,
-          "high": 232.11,
-          "low": 228.69,
-          "close": 230.28,
-          "volume": 28249600
-        },
-        {
-          "timestamp": 1765515600000,
-          "open": 229.87,
-          "high": 230.08,
-          "low": 225.12,
-          "close": 226.19,
-          "volume": 35639100
-        },
-        {
-          "timestamp": 1765774800000,
-          "open": 227.93,
-          "high": 227.93,
-          "low": 221.5,
-          "close": 222.54,
-          "volume": 47286100
-        },
-        {
-          "timestamp": 1765861200000,
-          "open": 223.04,
-          "high": 223.66,
-          "low": 221.13,
-          "close": 222.56,
-          "volume": 39298900
-        },
-        {
-          "timestamp": 1765947600000,
-          "open": 224.66,
-          "high": 225.19,
-          "low": 220.99,
-          "close": 221.27,
-          "volume": 44034400
-        },
-        {
-          "timestamp": 1766034000000,
-          "open": 225.71,
-          "high": 229.23,
-          "low": 224.41,
-          "close": 226.76,
-          "volume": 50272400
-        },
-        {
-          "timestamp": 1766120400000,
-          "open": 226.76,
-          "high": 229.13,
-          "low": 225.58,
-          "close": 227.35,
-          "volume": 85544400
-        },
-        {
-          "timestamp": 1766379600000,
-          "open": 228.61,
-          "high": 229.48,
-          "low": 226.71,
-          "close": 228.43,
-          "volume": 32261300
-        },
-        {
-          "timestamp": 1766466000000,
-          "open": 229.06,
-          "high": 232.45,
-          "low": 228.73,
-          "close": 232.14,
-          "volume": 29230200
-        },
-        {
-          "timestamp": 1766552400000,
-          "open": 232.13,
-          "high": 232.95,
-          "low": 231.33,
-          "close": 232.38,
-          "volume": 11420500
-        },
-        {
-          "timestamp": 1766725200000,
-          "open": 232.04,
-          "high": 232.99,
-          "low": 231.18,
-          "close": 232.52,
-          "volume": 15994700
-        },
-        {
-          "timestamp": 1766984400000,
-          "open": 231.94,
-          "high": 232.6,
-          "low": 230.77,
-          "close": 232.07,
-          "volume": 19797900
-        },
-        {
-          "timestamp": 1767070800000,
-          "open": 231.21,
-          "high": 232.77,
-          "low": 230.2,
-          "close": 232.53,
-          "volume": 21910500
-        },
-        {
-          "timestamp": 1767157200000,
-          "open": 232.91,
-          "high": 232.99,
-          "low": 230.12,
-          "close": 230.82,
-          "volume": 24383700
-        },
-        {
-          "timestamp": 1767330000000,
-          "open": 231.34,
-          "high": 235.46,
-          "low": 224.7,
-          "close": 226.5,
-          "volume": 51456200
-        },
-        {
-          "timestamp": 1767589200000,
-          "open": 228.84,
-          "high": 234.0,
-          "low": 227.18,
-          "close": 233.06,
-          "volume": 49733300
-        },
-        {
-          "timestamp": 1767675600000,
-          "open": 232.1,
-          "high": 243.18,
-          "low": 232.07,
-          "close": 240.93,
-          "volume": 53764700
-        },
-        {
-          "timestamp": 1767762000000,
-          "open": 239.61,
-          "high": 245.29,
-          "low": 239.52,
-          "close": 241.56,
-          "volume": 42236500
-        },
-        {
-          "timestamp": 1767848400000,
-          "open": 243.06,
-          "high": 246.41,
-          "low": 241.88,
-          "close": 246.29,
-          "volume": 39509800
-        },
-        {
-          "timestamp": 1767934800000,
-          "open": 244.57,
-          "high": 247.86,
-          "low": 242.24,
-          "close": 247.38,
-          "volume": 34560000
-        },
-        {
-          "timestamp": 1768194000000,
-          "open": 246.73,
-          "high": 248.94,
-          "low": 245.96,
-          "close": 246.47,
-          "volume": 35867800
-        },
-        {
-          "timestamp": 1768280400000,
-          "open": 246.53,
-          "high": 247.66,
-          "low": 240.25,
-          "close": 242.6,
-          "volume": 38371800
-        },
-        {
-          "timestamp": 1768366800000,
-          "open": 241.15,
-          "high": 241.28,
-          "low": 236.22,
-          "close": 236.65,
-          "volume": 41410600
-        },
-        {
-          "timestamp": 1768453200000,
-          "open": 239.31,
-          "high": 240.65,
-          "low": 236.63,
-          "close": 238.18,
-          "volume": 43003600
-        },
-        {
-          "timestamp": 1768539600000,
-          "open": 239.09,
-          "high": 239.57,
-          "low": 236.41,
-          "close": 239.12,
-          "volume": 45888300
-        },
-        {
-          "timestamp": 1768885200000,
-          "open": 233.76,
-          "high": 235.09,
-          "low": 229.34,
-          "close": 231.0,
-          "volume": 47737900
-        },
-        {
-          "timestamp": 1768971600000,
-          "open": 231.09,
-          "high": 232.3,
-          "low": 226.88,
-          "close": 231.31,
-          "volume": 47276100
-        },
-        {
-          "timestamp": 1769058000000,
-          "open": 234.05,
-          "high": 235.72,
-          "low": 230.9,
-          "close": 234.34,
-          "volume": 31913300
-        },
-        {
-          "timestamp": 1769144400000,
-          "open": 234.96,
-          "high": 240.45,
-          "low": 234.57,
-          "close": 239.16,
-          "volume": 33778500
-        },
-        {
-          "timestamp": 1769403600000,
-          "open": 239.98,
-          "high": 240.95,
-          "low": 237.54,
-          "close": 238.42,
-          "volume": 32825500
-        },
-        {
-          "timestamp": 1769490000000,
-          "open": 239.69,
-          "high": 244.88,
-          "low": 238.08,
-          "close": 244.68,
-          "volume": 38029200
-        },
-        {
-          "timestamp": 1769576400000,
-          "open": 246.37,
-          "high": 247.78,
-          "low": 241.53,
-          "close": 243.01,
-          "volume": 40882700
-        },
-        {
-          "timestamp": 1769662800000,
-          "open": 242.82,
-          "high": 243.0,
-          "low": 236.74,
-          "close": 241.73,
-          "volume": 47229600
-        },
-        {
-          "timestamp": 1769749200000,
-          "open": 239.89,
-          "high": 243.32,
-          "low": 237.64,
-          "close": 239.3,
-          "volume": 46585000
-        },
-        {
-          "timestamp": 1770008400000,
-          "open": 238.31,
-          "high": 245.63,
-          "low": 238.17,
-          "close": 242.96,
-          "volume": 37546100
-        },
-        {
-          "timestamp": 1770094800000,
-          "open": 244.98,
-          "high": 246.35,
-          "low": 235.45,
-          "close": 238.62,
-          "volume": 53831300
-        },
-        {
-          "timestamp": 1770181200000,
-          "open": 238.86,
-          "high": 238.86,
-          "low": 231.82,
-          "close": 232.99,
-          "volume": 51299900
-        },
-        {
-          "timestamp": 1770267600000,
-          "open": 224.91,
-          "high": 226.31,
-          "low": 220.38,
-          "close": 222.69,
-          "volume": 103509200
-        },
-        {
-          "timestamp": 1770354000000,
-          "open": 202.7,
-          "high": 211.44,
-          "low": 200.31,
-          "close": 210.32,
-          "volume": 179210900
-        },
-        {
-          "timestamp": 1770613200000,
-          "open": 208.97,
-          "high": 212.81,
-          "low": 203.35,
-          "close": 208.72,
-          "volume": 91178400
-        },
-        {
-          "timestamp": 1770699600000,
-          "open": 208.8,
-          "high": 212.65,
-          "low": 206.41,
-          "close": 206.96,
-          "volume": 67175000
-        },
-        {
-          "timestamp": 1770786000000,
-          "open": 208.06,
-          "high": 208.57,
-          "low": 202.49,
-          "close": 204.08,
-          "volume": 65545500
-        },
-        {
-          "timestamp": 1770872400000,
-          "open": 203.96,
-          "high": 203.96,
-          "low": 197.56,
-          "close": 199.6,
-          "volume": 83975400
-        },
-        {
-          "timestamp": 1770958800000,
-          "open": 198.88,
-          "high": 201.16,
-          "low": 197.28,
-          "close": 198.79,
-          "volume": 66321600
-        },
-        {
-          "timestamp": 1771304400000,
-          "open": 198.13,
-          "high": 201.74,
-          "low": 196.0,
-          "close": 201.15,
-          "volume": 69879200
-        },
-        {
-          "timestamp": 1771390800000,
-          "open": 202.07,
-          "high": 206.86,
-          "low": 201.51,
-          "close": 204.79,
-          "volume": 51003300
-        },
-        {
-          "timestamp": 1771477200000,
-          "open": 203.8,
-          "high": 205.64,
-          "low": 202.81,
-          "close": 204.86,
-          "volume": 35669600
-        },
-        {
-          "timestamp": 1771563600000,
-          "open": 204.76,
-          "high": 211.17,
-          "low": 203.75,
-          "close": 210.11,
-          "volume": 65881600
-        },
-        {
-          "timestamp": 1771822800000,
-          "open": 208.1,
-          "high": 208.43,
-          "low": 203.11,
-          "close": 205.27,
-          "volume": 53581500
-        },
-        {
-          "timestamp": 1771909200000,
-          "open": 205.47,
-          "high": 210.36,
-          "low": 203.25,
-          "close": 208.56,
-          "volume": 41137200
-        },
-        {
-          "timestamp": 1771995600000,
-          "open": 210.46,
-          "high": 211.59,
-          "low": 208.93,
-          "close": 210.64,
-          "volume": 41346400
-        },
-        {
-          "timestamp": 1772082000000,
-          "open": 210.73,
-          "high": 211.05,
-          "low": 205.35,
-          "close": 207.92,
-          "volume": 47756800
-        },
-        {
-          "timestamp": 1772168400000,
-          "open": 206.83,
-          "high": 210.33,
-          "low": 205.2,
-          "close": 210.0,
-          "volume": 57422800
-        },
-        {
-          "timestamp": 1772427600000,
-          "open": 204.55,
-          "high": 209.73,
-          "low": 203.46,
-          "close": 208.39,
-          "volume": 46001000
-        },
-        {
-          "timestamp": 1772514000000,
-          "open": 203.1,
-          "high": 209.18,
-          "low": 202.48,
-          "close": 208.73,
-          "volume": 43184900
-        },
-        {
-          "timestamp": 1772600400000,
-          "open": 210.47,
-          "high": 217.54,
-          "low": 210.15,
-          "close": 216.82,
-          "volume": 54731100
-        },
-        {
-          "timestamp": 1772686800000,
-          "open": 215.98,
-          "high": 220.47,
-          "low": 215.59,
-          "close": 218.94,
-          "volume": 60943400
-        },
-        {
-          "timestamp": 1772773200000,
-          "open": 214.99,
-          "high": 217.32,
-          "low": 212.53,
-          "close": 213.21,
-          "volume": 51152700
-        },
-        {
-          "timestamp": 1773028800000,
-          "open": 210.45,
-          "high": 213.82,
-          "low": 207.11,
-          "close": 213.49,
-          "volume": 54642900
-        },
-        {
-          "timestamp": 1773115200000,
-          "open": 214.19,
-          "high": 215.65,
-          "low": 212.43,
-          "close": 214.33,
-          "volume": 35678800
-        },
-        {
-          "timestamp": 1773201600000,
-          "open": 215.71,
-          "high": 217.0,
-          "low": 211.35,
-          "close": 212.65,
-          "volume": 34199300
-        },
-        {
-          "timestamp": 1773288000000,
-          "open": 210.39,
-          "high": 211.71,
-          "low": 208.15,
-          "close": 209.53,
-          "volume": 44349500
-        },
-        {
-          "timestamp": 1773374400000,
-          "open": 209.61,
-          "high": 210.56,
-          "low": 206.22,
-          "close": 207.67,
-          "volume": 35662100
-        },
-        {
-          "timestamp": 1773633600000,
-          "open": 208.35,
-          "high": 212.72,
-          "low": 207.45,
-          "close": 211.74,
-          "volume": 42209300
-        },
-        {
-          "timestamp": 1773720000000,
-          "open": 212.82,
-          "high": 215.7,
-          "low": 212.43,
-          "close": 215.2,
-          "volume": 44969900
-        },
-        {
-          "timestamp": 1773806400000,
-          "open": 213.93,
-          "high": 215.14,
-          "low": 208.83,
-          "close": 209.87,
-          "volume": 37846600
-        },
-        {
-          "timestamp": 1773892800000,
-          "open": 207.06,
-          "high": 209.12,
-          "low": 206.05,
-          "close": 208.76,
-          "volume": 36440600
-        },
-        {
-          "timestamp": 1773979200000,
-          "open": 207.4,
-          "high": 207.54,
-          "low": 204.32,
-          "close": 205.37,
-          "volume": 63694600
-        },
-        {
-          "timestamp": 1774238400000,
-          "open": 209.79,
-          "high": 212.8,
-          "low": 209.51,
-          "close": 210.14,
-          "volume": 44277400
-        },
-        {
-          "timestamp": 1774324800000,
-          "open": 207.95,
-          "high": 209.35,
-          "low": 206.64,
-          "close": 207.24,
-          "volume": 35351400
-        },
-        {
-          "timestamp": 1774411200000,
-          "open": 211.56,
-          "high": 213.07,
-          "low": 209.9,
-          "close": 211.71,
-          "volume": 36388800
-        },
-        {
-          "timestamp": 1774497600000,
-          "open": 210.61,
-          "high": 212.89,
-          "low": 207.12,
-          "close": 207.54,
-          "volume": 46746000
-        },
-        {
-          "timestamp": 1774584000000,
-          "open": 206.46,
-          "high": 206.6,
-          "low": 199.14,
-          "close": 199.34,
-          "volume": 56009800
-        },
-        {
-          "timestamp": 1774843200000,
-          "open": 201.48,
-          "high": 203.8,
-          "low": 199.98,
-          "close": 200.95,
-          "volume": 46373800
-        },
-        {
-          "timestamp": 1774929600000,
-          "open": 204.85,
-          "high": 210.28,
-          "low": 204.14,
-          "close": 208.27,
-          "volume": 58470100
-        },
-        {
-          "timestamp": 1775016000000,
-          "open": 210.44,
-          "high": 213.58,
-          "low": 208.19,
-          "close": 210.57,
-          "volume": 45955400
-        },
-        {
-          "timestamp": 1775102400000,
-          "open": 206.54,
-          "high": 212.21,
-          "low": 204.9,
-          "close": 209.77,
-          "volume": 31453000
-        },
-        {
-          "timestamp": 1775448000000,
-          "open": 209.8,
-          "high": 212.95,
-          "low": 209.59,
-          "close": 212.79,
-          "volume": 25385500
-        },
-        {
-          "timestamp": 1775534400000,
-          "open": 211.24,
-          "high": 213.97,
-          "low": 209.08,
-          "close": 213.77,
-          "volume": 28154600
-        },
-        {
-          "timestamp": 1775620800000,
-          "open": 223.79,
-          "high": 226.1,
-          "low": 219.62,
-          "close": 221.25,
-          "volume": 51092700
-        },
-        {
-          "timestamp": 1775707200000,
-          "open": 225.23,
-          "high": 233.8,
-          "low": 223.27,
-          "close": 233.65,
-          "volume": 65964200
-        },
-        {
-          "timestamp": 1775793600000,
-          "open": 235.3,
-          "high": 240.43,
-          "low": 235.21,
-          "close": 238.38,
-          "volume": 56912800
-        },
-        {
-          "timestamp": 1776052800000,
-          "open": 237.45,
-          "high": 240.0,
-          "low": 235.75,
-          "close": 239.89,
-          "volume": 42166200
-        },
-        {
-          "timestamp": 1776139200000,
-          "open": 241.78,
-          "high": 252.18,
-          "low": 241.78,
-          "close": 249.02,
-          "volume": 72685000
-        },
-        {
-          "timestamp": 1776225600000,
-          "open": 249.25,
-          "high": 250.44,
-          "low": 247.2,
-          "close": 248.5,
-          "volume": 43045200
-        },
-        {
-          "timestamp": 1776312000000,
-          "open": 248.51,
-          "high": 250.0,
-          "low": 244.2,
-          "close": 249.7,
-          "volume": 41895700
-        },
-        {
-          "timestamp": 1776398400000,
-          "open": 254.99,
-          "high": 256.18,
-          "low": 250.11,
-          "close": 250.56,
-          "volume": 52029300
-        },
-        {
-          "timestamp": 1776657600000,
-          "open": 249.19,
-          "high": 250.18,
-          "low": 245.37,
-          "close": 248.28,
-          "volume": 39463100
-        },
-        {
-          "timestamp": 1776744000000,
-          "open": 255.09,
-          "high": 255.09,
-          "low": 249.1,
-          "close": 249.91,
-          "volume": 42922400
-        },
-        {
-          "timestamp": 1776830400000,
-          "open": 252.44,
-          "high": 255.94,
-          "low": 250.33,
-          "close": 255.36,
-          "volume": 36065100
-        },
-        {
-          "timestamp": 1776916800000,
-          "open": 255.39,
-          "high": 258.79,
-          "low": 253.07,
-          "close": 255.08,
-          "volume": 39091400
-        },
-        {
-          "timestamp": 1777003200000,
-          "open": 259.98,
-          "high": 264.5,
-          "low": 257.69,
-          "close": 263.99,
-          "volume": 53777400
-        },
-        {
-          "timestamp": 1777262400000,
-          "open": 263.46,
-          "high": 264.15,
-          "low": 260.34,
-          "close": 261.12,
-          "volume": 44906800
-        },
-        {
-          "timestamp": 1777348800000,
-          "open": 258.39,
-          "high": 261.03,
-          "low": 256.63,
-          "close": 259.7,
-          "volume": 42204400
-        },
-        {
-          "timestamp": 1777435200000,
-          "open": 257.99,
-          "high": 265.91,
-          "low": 257.7,
-          "close": 263.04,
-          "volume": 72367900
-        },
-        {
-          "timestamp": 1777521600000,
-          "open": 273.17,
-          "high": 273.88,
-          "low": 256.16,
-          "close": 265.06,
-          "volume": 100974900
-        },
-        {
-          "timestamp": 1777608000000,
-          "open": 265.58,
-          "high": 273.32,
-          "low": 262.74,
-          "close": 268.26,
-          "volume": 50825200
-        },
-        {
-          "timestamp": 1777867200000,
-          "open": 268.8,
-          "high": 276.1,
-          "low": 268.8,
-          "close": 272.05,
-          "volume": 49083700
-        },
-        {
-          "timestamp": 1777953600000,
-          "open": 276.08,
-          "high": 278.56,
-          "low": 272.38,
-          "close": 273.55,
-          "volume": 41908500
-        },
-        {
-          "timestamp": 1778040000000,
-          "open": 272.89,
-          "high": 277.8,
-          "low": 272.21,
-          "close": 274.99,
-          "volume": 44552000
-        },
-        {
-          "timestamp": 1778126400000,
-          "open": 275.02,
-          "high": 276.63,
-          "low": 270.49,
-          "close": 271.17,
-          "volume": 35892900
-        },
-        {
-          "timestamp": 1778212800000,
-          "open": 271.63,
-          "high": 274.0,
-          "low": 269.95,
-          "close": 272.68,
-          "volume": 34732700
-        },
-        {
-          "timestamp": 1778472000000,
-          "open": 269.84,
-          "high": 273.63,
-          "low": 268.48,
-          "close": 268.99,
-          "volume": 38176700
-        },
-        {
-          "timestamp": 1778558400000,
-          "open": 266.71,
-          "high": 267.65,
-          "low": 262.63,
-          "close": 265.82,
-          "volume": 36776200
-        },
-        {
-          "timestamp": 1778644800000,
-          "open": 264.43,
-          "high": 270.72,
-          "low": 263.2,
-          "close": 270.13,
-          "volume": 39670900
-        },
-        {
-          "timestamp": 1778731200000,
-          "open": 269.15,
-          "high": 270.78,
-          "low": 266.63,
-          "close": 267.22,
-          "volume": 31338400
-        },
-        {
-          "timestamp": 1778817600000,
-          "open": 262.5,
-          "high": 264.36,
-          "low": 260.89,
-          "close": 264.14,
-          "volume": 40770300
-        },
-        {
-          "timestamp": 1779076800000,
-          "open": 263.87,
-          "high": 268.85,
-          "low": 262.53,
-          "close": 264.86,
-          "volume": 33690800
-        },
-        {
-          "timestamp": 1779163200000,
-          "open": 262.04,
-          "high": 262.25,
-          "low": 255.19,
-          "close": 259.34,
-          "volume": 40340700
-        },
-        {
-          "timestamp": 1779249600000,
-          "open": 260.05,
-          "high": 265.58,
-          "low": 259.53,
-          "close": 265.01,
-          "volume": 34933200
-        },
-        {
-          "timestamp": 1779336000000,
-          "open": 263.5,
-          "high": 269.49,
-          "low": 261.37,
-          "close": 268.46,
-          "volume": 36591700
-        },
-        {
-          "timestamp": 1779422400000,
-          "open": 268.66,
-          "high": 269.79,
-          "low": 266.24,
-          "close": 266.32,
-          "volume": 27535500
-        },
-        {
-          "timestamp": 1779768000000,
-          "open": 267.94,
-          "high": 269.3,
-          "low": 262.07,
-          "close": 265.29,
-          "volume": 38028100
-        },
-        {
-          "timestamp": 1779854400000,
-          "open": 266.15,
-          "high": 272.41,
-          "low": 265.7,
-          "close": 271.85,
-          "volume": 40061900
-        },
-        {
-          "timestamp": 1779940800000,
-          "open": 272.27,
-          "high": 274.5,
-          "low": 267.44,
-          "close": 274.0,
-          "volume": 40630400
-        },
-        {
-          "timestamp": 1780027200000,
-          "open": 271.29,
-          "high": 274.75,
-          "low": 269.64,
-          "close": 270.64,
-          "volume": 54749600
-        },
-        {
-          "timestamp": 1780286400000,
-          "open": 266.29,
-          "high": 266.63,
-          "low": 260.7,
-          "close": 261.26,
-          "volume": 53604400
-        },
-        {
-          "timestamp": 1780372800000,
-          "open": 257.16,
-          "high": 261.2,
-          "low": 254.37,
-          "close": 256.52,
-          "volume": 41811000
-        },
-        {
-          "timestamp": 1780459200000,
-          "open": 254.7,
-          "high": 257.09,
-          "low": 247.71,
-          "close": 250.02,
-          "volume": 51394200
-        },
-        {
-          "timestamp": 1780545600000,
-          "open": 253.12,
-          "high": 255.83,
-          "low": 251.75,
-          "close": 253.79,
-          "volume": 35609800
-        },
-        {
-          "timestamp": 1780632000000,
-          "open": 254.26,
-          "high": 256.38,
-          "low": 245.78,
-          "close": 246.03,
-          "volume": 55607800
-        },
-        {
-          "timestamp": 1780891200000,
-          "open": 246.68,
-          "high": 249.42,
-          "low": 243.36,
-          "close": 245.22,
-          "volume": 33899500
-        },
-        {
-          "timestamp": 1780977600000,
-          "open": 247.73,
-          "high": 250.43,
-          "low": 240.4,
-          "close": 244.19,
-          "volume": 44425400
-        },
-        {
-          "timestamp": 1781064000000,
-          "open": 243.61,
-          "high": 244.07,
-          "low": 237.45,
-          "close": 238.0,
-          "volume": 38590200
-        },
-        {
-          "timestamp": 1781150400000,
-          "open": 237.93,
-          "high": 242.14,
-          "low": 235.18,
-          "close": 241.51,
-          "volume": 41335400
-        },
-        {
-          "timestamp": 1781236800000,
-          "open": 243.21,
-          "high": 243.36,
-          "low": 233.59,
-          "close": 238.55,
-          "volume": 51186600
-        },
-        {
-          "timestamp": 1781496000000,
-          "open": 245.02,
-          "high": 247.81,
-          "low": 244.73,
-          "close": 246.02,
-          "volume": 41711600
-        },
-        {
-          "timestamp": 1781582400000,
-          "open": 248.0,
-          "high": 249.51,
-          "low": 245.45,
-          "close": 246.0,
-          "volume": 35187400
-        },
-        {
-          "timestamp": 1781668800000,
-          "open": 244.9,
-          "high": 245.91,
-          "low": 236.0,
-          "close": 237.5,
-          "volume": 44780800
-        },
-        {
-          "timestamp": 1781755200000,
-          "open": 240.12,
-          "high": 245.73,
-          "low": 236.02,
-          "close": 244.39,
-          "volume": 75624400
-        },
-        {
-          "timestamp": 1782100800000,
-          "open": 240.08,
-          "high": 242.0,
-          "low": 232.24,
-          "close": 232.79,
-          "volume": 68233300
-        },
-        {
-          "timestamp": 1782187200000,
-          "open": 232.55,
-          "high": 236.87,
-          "low": 232.0,
-          "close": 234.72,
-          "volume": 23405807
-        }
-      ],
-      "pick": {
-        "strike": 215.0,
-        "dte": 31,
-        "premium": 2.29,
-        "annualized_roc": 12.5,
-        "prob_otm": 80.2,
-        "iv": 34.9,
-        "iv_rank": 60.2,
-        "iv_rank_real": false,
-        "source": "live",
-        "earnings_days": 37,
-        "want_to_own": true,
-        "levels": {
-          "keltner": {
-            "upper": 273.24,
-            "sma": 249.91,
-            "lower": 226.59
-          },
-          "spot": 234.72
-        },
-        "free_shares": {
-          "assignment_basis": 212.72,
-          "basis_discount_pct": 9.4,
-          "prob_assigned_pct": 19.8,
-          "wheel_fit": 61.0,
-          "summary": "If assigned you own at $212.72, 9.4% below today, earning 12.5% annualized on the cash while you wait."
-        },
-        "score": 48.1,
-        "direction": "cash-secured put",
-        "avoid": false,
-        "factors": {
-          "richness": 0.393,
-          "safety": 0.765,
-          "liquidity": 0.452,
-          "free_shares": 0.5,
-          "structure": 0.174
-        },
-        "why": "fair premium, safe distance.",
-        "lanes": [
-          "liquid"
-        ]
-      }
-    },
-    {
       "ticker": "PLTR",
-      "spot": 119.1,
+      "spot": 119.2,
       "candles": [
         {
           "timestamp": 1761192000000,
@@ -16468,8 +15092,8 @@
           "open": 120.11,
           "high": 120.94,
           "low": 117.94,
-          "close": 119.1,
-          "volume": 21472771
+          "close": 119.2,
+          "volume": 21511202
         }
       ],
       "pick": {
@@ -16478,7 +15102,7 @@
         "premium": 1.07,
         "annualized_roc": 12.7,
         "prob_otm": 85.6,
-        "iv": 53.7,
+        "iv": 53.9,
         "iv_rank": 82.8,
         "iv_rank_real": false,
         "source": "live",
@@ -16486,28 +15110,28 @@
         "want_to_own": true,
         "levels": {
           "keltner": {
-            "upper": 155.48,
+            "upper": 155.49,
             "sma": 136.24,
             "lower": 116.99
           },
-          "spot": 119.1
+          "spot": 119.2
         },
         "free_shares": {
           "assignment_basis": 98.92,
-          "basis_discount_pct": 16.9,
+          "basis_discount_pct": 17.0,
           "prob_assigned_pct": 14.4,
           "wheel_fit": 71.0,
-          "summary": "If assigned you own at $98.92, 16.9% below today, earning 12.7% annualized on the cash while you wait."
+          "summary": "If assigned you own at $98.92, 17.0% below today, earning 12.7% annualized on the cash while you wait."
         },
-        "score": 48.1,
+        "score": 48.3,
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
-          "richness": 0.341,
-          "safety": 0.928,
-          "liquidity": 0.391,
+          "richness": 0.345,
+          "safety": 0.929,
+          "liquidity": 0.392,
           "free_shares": 0.503,
-          "structure": 0.055
+          "structure": 0.057
         },
         "why": "thin premium, safe distance, but illiquid, hard to fill.",
         "lanes": [
@@ -16516,8 +15140,1384 @@
       }
     },
     {
+      "ticker": "AMZN",
+      "spot": 234.98,
+      "candles": [
+        {
+          "timestamp": 1761192000000,
+          "open": 219.0,
+          "high": 221.3,
+          "low": 218.18,
+          "close": 221.09,
+          "volume": 31540000
+        },
+        {
+          "timestamp": 1761278400000,
+          "open": 221.97,
+          "high": 225.4,
+          "low": 221.9,
+          "close": 224.21,
+          "volume": 38685100
+        },
+        {
+          "timestamp": 1761537600000,
+          "open": 227.66,
+          "high": 228.4,
+          "low": 225.54,
+          "close": 226.97,
+          "volume": 38267000
+        },
+        {
+          "timestamp": 1761624000000,
+          "open": 228.22,
+          "high": 231.49,
+          "low": 226.21,
+          "close": 229.25,
+          "volume": 47100000
+        },
+        {
+          "timestamp": 1761710400000,
+          "open": 231.67,
+          "high": 232.82,
+          "low": 227.76,
+          "close": 230.3,
+          "volume": 52036200
+        },
+        {
+          "timestamp": 1761796800000,
+          "open": 227.06,
+          "high": 228.44,
+          "low": 222.75,
+          "close": 222.86,
+          "volume": 102252900
+        },
+        {
+          "timestamp": 1761883200000,
+          "open": 250.1,
+          "high": 250.5,
+          "low": 243.98,
+          "close": 244.22,
+          "volume": 166340800
+        },
+        {
+          "timestamp": 1762146000000,
+          "open": 255.36,
+          "high": 258.6,
+          "low": 252.9,
+          "close": 254.0,
+          "volume": 95997800
+        },
+        {
+          "timestamp": 1762232400000,
+          "open": 250.38,
+          "high": 257.01,
+          "low": 248.66,
+          "close": 249.32,
+          "volume": 51546300
+        },
+        {
+          "timestamp": 1762318800000,
+          "open": 249.03,
+          "high": 251.0,
+          "low": 246.16,
+          "close": 250.2,
+          "volume": 40610700
+        },
+        {
+          "timestamp": 1762405200000,
+          "open": 249.16,
+          "high": 250.38,
+          "low": 242.17,
+          "close": 243.04,
+          "volume": 46004200
+        },
+        {
+          "timestamp": 1762491600000,
+          "open": 242.9,
+          "high": 244.9,
+          "low": 238.49,
+          "close": 244.41,
+          "volume": 46374300
+        },
+        {
+          "timestamp": 1762750800000,
+          "open": 248.34,
+          "high": 251.75,
+          "low": 245.59,
+          "close": 248.4,
+          "volume": 36476500
+        },
+        {
+          "timestamp": 1762837200000,
+          "open": 248.41,
+          "high": 249.75,
+          "low": 247.23,
+          "close": 249.1,
+          "volume": 23564100
+        },
+        {
+          "timestamp": 1762923600000,
+          "open": 250.24,
+          "high": 250.37,
+          "low": 243.75,
+          "close": 244.2,
+          "volume": 31190100
+        },
+        {
+          "timestamp": 1763010000000,
+          "open": 243.05,
+          "high": 243.75,
+          "low": 236.5,
+          "close": 237.58,
+          "volume": 41401700
+        },
+        {
+          "timestamp": 1763096400000,
+          "open": 235.06,
+          "high": 238.73,
+          "low": 232.89,
+          "close": 234.69,
+          "volume": 38956700
+        },
+        {
+          "timestamp": 1763355600000,
+          "open": 233.25,
+          "high": 234.6,
+          "low": 229.19,
+          "close": 232.87,
+          "volume": 59919000
+        },
+        {
+          "timestamp": 1763442000000,
+          "open": 228.1,
+          "high": 230.2,
+          "low": 222.42,
+          "close": 222.55,
+          "volume": 60608400
+        },
+        {
+          "timestamp": 1763528400000,
+          "open": 223.74,
+          "high": 223.74,
+          "low": 218.52,
+          "close": 222.69,
+          "volume": 58335600
+        },
+        {
+          "timestamp": 1763614800000,
+          "open": 227.05,
+          "high": 227.41,
+          "low": 216.74,
+          "close": 217.14,
+          "volume": 50309000
+        },
+        {
+          "timestamp": 1763701200000,
+          "open": 216.35,
+          "high": 222.21,
+          "low": 215.18,
+          "close": 220.69,
+          "volume": 68490500
+        },
+        {
+          "timestamp": 1763960400000,
+          "open": 222.56,
+          "high": 227.33,
+          "low": 222.27,
+          "close": 226.28,
+          "volume": 54318400
+        },
+        {
+          "timestamp": 1764046800000,
+          "open": 226.38,
+          "high": 230.52,
+          "low": 223.8,
+          "close": 229.67,
+          "volume": 39379300
+        },
+        {
+          "timestamp": 1764133200000,
+          "open": 230.74,
+          "high": 231.75,
+          "low": 228.77,
+          "close": 229.16,
+          "volume": 38497900
+        },
+        {
+          "timestamp": 1764306000000,
+          "open": 231.24,
+          "high": 233.29,
+          "low": 230.22,
+          "close": 233.22,
+          "volume": 20292300
+        },
+        {
+          "timestamp": 1764565200000,
+          "open": 233.22,
+          "high": 235.8,
+          "low": 232.25,
+          "close": 233.88,
+          "volume": 42904000
+        },
+        {
+          "timestamp": 1764651600000,
+          "open": 235.01,
+          "high": 238.97,
+          "low": 233.55,
+          "close": 234.42,
+          "volume": 45785400
+        },
+        {
+          "timestamp": 1764738000000,
+          "open": 233.35,
+          "high": 233.38,
+          "low": 230.61,
+          "close": 232.38,
+          "volume": 35495100
+        },
+        {
+          "timestamp": 1764824400000,
+          "open": 232.77,
+          "high": 233.5,
+          "low": 226.8,
+          "close": 229.11,
+          "volume": 45683200
+        },
+        {
+          "timestamp": 1764910800000,
+          "open": 230.32,
+          "high": 231.24,
+          "low": 228.55,
+          "close": 229.53,
+          "volume": 33117400
+        },
+        {
+          "timestamp": 1765170000000,
+          "open": 229.59,
+          "high": 230.83,
+          "low": 226.27,
+          "close": 226.89,
+          "volume": 35019200
+        },
+        {
+          "timestamp": 1765256400000,
+          "open": 226.84,
+          "high": 228.57,
+          "low": 225.11,
+          "close": 227.92,
+          "volume": 25841700
+        },
+        {
+          "timestamp": 1765342800000,
+          "open": 228.81,
+          "high": 232.42,
+          "low": 228.46,
+          "close": 231.78,
+          "volume": 38790700
+        },
+        {
+          "timestamp": 1765429200000,
+          "open": 230.71,
+          "high": 232.11,
+          "low": 228.69,
+          "close": 230.28,
+          "volume": 28249600
+        },
+        {
+          "timestamp": 1765515600000,
+          "open": 229.87,
+          "high": 230.08,
+          "low": 225.12,
+          "close": 226.19,
+          "volume": 35639100
+        },
+        {
+          "timestamp": 1765774800000,
+          "open": 227.93,
+          "high": 227.93,
+          "low": 221.5,
+          "close": 222.54,
+          "volume": 47286100
+        },
+        {
+          "timestamp": 1765861200000,
+          "open": 223.04,
+          "high": 223.66,
+          "low": 221.13,
+          "close": 222.56,
+          "volume": 39298900
+        },
+        {
+          "timestamp": 1765947600000,
+          "open": 224.66,
+          "high": 225.19,
+          "low": 220.99,
+          "close": 221.27,
+          "volume": 44034400
+        },
+        {
+          "timestamp": 1766034000000,
+          "open": 225.71,
+          "high": 229.23,
+          "low": 224.41,
+          "close": 226.76,
+          "volume": 50272400
+        },
+        {
+          "timestamp": 1766120400000,
+          "open": 226.76,
+          "high": 229.13,
+          "low": 225.58,
+          "close": 227.35,
+          "volume": 85544400
+        },
+        {
+          "timestamp": 1766379600000,
+          "open": 228.61,
+          "high": 229.48,
+          "low": 226.71,
+          "close": 228.43,
+          "volume": 32261300
+        },
+        {
+          "timestamp": 1766466000000,
+          "open": 229.06,
+          "high": 232.45,
+          "low": 228.73,
+          "close": 232.14,
+          "volume": 29230200
+        },
+        {
+          "timestamp": 1766552400000,
+          "open": 232.13,
+          "high": 232.95,
+          "low": 231.33,
+          "close": 232.38,
+          "volume": 11420500
+        },
+        {
+          "timestamp": 1766725200000,
+          "open": 232.04,
+          "high": 232.99,
+          "low": 231.18,
+          "close": 232.52,
+          "volume": 15994700
+        },
+        {
+          "timestamp": 1766984400000,
+          "open": 231.94,
+          "high": 232.6,
+          "low": 230.77,
+          "close": 232.07,
+          "volume": 19797900
+        },
+        {
+          "timestamp": 1767070800000,
+          "open": 231.21,
+          "high": 232.77,
+          "low": 230.2,
+          "close": 232.53,
+          "volume": 21910500
+        },
+        {
+          "timestamp": 1767157200000,
+          "open": 232.91,
+          "high": 232.99,
+          "low": 230.12,
+          "close": 230.82,
+          "volume": 24383700
+        },
+        {
+          "timestamp": 1767330000000,
+          "open": 231.34,
+          "high": 235.46,
+          "low": 224.7,
+          "close": 226.5,
+          "volume": 51456200
+        },
+        {
+          "timestamp": 1767589200000,
+          "open": 228.84,
+          "high": 234.0,
+          "low": 227.18,
+          "close": 233.06,
+          "volume": 49733300
+        },
+        {
+          "timestamp": 1767675600000,
+          "open": 232.1,
+          "high": 243.18,
+          "low": 232.07,
+          "close": 240.93,
+          "volume": 53764700
+        },
+        {
+          "timestamp": 1767762000000,
+          "open": 239.61,
+          "high": 245.29,
+          "low": 239.52,
+          "close": 241.56,
+          "volume": 42236500
+        },
+        {
+          "timestamp": 1767848400000,
+          "open": 243.06,
+          "high": 246.41,
+          "low": 241.88,
+          "close": 246.29,
+          "volume": 39509800
+        },
+        {
+          "timestamp": 1767934800000,
+          "open": 244.57,
+          "high": 247.86,
+          "low": 242.24,
+          "close": 247.38,
+          "volume": 34560000
+        },
+        {
+          "timestamp": 1768194000000,
+          "open": 246.73,
+          "high": 248.94,
+          "low": 245.96,
+          "close": 246.47,
+          "volume": 35867800
+        },
+        {
+          "timestamp": 1768280400000,
+          "open": 246.53,
+          "high": 247.66,
+          "low": 240.25,
+          "close": 242.6,
+          "volume": 38371800
+        },
+        {
+          "timestamp": 1768366800000,
+          "open": 241.15,
+          "high": 241.28,
+          "low": 236.22,
+          "close": 236.65,
+          "volume": 41410600
+        },
+        {
+          "timestamp": 1768453200000,
+          "open": 239.31,
+          "high": 240.65,
+          "low": 236.63,
+          "close": 238.18,
+          "volume": 43003600
+        },
+        {
+          "timestamp": 1768539600000,
+          "open": 239.09,
+          "high": 239.57,
+          "low": 236.41,
+          "close": 239.12,
+          "volume": 45888300
+        },
+        {
+          "timestamp": 1768885200000,
+          "open": 233.76,
+          "high": 235.09,
+          "low": 229.34,
+          "close": 231.0,
+          "volume": 47737900
+        },
+        {
+          "timestamp": 1768971600000,
+          "open": 231.09,
+          "high": 232.3,
+          "low": 226.88,
+          "close": 231.31,
+          "volume": 47276100
+        },
+        {
+          "timestamp": 1769058000000,
+          "open": 234.05,
+          "high": 235.72,
+          "low": 230.9,
+          "close": 234.34,
+          "volume": 31913300
+        },
+        {
+          "timestamp": 1769144400000,
+          "open": 234.96,
+          "high": 240.45,
+          "low": 234.57,
+          "close": 239.16,
+          "volume": 33778500
+        },
+        {
+          "timestamp": 1769403600000,
+          "open": 239.98,
+          "high": 240.95,
+          "low": 237.54,
+          "close": 238.42,
+          "volume": 32825500
+        },
+        {
+          "timestamp": 1769490000000,
+          "open": 239.69,
+          "high": 244.88,
+          "low": 238.08,
+          "close": 244.68,
+          "volume": 38029200
+        },
+        {
+          "timestamp": 1769576400000,
+          "open": 246.37,
+          "high": 247.78,
+          "low": 241.53,
+          "close": 243.01,
+          "volume": 40882700
+        },
+        {
+          "timestamp": 1769662800000,
+          "open": 242.82,
+          "high": 243.0,
+          "low": 236.74,
+          "close": 241.73,
+          "volume": 47229600
+        },
+        {
+          "timestamp": 1769749200000,
+          "open": 239.89,
+          "high": 243.32,
+          "low": 237.64,
+          "close": 239.3,
+          "volume": 46585000
+        },
+        {
+          "timestamp": 1770008400000,
+          "open": 238.31,
+          "high": 245.63,
+          "low": 238.17,
+          "close": 242.96,
+          "volume": 37546100
+        },
+        {
+          "timestamp": 1770094800000,
+          "open": 244.98,
+          "high": 246.35,
+          "low": 235.45,
+          "close": 238.62,
+          "volume": 53831300
+        },
+        {
+          "timestamp": 1770181200000,
+          "open": 238.86,
+          "high": 238.86,
+          "low": 231.82,
+          "close": 232.99,
+          "volume": 51299900
+        },
+        {
+          "timestamp": 1770267600000,
+          "open": 224.91,
+          "high": 226.31,
+          "low": 220.38,
+          "close": 222.69,
+          "volume": 103509200
+        },
+        {
+          "timestamp": 1770354000000,
+          "open": 202.7,
+          "high": 211.44,
+          "low": 200.31,
+          "close": 210.32,
+          "volume": 179210900
+        },
+        {
+          "timestamp": 1770613200000,
+          "open": 208.97,
+          "high": 212.81,
+          "low": 203.35,
+          "close": 208.72,
+          "volume": 91178400
+        },
+        {
+          "timestamp": 1770699600000,
+          "open": 208.8,
+          "high": 212.65,
+          "low": 206.41,
+          "close": 206.96,
+          "volume": 67175000
+        },
+        {
+          "timestamp": 1770786000000,
+          "open": 208.06,
+          "high": 208.57,
+          "low": 202.49,
+          "close": 204.08,
+          "volume": 65545500
+        },
+        {
+          "timestamp": 1770872400000,
+          "open": 203.96,
+          "high": 203.96,
+          "low": 197.56,
+          "close": 199.6,
+          "volume": 83975400
+        },
+        {
+          "timestamp": 1770958800000,
+          "open": 198.88,
+          "high": 201.16,
+          "low": 197.28,
+          "close": 198.79,
+          "volume": 66321600
+        },
+        {
+          "timestamp": 1771304400000,
+          "open": 198.13,
+          "high": 201.74,
+          "low": 196.0,
+          "close": 201.15,
+          "volume": 69879200
+        },
+        {
+          "timestamp": 1771390800000,
+          "open": 202.07,
+          "high": 206.86,
+          "low": 201.51,
+          "close": 204.79,
+          "volume": 51003300
+        },
+        {
+          "timestamp": 1771477200000,
+          "open": 203.8,
+          "high": 205.64,
+          "low": 202.81,
+          "close": 204.86,
+          "volume": 35669600
+        },
+        {
+          "timestamp": 1771563600000,
+          "open": 204.76,
+          "high": 211.17,
+          "low": 203.75,
+          "close": 210.11,
+          "volume": 65881600
+        },
+        {
+          "timestamp": 1771822800000,
+          "open": 208.1,
+          "high": 208.43,
+          "low": 203.11,
+          "close": 205.27,
+          "volume": 53581500
+        },
+        {
+          "timestamp": 1771909200000,
+          "open": 205.47,
+          "high": 210.36,
+          "low": 203.25,
+          "close": 208.56,
+          "volume": 41137200
+        },
+        {
+          "timestamp": 1771995600000,
+          "open": 210.46,
+          "high": 211.59,
+          "low": 208.93,
+          "close": 210.64,
+          "volume": 41346400
+        },
+        {
+          "timestamp": 1772082000000,
+          "open": 210.73,
+          "high": 211.05,
+          "low": 205.35,
+          "close": 207.92,
+          "volume": 47756800
+        },
+        {
+          "timestamp": 1772168400000,
+          "open": 206.83,
+          "high": 210.33,
+          "low": 205.2,
+          "close": 210.0,
+          "volume": 57422800
+        },
+        {
+          "timestamp": 1772427600000,
+          "open": 204.55,
+          "high": 209.73,
+          "low": 203.46,
+          "close": 208.39,
+          "volume": 46001000
+        },
+        {
+          "timestamp": 1772514000000,
+          "open": 203.1,
+          "high": 209.18,
+          "low": 202.48,
+          "close": 208.73,
+          "volume": 43184900
+        },
+        {
+          "timestamp": 1772600400000,
+          "open": 210.47,
+          "high": 217.54,
+          "low": 210.15,
+          "close": 216.82,
+          "volume": 54731100
+        },
+        {
+          "timestamp": 1772686800000,
+          "open": 215.98,
+          "high": 220.47,
+          "low": 215.59,
+          "close": 218.94,
+          "volume": 60943400
+        },
+        {
+          "timestamp": 1772773200000,
+          "open": 214.99,
+          "high": 217.32,
+          "low": 212.53,
+          "close": 213.21,
+          "volume": 51152700
+        },
+        {
+          "timestamp": 1773028800000,
+          "open": 210.45,
+          "high": 213.82,
+          "low": 207.11,
+          "close": 213.49,
+          "volume": 54642900
+        },
+        {
+          "timestamp": 1773115200000,
+          "open": 214.19,
+          "high": 215.65,
+          "low": 212.43,
+          "close": 214.33,
+          "volume": 35678800
+        },
+        {
+          "timestamp": 1773201600000,
+          "open": 215.71,
+          "high": 217.0,
+          "low": 211.35,
+          "close": 212.65,
+          "volume": 34199300
+        },
+        {
+          "timestamp": 1773288000000,
+          "open": 210.39,
+          "high": 211.71,
+          "low": 208.15,
+          "close": 209.53,
+          "volume": 44349500
+        },
+        {
+          "timestamp": 1773374400000,
+          "open": 209.61,
+          "high": 210.56,
+          "low": 206.22,
+          "close": 207.67,
+          "volume": 35662100
+        },
+        {
+          "timestamp": 1773633600000,
+          "open": 208.35,
+          "high": 212.72,
+          "low": 207.45,
+          "close": 211.74,
+          "volume": 42209300
+        },
+        {
+          "timestamp": 1773720000000,
+          "open": 212.82,
+          "high": 215.7,
+          "low": 212.43,
+          "close": 215.2,
+          "volume": 44969900
+        },
+        {
+          "timestamp": 1773806400000,
+          "open": 213.93,
+          "high": 215.14,
+          "low": 208.83,
+          "close": 209.87,
+          "volume": 37846600
+        },
+        {
+          "timestamp": 1773892800000,
+          "open": 207.06,
+          "high": 209.12,
+          "low": 206.05,
+          "close": 208.76,
+          "volume": 36440600
+        },
+        {
+          "timestamp": 1773979200000,
+          "open": 207.4,
+          "high": 207.54,
+          "low": 204.32,
+          "close": 205.37,
+          "volume": 63694600
+        },
+        {
+          "timestamp": 1774238400000,
+          "open": 209.79,
+          "high": 212.8,
+          "low": 209.51,
+          "close": 210.14,
+          "volume": 44277400
+        },
+        {
+          "timestamp": 1774324800000,
+          "open": 207.95,
+          "high": 209.35,
+          "low": 206.64,
+          "close": 207.24,
+          "volume": 35351400
+        },
+        {
+          "timestamp": 1774411200000,
+          "open": 211.56,
+          "high": 213.07,
+          "low": 209.9,
+          "close": 211.71,
+          "volume": 36388800
+        },
+        {
+          "timestamp": 1774497600000,
+          "open": 210.61,
+          "high": 212.89,
+          "low": 207.12,
+          "close": 207.54,
+          "volume": 46746000
+        },
+        {
+          "timestamp": 1774584000000,
+          "open": 206.46,
+          "high": 206.6,
+          "low": 199.14,
+          "close": 199.34,
+          "volume": 56009800
+        },
+        {
+          "timestamp": 1774843200000,
+          "open": 201.48,
+          "high": 203.8,
+          "low": 199.98,
+          "close": 200.95,
+          "volume": 46373800
+        },
+        {
+          "timestamp": 1774929600000,
+          "open": 204.85,
+          "high": 210.28,
+          "low": 204.14,
+          "close": 208.27,
+          "volume": 58470100
+        },
+        {
+          "timestamp": 1775016000000,
+          "open": 210.44,
+          "high": 213.58,
+          "low": 208.19,
+          "close": 210.57,
+          "volume": 45955400
+        },
+        {
+          "timestamp": 1775102400000,
+          "open": 206.54,
+          "high": 212.21,
+          "low": 204.9,
+          "close": 209.77,
+          "volume": 31453000
+        },
+        {
+          "timestamp": 1775448000000,
+          "open": 209.8,
+          "high": 212.95,
+          "low": 209.59,
+          "close": 212.79,
+          "volume": 25385500
+        },
+        {
+          "timestamp": 1775534400000,
+          "open": 211.24,
+          "high": 213.97,
+          "low": 209.08,
+          "close": 213.77,
+          "volume": 28154600
+        },
+        {
+          "timestamp": 1775620800000,
+          "open": 223.79,
+          "high": 226.1,
+          "low": 219.62,
+          "close": 221.25,
+          "volume": 51092700
+        },
+        {
+          "timestamp": 1775707200000,
+          "open": 225.23,
+          "high": 233.8,
+          "low": 223.27,
+          "close": 233.65,
+          "volume": 65964200
+        },
+        {
+          "timestamp": 1775793600000,
+          "open": 235.3,
+          "high": 240.43,
+          "low": 235.21,
+          "close": 238.38,
+          "volume": 56912800
+        },
+        {
+          "timestamp": 1776052800000,
+          "open": 237.45,
+          "high": 240.0,
+          "low": 235.75,
+          "close": 239.89,
+          "volume": 42166200
+        },
+        {
+          "timestamp": 1776139200000,
+          "open": 241.78,
+          "high": 252.18,
+          "low": 241.78,
+          "close": 249.02,
+          "volume": 72685000
+        },
+        {
+          "timestamp": 1776225600000,
+          "open": 249.25,
+          "high": 250.44,
+          "low": 247.2,
+          "close": 248.5,
+          "volume": 43045200
+        },
+        {
+          "timestamp": 1776312000000,
+          "open": 248.51,
+          "high": 250.0,
+          "low": 244.2,
+          "close": 249.7,
+          "volume": 41895700
+        },
+        {
+          "timestamp": 1776398400000,
+          "open": 254.99,
+          "high": 256.18,
+          "low": 250.11,
+          "close": 250.56,
+          "volume": 52029300
+        },
+        {
+          "timestamp": 1776657600000,
+          "open": 249.19,
+          "high": 250.18,
+          "low": 245.37,
+          "close": 248.28,
+          "volume": 39463100
+        },
+        {
+          "timestamp": 1776744000000,
+          "open": 255.09,
+          "high": 255.09,
+          "low": 249.1,
+          "close": 249.91,
+          "volume": 42922400
+        },
+        {
+          "timestamp": 1776830400000,
+          "open": 252.44,
+          "high": 255.94,
+          "low": 250.33,
+          "close": 255.36,
+          "volume": 36065100
+        },
+        {
+          "timestamp": 1776916800000,
+          "open": 255.39,
+          "high": 258.79,
+          "low": 253.07,
+          "close": 255.08,
+          "volume": 39091400
+        },
+        {
+          "timestamp": 1777003200000,
+          "open": 259.98,
+          "high": 264.5,
+          "low": 257.69,
+          "close": 263.99,
+          "volume": 53777400
+        },
+        {
+          "timestamp": 1777262400000,
+          "open": 263.46,
+          "high": 264.15,
+          "low": 260.34,
+          "close": 261.12,
+          "volume": 44906800
+        },
+        {
+          "timestamp": 1777348800000,
+          "open": 258.39,
+          "high": 261.03,
+          "low": 256.63,
+          "close": 259.7,
+          "volume": 42204400
+        },
+        {
+          "timestamp": 1777435200000,
+          "open": 257.99,
+          "high": 265.91,
+          "low": 257.7,
+          "close": 263.04,
+          "volume": 72367900
+        },
+        {
+          "timestamp": 1777521600000,
+          "open": 273.17,
+          "high": 273.88,
+          "low": 256.16,
+          "close": 265.06,
+          "volume": 100974900
+        },
+        {
+          "timestamp": 1777608000000,
+          "open": 265.58,
+          "high": 273.32,
+          "low": 262.74,
+          "close": 268.26,
+          "volume": 50825200
+        },
+        {
+          "timestamp": 1777867200000,
+          "open": 268.8,
+          "high": 276.1,
+          "low": 268.8,
+          "close": 272.05,
+          "volume": 49083700
+        },
+        {
+          "timestamp": 1777953600000,
+          "open": 276.08,
+          "high": 278.56,
+          "low": 272.38,
+          "close": 273.55,
+          "volume": 41908500
+        },
+        {
+          "timestamp": 1778040000000,
+          "open": 272.89,
+          "high": 277.8,
+          "low": 272.21,
+          "close": 274.99,
+          "volume": 44552000
+        },
+        {
+          "timestamp": 1778126400000,
+          "open": 275.02,
+          "high": 276.63,
+          "low": 270.49,
+          "close": 271.17,
+          "volume": 35892900
+        },
+        {
+          "timestamp": 1778212800000,
+          "open": 271.63,
+          "high": 274.0,
+          "low": 269.95,
+          "close": 272.68,
+          "volume": 34732700
+        },
+        {
+          "timestamp": 1778472000000,
+          "open": 269.84,
+          "high": 273.63,
+          "low": 268.48,
+          "close": 268.99,
+          "volume": 38176700
+        },
+        {
+          "timestamp": 1778558400000,
+          "open": 266.71,
+          "high": 267.65,
+          "low": 262.63,
+          "close": 265.82,
+          "volume": 36776200
+        },
+        {
+          "timestamp": 1778644800000,
+          "open": 264.43,
+          "high": 270.72,
+          "low": 263.2,
+          "close": 270.13,
+          "volume": 39670900
+        },
+        {
+          "timestamp": 1778731200000,
+          "open": 269.15,
+          "high": 270.78,
+          "low": 266.63,
+          "close": 267.22,
+          "volume": 31338400
+        },
+        {
+          "timestamp": 1778817600000,
+          "open": 262.5,
+          "high": 264.36,
+          "low": 260.89,
+          "close": 264.14,
+          "volume": 40770300
+        },
+        {
+          "timestamp": 1779076800000,
+          "open": 263.87,
+          "high": 268.85,
+          "low": 262.53,
+          "close": 264.86,
+          "volume": 33690800
+        },
+        {
+          "timestamp": 1779163200000,
+          "open": 262.04,
+          "high": 262.25,
+          "low": 255.19,
+          "close": 259.34,
+          "volume": 40340700
+        },
+        {
+          "timestamp": 1779249600000,
+          "open": 260.05,
+          "high": 265.58,
+          "low": 259.53,
+          "close": 265.01,
+          "volume": 34933200
+        },
+        {
+          "timestamp": 1779336000000,
+          "open": 263.5,
+          "high": 269.49,
+          "low": 261.37,
+          "close": 268.46,
+          "volume": 36591700
+        },
+        {
+          "timestamp": 1779422400000,
+          "open": 268.66,
+          "high": 269.79,
+          "low": 266.24,
+          "close": 266.32,
+          "volume": 27535500
+        },
+        {
+          "timestamp": 1779768000000,
+          "open": 267.94,
+          "high": 269.3,
+          "low": 262.07,
+          "close": 265.29,
+          "volume": 38028100
+        },
+        {
+          "timestamp": 1779854400000,
+          "open": 266.15,
+          "high": 272.41,
+          "low": 265.7,
+          "close": 271.85,
+          "volume": 40061900
+        },
+        {
+          "timestamp": 1779940800000,
+          "open": 272.27,
+          "high": 274.5,
+          "low": 267.44,
+          "close": 274.0,
+          "volume": 40630400
+        },
+        {
+          "timestamp": 1780027200000,
+          "open": 271.29,
+          "high": 274.75,
+          "low": 269.64,
+          "close": 270.64,
+          "volume": 54749600
+        },
+        {
+          "timestamp": 1780286400000,
+          "open": 266.29,
+          "high": 266.63,
+          "low": 260.7,
+          "close": 261.26,
+          "volume": 53604400
+        },
+        {
+          "timestamp": 1780372800000,
+          "open": 257.16,
+          "high": 261.2,
+          "low": 254.37,
+          "close": 256.52,
+          "volume": 41811000
+        },
+        {
+          "timestamp": 1780459200000,
+          "open": 254.7,
+          "high": 257.09,
+          "low": 247.71,
+          "close": 250.02,
+          "volume": 51394200
+        },
+        {
+          "timestamp": 1780545600000,
+          "open": 253.12,
+          "high": 255.83,
+          "low": 251.75,
+          "close": 253.79,
+          "volume": 35609800
+        },
+        {
+          "timestamp": 1780632000000,
+          "open": 254.26,
+          "high": 256.38,
+          "low": 245.78,
+          "close": 246.03,
+          "volume": 55607800
+        },
+        {
+          "timestamp": 1780891200000,
+          "open": 246.68,
+          "high": 249.42,
+          "low": 243.36,
+          "close": 245.22,
+          "volume": 33899500
+        },
+        {
+          "timestamp": 1780977600000,
+          "open": 247.73,
+          "high": 250.43,
+          "low": 240.4,
+          "close": 244.19,
+          "volume": 44425400
+        },
+        {
+          "timestamp": 1781064000000,
+          "open": 243.61,
+          "high": 244.07,
+          "low": 237.45,
+          "close": 238.0,
+          "volume": 38590200
+        },
+        {
+          "timestamp": 1781150400000,
+          "open": 237.93,
+          "high": 242.14,
+          "low": 235.18,
+          "close": 241.51,
+          "volume": 41335400
+        },
+        {
+          "timestamp": 1781236800000,
+          "open": 243.21,
+          "high": 243.36,
+          "low": 233.59,
+          "close": 238.55,
+          "volume": 51186600
+        },
+        {
+          "timestamp": 1781496000000,
+          "open": 245.02,
+          "high": 247.81,
+          "low": 244.73,
+          "close": 246.02,
+          "volume": 41711600
+        },
+        {
+          "timestamp": 1781582400000,
+          "open": 248.0,
+          "high": 249.51,
+          "low": 245.45,
+          "close": 246.0,
+          "volume": 35187400
+        },
+        {
+          "timestamp": 1781668800000,
+          "open": 244.9,
+          "high": 245.91,
+          "low": 236.0,
+          "close": 237.5,
+          "volume": 44780800
+        },
+        {
+          "timestamp": 1781755200000,
+          "open": 240.12,
+          "high": 245.73,
+          "low": 236.02,
+          "close": 244.39,
+          "volume": 75624400
+        },
+        {
+          "timestamp": 1782100800000,
+          "open": 240.08,
+          "high": 242.0,
+          "low": 232.24,
+          "close": 232.79,
+          "volume": 68233300
+        },
+        {
+          "timestamp": 1782187200000,
+          "open": 232.55,
+          "high": 236.87,
+          "low": 232.0,
+          "close": 234.98,
+          "volume": 23475939
+        }
+      ],
+      "pick": {
+        "strike": 215.0,
+        "dte": 31,
+        "premium": 2.32,
+        "annualized_roc": 12.7,
+        "prob_otm": 80.2,
+        "iv": 35.3,
+        "iv_rank": 60.4,
+        "iv_rank_real": false,
+        "source": "live",
+        "earnings_days": 37,
+        "want_to_own": true,
+        "levels": {
+          "keltner": {
+            "upper": 273.26,
+            "sma": 249.93,
+            "lower": 226.6
+          },
+          "spot": 234.98
+        },
+        "free_shares": {
+          "assignment_basis": 212.68,
+          "basis_discount_pct": 9.5,
+          "prob_assigned_pct": 19.8,
+          "wheel_fit": 61.7,
+          "summary": "If assigned you own at $212.68, 9.5% below today, earning 12.7% annualized on the cash while you wait."
+        },
+        "score": 47.9,
+        "direction": "cash-secured put",
+        "avoid": false,
+        "factors": {
+          "richness": 0.409,
+          "safety": 0.763,
+          "liquidity": 0.394,
+          "free_shares": 0.505,
+          "structure": 0.18
+        },
+        "why": "fair premium, safe distance, but illiquid, hard to fill.",
+        "lanes": [
+          "liquid"
+        ]
+      }
+    },
+    {
       "ticker": "NVTS",
-      "spot": 21.76,
+      "spot": 21.8,
       "candles": [
         {
           "timestamp": 1761192000000,
@@ -17844,8 +17844,8 @@
           "open": 21.67,
           "high": 23.69,
           "low": 21.62,
-          "close": 21.76,
-          "volume": 11684972
+          "close": 21.8,
+          "volume": 11695549
         }
       ],
       "pick": {
@@ -17854,36 +17854,36 @@
         "premium": 0.46,
         "annualized_roc": 36.1,
         "prob_otm": 81.4,
-        "iv": 120.8,
-        "iv_rank": 70.1,
+        "iv": 121.2,
+        "iv_rank": 70.0,
         "iv_rank_real": false,
         "source": "live",
         "earnings_days": 55,
         "want_to_own": false,
         "levels": {
           "keltner": {
-            "upper": 33.63,
+            "upper": 33.64,
             "sma": 25.21,
             "lower": 16.78
           },
-          "spot": 21.76
+          "spot": 21.8
         },
         "free_shares": {
           "assignment_basis": 14.54,
-          "basis_discount_pct": 33.2,
+          "basis_discount_pct": 33.3,
           "prob_assigned_pct": 18.6,
           "wheel_fit": 100.0,
-          "summary": "If assigned you own at $14.54, 33.2% below today, earning 36.1% annualized on the cash while you wait."
+          "summary": "If assigned you own at $14.54, 33.3% below today, earning 36.1% annualized on the cash while you wait."
         },
-        "score": 46.2,
+        "score": 46.4,
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
-          "richness": 0.346,
-          "safety": 0.799,
+          "richness": 0.349,
+          "safety": 0.8,
           "liquidity": 0.0,
           "free_shares": 0.66,
-          "structure": 0.295
+          "structure": 0.298
         },
         "why": "thin premium, safe distance, but illiquid, hard to fill, good free-shares fit if assigned.",
         "lanes": [
@@ -17893,7 +17893,7 @@
     },
     {
       "ticker": "AXTI",
-      "spot": 80.12,
+      "spot": 80.72,
       "candles": [
         {
           "timestamp": 1761192000000,
@@ -19220,8 +19220,8 @@
           "open": 83.95,
           "high": 88.42,
           "low": 79.77,
-          "close": 80.12,
-          "volume": 6229714
+          "close": 80.72,
+          "volume": 6279150
         }
       ],
       "pick": {
@@ -19229,37 +19229,37 @@
         "dte": 31,
         "premium": 1.82,
         "annualized_roc": 43.0,
-        "prob_otm": 81.3,
-        "iv": 147.8,
-        "iv_rank": 62.3,
+        "prob_otm": 81.4,
+        "iv": 149.2,
+        "iv_rank": 61.7,
         "iv_rank_real": false,
         "source": "live",
         "earnings_days": 37,
         "want_to_own": false,
         "levels": {
           "keltner": {
-            "upper": 142.78,
-            "sma": 99.47,
-            "lower": 56.16
+            "upper": 142.81,
+            "sma": 99.5,
+            "lower": 56.19
           },
-          "spot": 80.12
+          "spot": 80.72
         },
         "free_shares": {
           "assignment_basis": 48.17,
-          "basis_discount_pct": 39.9,
-          "prob_assigned_pct": 18.7,
+          "basis_discount_pct": 40.3,
+          "prob_assigned_pct": 18.6,
           "wheel_fit": 100.0,
-          "summary": "If assigned you own at $48.17, 39.9% below today, earning 43.0% annualized on the cash while you wait."
+          "summary": "If assigned you own at $48.17, 40.3% below today, earning 43.0% annualized on the cash while you wait."
         },
-        "score": 45.5,
+        "score": 46.0,
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
-          "richness": 0.334,
-          "safety": 0.797,
+          "richness": 0.342,
+          "safety": 0.8,
           "liquidity": 0.0,
           "free_shares": 0.66,
-          "structure": 0.277
+          "structure": 0.283
         },
         "why": "thin premium, safe distance, but illiquid, hard to fill, good free-shares fit if assigned.",
         "lanes": [
@@ -20597,7 +20597,7 @@
           "high": 92.75,
           "low": 84.05,
           "close": 89.06,
-          "volume": 1480221
+          "volume": 1480548
         }
       ],
       "pick": {
@@ -20645,7 +20645,7 @@
     },
     {
       "ticker": "AAOI",
-      "spot": 152.82,
+      "spot": 153.0,
       "candles": [
         {
           "timestamp": 1761192000000,
@@ -21972,8 +21972,8 @@
           "open": 158.18,
           "high": 160.99,
           "low": 151.21,
-          "close": 152.82,
-          "volume": 7156194
+          "close": 153.0,
+          "volume": 7165675
         }
       ],
       "pick": {
@@ -21982,7 +21982,7 @@
         "premium": 2.7,
         "annualized_roc": 33.5,
         "prob_otm": 84.0,
-        "iv": 137.7,
+        "iv": 137.9,
         "iv_rank": 39.0,
         "iv_rank_real": false,
         "source": "live",
@@ -21990,28 +21990,28 @@
         "want_to_own": false,
         "levels": {
           "keltner": {
-            "upper": 244.88,
-            "sma": 176.45,
-            "lower": 108.01
+            "upper": 244.89,
+            "sma": 176.46,
+            "lower": 108.02
           },
-          "spot": 152.82
+          "spot": 153.0
         },
         "free_shares": {
           "assignment_basis": 92.3,
-          "basis_discount_pct": 39.6,
+          "basis_discount_pct": 39.7,
           "prob_assigned_pct": 16.0,
           "wheel_fit": 98.0,
-          "summary": "If assigned you own at $92.30, 39.6% below today, earning 33.5% annualized on the cash while you wait."
+          "summary": "If assigned you own at $92.30, 39.7% below today, earning 33.5% annualized on the cash while you wait."
         },
-        "score": 45.0,
+        "score": 45.1,
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
-          "richness": 0.243,
-          "safety": 0.878,
+          "richness": 0.245,
+          "safety": 0.879,
           "liquidity": 0.002,
           "free_shares": 0.626,
-          "structure": 0.327
+          "structure": 0.329
         },
         "why": "thin premium, safe distance, but illiquid, hard to fill, good free-shares fit if assigned.",
         "lanes": [
@@ -22021,7 +22021,7 @@
     },
     {
       "ticker": "RGTI",
-      "spot": 21.47,
+      "spot": 21.46,
       "candles": [
         {
           "timestamp": 1761192000000,
@@ -23348,8 +23348,8 @@
           "open": 20.67,
           "high": 22.57,
           "low": 20.24,
-          "close": 21.47,
-          "volume": 31769733
+          "close": 21.46,
+          "volume": 31802996
         }
       ],
       "pick": {
@@ -23370,7 +23370,7 @@
             "sma": 22.7,
             "lower": 15.82
           },
-          "spot": 21.47
+          "spot": 21.46
         },
         "free_shares": {
           "assignment_basis": 14.65,
@@ -23387,7 +23387,7 @@
           "safety": 0.875,
           "liquidity": 0.016,
           "free_shares": 0.493,
-          "structure": 0.411
+          "structure": 0.41
         },
         "why": "thin premium, safe distance, but illiquid, hard to fill.",
         "lanes": [
@@ -23397,7 +23397,7 @@
     },
     {
       "ticker": "ASTS",
-      "spot": 76.03,
+      "spot": 76.06,
       "candles": [
         {
           "timestamp": 1761192000000,
@@ -24724,8 +24724,8 @@
           "open": 71.86,
           "high": 77.79,
           "low": 71.66,
-          "close": 76.03,
-          "volume": 11675662
+          "close": 76.06,
+          "volume": 11693861
         }
       ],
       "pick": {
@@ -24735,7 +24735,7 @@
         "annualized_roc": 27.0,
         "prob_otm": 83.3,
         "iv": 101.0,
-        "iv_rank": 97.2,
+        "iv_rank": 97.3,
         "iv_rank_real": false,
         "source": "live",
         "earnings_days": 55,
@@ -24746,7 +24746,7 @@
             "sma": 98.07,
             "lower": 68.1
           },
-          "spot": 76.03
+          "spot": 76.06
         },
         "free_shares": {
           "assignment_basis": 53.74,
@@ -24763,7 +24763,7 @@
           "safety": 0.858,
           "liquidity": 0.069,
           "free_shares": 0.482,
-          "structure": 0.132
+          "structure": 0.133
         },
         "why": "fair premium, safe distance, but illiquid, hard to fill.",
         "lanes": [
@@ -24773,7 +24773,7 @@
     },
     {
       "ticker": "PL",
-      "spot": 28.71,
+      "spot": 28.73,
       "candles": [
         {
           "timestamp": 1761192000000,
@@ -26100,8 +26100,8 @@
           "open": 27.33,
           "high": 29.24,
           "low": 27.33,
-          "close": 28.71,
-          "volume": 5189117
+          "close": 28.73,
+          "volume": 5204147
         }
       ],
       "pick": {
@@ -26110,7 +26110,7 @@
         "premium": 0.25,
         "annualized_roc": 15.5,
         "prob_otm": 89.5,
-        "iv": 101.9,
+        "iv": 102.0,
         "iv_rank": 94.5,
         "iv_rank_real": false,
         "source": "live",
@@ -26122,7 +26122,7 @@
             "sma": 37.37,
             "lower": 26.34
           },
-          "spot": 28.71
+          "spot": 28.73
         },
         "free_shares": {
           "assignment_basis": 18.75,
@@ -26139,7 +26139,7 @@
           "safety": 1.0,
           "liquidity": 0.0,
           "free_shares": 0.226,
-          "structure": 0.107
+          "structure": 0.108
         },
         "why": "fair premium, safe distance, but illiquid, hard to fill.",
         "lanes": [
@@ -26149,7 +26149,7 @@
     },
     {
       "ticker": "INTC",
-      "spot": 135.04,
+      "spot": 135.13,
       "candles": [
         {
           "timestamp": 1761192000000,
@@ -27476,8 +27476,8 @@
           "open": 129.73,
           "high": 137.98,
           "low": 128.35,
-          "close": 135.04,
-          "volume": 72361259
+          "close": 135.13,
+          "volume": 72445523
         }
       ],
       "pick": {
@@ -27486,36 +27486,36 @@
         "premium": 3.42,
         "annualized_roc": 38.7,
         "prob_otm": 77.6,
-        "iv": 100.4,
-        "iv_rank": 74.2,
+        "iv": 100.5,
+        "iv_rank": 74.1,
         "iv_rank_real": false,
         "source": "live",
         "earnings_days": 30,
         "want_to_own": true,
         "levels": {
           "keltner": {
-            "upper": 147.91,
+            "upper": 147.92,
             "sma": 118.23,
-            "lower": 88.54
+            "lower": 88.55
           },
-          "spot": 135.04
+          "spot": 135.13
         },
         "free_shares": {
           "assignment_basis": 100.58,
-          "basis_discount_pct": 25.5,
+          "basis_discount_pct": 25.6,
           "prob_assigned_pct": 22.4,
           "wheel_fit": 100.0,
-          "summary": "If assigned you own at $100.58, 25.5% below today, earning 38.7% annualized on the cash while you wait."
+          "summary": "If assigned you own at $100.58, 25.6% below today, earning 38.7% annualized on the cash while you wait."
         },
         "score": 0.0,
         "direction": "avoid",
         "avoid": true,
         "factors": {
-          "richness": 0.581,
+          "richness": 0.582,
           "safety": 0.686,
           "liquidity": 0.012,
           "free_shares": 1.0,
-          "structure": 0.783
+          "structure": 0.785
         },
         "why": "Skip. Earnings print lands before expiry, do not sell premium through it.",
         "lanes": [
@@ -27525,7 +27525,7 @@
     },
     {
       "ticker": "AAL",
-      "spot": 16.3,
+      "spot": 16.29,
       "candles": [
         {
           "timestamp": 1761192000000,
@@ -28852,8 +28852,8 @@
           "open": 15.76,
           "high": 16.35,
           "low": 15.76,
-          "close": 16.3,
-          "volume": 77795378
+          "close": 16.29,
+          "volume": 77981834
         }
       ],
       "pick": {
@@ -28862,7 +28862,7 @@
         "premium": 0.38,
         "annualized_roc": 30.5,
         "prob_otm": 73.1,
-        "iv": 59.0,
+        "iv": 58.9,
         "iv_rank": 70.6,
         "iv_rank_real": false,
         "source": "live",
@@ -28874,7 +28874,7 @@
             "sma": 14.67,
             "lower": 12.69
           },
-          "spot": 16.3
+          "spot": 16.29
         },
         "free_shares": {
           "assignment_basis": 14.12,
@@ -28887,11 +28887,11 @@
         "direction": "avoid",
         "avoid": true,
         "factors": {
-          "richness": 0.685,
+          "richness": 0.683,
           "safety": 0.548,
           "liquidity": 0.0,
           "free_shares": 0.899,
-          "structure": 0.911
+          "structure": 0.909
         },
         "why": "Skip. Earnings print lands before expiry, do not sell premium through it.",
         "lanes": [
@@ -28901,7 +28901,7 @@
     },
     {
       "ticker": "TSLA",
-      "spot": 383.75,
+      "spot": 384.11,
       "candles": [
         {
           "timestamp": 1761192000000,
@@ -30228,8 +30228,8 @@
           "open": 392.46,
           "high": 392.59,
           "low": 382.05,
-          "close": 383.75,
-          "volume": 25664613
+          "close": 384.11,
+          "volume": 25722523
         }
       ],
       "pick": {
@@ -30237,37 +30237,37 @@
         "dte": 31,
         "premium": 4.78,
         "annualized_roc": 16.8,
-        "prob_otm": 81.0,
-        "iv": 50.3,
-        "iv_rank": 72.0,
+        "prob_otm": 81.1,
+        "iv": 50.5,
+        "iv_rank": 71.6,
         "iv_rank_real": false,
         "source": "live",
         "earnings_days": 29,
         "want_to_own": true,
         "levels": {
           "keltner": {
-            "upper": 463.43,
-            "sma": 410.94,
-            "lower": 358.46
+            "upper": 463.45,
+            "sma": 410.96,
+            "lower": 358.48
           },
-          "spot": 383.75
+          "spot": 384.11
         },
         "free_shares": {
           "assignment_basis": 330.23,
-          "basis_discount_pct": 13.9,
-          "prob_assigned_pct": 19.0,
+          "basis_discount_pct": 14.0,
+          "prob_assigned_pct": 18.9,
           "wheel_fit": 76.4,
-          "summary": "If assigned you own at $330.23, 13.9% below today, earning 16.8% annualized on the cash while you wait."
+          "summary": "If assigned you own at $330.23, 14.0% below today, earning 16.8% annualized on the cash while you wait."
         },
         "score": 0.0,
         "direction": "avoid",
         "avoid": true,
         "factors": {
-          "richness": 0.447,
-          "safety": 0.789,
+          "richness": 0.45,
+          "safety": 0.791,
           "liquidity": 0.52,
           "free_shares": 0.595,
-          "structure": 0.241
+          "structure": 0.244
         },
         "why": "Skip. Earnings print lands before expiry, do not sell premium through it.",
         "lanes": [
@@ -30277,7 +30277,7 @@
     },
     {
       "ticker": "NFLX",
-      "spot": 72.96,
+      "spot": 72.94,
       "candles": [
         {
           "timestamp": 1761192000000,
@@ -31604,8 +31604,8 @@
           "open": 73.38,
           "high": 73.96,
           "low": 72.63,
-          "close": 72.96,
-          "volume": 22764224
+          "close": 72.94,
+          "volume": 22835479
         }
       ],
       "pick": {
@@ -31614,7 +31614,7 @@
         "premium": 1.27,
         "annualized_roc": 22.3,
         "prob_otm": 73.7,
-        "iv": 43.7,
+        "iv": 43.6,
         "iv_rank": 28.6,
         "iv_rank_real": false,
         "source": "live",
@@ -31626,21 +31626,21 @@
             "sma": 81.5,
             "lower": 74.37
           },
-          "spot": 72.96
+          "spot": 72.94
         },
         "free_shares": {
           "assignment_basis": 65.73,
           "basis_discount_pct": 9.9,
           "prob_assigned_pct": 26.3,
-          "wheel_fit": 75.7,
+          "wheel_fit": 75.6,
           "summary": "If assigned you own at $65.73, 9.9% below today, earning 22.3% annualized on the cash while you wait."
         },
         "score": 0.0,
         "direction": "avoid",
         "avoid": true,
         "factors": {
-          "richness": 0.688,
-          "safety": 0.568,
+          "richness": 0.686,
+          "safety": 0.567,
           "liquidity": 0.49,
           "free_shares": 0.718,
           "structure": 0.0
@@ -31653,7 +31653,7 @@
     },
     {
       "ticker": "T",
-      "spot": 22.9,
+      "spot": 22.88,
       "candles": [
         {
           "timestamp": 1761192000000,
@@ -32980,8 +32980,8 @@
           "open": 22.31,
           "high": 22.9,
           "low": 22.19,
-          "close": 22.9,
-          "volume": 30047351
+          "close": 22.88,
+          "volume": 30109659
         }
       ],
       "pick": {
@@ -32989,9 +32989,9 @@
         "dte": 31,
         "premium": 0.27,
         "annualized_roc": 15.1,
-        "prob_otm": 78.1,
-        "iv": 37.2,
-        "iv_rank": 85.9,
+        "prob_otm": 78.0,
+        "iv": 37.0,
+        "iv_rank": 85.2,
         "iv_rank_real": false,
         "source": "live",
         "earnings_days": 29,
@@ -33002,24 +33002,24 @@
             "sma": 23.44,
             "lower": 21.61
           },
-          "spot": 22.9
+          "spot": 22.88
         },
         "free_shares": {
           "assignment_basis": 20.73,
-          "basis_discount_pct": 9.5,
-          "prob_assigned_pct": 21.9,
-          "wheel_fit": 64.7,
-          "summary": "If assigned you own at $20.73, 9.5% below today, earning 15.1% annualized on the cash while you wait."
+          "basis_discount_pct": 9.4,
+          "prob_assigned_pct": 22.0,
+          "wheel_fit": 64.4,
+          "summary": "If assigned you own at $20.73, 9.4% below today, earning 15.1% annualized on the cash while you wait."
         },
         "score": 0.0,
         "direction": "avoid",
         "avoid": true,
         "factors": {
-          "richness": 0.758,
-          "safety": 0.701,
+          "richness": 0.747,
+          "safety": 0.698,
           "liquidity": 0.07,
           "free_shares": 0.559,
-          "structure": 0.353
+          "structure": 0.347
         },
         "why": "Skip. Earnings print lands before expiry, do not sell premium through it.",
         "lanes": [
@@ -33029,18 +33029,11 @@
     }
   ],
   "changes": {
-    "new": [
-      "NVDA",
-      "VSH",
-      "NBIS",
-      "IREN",
-      "MRVL",
-      "CRDO"
-    ],
+    "new": [],
     "gone": [],
     "to_avoid": [],
     "from_avoid": [],
     "movers": []
   },
-  "prev_generated_at": null
+  "prev_generated_at": "2026-06-23T16:39:24+00:00"
 }
