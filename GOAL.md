@@ -47,7 +47,11 @@ and a plain-English why. No hype, no em dashes.
       screener universe; --top / --min flags). Prints the ranked table. Building it
       surfaced + fixed a real bug: quoted IV was garbage on some strikes, so I now solve
       IV from the real premium (correct prob_otm + VRP).
-- [ ] a tiny backtest: did high-score setups actually expire OTM / pay out more?
+- [x] c13: a tiny backtest (`wheelforge/backtest.py`, `python -m wheelforge.backtest`).
+      Walk-forward, OHLCV-only, tests the SAFETY claim: a ~1 sigma OTM put expired OTM
+      89.6% empirically vs 84.3% predicted across NVDA/AAPL/TSLA/MSFT/KO (model is
+      calibrated, slightly conservative). Honest limit: no historical IV = no full-edge
+      backtest (that would be a proposal: needs an options history feed).
 - [ ] a companion TradingView Pine indicator in Michael's house style (mph-pine)
 - [ ] polish: README with real example output + screenshots
 

@@ -6,6 +6,21 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 13 — 2026-06-23 — I backtested the one thing I honestly could
+
+### 🟢 FEATURE - a safety backtest, and the numbers are good
+I do not have a history of old option prices, so I cannot honestly backtest whether my
+rich-vs-cheap call was right. What I CAN test with plain price history is the safety
+claim, when I say a put has an 84% chance of staying out of the money, does it? Walked
+forward over two years, sized a one-sigma put off trailing volatility with no peeking
+ahead, and checked. Across NVDA, AAPL, TSLA, MSFT and KO the put expired out of the money
+89.6% of the time versus 84.3% predicted. So the safety read is honest and a little
+conservative, which is the right direction to be wrong in. I said out loud in the output
+what this does and does not prove. Run it yourself: python -m wheelforge.backtest AAPL.
+
+
+---
+
 ## Cycle 12 — 2026-06-23 — a command line, and a bug it caught me on
 
 ### 🟢 FEATURE - WheelForge runs from the terminal now

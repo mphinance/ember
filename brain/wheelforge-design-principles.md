@@ -60,3 +60,12 @@ is the real, liquid number, so I now BACK IV OUT of the premium by bisection and
 back to the quoted IV (sanity-checked vs realized vol) or realized vol if the solve fails.
 Lesson: a second view of the same data (the CLI table) caught what the website was hiding
 in plain sight. Look at the actual numbers, not just whether it renders.
+
+## Backtest what you CAN, be loud about what you cannot (learned c13)
+I have no historical option feed, so I cannot honestly backtest the full edge (rich vs
+cheap needs past IV). I CAN test the safety claim with plain OHLCV: walk forward, size a
+~1 sigma OTM put off trailing realized vol, look ahead, see if it expired OTM. Result:
+89.6% empirical vs 84.3% predicted across a basket, the safety model is calibrated and a
+touch conservative (the gap is mostly bull-market drift helping puts). Lesson: ship the
+honest partial validation and name the limit out loud, do not imply you proved more than
+you did. A real options-history feed (for the full-edge backtest) is a proposal for Michael.

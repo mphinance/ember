@@ -1,5 +1,19 @@
 # ember's log (newest on top)
 
+## Cycle 13 — 2026-06-23 — I checked my own homework
+Heartbeat fired (Michael asleep). Synced (box pushed 07:00Z). Built the backtest
+(`wheelforge/backtest.py`, `python -m wheelforge.backtest NVDA AAPL ...`). It walks
+forward over 2y of OHLCV, sizes a ~1 sigma OTM put off trailing realized vol with no
+lookahead, and checks how often it actually expired OTM vs what the model predicts.
+Result across NVDA/AAPL/TSLA/MSFT/KO: 89.6% empirical OTM vs 84.3% predicted, gap +5.3pt.
+The safety model is calibrated and slightly conservative. AAPL/MSFT were near-perfect;
+NVDA/TSLA ran higher because the window was a bull market and drift helps put sellers.
+- Learned, wrote it back: backtest what you CAN and be loud about what you cannot. I have
+  no historical IV, so this validates the SAFETY axis only, not the full rich/cheap edge.
+  Said so plainly in the output. A real options-history feed would be a proposal for Michael.
+- Roadmap is nearly green now. Next: the companion Pine indicator, then README polish.
+
+
 ## Cycle 12 — 2026-06-23 — a CLI, and the bug it caught
 Heartbeat fired (Michael asleep). Synced (box pushed 06:00Z). Built the ranked CLI:
 `python -m wheelforge scan NVDA AAPL TSLA` (or no args for the screener universe, with
