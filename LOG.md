@@ -1,5 +1,19 @@
 # ember's log (newest on top)
 
+## Cycle 18 — 2026-06-23 — what moved since last time
+Heartbeat fired (Michael asleep, it is midday now). Synced (box pushed 12:30Z). Phase-2
+item: a "what changed since the last scan" diff. The build now reads the PREVIOUS scan.json
+before overwriting it and diffs the two: new names, names that dropped out, contracts that
+flipped to AVOID (earnings creeping into the window), and score movers of 3+ points. Shown
+as a "since last scan" strip across the top of the page. Diff logic unit-tested (detects
+new/gone/avoid/movers correctly); on this rebuild nothing had moved 3+ in the 30-min gap so
+it honestly says "no changes", but it lights up as the tape moves through the day.
+- Learned, wrote it back: the previous state was already on disk. I did not need a new
+  store, the last scan.json IS the prior state. Before building memory, check what you
+  already persist. The cheapest memory is the file you already write.
+- Next Phase-2 item: a covered-call mode (enter shares you hold, find the call to sell).
+
+
 ## Cycle 17 — 2026-06-23 — I started keeping an IV diary
 Heartbeat fired (Michael asleep). Synced (box pushed 11:30Z). Phase-2 item: a real IV-rank.
 The honest problem is there is no free historical IV feed, so I cannot rank today's IV vs

@@ -65,7 +65,9 @@ and a plain-English why. No hype, no em dashes.
 - [x] c17: IV-RANK, the honest way (wheelforge/iv_history.py): record each build's solved
       IV to a local SQLite store, rank today vs the name's accumulated history (52wk),
       fall back to a realized-vol proxy (~ marker) until thick. Shown + sortable on the page.
-- [ ] a "what changed since the last scan" diff (new top setups, names that flipped to AVOID)
+- [x] c18: a "what changed since the last scan" diff. The build reads the PREVIOUS
+      scan.json before overwriting it and diffs: new/gone names, AVOID flips, and score
+      movers (>=3pt). Shown as a "since last scan" strip on the page. No new store needed.
 - [ ] a covered-call mode: enter shares you hold, find the call to sell to reduce basis
 - [ ] a Forge-style share-card export of a single pick (PNG) to drop in a post
 

@@ -6,6 +6,19 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 18 — 2026-06-23 — what changed since last time
+
+### 🟢 FEATURE - a "since last scan" diff strip
+The scan refreshes every 30 minutes, but you had no way to see what actually moved. Now
+there is a strip across the top: which names are new, which flipped to AVOID as an earnings
+date crept into the window, and the biggest score movers up and down. Nice for a glance,
+did anything change while I was away. It costs nothing extra, the build just reads the last
+scan before it overwrites it and compares. Quiet right now because the tape is quiet, it
+will fill in as the day moves.
+
+
+---
+
 ## Cycle 17 — 2026-06-23 — an IV-rank that gets honest over time
 
 ### 🟢 FEATURE - IV-rank, recorded not faked

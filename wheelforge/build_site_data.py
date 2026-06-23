@@ -222,7 +222,42 @@ def build_one(ticker, earnings_days=None):
     }
 
 
+def _load_prev():
+    """Snapshot of the PREVIOUS scan (read before we overwrite it) for the diff."""
+    try:
+        with open(OUT) as f:
+            d = json.load(f)
+        prev = {t["ticker"]: {"score": t["pick"].get("score"), "avoid": t["pick"].get("avoid")}
+                for t in d.get("tickers", [])}
+        return prev, d.get("generated_at")
+    except Exception:
+        return {}, None
+
+
+def _compute_changes(prev, tickers):
+    """What moved since the last scan: new/gone names, AVOID flips, score movers."""
+    cur = {t["ticker"]: t["pick"] for t in tickers}
+    movers = []
+    for tk, p in cur.items():
+        pv = prev.get(tk)
+        if pv and pv.get("score") is not None and p.get("score") is not None:
+            d = round(p["score"] - pv["score"], 1)
+            if abs(d) >= 3:
+                movers.append({"ticker": tk, "delta": d})
+    movers.sort(key=lambda x: abs(x["delta"]), reverse=True)
+    return {
+        "new": [tk for tk in cur if tk not in prev][:6],
+        "gone": [tk for tk in prev if tk not in cur][:6],
+        "to_avoid": [tk for tk in cur if cur[tk].get("avoid")
+                     and tk in prev and not prev[tk].get("avoid")][:6],
+        "from_avoid": [tk for tk in cur if not cur[tk].get("avoid")
+                       and tk in prev and prev[tk].get("avoid")][:6],
+        "movers": movers[:6],
+    }
+
+
 def main():
+    prev, prev_ts = _load_prev()
     from wheelforge.universe import combined_universe
     rows = combined_universe()  # liquid lane + high-IV lane (rich premium), lane-tagged
     print(f"universe: {len(rows)} names (liquid + high-IV lanes)")
@@ -248,6 +283,8 @@ def main():
     out = {
         "generated_at": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
         "source_note": note, "dte": DTE, "tickers": tickers,
+        "changes": _compute_changes(prev, tickers),
+        "prev_generated_at": prev_ts,
     }
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     with open(OUT, "w") as f:

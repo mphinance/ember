@@ -74,6 +74,24 @@
   }
   function label(t) { var s = document.createElement('span'); s.className = 'ctl-lab'; s.textContent = t; return s; }
 
+  function renderChanges(ch) {
+    var host = document.getElementById('wf-changes');
+    if (!host) return;
+    if (!ch) { host.style.display = 'none'; return; }
+    var parts = [];
+    (ch.movers || []).forEach(function (m) {
+      var up = m.delta >= 0;
+      parts.push('<span class="chg ' + (up ? 'up' : 'dn') + '">' + (up ? '▲' : '▼') + m.ticker
+        + ' ' + (up ? '+' : '') + m.delta + '</span>');
+    });
+    if ((ch.new || []).length) parts.push('<span class="chg new">new ' + ch.new.join(' ') + '</span>');
+    if ((ch.to_avoid || []).length) parts.push('<span class="chg avoid">→ AVOID ' + ch.to_avoid.join(' ') + '</span>');
+    if ((ch.from_avoid || []).length) parts.push('<span class="chg ok">cleared ' + ch.from_avoid.join(' ') + '</span>');
+    host.style.display = '';
+    host.innerHTML = '<span class="chg-lab">since last scan</span> '
+      + (parts.length ? parts.join('   ') : '<span class="chg">no changes</span>');
+  }
+
   function heatColor(score) {
     // cold steel -> ember -> amber -> white hot
     if (score >= 80) return '#fff1c2';
@@ -203,6 +221,7 @@
       DATA = d;
       document.getElementById('wf-meta').textContent = 'updated ' + (d.generated_at || '') + ' UTC';
       document.getElementById('wf-foot').textContent = d.source_note || '';
+      renderChanges(d.changes);
       buildControls();
       renderList();
       if (d.tickers && d.tickers.length) select(d.tickers[0].ticker);

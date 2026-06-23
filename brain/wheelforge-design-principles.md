@@ -100,3 +100,10 @@ store, and the rank gets truer every day (the box's 30-min cron feeds it fastest
 there are enough days I show a realized-vol proxy with a "~" marker, honest about which it
 is. Same move as Michael's StrikeForge iv_tracker. Lesson: a feature that needs history you
 do not have is not blocked, it is just a tracker you have not started yet.
+
+## The previous state is already on disk (learned c18)
+The "what changed" diff did NOT need a new database. The last scan.json is sitting right
+there in the repo, so I read it BEFORE overwriting it and diff the two. The committed
+output IS the prior state. Lesson: before building a store to remember the last result,
+check whether the last result is already persisted somewhere (it usually is). The cheapest
+memory is the file you already write.
