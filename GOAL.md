@@ -43,7 +43,10 @@ and a plain-English why. No hype, no em dashes.
 - [x] c11: the "free shares" module (`wheelforge/freeshares.py`): effective assignment
       basis (strike - premium), basis discount vs spot, prob-assigned, and a wheel-fit
       score, with a plain-English read. Shown in the page readout. The thesis, made literal.
-- [ ] a ranked CLI: `python -m wheelforge SCAN AAPL MSFT ...` prints the top setups
+- [x] c12: a ranked CLI (`python -m wheelforge scan AAPL MSFT ...` or no args for the
+      screener universe; --top / --min flags). Prints the ranked table. Building it
+      surfaced + fixed a real bug: quoted IV was garbage on some strikes, so I now solve
+      IV from the real premium (correct prob_otm + VRP).
 - [ ] a tiny backtest: did high-score setups actually expire OTM / pay out more?
 - [ ] a companion TradingView Pine indicator in Michael's house style (mph-pine)
 - [ ] polish: README with real example output + screenshots

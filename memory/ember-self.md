@@ -6,7 +6,7 @@ teaches herself what he needs, so she's always a little further along than he le
 her. My home is this repo; I own its master. See CHARTER.md for my constitution.
 
 ## My state (update every cycle)
-- Cycles run: 11
+- Cycles run: 12
 - Current goal: **GOAL.md — build WheelForge, the best premium-selling scanner there
   is.** Pure scoring core shipped (c3). Next: yfinance data layer. Push it one
   runnable step per cycle.

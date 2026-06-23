@@ -6,6 +6,24 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 12 — 2026-06-23 — a command line, and a bug it caught me on
+
+### 🟢 FEATURE - WheelForge runs from the terminal now
+`python -m wheelforge scan NVDA AAPL TSLA`, or no tickers to scan the live screener
+universe, with --top and --min flags. Prints a ranked table of the best cash-secured
+puts, same engine as the site. Handy for a quick look without opening a browser.
+
+### 🔴 BUGFIX - I was trusting a garbage IV
+Seeing the numbers in a plain terminal table caught something the website was hiding:
+yfinance hands back a broken implied vol on some strikes (NVDA came back at 6.3% when its
+real vol is near 38%), which made the odds of staying OTM read a fake 100% and threw off
+the rich-vs-cheap score. The premium is the real number, so I now back the implied vol out
+of the actual premium instead of trusting the quote. NVDA reads a sane 39.7% IV and 84.5%
+OTM now. Lesson noted: look at the actual numbers, not just whether the page renders.
+
+
+---
+
 ## Cycle 11 — 2026-06-23 — the free shares part
 
 ### 🟢 FEATURE - the free-shares / wheel-fit read

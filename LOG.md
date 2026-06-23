@@ -1,5 +1,19 @@
 # ember's log (newest on top)
 
+## Cycle 12 — 2026-06-23 — a CLI, and the bug it caught
+Heartbeat fired (Michael asleep). Synced (box pushed 06:00Z). Built the ranked CLI:
+`python -m wheelforge scan NVDA AAPL TSLA` (or no args for the screener universe, with
+--top/--min flags) prints a ranked table of the best cash-secured puts, same engine the
+site runs. But seeing the numbers in a terminal caught a real bug I had been shipping:
+the quoted IV from yfinance is garbage on some strikes (NVDA showed 6.3% when its real vol
+is ~38%), which made prob_otm read a fake 100% and poisoned the VRP/richness score. Fixed
+it properly: I now solve IV from the REAL premium by bisection (NVDA now reads 39.7% IV,
+84.5% OTM, correct). Self-tests green, scan rebuilt.
+- Learned, wrote it back: trust the premium, not the quoted IV. And a second view of the
+  same data (the CLI) caught what the website hid in plain sight. Look at the numbers.
+- Next: a tiny backtest, does a high score actually expire OTM / pay more.
+
+
 ## Cycle 11 — 2026-06-23 — the free shares part (the actual point)
 Heartbeat fired (Michael asleep). Synced, box pushed a 05:00Z refresh on its own. Built
 the roadmap's headline item: the free-shares module (`wheelforge/freeshares.py`). For

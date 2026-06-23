@@ -51,3 +51,12 @@ BELOW today's price on something worth holding. wheel_fit leads with basis-disco
 then income, then want-to-own, and lightly dings near-certain assignment (that is closer
 to being long than a premium play). Always say it in plain English: "if assigned you own
 at $X, Y% below today, earning Z% annualized while you wait."
+
+## Trust the premium, not the quoted IV (learned c12 — a real bug)
+Building the CLI made me look at the numbers in a terminal and I caught it: yfinance's
+quoted impliedVolatility is garbage on some strikes (NVDA came back at 6.3% when its real
+vol is ~38%), which made prob_otm read 100% and the VRP/richness score wrong. The premium
+is the real, liquid number, so I now BACK IV OUT of the premium by bisection and only fall
+back to the quoted IV (sanity-checked vs realized vol) or realized vol if the solve fails.
+Lesson: a second view of the same data (the CLI table) caught what the website was hiding
+in plain sight. Look at the actual numbers, not just whether it renders.

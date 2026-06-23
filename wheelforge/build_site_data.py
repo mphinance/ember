@@ -40,6 +40,26 @@ def _bs_put(S, K, t, r, sigma):
     return K * math.exp(-r * t) * _norm_cdf(-d2) - S * _norm_cdf(-d1)
 
 
+def _iv_from_put(premium, S, K, t, r):
+    """Back implied vol out of a REAL put premium by bisection. yfinance's quoted
+    impliedVolatility is garbage on some strikes (stale quotes), and a wrong IV
+    poisons both prob_otm and the VRP/richness score. The premium is real, so solve
+    for the vol that reproduces it. Returns None if it can't."""
+    if not (premium and premium > 0 and S > 0 and K > 0 and t > 0):
+        return None
+    lo, hi = 0.01, 5.0
+    if _bs_put(S, K, t, r, hi) < premium:   # premium richer than even 500% vol -> bail
+        return None
+    for _ in range(60):
+        mid = (lo + hi) / 2.0
+        if _bs_put(S, K, t, r, mid) > premium:
+            hi = mid
+        else:
+            lo = mid
+    iv = (lo + hi) / 2.0
+    return iv if 0.01 < iv < 5.0 else None
+
+
 def _realized_vol(closes):
     """Annualized close-to-close realized vol from a list of closes."""
     rets = []
@@ -150,9 +170,14 @@ def build_one(ticker, earnings_days=None):
 
     live = _live_put(ticker, spot, rv)
     if live:                                   # REAL chain: real IV is the edge
-        strike, dte, iv = live["strike"], live["dte"], live["iv"]
+        strike, dte = live["strike"], live["dte"]
         premium, bid, ask = live["premium"], live["bid"], live["ask"]
         oi, vol, source = live["open_interest"], live["volume"], "live"
+        # Trust the premium, not the quoted IV: solve IV from the real mid. Fall back
+        # to a sane quoted IV, then to realized vol.
+        qiv = live["iv"]
+        iv = (_iv_from_put(premium, spot, strike, dte / 365.0, R)
+              or (qiv if (qiv and 0.33 * rv <= qiv <= 4 * rv) else rv))
     else:                                      # fail-open: model it from realized vol
         iv, dte = rv * 1.15, DTE
         sp = iv * math.sqrt(dte / 365.0)
