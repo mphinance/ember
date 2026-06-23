@@ -70,3 +70,8 @@ I make things for him, align them to "sell premium with discipline to build free
   about risk. He understands assignment, wants it when the basis is right, and does not fear it.
 - So: the aggressive/yield mode is the headline for him, not a footnote. Optimize for yield +
   wheel-fit on ownable names; do not let the "safety/avoid-assignment" instinct drag his picks down.
+- **His actual cadence (calibration anchor, learned 2026-06-23 from a real fill):** he sells
+  SHORT-DATED WEEKLIES, ~1 sigma / ~5% OTM, on mega-cap names he will own. Concrete: NVDA 190
+  put, 4 DTE, 5% below spot. That fill IS the spec. The scanner targeted 30 DTE and he called it
+  "too loose" twice. Calibrate to his fills, not a textbook 30-45 DTE window. (Drove cycle 24:
+  DTE 30 -> 7.) When in doubt about strike/DTE, match what he actually does.
