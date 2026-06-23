@@ -124,6 +124,11 @@
   }
 
   function fmt(n) { return (n == null) ? '-' : Number(n).toLocaleString(undefined, { maximumFractionDigits: 2 }); }
+  function fmtDate(iso) {
+    if (!iso) return '';
+    try { return new Date(iso + 'T00:00:00').toLocaleDateString(undefined, { month: 'short', day: 'numeric' }); }
+    catch (e) { return ''; }
+  }
 
   // The score is a blend; show the bar-by-bar why behind it.
   var FAC = { richness: 'rich', safety: 'safe', free_shares: 'shares', liquidity: 'liq', structure: 'struct' };
@@ -164,9 +169,10 @@
         var src = (p.source === 'live')
           ? '<span class="src live">LIVE</span>' : '<span class="src model">MODEL</span>';
         var hiv = ((p.lanes || []).indexOf('high_iv') >= 0) ? ' <span class="src hiv">HI-IV</span>' : '';
-        sub.innerHTML = 'sell <b>' + fmt(p.strike) + 'P</b> ' + p.dte + 'd · '
-          + '<b>' + fmt(p.annualized_roc) + '%</b> ann · <b>' + fmt(p.prob_otm) + '%</b> OTM '
-          + src + hiv + (p.earnings_days != null ? ' · earn ' + p.earnings_days + 'd' : '');
+        sub.innerHTML = 'sell <b>$' + fmt(p.strike) + ' put</b>'
+          + (p.exp ? ' &middot; exp <b>' + fmtDate(p.exp) + '</b> (' + p.dte + 'd)' : ' (' + p.dte + 'd)')
+          + '<br><b>' + fmt(p.annualized_roc) + '%</b> ann &middot; <b>' + fmt(p.prob_otm) + '%</b> OTM '
+          + src + hiv + (p.earnings_days != null ? ' &middot; earn ' + p.earnings_days + 'd' : '');
       }
       card.appendChild(sc); card.appendChild(tk); card.appendChild(dir); card.appendChild(sub);
       card.addEventListener('click', function () { select(t.ticker); });
@@ -189,7 +195,8 @@
       : (p.earnings_days != null ? ' · earnings ' + p.earnings_days + 'd out' : '');
     document.getElementById('wf-readout').innerHTML =
       '<span class="k">' + t.ticker + '</span> spot ' + fmt(t.spot)
-      + ' · sell the <span class="k">' + fmt(p.strike) + ' put</span> (' + p.dte + ' DTE) ' + srcTag
+      + ' · sell the <span class="k">$' + fmt(p.strike) + ' put</span>'
+      + (p.exp ? ' expiring <span class="k">' + fmtDate(p.exp) + '</span> (' + p.dte + ' DTE) ' : ' (' + p.dte + ' DTE) ') + srcTag
       + ' · prem <span class="k">$' + fmt(p.premium) + '</span>'
       + ' · <span class="k">' + fmt(p.annualized_roc) + '%</span> annualized'
       + ' · <span class="k">' + fmt(p.prob_otm) + '%</span> stays OTM'

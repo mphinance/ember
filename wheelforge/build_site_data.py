@@ -92,11 +92,14 @@ def _iv_rank(closes, window=252):
     return 50.0 if hi == lo else round(100.0 * (cur - lo) / (hi - lo), 1)
 
 
-def _nearest_expiry(exps, target_dte):
-    """Pick the listed expiry closest to target_dte days out (>= 7 DTE)."""
+def _nearest_expiry(exps, target_dte, lo=7, hi=45):
+    """Pick the listed expiry nearest target_dte, CONSTRAINED to the sane CSP window
+    [lo, hi] days (default 7-45). A name with only far monthlies should not get pushed
+    out to 60+; we only fall outside the window if nothing at all lands inside it."""
     from datetime import date
-    best, best_d = None, 1e9
     today = date.today()
+    in_win, in_best = None, 1e9
+    any_pick, any_best = None, 1e9
     for e in exps:
         try:
             d = (date.fromisoformat(e) - today).days
@@ -104,9 +107,12 @@ def _nearest_expiry(exps, target_dte):
             continue
         if d < 7:
             continue
-        if abs(d - target_dte) < abs(best_d - target_dte):
-            best, best_d = e, d
-    return best, (int(best_d) if best else None)
+        if abs(d - target_dte) < any_best:
+            any_pick, any_best = (e, d), abs(d - target_dte)
+        if lo <= d <= hi and abs(d - target_dte) < in_best:
+            in_win, in_best = (e, d), abs(d - target_dte)
+    pick = in_win or any_pick
+    return (pick[0], int(pick[1])) if pick else (None, None)
 
 
 def _live_put(ticker, spot, rv):
@@ -136,7 +142,7 @@ def _live_put(ticker, spot, rv):
         if mid <= 0 or iv <= 0:
             return None
         return {
-            "strike": float(row["strike"]), "dte": int(dte), "premium": mid,
+            "strike": float(row["strike"]), "dte": int(dte), "exp": exp, "premium": mid,
             "iv": iv, "bid": bid, "ask": ask,
             "open_interest": int(row.get("openInterest") or 0),
             "volume": int(row.get("volume") or 0),
@@ -179,9 +185,10 @@ def build_one(ticker, earnings_days=None, lanes=None):
     # gives an honest VRP denominator vs the old close-to-close-only RV.
     rv = composite_realized_vol(candles, period=20) or _realized_vol(closes[-63:]) or 0.25
 
+    from datetime import date, timedelta
     live = _live_put(ticker, spot, rv)
     if live:                                   # REAL chain: real IV is the edge
-        strike, dte = live["strike"], live["dte"]
+        strike, dte, exp = live["strike"], live["dte"], live["exp"]
         premium, bid, ask = live["premium"], live["bid"], live["ask"]
         oi, vol, source = live["open_interest"], live["volume"], "live"
         # Trust the premium, not the quoted IV: solve IV from the real mid. Fall back
@@ -197,6 +204,7 @@ def build_one(ticker, earnings_days=None, lanes=None):
         spread = max(0.02, premium * 0.04)
         bid, ask = round(premium - spread / 2, 2), round(premium + spread / 2, 2)
         oi, vol, source = 1500, 250, "modeled"
+        exp = (date.today() + timedelta(days=dte)).isoformat()
 
     t = dte / 365.0
     prob_otm = (_norm_cdf((math.log(spot / strike) + (R - 0.5 * iv * iv) * t) / (iv * math.sqrt(t)))
@@ -224,7 +232,7 @@ def build_one(ticker, earnings_days=None, lanes=None):
     return {
         "ticker": ticker, "spot": round(spot, 2), "candles": candles,
         "pick": {
-            "strike": round(strike, 2), "dte": dte, "premium": round(premium, 2),
+            "strike": round(strike, 2), "dte": dte, "exp": exp, "premium": round(premium, 2),
             "annualized_roc": round(roc * 100, 1), "prob_otm": round(prob_otm * 100, 1),
             "iv": round(iv * 100, 1), "iv_rank": contract["iv_rank"],
             "iv_rank_real": ivr_hist is not None, "source": source,
