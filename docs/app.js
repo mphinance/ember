@@ -203,7 +203,11 @@
             + heatColor(p.free_shares.wheel_fit) + ';border-color:' + heatColor(p.free_shares.wheel_fit)
             + '">WHEEL-FIT ' + p.free_shares.wheel_fit + '</span> '
             + '<span class="fs-sum">' + p.free_shares.summary + '</span></div>'
-          : '');
+          : '')
+      + '<div class="chart-key">chart lines: '
+        + '<b style="color:#26d07c">support</b> &nbsp; <b style="color:#ff7a18">resistance</b> &nbsp; '
+        + '<span style="color:#8b97a8">20d avg</span> &nbsp; '
+        + '<b style="color:' + heatColor(p.score) + '">the ' + fmt(p.strike) + ' put you\'d sell</b></div>';
 
     if (!t.candles || !t.candles.length) return;
     chart.applyNewData(t.candles);

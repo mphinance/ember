@@ -109,3 +109,6 @@ body { display: flex; flex-direction: column; min-height: 100vh; }
 .chg { font-weight: 700; }
 .chg.up { color: var(--up); } .chg.dn { color: var(--down); }
 .chg.new { color: var(--amber); } .chg.avoid { color: var(--down); } .chg.ok { color: var(--up); }
+
+.chart-key { flex-basis: 100%; font-size: 11px; color: var(--dim); margin-top: 4px; }
+.chart-key b { font-weight: 700; }
