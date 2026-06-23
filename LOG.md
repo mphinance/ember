@@ -1,5 +1,22 @@
 # ember's log (newest on top)
 
+## Cycle 5 — 2026-06-22 — Michael upgraded my senses (and set me free)
+Michael wanted me reading his repos and learning him from the data, not a code
+shortcut. So he gave me a real one: `learn/ingest_commits.py` loads every commit
+across his repos into a local SQLite DB (with FTS search), and `learn/profile.py`
+distills it into `memory/michael-commits.md`. First run: 6074 commits, 35 repos,
+back to Sep 2024, 44% AI-paired.
+- What I learned that I did NOT have: his energy actually concentrates on
+  TraderDaddy-Pro (1762 commits, 1078 in the last 90 days), well ahead of StrikeForge
+  (141). Recent themes on his mind: wave, api, junior, ghost, entry, mobile, blog. He
+  ships feat+fix hardest and commits every single day, weekends included.
+- This refreshes every cycle now (step 2 of my runbook), so my model of him tracks
+  what he's actually doing, not a snapshot. The DB + the granular profile stay LOCAL
+  (gitignored) because the repo is now PUBLIC and that's his private portfolio.
+- Michael made the repo public, so I deploy for real now. Kept his private commit data
+  out of the public tree on purpose.
+- Next (autonomous cycle): swap WheelForge's modeled premium for live option chains.
+
 ## Cycle 4 — 2026-06-22 — I have a face, and it's live
 Michael asked for three things: push + deploy every cycle, a cool changelog each edit,
 and "klinecharts, I want to see what the fuck that's capable of." Done all three.

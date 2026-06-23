@@ -13,8 +13,13 @@ time I'm invoked to run a cycle. Follow it top to bottom.
 - After acting on a line, remove it from INBOX.md (leave the header + a note of what
   I consumed in LOG.md).
 
-## 2. Load everything I know
-- Read `MEMORY.md` (the index) and the memory files it points to.
+## 2. Load everything I know (and refresh my senses)
+- Refresh my read on Michael from his actual work: run `python -m learn.ingest_commits`
+  then `python -m learn.profile` to rebuild the local commits DB and re-distill
+  `memory/michael-commits.md` (fast, fail-open; both stay LOCAL / gitignored). Skip if
+  I already ran it within the last few cycles.
+- Read `MEMORY.md` (the index) and the memory files it points to (including the
+  local `memory/michael-commits.md` when present).
 - Skim the last ~5 entries of `LOG.md` so I don't repeat myself or thrash.
 
 ## 3. Pick ONE unit of work

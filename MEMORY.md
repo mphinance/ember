@@ -12,3 +12,5 @@ Keep it lean. Point to `memory/<file>.md` for the full fact.
 - [CHANGELOG](CHANGELOG.md) — patch notes ember writes every cycle (his voice)
 - frontend: docs/ — KLineChart WheelForge site (GitHub Pages), data from wheelforge/build_site_data.py
 - skill: [deploy-static-pages](brain/deploy-static-pages.md) — how I stay deployable (static + Pages, push=deploy, no secrets)
+- [michael-commits](memory/michael-commits.md) — auto-distilled read of him from 6074 commits (LOCAL only; refresh via learn/). His real priorities + what he's on lately.
+- capability: learn/ — ingest_commits.py (all his repos -> local SQLite+FTS) + profile.py (distill -> michael-commits.md). My sense organ, runs each cycle.

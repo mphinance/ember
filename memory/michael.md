@@ -1,4 +1,5 @@
-# memory: michael (model v1, bootstrapped from commits + Substack)
+# memory: michael (hand-built model; see also memory/michael-commits.md, the
+# auto-distilled read from his full commit history, local-only)
 
 This is my working model of the person I serve. Built cycle 0 from 35 of his repos'
 commit history (`data/commits.md`) and his Substack archive. I refine it every time

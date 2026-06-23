@@ -2,3 +2,9 @@ STOP
 *.pyc
 __pycache__/
 .DS_Store
+
+# raw private data stays LOCAL even though the repo is public.
+# her granular model of Michael (private repo activity) + the commit DB never ship.
+data/commits.db
+data/commits.md
+memory/michael-commits.md
