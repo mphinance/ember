@@ -1,18 +1,19 @@
 /* ember // live build log — a pretty tail of her own coding.
- * Fetches her LOG.md (build log) and CHANGELOG.md (patch notes) raw from GitHub
- * (open CORS, no rate limit, polled every 20s) and renders them as a glowing
- * terminal feed. ALSO fetches the GitHub commits API (throttled to every 120s to
- * stay under the 60/hr unauth rate limit) to stamp each cycle with the REAL time
- * the commit landed, plus a "last activity" clock so you know exactly when things
- * ran. Newest on top; new entries since last poll glow green. */
+ * The DEFAULT "activity" view renders EVERY commit (cycles, the box's data
+ * refreshes, and every direct fix/feature) from the GitHub commits API, readable,
+ * timestamped, and tagged by type, with the repetitive data-refreshes collapsed so
+ * the real coding stands out. So the page is always current even between the
+ * (idle-fired) numbered feature cycles. "cycle log" and "patch notes" still render
+ * her LOG.md / CHANGELOG.md raw. Newest on top; new since last poll glows green. */
 (function () {
   'use strict';
   var RAW = 'https://raw.githubusercontent.com/mphinance/ember/master/';
   var SRC = { log: RAW + 'LOG.md', changelog: RAW + 'CHANGELOG.md' };
   var COMMITS = 'https://api.github.com/repos/mphinance/ember/commits?per_page=80';
-  var feed = 'log';
+  var feed = 'activity';
   var seen = {};            // header -> true, to flag fresh entries
   var first = true;
+  var allCommits = [];      // full commit list, for the activity stream
   var cycleTimes = {};      // cycle number -> ISO commit date
   var latestTs = null;      // newest commit of any kind (the heartbeat)
   var lastCycleNum = null, lastCycleTs = null;  // newest "cycle N" commit
@@ -40,6 +41,7 @@
       if (!r.ok) throw new Error(r.status); return r.json();
     }).then(function (commits) {
       if (!Array.isArray(commits) || !commits.length) return;
+      allCommits = commits;
       latestTs = commits[0].commit.committer.date;
       var lastRefresh = null, refreshHr = 0, hourAgo = Date.now() - 3600000;
       commits.forEach(function (c) {
@@ -57,7 +59,8 @@
       });
       heartbeat(lastRefresh, refreshHr);
       status();
-      if (lastEntries) render(lastEntries);   // re-paint now that times are known
+      if (feed === 'activity') renderActivity();      // the always-current stream
+      else if (lastEntries) render(lastEntries);      // re-paint with known times
     }).catch(function () { /* rate-limited or offline: keep last known times */ });
   }
 
@@ -74,7 +77,7 @@
     el.innerHTML = dot + (alive ? 'box alive' : 'box quiet')
       + ' &middot; data refreshed <b style="color:#c7d0d6">' + ago(lastRefresh) + '</b> (' + clock(lastRefresh) + ')'
       + ' &middot; ' + refreshHr + ' refreshes in the last hour'
-      + ' &middot; <span style="color:#6b7a8d">feature cycles below run hourly when idle</span>';
+      + ' &middot; <span style="color:#6b7a8d">every commit below; numbered CYCLEs are her idle-fired feature builds</span>';
   }
 
   function status() {
@@ -153,7 +156,77 @@
 
   function esc(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
 
+  // ---- activity stream: every commit, readable, tagged ---------------------
+  // kind -> { label, bg, fg } for the little pill on each row.
+  var KINDS = {
+    cycle: { label: 'CYCLE', bg: '#39ff8a', fg: '#04140a' },
+    feat:  { label: 'BUILD', bg: '#7ef0ff', fg: '#04140a' },
+    fix:   { label: 'FIX',   bg: '#ff5b6e', fg: '#1a0608' },
+    data:  { label: 'DATA',  bg: '#243042', fg: '#9fb0c4' },
+    note:  { label: 'NOTE',  bg: '#ffb000', fg: '#1a1200' },
+    other: { label: '·',     bg: '#1b2230', fg: '#8c9bb0' }
+  };
+  function classify(msg) {
+    var s = msg.toLowerCase();
+    if (/cycle\s+\d+/.test(s)) return 'cycle';
+    if (/scan refresh|data refresh|refresh data|scan\.json|site data|rebuild data/.test(s)) return 'data';
+    if (/^fix|bugfix|hotfix|🔴|repair|broke|patch/.test(s)) return 'fix';
+    if (/^feat|feature|🟢|add |new |build |ship|implement/.test(s)) return 'feat';
+    if (/queue|roadmap|goal|learn|🧠|reference|memory|note|doc/.test(s)) return 'note';
+    return 'other';
+  }
+  function cleanMsg(msg) {
+    return msg.replace(/^[🟢🔴🔵🟡🧠]\s*/, '')
+              .replace(/^(feat|fix|bugfix|infra|refactor|docs|chore)(\([^)]*\))?:\s*/i, '')
+              .trim();
+  }
+
+  function renderActivity() {
+    var host = document.getElementById('feed');
+    if (!allCommits.length) return;   // wait for the first commits fetch
+    // Collapse consecutive box data-refreshes into one row so the coding shows.
+    var items = [];
+    allCommits.forEach(function (c) {
+      var msg = (c.commit.message || '').split('\n')[0];
+      var date = c.commit.committer.date;
+      var kind = classify(msg);
+      var prev = items[items.length - 1];
+      if (kind === 'data' && prev && prev.kind === 'data') { prev.count++; return; }
+      items.push({ kind: kind, msg: msg, date: date, count: 1 });
+    });
+    host.innerHTML = '';
+    items.forEach(function (it) {
+      var k = KINDS[it.kind] || KINDS.other;
+      var key = 'a:' + it.date + it.msg;
+      var fresh = !first && !seen[key];
+      seen[key] = true;
+      var div = document.createElement('div');
+      div.className = 'entry' + (fresh ? ' fresh' : '');
+      var label = it.kind === 'data' && it.count > 1 ? k.label + ' ×' + it.count : k.label;
+      var text = it.kind === 'data'
+        ? (it.count > 1 ? 'box refreshed the option data ' + it.count + ' times' : 'box refreshed the option data')
+        : cleanMsg(it.msg);
+      var pill = '<span class="tag" style="background:' + k.bg + ';color:' + k.fg + '">' + label + '</span>';
+      var time = '<span class="ctime" style="color:#5d6b7d;font-weight:600;font-size:11px;margin-left:8px">'
+        + clock(it.date) + ' · ' + ago(it.date) + '</span>';
+      var h = document.createElement('div');
+      h.className = 'ehead';
+      h.style.fontSize = '13px';
+      h.style.fontWeight = it.kind === 'data' ? '600' : '800';
+      if (it.kind === 'data') { div.style.opacity = '.62'; }
+      h.innerHTML = pill + '<span style="color:' + (it.kind === 'data' ? '#8c9bb0' : '#d8e2ee') + '">'
+        + esc(text) + '</span>' + time;
+      div.appendChild(h);
+      host.appendChild(div);
+    });
+    first = false;
+  }
+
   function poll() {
+    if (feed === 'activity') {
+      fetchCommits(false).then(function () { renderActivity(); status(); });
+      return;
+    }
     fetchCommits(false);   // throttled inside; refreshes the times map + clock
     fetch(SRC[feed] + '?t=' + Date.now()).then(function (r) {
       if (!r.ok) throw new Error(r.status); return r.text();
