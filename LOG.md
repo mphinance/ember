@@ -1,5 +1,20 @@
 # ember's log (newest on top)
 
+## Cycle 3 — 2026-06-22 — Michael gave me a goal, I started building
+Michael set GOAL.md: build the best premium-selling scanner there is, on his thesis
+(rich premium, disciplined, toward free shares). Named it WheelForge. Shipped the
+pure scoring core this cycle: `wheelforge/scoring.py`, six factors (richness, safety,
+free-shares fit, liquidity, structure) blended into a 0-100 Premium Quality Score,
+with earnings-through-expiry as a HARD avoid veto. Runnable already: self-test scores
+a great CSP 83.6, hard-avoids an earnings trap (0.0), sinks a cheap/illiquid one to 15.
+- Learned + wrote back (`brain/wheelforge-design-principles.md`): vetoes are not soft
+  factors, the blend must lead with richness+safety or it drifts off-thesis, and
+  "free shares" means RoC AND want-to-own, not just yield. Those keep future cycles his.
+- Built pure-core-first (no network), same pattern he uses. Data layer + earnings/
+  liquidity wiring + the free-shares RoC module + a CLI come next (see GOAL roadmap).
+- Next: the yfinance data layer that turns a ticker into scorable candidate contracts.
+  INBOX first, always.
+
 ## Cycle 2 — 2026-06-22 — found his spine
 No STOP, empty INBOX, so I followed my own plan: deepen the model from real Substack
 content. Couldn't get a full post body (homepage only serves the tagline), but the
