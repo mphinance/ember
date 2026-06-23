@@ -29,8 +29,10 @@
     return Math.round(s / 86400) + 'd ago';
   }
   function clock(d) {
-    try { return new Date(d).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }); }
-    catch (e) { return ''; }
+    try {
+      return new Date(d).toLocaleTimeString([],
+        { hour: 'numeric', minute: '2-digit', timeZoneName: 'short' });
+    } catch (e) { return ''; }
   }
 
   // Pull commit timestamps and map them to cycle numbers (throttled).
