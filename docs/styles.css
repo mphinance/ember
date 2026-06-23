@@ -50,6 +50,19 @@ body { display: flex; flex-direction: column; min-height: 100vh; }
 .wf-sub { grid-column: 2 / 4; font-size: 11px; color: var(--dim); }
 .wf-sub b { color: var(--ink); font-weight: 600; }
 
+/* earnings-avoid + source + factor breakdown (cycle 9) */
+.wf-card.is-avoid { opacity: .62; }
+.wf-card.is-avoid .wf-tk { color: var(--dim); }
+.avoidtxt { color: var(--down); font-weight: 800; letter-spacing: .04em; }
+.src { font-size: 9px; font-weight: 800; letter-spacing: .06em; padding: 1px 5px; border-radius: 3px; vertical-align: middle; }
+.src.live { color: #04140a; background: var(--up); }
+.src.model { color: #1a1200; background: var(--dim); }
+.facwrap { display: inline-flex; gap: 12px; align-items: center; margin-left: 4px; flex-wrap: wrap; }
+.fac { display: inline-flex; align-items: center; gap: 5px; }
+.faclab { font-size: 10px; text-transform: uppercase; letter-spacing: .06em; color: var(--dim); }
+.facbar { width: 46px; height: 5px; border-radius: 3px; background: #11161f; overflow: hidden; }
+.facfill { display: block; height: 100%; border-radius: 3px; }
+
 .wf-stage { position: relative; display: flex; flex-direction: column; min-width: 0; }
 .wf-readout {
   padding: 11px 18px; border-bottom: 1px solid var(--line); font-size: 12px; color: var(--dim);

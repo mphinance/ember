@@ -42,24 +42,46 @@
 
   function fmt(n) { return (n == null) ? '-' : Number(n).toLocaleString(undefined, { maximumFractionDigits: 2 }); }
 
+  // The score is a blend; show the bar-by-bar why behind it.
+  var FAC = { richness: 'rich', safety: 'safe', free_shares: 'shares', liquidity: 'liq', structure: 'struct' };
+  function factorBars(f) {
+    if (!f) return '';
+    var html = '<span class="facwrap">';
+    Object.keys(FAC).forEach(function (k) {
+      var v = Math.round((Number(f[k]) || 0) * 100);
+      html += '<span class="fac"><span class="faclab">' + FAC[k] + '</span>'
+        + '<span class="facbar"><span class="facfill" style="width:' + v + '%;background:'
+        + heatColor(v) + '"></span></span></span>';
+    });
+    return html + '</span>';
+  }
+
   function renderList() {
     var host = document.getElementById('wf-list');
     host.innerHTML = '';
     DATA.tickers.forEach(function (t, i) {
       var p = t.pick;
       var card = document.createElement('div');
-      card.className = 'wf-card' + (i === 0 ? ' is-sel' : '');
+      card.className = 'wf-card' + (i === 0 ? ' is-sel' : '') + (p.avoid ? ' is-avoid' : '');
       card.dataset.ticker = t.ticker;
       var sc = document.createElement('div');
-      sc.className = 'wf-score'; sc.textContent = p.score;
-      sc.style.color = heatColor(p.score);
-      sc.style.borderColor = heatColor(p.score);
-      sc.style.boxShadow = '0 0 16px ' + heatColor(p.score) + '33';
+      sc.className = 'wf-score'; sc.textContent = p.avoid ? '✕' : p.score;
+      var col = p.avoid ? '#ff5b6e' : heatColor(p.score);
+      sc.style.color = col; sc.style.borderColor = col;
+      sc.style.boxShadow = '0 0 16px ' + col + '33';
       var tk = document.createElement('div'); tk.className = 'wf-tk'; tk.textContent = t.ticker;
       var dir = document.createElement('div'); dir.className = 'wf-dir'; dir.textContent = p.direction;
       var sub = document.createElement('div'); sub.className = 'wf-sub';
-      sub.innerHTML = 'sell <b>' + fmt(p.strike) + 'P</b> ' + p.dte + 'd · '
-        + '<b>' + fmt(p.annualized_roc) + '%</b> ann · <b>' + fmt(p.prob_otm) + '%</b> OTM · IVR <b>' + fmt(p.iv_rank) + '</b>';
+      if (p.avoid) {
+        sub.innerHTML = '<b class="avoidtxt">AVOID</b> earnings in <b>'
+          + (p.earnings_days != null ? p.earnings_days + 'd' : 'window') + '</b> before expiry';
+      } else {
+        var src = (p.source === 'live')
+          ? '<span class="src live">LIVE</span>' : '<span class="src model">MODEL</span>';
+        sub.innerHTML = 'sell <b>' + fmt(p.strike) + 'P</b> ' + p.dte + 'd · '
+          + '<b>' + fmt(p.annualized_roc) + '%</b> ann · <b>' + fmt(p.prob_otm) + '%</b> OTM '
+          + src + (p.earnings_days != null ? ' · earn ' + p.earnings_days + 'd' : '');
+      }
       card.appendChild(sc); card.appendChild(tk); card.appendChild(dir); card.appendChild(sub);
       card.addEventListener('click', function () { select(t.ticker); });
       host.appendChild(card);
@@ -74,13 +96,20 @@
       c.classList.toggle('is-sel', c.dataset.ticker === ticker);
     });
     var p = t.pick;
+    var srcTag = (p.source === 'live') ? '<span class="src live">LIVE chain</span>'
+                                       : '<span class="src model">MODELED</span>';
+    var earn = (p.avoid)
+      ? ' · <span class="avoidtxt">AVOID earnings in ' + p.earnings_days + 'd</span>'
+      : (p.earnings_days != null ? ' · earnings ' + p.earnings_days + 'd out' : '');
     document.getElementById('wf-readout').innerHTML =
       '<span class="k">' + t.ticker + '</span> spot ' + fmt(t.spot)
-      + ' · sell the <span class="k">' + fmt(p.strike) + ' put</span> (' + p.dte + ' DTE)'
+      + ' · sell the <span class="k">' + fmt(p.strike) + ' put</span> (' + p.dte + ' DTE) ' + srcTag
       + ' · prem <span class="k">$' + fmt(p.premium) + '</span>'
       + ' · <span class="k">' + fmt(p.annualized_roc) + '%</span> annualized'
-      + ' · <span class="k">' + fmt(p.prob_otm) + '%</span> stays OTM'
-      + ' · <span class="why">' + p.why + '</span>';
+      + ' · <span class="k">' + fmt(p.prob_otm) + '%</span> stays OTM · IV ' + fmt(p.iv) + '%'
+      + earn
+      + ' · <span class="why">' + p.why + '</span>'
+      + factorBars(p.factors);
 
     chart.applyNewData(t.candles);
     chart.removeOverlay();

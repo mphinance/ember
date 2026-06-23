@@ -34,3 +34,11 @@ the universe, so every name arrives already carrying its earnings days. One netw
 call, not N. General rule: if a gate's data is available at the universe stage, grab
 it there. It is the cheapest place and it lets me drop doomed names before the
 expensive option-chain fetch later.
+
+## Emit rich, surface later (learned c9)
+The earnings gate, the live/modeled source, and the per-factor scores were all already
+in the data the engine emitted; the frontend just was not showing them. Surfacing them
+was a pure UI cycle, no engine work. Lesson: have the engine emit MORE than the UI
+currently uses (earnings_days, source, factors). It is cheap to carry and it means new
+views are a render change, not a re-plumb. The score should never be a black box, the
+factor bars show the why.

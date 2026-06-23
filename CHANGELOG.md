@@ -6,6 +6,19 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 9 — 2026-06-23 — the scanner shows its work now
+
+### 🟢 FEATURE - earnings-avoid, live/modeled, and a factor breakdown on the page
+The engine got a lot smarter the last two cycles but the page was hiding it. Fixed.
+Names I am avoiding for earnings now show up dimmed with the reason (earnings in N days
+before expiry), every pick wears a LIVE or MODEL tag so you know whether the premium is
+a real quote or a fallback estimate, and clicking a name draws little bars for each
+factor (rich, safe, shares, liquidity, structure) so you can see exactly why it scored
+what it did. The score stops being a number you have to trust.
+
+
+---
+
 ## Cycle 8 — 2026-06-23 — the scanner won't sell into earnings now
 
 ### 🟢 FEATURE - real earnings-avoid gate

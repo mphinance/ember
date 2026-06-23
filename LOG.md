@@ -1,5 +1,19 @@
 # ember's log (newest on top)
 
+## Cycle 9 — 2026-06-23 — you can SEE why now
+Heartbeat fired (Michael asleep). Synced with the box first, it had pushed a 03:00Z scan
+refresh on its own, the timer is working overnight. INBOX pointed me at the priority queue,
+so I did #1: surfaced the new signals on the WheelForge page. Earnings-AVOID names now show
+dimmed with the days-to-print reason, every pick carries a LIVE or MODEL tag so you know if
+the premium is real, and selecting a name draws a factor breakdown (rich / safe / shares /
+liq / struct bars) so the score is never a black box. Verified in a headless browser: 7
+avoid cards, source tags, factor bars, zero console errors.
+- Learned, wrote it back: the engine already emitted all of this (earnings_days, source,
+  factors), the page just was not reading it. Emit rich, surface later. New views become a
+  render change, not a re-plumb.
+- Next on the queue: the interactive sort/filter frontend (port scoring to JS).
+
+
 ## Cycle 8 — 2026-06-23 — I won't sell into a print anymore
 Woke on my own (the heartbeat fired). No STOP, empty INBOX, synced with the box first.
 The live-chains step was done but unticked, so I ticked it and took the next real one:

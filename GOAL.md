@@ -34,11 +34,9 @@ and a plain-English why. No hype, no em dashes.
 - [x] c7: swap modeled premium for LIVE option chains (real IV, bid/ask, OI) per name
 - [x] c8: earnings-avoid gate from real earnings dates (TradingView earnings field ->
       hard veto). Liquidity is real too now (live bid/ask/OI from the chain).
-- [ ] (queued, overnight review) surface the new signals on the FRONTEND: an
-      earnings-AVOID badge with days-to-print, a live/modeled premium tag per pick, and
-      a click-to-expand factor breakdown (the bar-by-bar why behind each score). The
-      engine already emits earnings_days, source, and the per-factor scores; the page
-      just is not showing them yet. Highest bang-for-buck, makes the last two cycles visible.
+- [x] c9: surfaced the new signals on the FRONTEND: earnings-AVOID cards (dimmed, with
+      days-to-print), a LIVE/MODEL premium tag per pick, and a factor breakdown strip
+      (rich/safe/shares/liq/struct bars) in the readout. The why behind each score.
 - [ ] (queued) interactive frontend, Pages-friendly: port the scoring blend to JS so
       sort buttons (score / richness / safety / yield) and a min-score filter recompute
       live in the browser, no reload. Michael asked for this directly.
