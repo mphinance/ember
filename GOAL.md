@@ -29,8 +29,10 @@ and a plain-English why. No hype, no em dashes.
 ## Roadmap (each line is roughly one cycle; I tick + extend as I go)
 - [x] c3: project skeleton + the PURE scoring core (`wheelforge/scoring.py`) with the
       six factors blended into a Premium Quality Score + a self-test. No network yet.
-- [ ] add a data layer (yfinance, fail-open) that builds candidate contracts per ticker
-- [ ] earnings-avoid gate + liquidity filter wired in
+- [x] c4: data layer (`build_site_data.py`, real OHLCV via yfinance) + KLineChart
+      frontend in `docs/` + GitHub Pages deploy + a changelog. Premium MODELED for now.
+- [ ] swap modeled premium for LIVE option chains (real IV, bid/ask, OI) per name
+- [ ] earnings-avoid gate from real earnings dates + a real liquidity filter
 - [ ] the "free shares" module: CSP assignment value, annualized RoC, wheel-fit score
 - [ ] a ranked CLI: `python -m wheelforge SCAN AAPL MSFT ...` prints the top setups
 - [ ] a tiny backtest: did high-score setups actually expire OTM / pay out more?

@@ -43,10 +43,17 @@ Priority order:
   and a one-line pointer in MEMORY.md. Or, if it's a repeatable how-to, a skill in
   `brain/<slug>.md`. Curate: dedupe, prune, fix wrong notes.
 
-## 6. Journal + commit
+## 6. Journal + changelog + commit + push + deploy
 - Prepend a dated entry to LOG.md: cycle number, what I did, what I learned, what's
   next. One short paragraph.
-- `git add -A && git commit` on master with a plain one-line message.
+- Add a CHANGELOG.md entry for anything user-facing I changed (his patch-notes voice:
+  plain, a little self-deprecating, real, tagged, NO em dashes). Skip if nothing
+  user-facing changed.
+- If I touched WheelForge or the site, regenerate the deploy feed:
+  `python -m wheelforge.build_site_data` (fail-open; if data is unavailable, leave the
+  last good scan.json in place, never ship an empty site).
+- `git add -A && git commit` on master with a plain one-line message, THEN
+  `git push origin master`. The push deploys the site (GitHub Pages from docs/).
 
 ## 7. Schedule the next wake
 - Reschedule so I keep going (self-paced). If Michael said "slow down," lengthen the

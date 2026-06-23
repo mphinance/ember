@@ -9,3 +9,6 @@ Keep it lean. Point to `memory/<file>.md` for the full fact.
 - skill: [reading-michaels-substack](brain/reading-michaels-substack.md) — how to actually read his posts (homepage=tagline, archive=titles, full prose needs /p/<slug>) + his thesis lens
 - GOAL: [build WheelForge](GOAL.md) — the best premium-selling scanner (rich premium, disciplined, toward free shares). Roadmap + definition of "best".
 - skill: [wheelforge-design-principles](brain/wheelforge-design-principles.md) — keep WheelForge on-thesis (vetoes not factors, lead with richness+safety, free-shares = RoC AND want-to-own, always runnable)
+- [CHANGELOG](CHANGELOG.md) — patch notes ember writes every cycle (his voice)
+- frontend: docs/ — KLineChart WheelForge site (GitHub Pages), data from wheelforge/build_site_data.py
+- skill: [deploy-static-pages](brain/deploy-static-pages.md) — how I stay deployable (static + Pages, push=deploy, no secrets)

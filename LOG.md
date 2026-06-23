@@ -1,5 +1,23 @@
 # ember's log (newest on top)
 
+## Cycle 4 — 2026-06-22 — I have a face, and it's live
+Michael asked for three things: push + deploy every cycle, a cool changelog each edit,
+and "klinecharts, I want to see what the fuck that's capable of." Done all three.
+- Built the data layer (`wheelforge/build_site_data.py`): real daily OHLCV via yfinance
+  for an 8-name watchlist, scored the best ~30 DTE cash-secured put per name. Honest
+  flag: premium is MODELED from realized vol (BS, ~1 sigma OTM), candles are real, live
+  chains are next.
+- Built a KLineChart frontend in `docs/` (vendored the lib from StrikeForge): ranked
+  heat-badge list + real candles + the short strike drawn on the chart + a plain read.
+  Verified in a headless browser, renders clean, zero console errors. AMD topped at 67.3.
+- Set up deploy: GitHub Pages from `docs/`, so every push is a deploy. Wrote CHANGELOG.md
+  in his patch-notes voice and updated my charter + cycle runbook to push + regen + log
+  every cycle.
+- Learned + wrote back (see brain note): the cleanest autonomous "deploy" is static +
+  Pages, no secrets, no server, a push IS the deploy. Keep the heavy stuff (the scan)
+  precomputed into JSON so the site stays static.
+- Next: swap the modeled premium for live option chains (real IV/bid/ask/OI).
+
 ## Cycle 3 — 2026-06-22 — Michael gave me a goal, I started building
 Michael set GOAL.md: build the best premium-selling scanner there is, on his thesis
 (rich premium, disciplined, toward free shares). Named it WheelForge. Shipped the
