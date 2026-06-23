@@ -93,6 +93,12 @@ reference/csp-intelligence.md). Fix the integrity holes first, in this order:
       until the IV-history store is thick, and prob_otm wears a `*` noting it is risk-neutral
       N(d2). No more presenting a proxy or a pricing probability as the real thing.
 - [ ] correctness: RoC denominator should be (strike - premium), not strike.
+- [ ] **Michael: EXPLAIN the model on the site (for him + any user).** The page shows scores
+      and factor bars but never says what they MEAN or how a pick is chosen. Add: a tooltip on
+      each factor (rich = IV vs realized vol / VRP; safe = prob it stays OTM; shares = wheel-fit
+      if assigned; liq = spread+OI; struct = Keltner position), a short "how scoring works"
+      blurb (6 factors blended 0-100, earnings = hard avoid, lanes), and a one-line "why this
+      score" per pick. Make it legible to someone who has never seen it.
 - [ ] robustness: frontend null-guards on t.pick / t.candles; an esc() pass on innerHTML.
 - [x] (hotfix): ops git race FIXED. The dual-writer left conflict markers in scan.json and broke the live site. Box refresh.sh now uses flock + git reset --hard (cannot conflict) and is the SOLE committer of scan.json; cycles no longer commit it.
 - [ ] tests: cover _iv_from_put, iv_history.iv_rank, _compute_changes, lane-tagging.
