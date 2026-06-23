@@ -101,6 +101,13 @@ reference/csp-intelligence.md). Fix the integrity holes first, in this order:
       conservative/yield mode toggle + a min-annualized filter. NOTE: a 100% filter on the
       conservative strikes shows nothing, the strike SELECTION is the lever, not just a filter.
       Pairs with the Phase-4 OI-walls work (sell at the wall).
+- [ ] **Michael's likely next ask (use the S/R, do not just draw it):** turn the major
+      price-action support into a SIGNAL. (a) A 'strike at support' flag + factor: reward picks
+      whose put strike sits just ABOVE major support (the structural A+ CSP, a real floor under
+      the strike); penalize selling into a strike with nothing below it. (b) A filter/sort for
+      'strike on support'. (c) In the yield/aggressive mode, PLACE the strike just above major
+      support (max premium with a structural floor). Distance-to-support folds into the structure
+      factor. Ties together: the c-levels S/R + the yield mode + sell-near-support.
 - [ ] **CSP-screener ENGINE port (TraderDaddy CSPScreener.ts — the good work):** (a) promote
       ROC EFFICIENCY to a first-class scoring factor (he weights it 25%), reweight the blend
       toward yield; (b) add a configurable MIN return-on-capital target + a MAX-CAPITAL filter
