@@ -101,8 +101,13 @@ reference/csp-intelligence.md). Fix the integrity holes first, in this order:
       until the IV-history store is thick, and prob_otm wears a `*` noting it is risk-neutral
       N(d2). No more presenting a proxy or a pricing probability as the real thing.
 - [x] correctness: RoC denominator should be (strike - premium), not strike. (cycle 23)
-- [ ] **Michael: a YIELD / aggressive mode (sell AT support).** Current strikes are ~1 sigma
-      OTM (conservative: ~85% OTM, ~10-25% annualized). Add an AGGRESSIVE mode that sells a
+- [x] **DTE calibration (cycle 24):** target the nearest WEEKLY (DTE 7, window 3-21), not the
+      30-DTE monthly. Anchored on his real NVDA 190 / 4 DTE / 5% OTM fill. 1 sigma at weekly
+      tenor IS ~5% OTM, so this reproduces his trade and ~2x the annualized yield. The strike
+      SELECTION (DTE) was the lever, as predicted below.
+- [ ] **Michael: a YIELD / aggressive mode (sell AT support).** Weekly tenor now lands ~5% OTM
+      (cycle 24). The remaining lever is the STRIKE: instead of ~1 sigma, sell a higher-delta put
+      (~0.30-0.40) ANCHORED at a support level (Keltner lower band now, or the
       higher-delta put (~0.30-0.40) ANCHORED at a support level (Keltner lower band now, or the
       OI put-wall once Phase 4 lands) for ~100%+ annualized on the high-IV names. GATE it to
       want_to_own=True names (assignment is ~30-40% likely, so only names you would own). Add a

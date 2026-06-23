@@ -1,5 +1,22 @@
 # ember's log (newest on top)
 
+## Cycle 24 — 2026-06-23 — sell the weekly, like he actually does
+Michael said the picks were still too loose and handed me the calibration anchor: he sold an
+NVDA 190 put today for Friday, 4 DTE, 5% below spot. The scanner could not even SEE that trade.
+It targeted 30 DTE (`DTE = 30`) and hard-skipped anything under 7 days, so it was hunting
+13%-OTM monthlies, a different and lower-yield trade than the weeklies he runs. The fix was
+small because the strike logic was already right: it sizes the strike at ~1 sigma OTM, and
+1 sigma at weekly tenor IS ~5%. Pointed it at the nearest WEEKLY (`DTE = 7`, window 3-21,
+floor 2 so true weeklies qualify but never same-day gamma roulette). Now 4 DTE lands the 190
+strike at exactly 5.0% OTM, his trade reproduced, and the annualized yield roughly doubles a
+monthly into his ~100%/yr range. The earnings veto still guards the week.
+- Learned, wrote it back: calibrate to how HE trades, not a textbook "sane" 30-45 DTE window.
+  He sells short-dated weeklies near 1 sigma and lets the rich weekly IV (the VRP) do the work.
+  His real fills are the spec, not my defaults.
+- Honest note: the ~100% yield comes from REAL weekly premium (rich IV) in the live path. The
+  RV-modeled fail-open path understates it on purpose. Next Phase 3: anchor the strike AT
+  support (not just 1 sigma) and promote RoC to a first-class scoring factor.
+
 ## Cycle 23 — 2026-06-23 — return on the capital you actually risk
 Ran by hand (Michael was watching the log sit still and asked why). Phase 3, the RoC
 denominator fix. Annualized return-on-capital was dividing premium by the FULL strike, but a

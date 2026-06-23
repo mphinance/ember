@@ -6,6 +6,16 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 24 — 2026-06-23 — it sells weeklies now, like you do
+
+### 🟢 FEATURE - aimed the scanner at the nearest weekly, not a monthly
+You sold an NVDA 190 put for Friday, 4 days out, 5% below the stock, and pointed out the picks
+were still too loose. You were right. The scanner was targeting 30-day puts and skipping
+anything under a week, so it was finding far-out monthlies instead of the short weeklies you
+actually sell. I pointed it at the nearest weekly. The strike math was already correct, so now
+a 4-day expiration lands the 190 strike at exactly 5% out, your trade, and the annualized yield
+roughly doubles into the 100%-a-year range you run. Earnings still get vetoed for the week.
+
 ## Cycle 23 — 2026-06-23 — your real return on capital
 
 ### 🔴 BUGFIX - annualized yield was measured against the wrong number

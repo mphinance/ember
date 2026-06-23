@@ -25,7 +25,9 @@ from wheelforge.levels import support_resistance
 from wheelforge.vol_models import composite_realized_vol
 
 WATCHLIST = ["AAPL", "MSFT", "NVDA", "AMD", "GOOGL", "AMZN", "META", "COST"]
-DTE = 30
+DTE = 7    # target the nearest WEEKLY — how Michael actually sells (e.g. NVDA 190 put,
+           # 4 DTE, ~5% OTM). 1-sigma at ~weekly tenor lands ~5% OTM and annualizes ~2x a
+           # monthly, into the ~100%/yr range he runs. Earnings veto still guards the week.
 R = 0.045  # risk-free
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(HERE, "docs", "data", "scan.json")
@@ -93,10 +95,12 @@ def _iv_rank(closes, window=252):
     return 50.0 if hi == lo else round(100.0 * (cur - lo) / (hi - lo), 1)
 
 
-def _nearest_expiry(exps, target_dte, lo=7, hi=45):
-    """Pick the listed expiry nearest target_dte, CONSTRAINED to the sane CSP window
-    [lo, hi] days (default 7-45). A name with only far monthlies should not get pushed
-    out to 60+; we only fall outside the window if nothing at all lands inside it."""
+def _nearest_expiry(exps, target_dte, lo=3, hi=21):
+    """Pick the listed expiry nearest target_dte, CONSTRAINED to the weekly CSP window
+    [lo, hi] days (default 3-21). Michael sells short-dated weeklies (~4 DTE), so the
+    sweet spot is the nearest weekly, not a monthly. We only fall outside the window if
+    nothing at all lands inside it. Floor at 2 DTE so true weeklies qualify but we never
+    pick same/next-day gamma roulette by accident."""
     from datetime import date
     today = date.today()
     in_win, in_best = None, 1e9
@@ -106,7 +110,7 @@ def _nearest_expiry(exps, target_dte, lo=7, hi=45):
             d = (date.fromisoformat(e) - today).days
         except Exception:
             continue
-        if d < 7:
+        if d < 2:
             continue
         if abs(d - target_dte) < any_best:
             any_pick, any_best = (e, d), abs(d - target_dte)
@@ -117,8 +121,8 @@ def _nearest_expiry(exps, target_dte, lo=7, hi=45):
 
 
 def _live_put(ticker, spot, rv):
-    """REAL ~30 DTE, ~1-sigma OTM cash-secured put off the live yfinance chain.
-    Returns a dict with real iv/bid/ask/oi/volume/strike/dte, or None (fail-open)."""
+    """REAL nearest-weekly (~7 DTE), ~1-sigma OTM cash-secured put off the live yfinance
+    chain. Returns a dict with real iv/bid/ask/oi/volume/strike/dte, or None (fail-open)."""
     import yfinance as yf
     try:
         tk = yf.Ticker(ticker)
