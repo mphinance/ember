@@ -218,9 +218,10 @@
             + '<span class="fs-sum">' + p.free_shares.summary + '</span></div>'
           : '')
       + '<div class="chart-key">chart lines: '
-        + '<b style="color:#26d07c">support</b> &nbsp; <b style="color:#ff7a18">resistance</b> &nbsp; '
-        + '<span style="color:#8b97a8">20d avg</span> &nbsp; '
-        + '<b style="color:' + heatColor(p.score) + '">the ' + fmt(p.strike) + ' put you\'d sell</b></div>';
+        + '<b style="color:#22d3ee">major S/R</b> (price action) &nbsp;·&nbsp; '
+        + '<b style="color:#26d07c">support</b>/<b style="color:#ff7a18">resistance</b> walls (volatility) &nbsp;·&nbsp; '
+        + '<span style="color:#8b97a8">20d avg</span> &nbsp;·&nbsp; '
+        + '<b style="color:' + heatColor(p.score) + '">your $' + fmt(p.strike) + ' strike</b></div>';
 
     if (!t.candles || !t.candles.length) return;
     chart.applyNewData(t.candles);
@@ -240,11 +241,16 @@
     });
   }
   function drawLevels(p) {
-    var kc = (p.levels || {}).keltner || {};
+    var lv = p.levels || {}, kc = lv.keltner || {};
+    // Keltner VOLATILITY walls (thin).
     hline(kc.upper, '#ff7a18', false, 1);   // resistance wall (hot)
-    hline(kc.sma, '#5c6b73', true, 1);      // midline
-    hline(kc.lower, '#26d07c', false, 1);   // support wall (green = good for put-selling)
-    hline(p.strike, heatColor(p.score), false, 2);  // the strike, prominent
+    hline(kc.sma, '#5c6b73', true, 1);      // 20d midline
+    hline(kc.lower, '#26d07c', false, 1);   // support wall
+    // Major PRICE-ACTION support / resistance (cyan, thicker = "major").
+    hline(lv.resistance, '#22d3ee', false, 2);
+    hline(lv.support, '#22d3ee', false, 2);
+    // The strike, prominent.
+    hline(p.strike, heatColor(p.score), false, 2);
   }
 
   function boot() {

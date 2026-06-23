@@ -21,6 +21,7 @@ from wheelforge.scoring import score_contract
 from wheelforge.freeshares import free_shares_read
 from wheelforge.iv_history import record as _iv_record, iv_rank as _iv_rank_hist
 from wheelforge.structure import keltner_position, keltner_bands
+from wheelforge.levels import support_resistance
 from wheelforge.vol_models import composite_realized_vol
 
 WATCHLIST = ["AAPL", "MSFT", "NVDA", "AMD", "GOOGL", "AMZN", "META", "COST"]
@@ -170,6 +171,16 @@ def _fetch(ticker):
     return candles, closes
 
 
+def _levels(candles, spot):
+    """Chart levels: Keltner volatility walls + major price-action S/R + spot."""
+    sup, res = support_resistance(candles, spot)
+    return {
+        "keltner": keltner_bands(candles),
+        "support": sup, "resistance": res,
+        "spot": round(spot, 2),
+    }
+
+
 def build_one(ticker, earnings_days=None, lanes=None):
     candles, closes = _fetch(ticker)
     if not candles:
@@ -237,8 +248,9 @@ def build_one(ticker, earnings_days=None, lanes=None):
             "iv": round(iv * 100, 1), "iv_rank": contract["iv_rank"],
             "iv_rank_real": ivr_hist is not None, "source": source,
             "earnings_days": earnings_days, "want_to_own": want_to_own,
-            # Levels for the chart: the Keltner channel (support/resistance walls).
-            "levels": {"keltner": keltner_bands(candles), "spot": round(spot, 2)},
+            # Levels for the chart: the Keltner volatility walls PLUS the major
+            # price-action support/resistance (where the stock actually bounces).
+            "levels": _levels(candles, spot),
             "free_shares": free_shares_read(spot, strike, premium, roc, prob_otm,
                                             want_to_own=True),
             **scored,
