@@ -101,6 +101,12 @@ reference/csp-intelligence.md). Fix the integrity holes first, in this order:
       conservative/yield mode toggle + a min-annualized filter. NOTE: a 100% filter on the
       conservative strikes shows nothing, the strike SELECTION is the lever, not just a filter.
       Pairs with the Phase-4 OI-walls work (sell at the wall).
+- [ ] **CSP-screener ENGINE port (TraderDaddy CSPScreener.ts — the good work):** (a) promote
+      ROC EFFICIENCY to a first-class scoring factor (he weights it 25%), reweight the blend
+      toward yield; (b) add a configurable MIN return-on-capital target + a MAX-CAPITAL filter
+      (strike*100<=capital) as real params; (c) target ~0.20 delta (fatter than my 1-sigma);
+      (d) derive a letter grade A>=80/B>=65/C>=50/D>=35 with put-wall/max-pain/EM adjustments.
+      This is the engine version of the 100%/yr yield focus. Ref: reference/csp-intelligence.md.
 - [ ] **Match the TraderDaddy CSP-wheel PAGE UX (Michael's shipped page, study its code):** a
       LETTER GRADE (A-F) on each pick led front-and-center; a supportFloor shown per name; a
       "Prime Picks" standouts highlight; and real configurable param FILTERS (incl. min-annualized

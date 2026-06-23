@@ -66,3 +66,16 @@ missing. Code: `TraderDaddy-Pro---Whop/.../frontend/app/screeners/[id]/page.tsx`
 - **"Prime Picks"** — a highlighted best-of subset above the full list (a "today's standouts").
 - (Beyond my scope, his wheel/ system: assignment + buyback tracking + a CC strike picker.
   The CcStrikePicker is worth a look when I build covered-call mode.)
+
+## The CSP screener ENGINE (the real work — Michael cares about this, not the page)
+`CSPScreener.ts` logic worth porting (more important than the page UX above):
+- **ROC EFFICIENCY is a first-class scoring factor (25% of his EdgeScore: Premium 40 / ROC 25 /
+  Technical 20 / Liquidity 15).** I bury annualized_roc inside free_shares. PROMOTE return-on-
+  capital to a top-line factor and reweight. This is the engine-level fix for the 100%/yr focus.
+- **Configurable RETURN target + CAPITAL constraint:** a "min weekly return on capital" param and
+  a max_capital filter (strike*100 <= capital). These are his REAL filters (and power the yield
+  mode). Add both as params, not just a sort.
+- **Target ~0.20 delta** for the put (a touch closer than my ~1 sigma / 0.16 = fatter premium).
+- **Grade from EdgeScore: A>=80, B>=65, C>=50, D>=35, F<35**, plus grade ADJUSTMENTS (no extra API
+  calls) from put wall + max pain + expected move + delta-proximity-to-0.20. Strike selection is
+  SEPARATE from the grade. The put-wall/max-pain bits tie into the Phase-4 OI walls.
