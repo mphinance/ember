@@ -69,6 +69,26 @@ def keltner_position(candles, sma_period=20, atr_period=14, mult=3.0):
     return max(0.0, min(1.0, (spot - lower) / width))
 
 
+def keltner_bands(candles, sma_period=20, atr_period=14, mult=3.0):
+    """The raw Keltner levels for drawing on the chart: {upper, sma, lower}.
+    None if not enough history."""
+    need = max(sma_period, atr_period) + 1
+    if not candles or len(candles) < need:
+        return None
+    closes = []
+    for c in candles:
+        b = _bar(c)
+        if not b:
+            return None
+        closes.append(b[2])
+    sma = sum(closes[-sma_period:]) / sma_period
+    atr = wilder_atr(candles, atr_period)
+    if atr is None or atr <= 0:
+        return None
+    return {"upper": round(sma + mult * atr, 2), "sma": round(sma, 2),
+            "lower": round(sma - mult * atr, 2)}
+
+
 def _selftest():
     def series(step):
         # build candles with a tight high/low around a trending close

@@ -205,14 +205,29 @@
             + '<span class="fs-sum">' + p.free_shares.summary + '</span></div>'
           : '');
 
+    if (!t.candles || !t.candles.length) return;
     chart.applyNewData(t.candles);
     chart.removeOverlay();
+    drawLevels(p);
+  }
+
+  // Draw the levels prominently: Keltner walls (resistance/support), the SMA
+  // midline, and the put strike in heat. The Keltner bands are the support/
+  // resistance walls she computes for the structure factor.
+  function hline(value, color, dashed, size) {
+    if (value == null || !isFinite(value)) return;
     chart.createOverlay({
-      name: 'priceLine',
-      points: [{ value: p.strike }],
-      styles: { line: { color: heatColor(p.score), style: 'dashed', size: 1 },
-                text: { color: '#07090e', backgroundColor: heatColor(p.score) } }
+      name: 'priceLine', points: [{ value: value }], lock: true,
+      styles: { line: { color: color, style: dashed ? 'dashed' : 'solid', size: size || 1 },
+                text: { color: '#07090e', backgroundColor: color } }
     });
+  }
+  function drawLevels(p) {
+    var kc = (p.levels || {}).keltner || {};
+    hline(kc.upper, '#ff7a18', false, 1);   // resistance wall (hot)
+    hline(kc.sma, '#5c6b73', true, 1);      // midline
+    hline(kc.lower, '#26d07c', false, 1);   // support wall (green = good for put-selling)
+    hline(p.strike, heatColor(p.score), false, 2);  // the strike, prominent
   }
 
   function boot() {
