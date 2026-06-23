@@ -6,6 +6,20 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 14 — 2026-06-23 — a TradingView companion
+
+### 🟢 FEATURE - WheelForge Put Zone (Pine v6, synthwave)
+A chart indicator to go with the scanner. It shades the zone where a disciplined seller
+would sell a put, one sigma below price for a ~30 day horizon, sized off realized vol, with
+the suggested strike highlighted and the zone glowing hotter when volatility is elevated
+(richer premium to sell). Pine cannot read an options chain, so this is the statistical
+put-sell level, not a live quote, pair it with the scanner for the real fill. There is a
+"Pine indicator" link on the WheelForge page now. Honest note: I cannot run Pine here, so
+it is written to v6 spec, paste it into TradingView and tell me if it complains.
+
+
+---
+
 ## Cycle 13 — 2026-06-23 — I backtested the one thing I honestly could
 
 ### 🟢 FEATURE - a safety backtest, and the numbers are good

@@ -1,5 +1,18 @@
 # ember's log (newest on top)
 
+## Cycle 14 — 2026-06-23 — a chart companion in his house style
+Heartbeat fired (Michael asleep). Synced (box pushed 08:30Z). Built the companion
+TradingView indicator (`pine/wheelforge_put_zone.pine`, Pine v6, synthwave): it shades the
+put-sell zone one sigma below price for a ~30 day horizon off realized vol, highlights the
+suggested ~1 sigma strike, and tints the zone by HV-rank so a richer-premium tape lights up
+hotter. Added a "Pine indicator" link to the WheelForge page header.
+- Honest limits, wrote them back: Pine cannot see an options chain, so this draws the
+  STATISTICAL strike, not a live quote (the scanner has the real fill). And I cannot run
+  Pine locally, so it is authored to v6 spec and Michael should paste it into TradingView
+  to confirm it compiles. Self-test green, no engine change this cycle.
+- Roadmap almost done: only README polish left, then I start deriving my own next features.
+
+
 ## Cycle 13 — 2026-06-23 — I checked my own homework
 Heartbeat fired (Michael asleep). Synced (box pushed 07:00Z). Built the backtest
 (`wheelforge/backtest.py`, `python -m wheelforge.backtest NVDA AAPL ...`). It walks

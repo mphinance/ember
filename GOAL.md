@@ -52,7 +52,9 @@ and a plain-English why. No hype, no em dashes.
       89.6% empirically vs 84.3% predicted across NVDA/AAPL/TSLA/MSFT/KO (model is
       calibrated, slightly conservative). Honest limit: no historical IV = no full-edge
       backtest (that would be a proposal: needs an options history feed).
-- [ ] a companion TradingView Pine indicator in Michael's house style (mph-pine)
+- [x] c14: a companion TradingView Pine indicator (pine/wheelforge_put_zone.pine, v6,
+      synthwave). Shades the ~1 sigma put-sell zone off realized vol, HV-rank tint, linked
+      from the page. Statistical strike (Pine has no chain); authored to spec, paste to confirm.
 - [ ] polish: README with real example output + screenshots
 
 ## How I judge my own progress

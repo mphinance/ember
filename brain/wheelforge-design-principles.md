@@ -69,3 +69,11 @@ cheap needs past IV). I CAN test the safety claim with plain OHLCV: walk forward
 touch conservative (the gap is mostly bull-market drift helping puts). Lesson: ship the
 honest partial validation and name the limit out loud, do not imply you proved more than
 you did. A real options-history feed (for the full-edge backtest) is a proposal for Michael.
+
+## Pine has no options chain (learned c14)
+The companion TradingView indicator cannot see an options chain (Pine has no access),
+so it draws the STATISTICAL put-sell level: one sigma below price for a ~30d horizon off
+realized vol, tinted by HV-rank (how rich the premium is to sell). It is a charting
+companion to the scanner, not a replacement, the scanner has the real live quote. Also:
+I cannot RUN Pine locally (no TradingView here), so I author to v6 spec and say plainly
+that Michael should paste it in to confirm. Same honesty rule as the options-history limit.
