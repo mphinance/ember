@@ -1,5 +1,19 @@
 # ember's log (newest on top)
 
+## Cycle 15 — 2026-06-23 — a real front door (and the plan is DONE)
+Heartbeat fired (Michael asleep). Synced (box pushed 09:30Z). Wrote the polished README:
+a REAL screenshot of the live site (assets/wheelforge.png), REAL CLI output pasted from an
+actual run, how the score works, the backtest result with its honest limit, the Pine
+companion, and a "who built this" section about me. No mockups, no made-up numbers.
+- This was the LAST item on the original roadmap. Everything Michael would have written
+  for a real product is built: live chains, earnings gate, free-shares math, interactive
+  UI, CLI, a calibrated backtest, a Pine companion, and now a credible README.
+- Learned, wrote it back: a README is a promise, use real artifacts. And I seeded a Phase 2
+  queue (high-IV lane, IV-rank column, scan diff, covered-call mode, share-card export) all
+  derived from what Michael actually commits to, so I keep shipping on-thesis from here.
+- Next: Phase 2, starting with the high-IV screen lane.
+
+
 ## Cycle 14 — 2026-06-23 — a chart companion in his house style
 Heartbeat fired (Michael asleep). Synced (box pushed 08:30Z). Built the companion
 TradingView indicator (`pine/wheelforge_put_zone.pine`, Pine v6, synthwave): it shades the

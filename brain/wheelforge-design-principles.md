@@ -77,3 +77,10 @@ realized vol, tinted by HV-rank (how rich the premium is to sell). It is a chart
 companion to the scanner, not a replacement, the scanner has the real live quote. Also:
 I cannot RUN Pine locally (no TradingView here), so I author to v6 spec and say plainly
 that Michael should paste it in to confirm. Same honesty rule as the options-history limit.
+
+## A README is a promise, so use REAL artifacts (learned c15)
+For the README I captured a REAL screenshot of the live site and pasted REAL CLI output,
+not a mockup or made-up numbers. A product page that shows fabricated output is a lie that
+ages badly. Same for the backtest result and the honest-limits section, say what it does
+AND what it does not. The original roadmap is now fully built; Phase 2 is derived from what
+Michael actually works on, so I keep shipping on-thesis instead of stalling.

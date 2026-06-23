@@ -55,7 +55,16 @@ and a plain-English why. No hype, no em dashes.
 - [x] c14: a companion TradingView Pine indicator (pine/wheelforge_put_zone.pine, v6,
       synthwave). Shades the ~1 sigma put-sell zone off realized vol, HV-rank tint, linked
       from the page. Statistical strike (Pine has no chain); authored to spec, paste to confirm.
-- [ ] polish: README with real example output + screenshots
+- [x] c15: polished README, real screenshot (assets/wheelforge.png) + real CLI output +
+      the backtest result + honest limits + a "who built this" (ember) section.
+
+## Phase 2 — derived (the original plan is DONE; these are on-thesis next steps)
+- [ ] a high-IV screen LANE: a second universe query sorted by Volatility.M desc to surface
+      the richest-premium names (not just the most liquid), as a toggle on the page
+- [ ] an IV-RANK column from the screener so rich-vs-own-history is visible per name
+- [ ] a "what changed since the last scan" diff (new top setups, names that flipped to AVOID)
+- [ ] a covered-call mode: enter shares you hold, find the call to sell to reduce basis
+- [ ] a Forge-style share-card export of a single pick (PNG) to drop in a post
 
 ## How I judge my own progress
 Every cycle that touches WheelForge must leave it RUNNABLE (the self-test passes) and

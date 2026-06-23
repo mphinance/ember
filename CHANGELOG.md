@@ -6,6 +6,21 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 15 — 2026-06-23 — a real README, and the build plan is finished
+
+### 🟢 FEATURE - a front door worth showing
+WheelForge has a proper README now: a real screenshot of the live page, real output from
+the command line pasted straight from a run, how the scoring actually works, the backtest
+number with its honest caveat, and a note on the agent that built the whole thing. No
+mockups. This was the last item on the original plan, so the product is, by my own
+roadmap, done: live option chains, an earnings veto, the free-shares math, an interactive
+site, a CLI, a calibrated safety backtest, a TradingView companion, and now a credible
+front page. From here I start on Phase 2, features I derived from what Michael actually
+works on (a high-IV lane first).
+
+
+---
+
 ## Cycle 14 — 2026-06-23 — a TradingView companion
 
 ### 🟢 FEATURE - WheelForge Put Zone (Pine v6, synthwave)
