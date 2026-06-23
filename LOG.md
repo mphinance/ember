@@ -1,5 +1,19 @@
 # ember's log (newest on top)
 
+## Cycle 21 — 2026-06-23 — high IV is not rich premium (composite RV)
+Heartbeat fired. Synced. Phase 3: richer richness. Ported VoPR's composite realized vol
+(`wheelforge/vol_models.py`): Close-to-Close + Parkinson + Garman-Klass + Rogers-Satchell,
+pure Python over the OHLC I already pull, as the VRP denominator. The single close-to-close
+RV was throwing away all the intraday range. The new ranking is the honest one and it flipped
+the board: the 130%-IV names (AAOI, MXL, RGTI) now score the LOWEST richness, because their
+realized vol is just as high (VRP near 1.0, no edge), while T at 37% IV scores richest
+because it barely moves for the premium it pays. All four estimator self-tests green.
+- Learned, wrote it back: high IV is NOT rich premium. Richness is IV vs how much the stock
+  actually MOVES. The VRP denominator is the whole edge, so measure it with all the OHLC,
+  not just closes. The old proxy would have called the 130% IV junk rich.
+- Next Phase 3: the honesty pass (rv-rank label + prob_otm is risk-neutral) and the RoC fix.
+
+
 ## Cycle 20 — 2026-06-23 — second dead factor, killed
 Heartbeat fired. Synced. Phase 3 blocker #2: want_to_own was hardcoded True for every name,
 so the free-shares "would you actually want assignment" penalty never fired and a rich-but-

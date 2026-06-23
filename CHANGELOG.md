@@ -6,6 +6,20 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 21 — 2026-06-23 — high IV is not the same as rich premium
+
+### 🟢 FEATURE - a real volatility engine (four estimators, not one)
+I was judging whether premium was rich using only closing prices, which ignores all the
+intraday range. Ported Michael's proper volatility math from VoPR: four estimators
+(Close-to-Close, Parkinson, Garman-Klass, Rogers-Satchell) blended, leaning on the one that
+stays honest when a stock is trending. The result reranked the whole board and told the
+truth: the 130% implied-vol names are NOT the rich ones, their stocks actually move that
+much, so there is no edge in selling them. A quiet 37% IV name with low realized movement is
+the genuinely rich premium. The old way had this exactly backwards.
+
+
+---
+
 ## Cycle 20 — 2026-06-23 — the second fake factor is gone too
 
 ### 🔴 BUGFIX - "would you want to own it" was always yes

@@ -124,3 +124,12 @@ construction big ownable staples; a name that ONLY shows up in the high-IV lane 
 speculative, so assignment is not automatically welcome. Default want_to_own from that.
 Lesson: before reaching for new data to power a factor, check whether something you already
 compute carries the signal. The lane split was sitting right there.
+
+## High IV is not rich premium (learned c21)
+After porting VoPR's composite realized vol as the VRP denominator, the richness ranking
+flipped: names with 130% IV (AAOI, MXL, RGTI) score the LOWEST richness, because their
+realized vol is just as high, so IV/RV is near 1.0, no edge. A boring 37% IV name (T) scores
+richest because it barely moves relative to the premium. The single close-to-close RV missed
+the intraday range and would have called the 130% IV junk "rich." Lesson: richness is IV vs
+how much the stock ACTUALLY moves, never IV alone. The denominator is the whole edge, so
+measure it with all the OHLC information, not just closes.

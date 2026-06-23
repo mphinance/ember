@@ -85,8 +85,11 @@ reference/csp-intelligence.md). Fix the integrity holes first, in this order:
 - [ ] **SAFETY: never blank the site.** Guard build_site_data: if the universe/scan comes
       back empty, keep the last good scan.json, do not overwrite with an empty list.
       (Patched in c19; verify + keep.)
-- [ ] richer RICHNESS: port VoPR's composite realized vol (4 estimators: CC/Parkinson/
-      Garman-Klass/Rogers-Satchell, `scanner/volatility_models.py`) for an honest VRP.
+- [x] c21: richer RICHNESS (wheelforge/vol_models.py). Ported VoPR's composite realized vol
+      (CC + Parkinson + Garman-Klass + Rogers-Satchell, pure Python) as the VRP denominator.
+      It revealed the truth: high IV != rich premium. The 130%-IV names (AAOI/MXL/RGTI) score
+      LOWEST richness because their realized vol is just as high (VRP ~1); T at 37% IV scores
+      richest because it barely moves. The old close-to-close RV had this backwards.
 - [ ] honesty: rename the realized-vol IV-rank proxy to read `rv-rank` until the real
       IV-history store is thick; prob_otm is risk-neutral N(d2), label it as such in the UI.
 - [ ] correctness: RoC denominator should be (strike - premium), not strike.

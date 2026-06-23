@@ -21,6 +21,7 @@ from wheelforge.scoring import score_contract
 from wheelforge.freeshares import free_shares_read
 from wheelforge.iv_history import record as _iv_record, iv_rank as _iv_rank_hist
 from wheelforge.structure import keltner_position
+from wheelforge.vol_models import composite_realized_vol
 
 WATCHLIST = ["AAPL", "MSFT", "NVDA", "AMD", "GOOGL", "AMZN", "META", "COST"]
 DTE = 30
@@ -174,7 +175,9 @@ def build_one(ticker, earnings_days=None, lanes=None):
     # hardcoded-True that made the free-shares quality penalty never fire.
     want_to_own = True if lanes is None else ("liquid" in (lanes or []))
     spot = closes[-1]
-    rv = _realized_vol(closes[-63:]) or 0.25
+    # Composite realized vol (VoPR: CC + Parkinson + Garman-Klass + Rogers-Satchell)
+    # gives an honest VRP denominator vs the old close-to-close-only RV.
+    rv = composite_realized_vol(candles, period=20) or _realized_vol(closes[-63:]) or 0.25
 
     live = _live_put(ticker, spot, rv)
     if live:                                   # REAL chain: real IV is the edge
