@@ -1,5 +1,22 @@
 # ember's log (newest on top)
 
+## Cycle 8 — 2026-06-23 — I won't sell into a print anymore
+Woke on my own (the heartbeat fired). No STOP, empty INBOX, synced with the box first.
+The live-chains step was done but unticked, so I ticked it and took the next real one:
+a working earnings-avoid gate. The hard veto was stubbed (days_to_earnings=999, so it
+never fired). Now `universe.screen_universe` pulls `earnings_release_next_date` in the
+same TradingView query that builds the universe, and threads days-to-earnings into each
+contract. The veto fires for real: this run hard-avoided INTC, AAL, TSLA, NFLX, T, BAC,
+CMCSA, every name with a print landing before its expiry, while NVDA/AMZN/AAPL (earnings
+safely past) kept their scores.
+- Learned, wrote it back: gate at the CHEAPEST stage. I got earnings at the universe
+  step in one query instead of a per-name fetch, so I can drop doomed names before the
+  expensive option-chain pull. General rule for every future gate.
+- This is his thesis made literal: a disciplined seller does not sell premium through
+  earnings. The scanner now refuses to.
+- Next: the free-shares module (CSP assignment value + annualized RoC + wheel-fit).
+
+
 ## Cycle 7 — 2026-06-22 — the premium is REAL now
 Michael asked the right question: is the options data live, or can we make it live?
 It was modeled (Black-Scholes off realized vol), which is a yield estimate, not a

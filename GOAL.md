@@ -31,8 +31,9 @@ and a plain-English why. No hype, no em dashes.
       six factors blended into a Premium Quality Score + a self-test. No network yet.
 - [x] c4: data layer (`build_site_data.py`, real OHLCV via yfinance) + KLineChart
       frontend in `docs/` + GitHub Pages deploy + a changelog. Premium MODELED for now.
-- [ ] swap modeled premium for LIVE option chains (real IV, bid/ask, OI) per name
-- [ ] earnings-avoid gate from real earnings dates + a real liquidity filter
+- [x] c7: swap modeled premium for LIVE option chains (real IV, bid/ask, OI) per name
+- [x] c8: earnings-avoid gate from real earnings dates (TradingView earnings field ->
+      hard veto). Liquidity is real too now (live bid/ask/OI from the chain).
 - [ ] the "free shares" module: CSP assignment value, annualized RoC, wheel-fit score
 - [ ] a ranked CLI: `python -m wheelforge SCAN AAPL MSFT ...` prints the top setups
 - [ ] a tiny backtest: did high-score setups actually expire OTM / pay out more?

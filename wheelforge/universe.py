@@ -27,15 +27,34 @@ def _clean(sym):
     return s if s.isalpha() else None
 
 
-def liquid_universe(limit: int = 30, min_cap: float = 5e9,
+def _earnings_days(val):
+    """TradingView earnings_release_next_date -> days from today (or None).
+    The field comes back as a unix timestamp (sec) or an ISO date; handle both."""
+    from datetime import date, datetime, timezone
+    if val is None:
+        return None
+    try:
+        if isinstance(val, (int, float)):
+            d = datetime.fromtimestamp(float(val), tz=timezone.utc).date()
+        else:
+            d = date.fromisoformat(str(val)[:10])
+        return (d - date.today()).days
+    except Exception:
+        return None
+
+
+def screen_universe(limit: int = 30, min_cap: float = 5e9,
                     min_dollar_vol: float = 2e7, price_lo: float = 15.0,
                     price_hi: float = 800.0):
-    """Most-liquid, optionable-grade US names, most-liquid first. Fail-open."""
+    """Most-liquid, optionable-grade US names, most-liquid first, each carrying its
+    days-to-next-earnings (for the avoid gate). Returns a list of
+    {ticker, earnings_days}. Fail-open to the staple list (earnings_days None)."""
     try:
         from tradingview_screener import Query, col
         q = (Query()
              .set_markets("america")
-             .select("name", "close", "market_cap_basic", "average_volume_90d_calc")
+             .select("name", "close", "market_cap_basic",
+                     "average_volume_90d_calc", "earnings_release_next_date")
              .where(
                  col("market_cap_basic") >= min_cap,
                  col("average_volume_90d_calc") >= (min_dollar_vol / max(price_lo, 1)),
@@ -43,21 +62,28 @@ def liquid_universe(limit: int = 30, min_cap: float = 5e9,
                  col("close") <= price_hi,
              )
              .order_by("average_volume_90d_calc", ascending=False)
-             .limit(int(limit) * 2))   # over-pull, then clean/dedupe to limit
+             .limit(int(limit) * 2))
         _count, df = q.get_scanner_data()
         out, seen = [], set()
-        for raw in df["name"].tolist():
-            s = _clean(raw)
-            if s and s not in seen:
-                seen.add(s)
-                out.append(s)
+        for _, row in df.iterrows():
+            s = _clean(row.get("name"))
+            if not s or s in seen:
+                continue
+            seen.add(s)
+            out.append({"ticker": s,
+                        "earnings_days": _earnings_days(row.get("earnings_release_next_date"))})
             if len(out) >= limit:
                 break
         if out:
             return out
     except Exception as exc:
         print(f"  universe: screener unavailable ({exc}); using fallback")
-    return FALLBACK[:limit]
+    return [{"ticker": t, "earnings_days": None} for t in FALLBACK[:limit]]
+
+
+def liquid_universe(limit: int = 30, **kw):
+    """Just the tickers (back-compat wrapper over screen_universe)."""
+    return [d["ticker"] for d in screen_universe(limit, **kw)]
 
 
 if __name__ == "__main__":

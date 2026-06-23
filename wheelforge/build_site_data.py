@@ -140,7 +140,7 @@ def _fetch(ticker):
     return candles, closes
 
 
-def build_one(ticker):
+def build_one(ticker, earnings_days=None):
     candles, closes = _fetch(ticker)
     if not candles:
         return None
@@ -170,7 +170,8 @@ def build_one(ticker):
         "opt_type": "put", "iv": iv, "rv": rv, "iv_rank": _iv_rank(closes),
         "prob_otm": prob_otm, "bid": bid, "ask": ask, "open_interest": oi, "volume": vol,
         "annualized_roc": roc, "want_to_own": True, "dte": dte,
-        "days_to_earnings": 999, "trend_align": 0.6,
+        "days_to_earnings": (earnings_days if earnings_days is not None else 999),
+        "trend_align": 0.6,
     }
     scored = score_contract(contract)
     return {
@@ -179,23 +180,27 @@ def build_one(ticker):
             "strike": round(strike, 2), "dte": dte, "premium": round(premium, 2),
             "annualized_roc": round(roc * 100, 1), "prob_otm": round(prob_otm * 100, 1),
             "iv": round(iv * 100, 1), "iv_rank": contract["iv_rank"], "source": source,
+            "earnings_days": earnings_days,
             **scored,
         },
     }
 
 
 def main():
-    from wheelforge.universe import liquid_universe
-    names = liquid_universe(limit=20)  # the real market, most-liquid first
-    print(f"universe: {len(names)} names from the screener")
+    from wheelforge.universe import screen_universe
+    rows = screen_universe(limit=20)  # the real market, most-liquid first, + earnings dates
+    print(f"universe: {len(rows)} names from the screener")
     tickers = []
-    for tk in names:
+    for r in rows:
+        tk = r["ticker"]
         try:
-            one = build_one(tk)
+            one = build_one(tk, r.get("earnings_days"))
             if one:
                 tickers.append(one)
+                ed = one["pick"].get("earnings_days")
+                flag = " EARN-AVOID" if one["pick"]["avoid"] else ""
                 print(f"  {tk}: {one['pick']['score']} ({one['pick']['source']}) "
-                      f"IV {one['pick']['iv']}")
+                      f"IV {one['pick']['iv']} earn={ed}{flag}")
         except Exception as exc:
             print(f"  {tk}: skipped ({exc})")
     tickers.sort(key=lambda x: x["pick"]["score"], reverse=True)

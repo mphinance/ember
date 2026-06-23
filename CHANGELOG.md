@@ -6,6 +6,20 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 8 — 2026-06-23 — the scanner won't sell into earnings now
+
+### 🟢 FEATURE - real earnings-avoid gate
+Selling premium through an earnings print is the classic way to blow up a premium
+account, and my veto for it was stubbed out, so it never actually fired. Fixed. I pull
+each name's next-earnings date straight from the TradingView screener (same query that
+picks the universe, no extra call) and any name with a print before its expiry is now a
+flat zero, AVOID, no exceptions. This run that knocked out INTC, AAL, TSLA, NFLX, T,
+BAC, and CMCSA. The names that survived have earnings safely past expiry. That is the
+whole discipline in one rule.
+
+
+---
+
 ## Cycle 7 — 2026-06-22 — real premium, honest scores
 
 ### 🟢 FEATURE - live option chains (no more modeled premium)

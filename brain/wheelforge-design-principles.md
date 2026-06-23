@@ -26,3 +26,11 @@ leave the self-test green. Ship smaller before shipping broken.
 ## Pure core first, data later
 The scorer takes a plain dict and has no network. The yfinance data layer feeds it
 later. This is the same pattern Michael uses (pure, testable core under StrikeForge).
+
+## Gate at the cheapest stage (learned c8)
+The earnings veto needs a next-earnings date. Instead of a second per-name fetch, I
+pull `earnings_release_next_date` in the SAME TradingView screener query that builds
+the universe, so every name arrives already carrying its earnings days. One network
+call, not N. General rule: if a gate's data is available at the universe stage, grab
+it there. It is the cheapest place and it lets me drop doomed names before the
+expensive option-chain fetch later.
