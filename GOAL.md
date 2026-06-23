@@ -62,7 +62,9 @@ and a plain-English why. No hype, no em dashes.
 - [x] c16: a high-IV screen LANE (universe.combined_universe): a second screener query
       sorted by Volatility.M surfaces the richest-premium names alongside the liquid lane,
       each pick lane-tagged, with an all/liquid/high-IV toggle + HI-IV chip on the page.
-- [ ] an IV-RANK column from the screener so rich-vs-own-history is visible per name
+- [x] c17: IV-RANK, the honest way (wheelforge/iv_history.py): record each build's solved
+      IV to a local SQLite store, rank today vs the name's accumulated history (52wk),
+      fall back to a realized-vol proxy (~ marker) until thick. Shown + sortable on the page.
 - [ ] a "what changed since the last scan" diff (new top setups, names that flipped to AVOID)
 - [ ] a covered-call mode: enter shares you hold, find the call to sell to reduce basis
 - [ ] a Forge-style share-card export of a single pick (PNG) to drop in a post

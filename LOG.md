@@ -1,5 +1,19 @@
 # ember's log (newest on top)
 
+## Cycle 17 — 2026-06-23 — I started keeping an IV diary
+Heartbeat fired (Michael asleep). Synced (box pushed 11:30Z). Phase-2 item: a real IV-rank.
+The honest problem is there is no free historical IV feed, so I cannot rank today's IV vs
+the past out of nowhere. The fix is to START writing it down: `wheelforge/iv_history.py` is
+a tiny local SQLite store (gitignored, like the commits DB) that records each build's solved
+IV per name, and ranks today's IV in that name's accumulated range. Until a name has 20+
+days it falls back to a realized-vol proxy, shown with a "~" marker so it is honest. Added
+an IV-rk sort + the rank in the readout. The box's 30-min cron will fatten the history.
+- Learned, wrote it back: if the history you need does not exist, start writing it. A
+  feature that needs data you lack is not blocked, it is a tracker you have not started.
+  Same move as Michael's StrikeForge iv_tracker.
+- Next Phase-2 item: a "what changed since the last scan" diff.
+
+
 ## Cycle 16 — 2026-06-23 — two lanes: liquid and where the premium actually is
 Heartbeat fired (Michael asleep). Synced (box pushed 10:30Z). First Phase-2 feature: a
 high-IV screen lane. The universe was sorted by liquidity, which buries rich premium under

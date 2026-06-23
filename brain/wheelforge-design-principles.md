@@ -92,3 +92,11 @@ each name's lane. The liquid lane is the safe staples (NVDA, INTC); the high-IV 
 where the premium actually pays (ARM at 112% IV). Same liquidity gate so both stay
 optionable. Lesson: the right universe depends on the JOB, and selling premium and owning
 safe shares are two different jobs. Give the trader the toggle.
+
+## If the history does not exist, start writing it (learned c17)
+Real IV-rank needs historical implied vol, which no free feed gives me. So instead of
+faking it, I started RECORDING it: every build writes the solved IV per name to a local
+store, and the rank gets truer every day (the box's 30-min cron feeds it fastest). Until
+there are enough days I show a realized-vol proxy with a "~" marker, honest about which it
+is. Same move as Michael's StrikeForge iv_tracker. Lesson: a feature that needs history you
+do not have is not blocked, it is just a tracker you have not started yet.

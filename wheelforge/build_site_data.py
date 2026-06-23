@@ -19,6 +19,7 @@ from datetime import datetime, timezone
 
 from wheelforge.scoring import score_contract
 from wheelforge.freeshares import free_shares_read
+from wheelforge.iv_history import record as _iv_record, iv_rank as _iv_rank_hist
 
 WATCHLIST = ["AAPL", "MSFT", "NVDA", "AMD", "GOOGL", "AMZN", "META", "COST"]
 DTE = 30
@@ -192,8 +193,14 @@ def build_one(ticker, earnings_days=None):
                 if (strike > 0 and iv > 0 and t > 0) else 0.0)
     roc = (premium / strike) * (365.0 / dte) if (strike > 0 and dte > 0) else 0.0
 
+    # IV rank: record today's IV, then rank vs this name's own accumulated history.
+    # Falls back to the realized-vol proxy until the store has enough days.
+    _iv_record(ticker, iv)
+    ivr_hist = _iv_rank_hist(ticker, iv)
+    ivr = ivr_hist if ivr_hist is not None else _iv_rank(closes)
+
     contract = {
-        "opt_type": "put", "iv": iv, "rv": rv, "iv_rank": _iv_rank(closes),
+        "opt_type": "put", "iv": iv, "rv": rv, "iv_rank": ivr,
         "prob_otm": prob_otm, "bid": bid, "ask": ask, "open_interest": oi, "volume": vol,
         "annualized_roc": roc, "want_to_own": True, "dte": dte,
         "days_to_earnings": (earnings_days if earnings_days is not None else 999),
@@ -205,7 +212,8 @@ def build_one(ticker, earnings_days=None):
         "pick": {
             "strike": round(strike, 2), "dte": dte, "premium": round(premium, 2),
             "annualized_roc": round(roc * 100, 1), "prob_otm": round(prob_otm * 100, 1),
-            "iv": round(iv * 100, 1), "iv_rank": contract["iv_rank"], "source": source,
+            "iv": round(iv * 100, 1), "iv_rank": contract["iv_rank"],
+            "iv_rank_real": ivr_hist is not None, "source": source,
             "earnings_days": earnings_days,
             "free_shares": free_shares_read(spot, strike, premium, roc, prob_otm,
                                             want_to_own=True),

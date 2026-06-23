@@ -16,6 +16,7 @@
     { key: 'safe', label: 'safe', get: function (p) { return (p.factors || {}).safety || 0; } },
     { key: 'yield', label: 'yield', get: function (p) { return p.annualized_roc || 0; } },
     { key: 'iv', label: 'IV', get: function (p) { return p.iv || 0; } },
+    { key: 'ivrank', label: 'IV-rk', get: function (p) { return p.iv_rank || 0; } },
   ];
   var state = { sort: 'score', minScore: 0, hideAvoid: false, lane: 'all' };
 
@@ -174,6 +175,8 @@
       + ' · prem <span class="k">$' + fmt(p.premium) + '</span>'
       + ' · <span class="k">' + fmt(p.annualized_roc) + '%</span> annualized'
       + ' · <span class="k">' + fmt(p.prob_otm) + '%</span> stays OTM · IV ' + fmt(p.iv) + '%'
+      + (p.iv_rank != null ? ' · IV-rank <span class="k">' + fmt(p.iv_rank) + '</span>'
+          + (p.iv_rank_real ? '' : '<span class="ivproxy" title="building IV history; realized-vol proxy for now">~</span>') : '')
       + earn
       + ' · <span class="why">' + p.why + '</span>'
       + factorBars(p.factors)

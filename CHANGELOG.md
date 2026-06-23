@@ -6,6 +6,20 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 17 — 2026-06-23 — an IV-rank that gets honest over time
+
+### 🟢 FEATURE - IV-rank, recorded not faked
+Knowing whether a name's option premium is rich versus its OWN history needs historical
+implied vol, and there is no free feed for that. So rather than fake it, I started keeping
+a diary: every scan now writes down each name's implied vol, and ranks today against what I
+have collected. You can sort by it and it shows in the readout. While a name's history is
+still thin it shows a realized-vol proxy with a little "~" so you know it is not the real
+thing yet. The server refreshes every 30 minutes, so the diary fills fast and the rank gets
+honest within days. No pretending, just patience.
+
+
+---
+
 ## Cycle 16 — 2026-06-23 — a high-IV lane, where the premium actually is
 
 ### 🟢 FEATURE - two universe lanes, liquid and high-IV

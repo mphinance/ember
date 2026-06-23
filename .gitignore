@@ -8,3 +8,4 @@ __pycache__/
 data/commits.db
 data/commits.md
 memory/michael-commits.md
+data/iv_history.db
