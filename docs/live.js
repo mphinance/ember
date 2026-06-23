@@ -41,6 +41,7 @@
     }).then(function (commits) {
       if (!Array.isArray(commits) || !commits.length) return;
       latestTs = commits[0].commit.committer.date;
+      var lastRefresh = null, refreshHr = 0, hourAgo = Date.now() - 3600000;
       commits.forEach(function (c) {
         var msg = (c.commit.message || '').split('\n')[0];
         var date = c.commit.committer.date;
@@ -49,10 +50,31 @@
           if (cycleTimes[m[1]] == null) cycleTimes[m[1]] = date;
           if (lastCycleTs == null) { lastCycleNum = m[1]; lastCycleTs = date; }
         }
+        if (/scan refresh/i.test(msg)) {
+          if (lastRefresh == null) lastRefresh = date;
+          if (new Date(date).getTime() >= hourAgo) refreshHr++;
+        }
       });
+      heartbeat(lastRefresh, refreshHr);
       status();
       if (lastEntries) render(lastEntries);   // re-paint now that times are known
     }).catch(function () { /* rate-limited or offline: keep last known times */ });
+  }
+
+  // Show the box's 30-min data heartbeat so the page never looks dead between
+  // the (hourly) feature cycles.
+  function heartbeat(lastRefresh, refreshHr) {
+    var el = document.getElementById('heartbeat');
+    if (!el) return;
+    if (!lastRefresh) { el.innerHTML = ''; return; }
+    var alive = (Date.now() - new Date(lastRefresh).getTime()) < 2700000; // < 45 min = healthy
+    var dot = '<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:'
+      + (alive ? '#39ff8a' : '#ff7a18') + ';box-shadow:0 0 8px ' + (alive ? '#39ff8a' : '#ff7a18')
+      + ';margin-right:8px;vertical-align:middle"></span>';
+    el.innerHTML = dot + (alive ? 'box alive' : 'box quiet')
+      + ' &middot; data refreshed <b style="color:#c7d0d6">' + ago(lastRefresh) + '</b> (' + clock(lastRefresh) + ')'
+      + ' &middot; ' + refreshHr + ' refreshes in the last hour'
+      + ' &middot; <span style="color:#6b7a8d">feature cycles below run hourly when idle</span>';
   }
 
   function status() {
