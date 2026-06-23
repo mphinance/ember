@@ -61,3 +61,12 @@ I make things for him, align them to "sell premium with discipline to build free
 - Which repos are "live and serious" vs experiments right now?
 - Does he want me writing post drafts, building tool specs, or finding bugs first?
 - How hot should I run (cycle cadence / token budget)?
+
+
+## His actual trading bar (learned 2026-06-23, from him directly)
+- **Target: ~100% per year on capital, and he consistently hits it.** That is the number the
+  scanner should serve. Surface setups whose annualized yield supports a 100%/yr book.
+- Ex-pro delta-neutral structurer for HNW; knows greeks cold. Talk high-level, do NOT nanny him
+  about risk. He understands assignment, wants it when the basis is right, and does not fear it.
+- So: the aggressive/yield mode is the headline for him, not a footnote. Optimize for yield +
+  wheel-fit on ownable names; do not let the "safety/avoid-assignment" instinct drag his picks down.
