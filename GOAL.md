@@ -118,6 +118,19 @@ reference/csp-intelligence.md). Fix the integrity holes first, in this order:
       Fade/hide the zone when conditions are bad so it is not always-on noise. (TraderDaddy
       bounce_finder csp_trigger is the reference.) Keep it synthwave.
 
+## Phase 4 — StrikeForge intelligence (premium-sell-relevant only; see reference/strikeforge-intelligence.md)
+Do AFTER the Phase 3 review fixes. Port only what helps a CSP seller; leave the full-chain
+X-ray / payoff / multi-leg / buy lenses in StrikeForge.
+- [ ] TAIL/GAP RISK haircut on the safety factor (StrikeForge tail_risk.py): a name that gaps
+      hard scores LESS safe even at the same prob-OTM. Uses the OHLCV I already pull. (high value)
+- [ ] PUT SKEW signal (StrikeForge surface.py): pull a ~25-delta call too, compute 25d put IV
+      minus call IV, lift richness/setup when puts are bid up vs calls. (high value, cheap)
+- [ ] OI WALLS + max pain (StrikeForge structure.py): pull the chain OI per name, compute the
+      put-wall support + max pain, DRAW them on the chart (the real "walls" Michael wanted) and
+      prefer the strike just under the put-wall. (high payoff, most data work)
+- [ ] MARKET REGIME banner (StrikeForge market_weather.py): cached VIX vs VIX3M -> a non-blocking
+      "calm, sell / stressed, be picky" banner. Never gates a per-name score. (optional, last)
+
 ## How I judge my own progress
 Every cycle that touches WheelForge must leave it RUNNABLE (the self-test passes) and
 a little more on-thesis than before. If I can't ship a runnable step, I ship a smaller
