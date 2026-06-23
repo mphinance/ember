@@ -1,14 +1,23 @@
 /* ember // live build log — a pretty tail of her own coding.
  * Fetches her LOG.md (build log) and CHANGELOG.md (patch notes) raw from GitHub
- * (open CORS, no rate limit) and renders them as a glowing terminal feed that
- * polls for new cycles. Newest on top; new entries since last poll glow green. */
+ * (open CORS, no rate limit, polled every 20s) and renders them as a glowing
+ * terminal feed. ALSO fetches the GitHub commits API (throttled to every 120s to
+ * stay under the 60/hr unauth rate limit) to stamp each cycle with the REAL time
+ * the commit landed, plus a "last activity" clock so you know exactly when things
+ * ran. Newest on top; new entries since last poll glow green. */
 (function () {
   'use strict';
   var RAW = 'https://raw.githubusercontent.com/mphinance/ember/master/';
   var SRC = { log: RAW + 'LOG.md', changelog: RAW + 'CHANGELOG.md' };
+  var COMMITS = 'https://api.github.com/repos/mphinance/ember/commits?per_page=80';
   var feed = 'log';
-  var seen = {};        // header -> true, to flag fresh entries
+  var seen = {};            // header -> true, to flag fresh entries
   var first = true;
+  var cycleTimes = {};      // cycle number -> ISO commit date
+  var latestTs = null;      // newest commit of any kind (the heartbeat)
+  var lastCycleNum = null, lastCycleTs = null;  // newest "cycle N" commit
+  var commitsAt = 0;        // last time we hit the API (throttle)
+  var lastEntries = null;   // cached parse, so we can re-render when times arrive
 
   function ago(d) {
     var s = (Date.now() - new Date(d).getTime()) / 1000;
@@ -18,8 +27,44 @@
     if (s < 129600) return Math.round(s / 3600) + 'h ago';
     return Math.round(s / 86400) + 'd ago';
   }
+  function clock(d) {
+    try { return new Date(d).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }); }
+    catch (e) { return ''; }
+  }
 
-  // Split a markdown doc into entries on "## " headers; keep header + body lines.
+  // Pull commit timestamps and map them to cycle numbers (throttled).
+  function fetchCommits(force) {
+    if (!force && Date.now() - commitsAt < 110000) return Promise.resolve();
+    commitsAt = Date.now();
+    return fetch(COMMITS).then(function (r) {
+      if (!r.ok) throw new Error(r.status); return r.json();
+    }).then(function (commits) {
+      if (!Array.isArray(commits) || !commits.length) return;
+      latestTs = commits[0].commit.committer.date;
+      commits.forEach(function (c) {
+        var msg = (c.commit.message || '').split('\n')[0];
+        var date = c.commit.committer.date;
+        var m = msg.match(/cycle\s+(\d+)/i);
+        if (m) {
+          if (cycleTimes[m[1]] == null) cycleTimes[m[1]] = date;
+          if (lastCycleTs == null) { lastCycleNum = m[1]; lastCycleTs = date; }
+        }
+      });
+      status();
+      if (lastEntries) render(lastEntries);   // re-paint now that times are known
+    }).catch(function () { /* rate-limited or offline: keep last known times */ });
+  }
+
+  function status() {
+    var foot = document.getElementById('foot');
+    if (!foot) return;
+    var bits = [];
+    if (latestTs) bits.push('last activity ' + ago(latestTs) + ' (' + clock(latestTs) + ')');
+    if (lastCycleTs) bits.push('last cycle: cycle ' + lastCycleNum + ' at ' + clock(lastCycleTs));
+    bits.push(feed + ' refreshed ' + clock(Date.now()));
+    foot.textContent = bits.join('  ·  ');
+  }
+
   function parse(md) {
     var out = [], cur = null;
     md.split('\n').forEach(function (ln) {
@@ -43,6 +88,13 @@
     return '';
   }
 
+  function timeTag(cycleNum) {
+    var ts = cycleNum && cycleTimes[cycleNum];
+    if (!ts) return '';
+    return '<span class="ctime" style="color:#39ff8a;font-weight:600;font-size:11px;margin-left:8px">'
+      + clock(ts) + ' · ' + ago(ts) + '</span>';
+  }
+
   function render(entries) {
     var host = document.getElementById('feed');
     host.innerHTML = '';
@@ -51,12 +103,12 @@
       seen[e.head] = true;
       var div = document.createElement('div');
       div.className = 'entry' + (fresh ? ' fresh' : '');
-      // header: pull "Cycle N" + date out if present
       var m = e.head.match(/Cycle\s+(\d+)\s*[—-]\s*([\d-]+)?\s*[—-]?\s*(.*)/i);
       var h = document.createElement('div'); h.className = 'ehead';
       if (m) {
         h.innerHTML = '<span class="num">cycle ' + m[1] + '</span>'
           + (m[2] ? '<span class="date">' + m[2] + '</span>' : '')
+          + timeTag(m[1])
           + '<div style="margin-top:3px">' + esc(m[3] || '') + '</div>';
       } else {
         var t = tagFor(e.head);
@@ -80,14 +132,16 @@
   function esc(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
 
   function poll() {
+    fetchCommits(false);   // throttled inside; refreshes the times map + clock
     fetch(SRC[feed] + '?t=' + Date.now()).then(function (r) {
       if (!r.ok) throw new Error(r.status); return r.text();
     }).then(function (md) {
-      render(parse(md));
-      document.getElementById('foot').textContent =
-        'live · ' + feed + ' · refreshed ' + new Date().toLocaleTimeString() + ' · polling every 20s';
+      lastEntries = parse(md);
+      render(lastEntries);
+      status();
     }).catch(function (e) {
-      document.getElementById('foot').textContent = 'could not reach her repo (' + e + '), retrying';
+      var foot = document.getElementById('foot');
+      if (foot) foot.textContent = 'could not reach her repo (' + e + '), retrying';
     });
   }
 
@@ -98,6 +152,7 @@
     });
   });
 
+  fetchCommits(true);
   poll();
   setInterval(poll, 20000);
 })();
