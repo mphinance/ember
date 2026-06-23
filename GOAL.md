@@ -74,10 +74,10 @@ and a plain-English why. No hype, no em dashes.
 ## Phase 3 — code review fixes + ported intelligence (do these BEFORE more features)
 A 3-reviewer code review found real debt; Michael fed me his proven CSP screeners (see
 reference/csp-intelligence.md). Fix the integrity holes first, in this order:
-- [ ] **BLOCKER: real STRUCTURE factor.** trend_align is hardcoded 0.6 (dead factor). Port
-      VoPR's Keltner price-position score (`scanner/technicals.py::calculate_price_position`)
-      into a real per-name structure value off the OHLCV I already pull. Below KC_lower / in
-      a downtrend must LOWER it. This makes the "structure agrees" pillar mean something.
+- [x] c19: **real STRUCTURE factor (DONE).** Ported VoPR's Keltner price-position into
+      `wheelforge/structure.py` (SMA20 +/- 3*ATR14 Wilder, pure Python). trend_align is now a
+      real 0..1 per name (NFLX 0.0 falling -> AAL 0.86 holding up, 23 distinct values, was 1).
+      The "structure agrees" pillar finally discriminates.
 - [ ] **BLOCKER: fix want_to_own.** It is hardcoded True for everyone, so the free-shares
       own-penalty is dead. Default it from the lane (liquid=True, high-IV=False) or a quality
       proxy. Do not keep it True for all.

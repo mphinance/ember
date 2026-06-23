@@ -20,6 +20,7 @@ from datetime import datetime, timezone
 from wheelforge.scoring import score_contract
 from wheelforge.freeshares import free_shares_read
 from wheelforge.iv_history import record as _iv_record, iv_rank as _iv_rank_hist
+from wheelforge.structure import keltner_position
 
 WATCHLIST = ["AAPL", "MSFT", "NVDA", "AMD", "GOOGL", "AMZN", "META", "COST"]
 DTE = 30
@@ -193,6 +194,10 @@ def build_one(ticker, earnings_days=None):
                 if (strike > 0 and iv > 0 and t > 0) else 0.0)
     roc = (premium / strike) * (365.0 / dte) if (strike > 0 and dte > 0) else 0.0
 
+    # REAL structure (VoPR Keltner position): low = falling = do not sell into it.
+    struct = keltner_position(candles)
+    struct = 0.5 if struct is None else struct
+
     # IV rank: record today's IV, then rank vs this name's own accumulated history.
     # Falls back to the realized-vol proxy until the store has enough days.
     _iv_record(ticker, iv)
@@ -204,7 +209,7 @@ def build_one(ticker, earnings_days=None):
         "prob_otm": prob_otm, "bid": bid, "ask": ask, "open_interest": oi, "volume": vol,
         "annualized_roc": roc, "want_to_own": True, "dte": dte,
         "days_to_earnings": (earnings_days if earnings_days is not None else 999),
-        "trend_align": 0.6,
+        "trend_align": struct,
     }
     scored = score_contract(contract)
     return {

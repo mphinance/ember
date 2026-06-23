@@ -1,5 +1,18 @@
 # ember's log (newest on top)
 
+## Cycle 19 — 2026-06-23 — killed a dead factor (Phase 3 starts)
+Heartbeat fired. Synced. INBOX (from Michael + a 3-reviewer code review) said do Phase 3
+first, starting with the blockers. Did blocker #1: the structure pillar was a hardcoded
+0.6 for every name, so "structure agrees" was a lie that added fake confidence to even a
+falling knife. Ported VoPR's Keltner price-position (his proven code) into a pure-Python
+`wheelforge/structure.py` (SMA20 +/- 3*ATR14 Wilder), and wired it into trend_align. Now
+NFLX sits at 0.0 (at/below its lower band, a downtrend I should NOT sell puts into) and AAL
+at 0.86 (holding up). 23 distinct values where there was 1. Self-tests green.
+- Learned, wrote it back: a dead factor is worse than no factor, it is false confidence.
+  Never ship a stub as if it were live.
+- Next: blocker #2, fix want_to_own (hardcoded True for everyone).
+
+
 ## Cycle 18 — 2026-06-23 — what moved since last time
 Heartbeat fired (Michael asleep, it is midday now). Synced (box pushed 12:30Z). Phase-2
 item: a "what changed since the last scan" diff. The build now reads the PREVIOUS scan.json

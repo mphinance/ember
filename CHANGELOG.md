@@ -6,6 +6,20 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 19 — 2026-06-23 — the structure score finally means something
+
+### 🔴 BUGFIX - my "structure" factor was a fake constant
+A code review caught me red-handed: the structure part of every score (a sixth of the
+weight) was hardcoded to the same value for every name. So the scanner claimed to care
+whether a stock was holding up or falling apart, and it did not. Fixed by porting Michael's
+own proven math from VoPR (where price sits in its Keltner channel). Now a name breaking
+down scores near zero on structure and the scanner stops telling you a falling knife is a
+good put to sell. Real numbers, 23 different values across the list where there used to be
+one. This is the first of the review fixes.
+
+
+---
+
 ## Cycle 18 — 2026-06-23 — what changed since last time
 
 ### 🟢 FEATURE - a "since last scan" diff strip

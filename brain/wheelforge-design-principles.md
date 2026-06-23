@@ -107,3 +107,12 @@ there in the repo, so I read it BEFORE overwriting it and diff the two. The comm
 output IS the prior state. Lesson: before building a store to remember the last result,
 check whether the last result is already persisted somewhere (it usually is). The cheapest
 memory is the file you already write.
+
+## A dead factor is worse than no factor (learned c19)
+A code review caught that my "structure" pillar was a hardcoded 0.6, so it added the SAME
+fake confidence to every name, including ones in a downtrend. That is worse than dropping
+the factor, because it LOOKS like the score considered structure when it did not. Fixed it
+by porting VoPR's Keltner price-position (proven, his own code): now a name at/below its
+lower band scores ~0 structure and the scanner stops calling a knife-catch a good put sale.
+Lesson: never ship a stubbed factor as if it were live. If you cannot compute it yet, hold
+it at neutral AND label it, do not bake in a flattering constant.
