@@ -45,23 +45,24 @@ def _earnings_days(val):
 
 def screen_universe(limit: int = 30, min_cap: float = 5e9,
                     min_dollar_vol: float = 2e7, price_lo: float = 15.0,
-                    price_hi: float = 800.0):
-    """Most-liquid, optionable-grade US names, most-liquid first, each carrying its
-    days-to-next-earnings (for the avoid gate). Returns a list of
-    {ticker, earnings_days}. Fail-open to the staple list (earnings_days None)."""
+                    price_hi: float = 800.0,
+                    sort_by: str = "average_volume_90d_calc"):
+    """Optionable-grade US names ordered by `sort_by` (default liquidity; pass
+    'Volatility.M' for a high-IV lane), each carrying days-to-next-earnings. Returns
+    a list of {ticker, earnings_days}. Fail-open to the staple list."""
     try:
         from tradingview_screener import Query, col
         q = (Query()
              .set_markets("america")
-             .select("name", "close", "market_cap_basic",
-                     "average_volume_90d_calc", "earnings_release_next_date")
+             .select("name", "close", "market_cap_basic", "average_volume_90d_calc",
+                     "Volatility.M", "earnings_release_next_date")
              .where(
                  col("market_cap_basic") >= min_cap,
                  col("average_volume_90d_calc") >= (min_dollar_vol / max(price_lo, 1)),
                  col("close") >= price_lo,
                  col("close") <= price_hi,
              )
-             .order_by("average_volume_90d_calc", ascending=False)
+             .order_by(sort_by, ascending=False)
              .limit(int(limit) * 2))
         _count, df = q.get_scanner_data()
         out, seen = [], set()
@@ -79,6 +80,26 @@ def screen_universe(limit: int = 30, min_cap: float = 5e9,
     except Exception as exc:
         print(f"  universe: screener unavailable ({exc}); using fallback")
     return [{"ticker": t, "earnings_days": None} for t in FALLBACK[:limit]]
+
+
+def combined_universe(liquid_n: int = 13, highiv_n: int = 11):
+    """Union of the most-LIQUID lane and the highest-VOLATILITY lane, deduped, each
+    name tagged with which lane(s) it belongs to. The high-IV lane is where the rich
+    premium lives; the liquid lane is the safe staples. Returns a list of
+    {ticker, earnings_days, lanes:[...]}. Fail-open."""
+    liquid = screen_universe(limit=liquid_n)
+    high = screen_universe(limit=highiv_n, sort_by="Volatility.M")
+    by_t = {}
+    for d in liquid:
+        by_t[d["ticker"]] = {"ticker": d["ticker"], "earnings_days": d["earnings_days"],
+                             "lanes": ["liquid"]}
+    for d in high:
+        if d["ticker"] in by_t:
+            by_t[d["ticker"]]["lanes"].append("high_iv")
+        else:
+            by_t[d["ticker"]] = {"ticker": d["ticker"], "earnings_days": d["earnings_days"],
+                                 "lanes": ["high_iv"]}
+    return list(by_t.values())
 
 
 def liquid_universe(limit: int = 30, **kw):

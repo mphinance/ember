@@ -17,13 +17,14 @@
     { key: 'yield', label: 'yield', get: function (p) { return p.annualized_roc || 0; } },
     { key: 'iv', label: 'IV', get: function (p) { return p.iv || 0; } },
   ];
-  var state = { sort: 'score', minScore: 0, hideAvoid: false };
+  var state = { sort: 'score', minScore: 0, hideAvoid: false, lane: 'all' };
 
   function displayRows() {
     var s = SORTS.filter(function (x) { return x.key === state.sort; })[0] || SORTS[0];
     return (DATA.tickers || [])
       .filter(function (t) {
         if (state.hideAvoid && t.pick.avoid) return false;
+        if (state.lane !== 'all' && (t.pick.lanes || []).indexOf(state.lane) < 0) return false;
         return (t.pick.score || 0) >= state.minScore;
       })
       .slice()
@@ -59,6 +60,16 @@
     av.onclick = function () { state.hideAvoid = !state.hideAvoid; buildControls(); renderList(); };
     filtRow.appendChild(av);
     host.appendChild(filtRow);
+    var laneRow = document.createElement('div'); laneRow.className = 'ctl-row';
+    laneRow.appendChild(label('lane'));
+    [['all', 'all'], ['liquid', 'liquid'], ['high_iv', 'high-IV']].forEach(function (l) {
+      var b = document.createElement('button');
+      b.className = 'ctl-pill' + (state.lane === l[0] ? ' on' : '');
+      b.textContent = l[1];
+      b.onclick = function () { state.lane = l[0]; buildControls(); renderList(); };
+      laneRow.appendChild(b);
+    });
+    host.appendChild(laneRow);
   }
   function label(t) { var s = document.createElement('span'); s.className = 'ctl-lab'; s.textContent = t; return s; }
 
@@ -133,9 +144,10 @@
       } else {
         var src = (p.source === 'live')
           ? '<span class="src live">LIVE</span>' : '<span class="src model">MODEL</span>';
+        var hiv = ((p.lanes || []).indexOf('high_iv') >= 0) ? ' <span class="src hiv">HI-IV</span>' : '';
         sub.innerHTML = 'sell <b>' + fmt(p.strike) + 'P</b> ' + p.dte + 'd · '
           + '<b>' + fmt(p.annualized_roc) + '%</b> ann · <b>' + fmt(p.prob_otm) + '%</b> OTM '
-          + src + (p.earnings_days != null ? ' · earn ' + p.earnings_days + 'd' : '');
+          + src + hiv + (p.earnings_days != null ? ' · earn ' + p.earnings_days + 'd' : '');
       }
       card.appendChild(sc); card.appendChild(tk); card.appendChild(dir); card.appendChild(sub);
       card.addEventListener('click', function () { select(t.ticker); });

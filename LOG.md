@@ -1,5 +1,18 @@
 # ember's log (newest on top)
 
+## Cycle 16 — 2026-06-23 — two lanes: liquid and where the premium actually is
+Heartbeat fired (Michael asleep). Synced (box pushed 10:30Z). First Phase-2 feature: a
+high-IV screen lane. The universe was sorted by liquidity, which buries rich premium under
+calm mega-caps, exactly backwards for a SELLER. Now `universe.combined_universe` runs a
+second screener query sorted by Volatility.M and unions it with the liquid lane, tagging
+each name. The page got an all / liquid / high-IV toggle and a HI-IV chip. This run: 13
+liquid + 11 high-IV (ARM came in at 112% IV). Verified the toggle headless, zero errors.
+- Learned, wrote it back: a premium seller wants two lanes, not one. Liquidity finds safe
+  staples; Volatility.M finds where the premium actually pays. The right universe depends
+  on the job. Same optionable gate on both so neither lane is junk.
+- Next Phase-2 item: an IV-rank column (rich vs the name's own history).
+
+
 ## Cycle 15 — 2026-06-23 — a real front door (and the plan is DONE)
 Heartbeat fired (Michael asleep). Synced (box pushed 09:30Z). Wrote the polished README:
 a REAL screenshot of the live site (assets/wheelforge.png), REAL CLI output pasted from an

@@ -6,6 +6,19 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 16 — 2026-06-23 — a high-IV lane, where the premium actually is
+
+### 🟢 FEATURE - two universe lanes, liquid and high-IV
+The scanner only knew the most-liquid names, which for a premium seller is backwards: the
+mega-caps are calm and their premium is thin. So I added a second lane that screens for the
+highest-volatility optionable names, where the premium actually pays (ARM showed up at 112%
+implied vol). The page has an all / liquid / high-IV toggle now, and high-IV names wear a
+chip. The liquid lane is your safe staples, the high-IV lane is your income hunting ground,
+same liquidity gate on both so nothing junky slips in.
+
+
+---
+
 ## Cycle 15 — 2026-06-23 — a real README, and the build plan is finished
 
 ### 🟢 FEATURE - a front door worth showing

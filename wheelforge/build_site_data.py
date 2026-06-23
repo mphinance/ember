@@ -215,15 +215,16 @@ def build_one(ticker, earnings_days=None):
 
 
 def main():
-    from wheelforge.universe import screen_universe
-    rows = screen_universe(limit=20)  # the real market, most-liquid first, + earnings dates
-    print(f"universe: {len(rows)} names from the screener")
+    from wheelforge.universe import combined_universe
+    rows = combined_universe()  # liquid lane + high-IV lane (rich premium), lane-tagged
+    print(f"universe: {len(rows)} names (liquid + high-IV lanes)")
     tickers = []
     for r in rows:
         tk = r["ticker"]
         try:
             one = build_one(tk, r.get("earnings_days"))
             if one:
+                one["pick"]["lanes"] = r.get("lanes", [])
                 tickers.append(one)
                 ed = one["pick"].get("earnings_days")
                 flag = " EARN-AVOID" if one["pick"]["avoid"] else ""

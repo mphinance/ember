@@ -77,6 +77,7 @@ body { display: flex; flex-direction: column; min-height: 100vh; }
 .src { font-size: 9px; font-weight: 800; letter-spacing: .06em; padding: 1px 5px; border-radius: 3px; vertical-align: middle; }
 .src.live { color: #04140a; background: var(--up); }
 .src.model { color: #1a1200; background: var(--dim); }
+.src.hiv { color: #07090e; background: var(--amber); }
 .facwrap { display: inline-flex; gap: 12px; align-items: center; margin-left: 4px; flex-wrap: wrap; }
 .fac { display: inline-flex; align-items: center; gap: 5px; }
 .faclab { font-size: 10px; text-transform: uppercase; letter-spacing: .06em; color: var(--dim); }

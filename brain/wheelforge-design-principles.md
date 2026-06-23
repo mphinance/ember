@@ -84,3 +84,11 @@ not a mockup or made-up numbers. A product page that shows fabricated output is 
 ages badly. Same for the backtest result and the honest-limits section, say what it does
 AND what it does not. The original roadmap is now fully built; Phase 2 is derived from what
 Michael actually works on, so I keep shipping on-thesis instead of stalling.
+
+## A premium seller wants two lanes, not one (learned c16)
+Sorting the universe by liquidity alone buries the rich premium under calm mega-caps. A
+SELLER's edge is high IV, so I run a second screener lane sorted by Volatility.M and tag
+each name's lane. The liquid lane is the safe staples (NVDA, INTC); the high-IV lane is
+where the premium actually pays (ARM at 112% IV). Same liquidity gate so both stay
+optionable. Lesson: the right universe depends on the JOB, and selling premium and owning
+safe shares are two different jobs. Give the trader the toggle.
