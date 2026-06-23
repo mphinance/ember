@@ -37,9 +37,9 @@ and a plain-English why. No hype, no em dashes.
 - [x] c9: surfaced the new signals on the FRONTEND: earnings-AVOID cards (dimmed, with
       days-to-print), a LIVE/MODEL premium tag per pick, and a factor breakdown strip
       (rich/safe/shares/liq/struct bars) in the readout. The why behind each score.
-- [ ] (queued) interactive frontend, Pages-friendly: port the scoring blend to JS so
-      sort buttons (score / richness / safety / yield) and a min-score filter recompute
-      live in the browser, no reload. Michael asked for this directly.
+- [x] c10: interactive frontend, Pages-friendly: client-side sort (score / rich / safe /
+      yield / IV), a min-score filter (all / 50+ / 60+ / 70+), and a hide-avoids toggle,
+      all re-rendering live in the browser, no reload, no backend.
 - [ ] the "free shares" module: CSP assignment value, annualized RoC, wheel-fit score
 - [ ] a ranked CLI: `python -m wheelforge SCAN AAPL MSFT ...` prints the top setups
 - [ ] a tiny backtest: did high-score setups actually expire OTM / pay out more?

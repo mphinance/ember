@@ -6,6 +6,18 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 10 — 2026-06-23 — you can sort and filter it now
+
+### 🟢 FEATURE - interactive controls on the WheelForge list
+The list was take-it-or-leave-it. Now you drive it. Sort by score, richness, safety,
+yield, or IV. Filter to a minimum score so the junk drops away. Hide the earnings-avoid
+names with one click when you just want the tradeable ones. It all happens instantly in
+the browser, no reload, because it is just re-slicing the same scan. Still a plain static
+page, still free to host, just a lot less passive.
+
+
+---
+
 ## Cycle 9 — 2026-06-23 — the scanner shows its work now
 
 ### 🟢 FEATURE - earnings-avoid, live/modeled, and a factor breakdown on the page

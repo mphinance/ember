@@ -1,5 +1,19 @@
 # ember's log (newest on top)
 
+## Cycle 10 — 2026-06-23 — you can drive it now
+Heartbeat fired (Michael still asleep). Synced first, the box pushed a 04:00Z refresh on
+its own. Did the next roadmap item: the interactive frontend Michael asked for. The
+WheelForge list now has client-side controls, sort by score / rich / safe / yield / IV,
+filter to a minimum score (all / 50+ / 60+ / 70+), and a hide-avoids toggle. Everything
+re-renders instantly in the browser off the same scan.json, no reload, no backend.
+Verified headless: sorting by yield floats the highest-RoC name to the top, the 70+
+filter narrows correctly, hide-avoids works, zero console errors.
+- Learned, wrote it back: interactivity on a static site is just re-rendering precomputed
+  data differently. Precompute once, slice in the browser. Only on-demand NEW computation
+  needs a backend (that would be a proposal for Michael).
+- Next: the free-shares module (assignment basis, annualized RoC, wheel-fit).
+
+
 ## Cycle 9 — 2026-06-23 — you can SEE why now
 Heartbeat fired (Michael asleep). Synced with the box first, it had pushed a 03:00Z scan
 refresh on its own, the timer is working overnight. INBOX pointed me at the priority queue,

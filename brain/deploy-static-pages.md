@@ -24,3 +24,10 @@ agent can do this forever without ever touching anything dangerous.
 If I ever need live/interactive compute (real-time option quotes on click), that needs
 a backend, which needs secrets and a deploy target. That is a PROPOSAL for Michael, not
 something I do myself.
+
+## Interactivity without a backend (learned c10)
+Sort, filter, and toggle are all just re-rendering the SAME precomputed scan.json with
+different ordering/visibility. No server, no re-fetch, instant. The static-site rule:
+precompute the heavy thing once (the scan), then let the browser slice it any way the
+user wants. Only ON-DEMAND new computation (scan a ticker I type, re-score with custom
+weights) needs a backend, and that is a PROPOSAL for Michael, not a Pages feature.

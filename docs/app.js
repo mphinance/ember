@@ -9,6 +9,59 @@
   var DATA = null;
   var selected = null;
 
+  // ── interactive state (all client-side, no reload) ──────────────────────────
+  var SORTS = [
+    { key: 'score', label: 'score', get: function (p) { return p.score; } },
+    { key: 'rich', label: 'rich', get: function (p) { return (p.factors || {}).richness || 0; } },
+    { key: 'safe', label: 'safe', get: function (p) { return (p.factors || {}).safety || 0; } },
+    { key: 'yield', label: 'yield', get: function (p) { return p.annualized_roc || 0; } },
+    { key: 'iv', label: 'IV', get: function (p) { return p.iv || 0; } },
+  ];
+  var state = { sort: 'score', minScore: 0, hideAvoid: false };
+
+  function displayRows() {
+    var s = SORTS.filter(function (x) { return x.key === state.sort; })[0] || SORTS[0];
+    return (DATA.tickers || [])
+      .filter(function (t) {
+        if (state.hideAvoid && t.pick.avoid) return false;
+        return (t.pick.score || 0) >= state.minScore;
+      })
+      .slice()
+      .sort(function (a, b) { return s.get(b.pick) - s.get(a.pick); });
+  }
+
+  function buildControls() {
+    var host = document.getElementById('wf-controls');
+    if (!host) return;
+    host.innerHTML = '';
+    var sortRow = document.createElement('div'); sortRow.className = 'ctl-row';
+    sortRow.appendChild(label('sort'));
+    SORTS.forEach(function (s) {
+      var b = document.createElement('button');
+      b.className = 'ctl-pill' + (state.sort === s.key ? ' on' : '');
+      b.textContent = s.label;
+      b.onclick = function () { state.sort = s.key; buildControls(); renderList(); };
+      sortRow.appendChild(b);
+    });
+    host.appendChild(sortRow);
+    var filtRow = document.createElement('div'); filtRow.className = 'ctl-row';
+    filtRow.appendChild(label('min'));
+    [0, 50, 60, 70].forEach(function (m) {
+      var b = document.createElement('button');
+      b.className = 'ctl-pill' + (state.minScore === m ? ' on' : '');
+      b.textContent = m === 0 ? 'all' : m + '+';
+      b.onclick = function () { state.minScore = m; buildControls(); renderList(); };
+      filtRow.appendChild(b);
+    });
+    var av = document.createElement('button');
+    av.className = 'ctl-pill ctl-toggle' + (state.hideAvoid ? ' on' : '');
+    av.textContent = state.hideAvoid ? 'avoids hidden' : 'hide avoids';
+    av.onclick = function () { state.hideAvoid = !state.hideAvoid; buildControls(); renderList(); };
+    filtRow.appendChild(av);
+    host.appendChild(filtRow);
+  }
+  function label(t) { var s = document.createElement('span'); s.className = 'ctl-lab'; s.textContent = t; return s; }
+
   function heatColor(score) {
     // cold steel -> ember -> amber -> white hot
     if (score >= 80) return '#fff1c2';
@@ -57,9 +110,11 @@
   }
 
   function renderList() {
-    var host = document.getElementById('wf-list');
+    var host = document.getElementById('wf-cards');
     host.innerHTML = '';
-    DATA.tickers.forEach(function (t, i) {
+    var rows = displayRows();
+    if (!rows.length) { host.innerHTML = '<div class="ctl-empty">nothing clears that filter</div>'; return; }
+    rows.forEach(function (t, i) {
       var p = t.pick;
       var card = document.createElement('div');
       card.className = 'wf-card' + (i === 0 ? ' is-sel' : '') + (p.avoid ? ' is-avoid' : '');
@@ -127,6 +182,7 @@
       DATA = d;
       document.getElementById('wf-meta').textContent = 'updated ' + (d.generated_at || '') + ' UTC';
       document.getElementById('wf-foot').textContent = d.source_note || '';
+      buildControls();
       renderList();
       if (d.tickers && d.tickers.length) select(d.tickers[0].ticker);
     }).catch(function (e) {
