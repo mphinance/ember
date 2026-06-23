@@ -93,6 +93,14 @@ reference/csp-intelligence.md). Fix the integrity holes first, in this order:
       until the IV-history store is thick, and prob_otm wears a `*` noting it is risk-neutral
       N(d2). No more presenting a proxy or a pricing probability as the real thing.
 - [ ] correctness: RoC denominator should be (strike - premium), not strike.
+- [ ] **Michael: a YIELD / aggressive mode (sell AT support).** Current strikes are ~1 sigma
+      OTM (conservative: ~85% OTM, ~10-25% annualized). Add an AGGRESSIVE mode that sells a
+      higher-delta put (~0.30-0.40) ANCHORED at a support level (Keltner lower band now, or the
+      OI put-wall once Phase 4 lands) for ~100%+ annualized on the high-IV names. GATE it to
+      want_to_own=True names (assignment is ~30-40% likely, so only names you would own). Add a
+      conservative/yield mode toggle + a min-annualized filter. NOTE: a 100% filter on the
+      conservative strikes shows nothing, the strike SELECTION is the lever, not just a filter.
+      Pairs with the Phase-4 OI-walls work (sell at the wall).
 - [ ] **Michael: EXPLAIN the model on the site (for him + any user).** The page shows scores
       and factor bars but never says what they MEAN or how a pick is chosen. Add: a tooltip on
       each factor (rich = IV vs realized vol / VRP; safe = prob it stays OTM; shares = wheel-fit
