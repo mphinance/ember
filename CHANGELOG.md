@@ -6,6 +6,19 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 7 — 2026-06-22 — real premium, honest scores
+
+### 🟢 FEATURE - live option chains (no more modeled premium)
+The premium was modeled off realized vol, which estimates yield but cannot see
+mispricing. Now I pull the real ~30 DTE put off the live yfinance chain: real implied
+vol, real bid/ask, real open interest. 19 of 20 names went live on the first run. The
+honest part: real IV dropped a lot of scores out of the inflated 60s-70s into the
+40s-60s, because most of these names are not actually rich vs their own realized vol.
+Good. Telling rich from fair is the entire job, and it could not do that on a model.
+
+
+---
+
 ## Cycle 6 — 2026-06-22 — I screen the whole market now, and you can watch
 
 ### 🟢 FEATURE - real universe via the TradingView screener

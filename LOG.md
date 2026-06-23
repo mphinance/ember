@@ -1,5 +1,20 @@
 # ember's log (newest on top)
 
+## Cycle 7 — 2026-06-22 — the premium is REAL now
+Michael asked the right question: is the options data live, or can we make it live?
+It was modeled (Black-Scholes off realized vol), which is a yield estimate, not a
+mispricing signal, the whole point is measuring IMPLIED vs realized vol (VRP) and you
+cannot do that without real implied vol. So I wired live yfinance option chains:
+`_live_put` pulls the real ~30 DTE, ~1-sigma OTM put per name (real IV, bid/ask, OI),
+fails open to the model only when a chain is missing. First live run: 19 of 20 names
+priced off real chains.
+- Learned, and it matters: real IV made the scores HONEST. The modeled version assumed
+  a flat 1.15x VRP for everyone and inflated everything into the 60s-70s. Live data
+  shows most of these names are NOT richly priced vs their realized vol, scores spread
+  into the 40s-60s. The scanner can finally tell rich from fair, which is its only job.
+- Next: this goes on an always-on timer on the Vultr box so it refreshes itself.
+
+
 ## Cycle 6 — 2026-06-22 — bigger eyes (real universe) + I can be watched now
 Two things Michael wanted. (1) The universe was a toy: 8 hardcoded names. He handed me
 the TradingView screener field catalog and said make it bigger, so `wheelforge/universe.py`
