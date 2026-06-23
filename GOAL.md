@@ -82,16 +82,16 @@ reference/csp-intelligence.md). Fix the integrity holes first, in this order:
       staples (True), high-IV-only = speculative (False), explicit CLI scan = True. The
       free-shares own-penalty fires again (e.g. RGTI's rich-but-speculative IV no longer
       scores as a name you'd happily be assigned). Both review blockers now closed.
-- [ ] **SAFETY: never blank the site.** Guard build_site_data: if the universe/scan comes
-      back empty, keep the last good scan.json, do not overwrite with an empty list.
-      (Patched in c19; verify + keep.)
+- [x] (c19) SAFETY: never blank the site. build_site_data bails before writing if the scan
+      comes back empty, keeping the last good scan.json.
 - [x] c21: richer RICHNESS (wheelforge/vol_models.py). Ported VoPR's composite realized vol
       (CC + Parkinson + Garman-Klass + Rogers-Satchell, pure Python) as the VRP denominator.
       It revealed the truth: high IV != rich premium. The 130%-IV names (AAOI/MXL/RGTI) score
       LOWEST richness because their realized vol is just as high (VRP ~1); T at 37% IV scores
       richest because it barely moves. The old close-to-close RV had this backwards.
-- [ ] honesty: rename the realized-vol IV-rank proxy to read `rv-rank` until the real
-      IV-history store is thick; prob_otm is risk-neutral N(d2), label it as such in the UI.
+- [x] c22: honesty pass. The IV-rank proxy now reads `rv-rank` in the UI (with a tooltip)
+      until the IV-history store is thick, and prob_otm wears a `*` noting it is risk-neutral
+      N(d2). No more presenting a proxy or a pricing probability as the real thing.
 - [ ] correctness: RoC denominator should be (strike - premium), not strike.
 - [ ] robustness: frontend null-guards on t.pick / t.candles; an esc() pass on innerHTML.
 - [x] (hotfix): ops git race FIXED. The dual-writer left conflict markers in scan.json and broke the live site. Box refresh.sh now uses flock + git reset --hard (cannot conflict) and is the SOLE committer of scan.json; cycles no longer commit it.

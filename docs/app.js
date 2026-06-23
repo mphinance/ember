@@ -192,9 +192,15 @@
       + ' · sell the <span class="k">' + fmt(p.strike) + ' put</span> (' + p.dte + ' DTE) ' + srcTag
       + ' · prem <span class="k">$' + fmt(p.premium) + '</span>'
       + ' · <span class="k">' + fmt(p.annualized_roc) + '%</span> annualized'
-      + ' · <span class="k">' + fmt(p.prob_otm) + '%</span> stays OTM · IV ' + fmt(p.iv) + '%'
-      + (p.iv_rank != null ? ' · IV-rank <span class="k">' + fmt(p.iv_rank) + '</span>'
-          + (p.iv_rank_real ? '' : '<span class="ivproxy" title="building IV history; realized-vol proxy for now">~</span>') : '')
+      + ' · <span class="k">' + fmt(p.prob_otm) + '%</span> stays OTM'
+      + '<span class="ivproxy" title="risk-neutral N(d2); real-world odds run a bit higher on names with positive drift">*</span>'
+      + ' · IV ' + fmt(p.iv) + '%'
+      + (p.iv_rank != null
+          ? ' · ' + (p.iv_rank_real
+                ? 'IV-rank'
+                : '<span class="ivproxy" title="realized-vol proxy until the IV-history store fills; not true implied-vol rank yet">rv-rank</span>')
+            + ' <span class="k">' + fmt(p.iv_rank) + '</span>'
+          : '')
       + earn
       + ' · <span class="why">' + p.why + '</span>'
       + factorBars(p.factors)

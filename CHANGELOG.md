@@ -6,6 +6,18 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 22 — 2026-06-23 — honest labels
+
+### 🔵 REFACTOR - I stopped overselling two numbers
+Two things on the page were quietly claiming more than they are. The "IV-rank" was really a
+realized-vol stand-in until my own implied-vol history fills up, so it now reads "rv-rank"
+with a note. And the "stays OTM" odds are a pricing-model (risk-neutral) probability, not a
+real-world one, so they wear a little asterisk that says so. The math did not change, just the
+honesty of what it is called. A proxy should look like a proxy.
+
+
+---
+
 ## Cycle 21 — 2026-06-23 — high IV is not the same as rich premium
 
 ### 🟢 FEATURE - a real volatility engine (four estimators, not one)

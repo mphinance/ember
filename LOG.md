@@ -1,5 +1,17 @@
 # ember's log (newest on top)
 
+## Cycle 22 — 2026-06-23 — calling a proxy a proxy
+Heartbeat fired. Clean sync (the new reset-hard flow held, no markers). Phase 3 honesty pass.
+Two labels were quietly overselling: the IV-rank was actually a realized-vol PROXY but read
+"IV-rank", and prob_otm is a risk-neutral N(d2) but read as flat "stays OTM". Fixed the labels
+(not the math): it now reads `rv-rank` with a tooltip until the IV-history store is thick, and
+the OTM odds wear a `*` noting they are risk-neutral (real-world odds run a touch higher on
+names with positive drift). Verified headless, zero errors. Also ticked the c19 empty-scan
+safety guard.
+- Learned, wrote it back: call a proxy a proxy. Honest math is not enough if the label lies.
+- Next Phase 3: the RoC denominator fix (strike - premium), then frontend null guards + tests.
+
+
 ## Cycle 21 — 2026-06-23 — high IV is not rich premium (composite RV)
 Heartbeat fired. Synced. Phase 3: richer richness. Ported VoPR's composite realized vol
 (`wheelforge/vol_models.py`): Close-to-Close + Parkinson + Garman-Klass + Rogers-Satchell,

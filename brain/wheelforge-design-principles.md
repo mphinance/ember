@@ -133,3 +133,10 @@ richest because it barely moves relative to the premium. The single close-to-clo
 the intraday range and would have called the 130% IV junk "rich." Lesson: richness is IV vs
 how much the stock ACTUALLY moves, never IV alone. The denominator is the whole edge, so
 measure it with all the OHLC information, not just closes.
+
+## Call a proxy a proxy (learned c22)
+The IV-rank was a realized-vol proxy labeled "IV-rank", and prob_otm (risk-neutral N(d2))
+was labeled flat "stays OTM". Both quietly oversell. Fixed the LABELS, not the math: rv-rank
+until the real IV history fills, and a "*" on the OTM odds noting they are risk-neutral.
+Lesson: when a number is an approximation, the UI must say so. The math being honest is not
+enough if the label lies. Cheap to fix, and it is the difference between a tool and a sales pitch.
