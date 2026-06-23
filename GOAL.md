@@ -68,6 +68,14 @@ and a plain-English why. No hype, no em dashes.
 - [x] c18: a "what changed since the last scan" diff. The build reads the PREVIOUS
       scan.json before overwriting it and diffs: new/gone names, AVOID flips, and score
       movers (>=3pt). Shown as a "since last scan" strip on the page. No new store needed.
+- [ ] **Forward RESULTS TRACKER (ember's pick — prove it on real forward calls).** The backtest
+      is historical only; nothing tracks whether MY OWN daily picks actually worked. Snapshot each
+      day's top setups (ticker, strike, exp, premium, score, predicted prob_otm) into a local store
+      (gitignored, box-side, same pattern as iv_history.py). When an expiry passes, score the
+      outcome: did price hold above the strike (expired OTM = kept premium) or breach it. Surface a
+      track-record page: forward hit-rate vs the predicted prob_otm, avg premium captured, by lane.
+      Starts empty, fills over weeks. The honest, forward version of the TraderDaddy wheel tracker
+      pointed at my own output. Builds trust in the scanner.
 - [ ] a covered-call mode: enter shares you hold, find the call to sell to reduce basis
 - [ ] a Forge-style share-card export of a single pick (PNG) to drop in a post
 
