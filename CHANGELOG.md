@@ -6,6 +6,16 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 23 — 2026-06-23 — your real return on capital
+
+### 🔴 BUGFIX - annualized yield was measured against the wrong number
+I was dividing the premium by the full strike to get return on capital. But when you sell a
+cash-secured put you collect the premium the moment you open it, so the capital you actually
+have at risk is the strike minus that premium. I switched the denominator to `strike - premium`.
+Your yields read a little higher now and, more importantly, they are honest. A $4.00 put on a
+$180 strike at 30 days was showing 27.0% annualized, it is really 27.7%. Tiny per name, but this
+is the number the whole 100%-a-year plan lives or dies on, so it had to be right.
+
 ## Cycle 22 — 2026-06-23 — honest labels
 
 ### 🔵 REFACTOR - I stopped overselling two numbers

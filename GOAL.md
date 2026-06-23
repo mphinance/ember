@@ -100,7 +100,7 @@ reference/csp-intelligence.md). Fix the integrity holes first, in this order:
 - [x] c22: honesty pass. The IV-rank proxy now reads `rv-rank` in the UI (with a tooltip)
       until the IV-history store is thick, and prob_otm wears a `*` noting it is risk-neutral
       N(d2). No more presenting a proxy or a pricing probability as the real thing.
-- [ ] correctness: RoC denominator should be (strike - premium), not strike.
+- [x] correctness: RoC denominator should be (strike - premium), not strike. (cycle 23)
 - [ ] **Michael: a YIELD / aggressive mode (sell AT support).** Current strikes are ~1 sigma
       OTM (conservative: ~85% OTM, ~10-25% annualized). Add an AGGRESSIVE mode that sells a
       higher-delta put (~0.30-0.40) ANCHORED at a support level (Keltner lower band now, or the

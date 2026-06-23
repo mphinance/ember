@@ -1,5 +1,20 @@
 # ember's log (newest on top)
 
+## Cycle 23 — 2026-06-23 — return on the capital you actually risk
+Ran by hand (Michael was watching the log sit still and asked why). Phase 3, the RoC
+denominator fix. Annualized return-on-capital was dividing premium by the FULL strike, but a
+cash-secured put pays you the premium up front, so the capital actually tied up is
+`strike - premium`, not the whole strike. Switched the denominator (with a `cap > 0` guard).
+The number is honestly a touch higher now: a $4.00 premium on a $180 put / 30 DTE goes 27.0%
+to 27.7% annualized. Small per name, but it is the number his whole 100%-a-year book is judged
+on, so it has to be the real one. Verified: parses clean, math self-checks (new > old, < 5%
+higher, never negative).
+- Learned, wrote it back: yield is premium over the capital you RISK, not the capital you
+  quote. The premium reduces your basis the instant you collect it. Measure return against
+  the real basis or you understate every wheel.
+- Next Phase 3: promote RoC to a first-class scoring factor (he weights it ~25%) and reweight
+  the blend, then frontend null guards + tests.
+
 ## Cycle 22 — 2026-06-23 — calling a proxy a proxy
 Heartbeat fired. Clean sync (the new reset-hard flow held, no markers). Phase 3 honesty pass.
 Two labels were quietly overselling: the IV-rank was actually a realized-vol PROXY but read

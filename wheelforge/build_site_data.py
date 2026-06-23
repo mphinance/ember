@@ -220,7 +220,11 @@ def build_one(ticker, earnings_days=None, lanes=None):
     t = dte / 365.0
     prob_otm = (_norm_cdf((math.log(spot / strike) + (R - 0.5 * iv * iv) * t) / (iv * math.sqrt(t)))
                 if (strike > 0 and iv > 0 and t > 0) else 0.0)
-    roc = (premium / strike) * (365.0 / dte) if (strike > 0 and dte > 0) else 0.0
+    # Return on the capital actually tied up: a cash-secured put pockets the premium
+    # up front, so the net basis at risk is (strike - premium), not the full strike.
+    # That is the honest denominator a wheel seller uses to judge yield.
+    cap = strike - premium
+    roc = (premium / cap) * (365.0 / dte) if (cap > 0 and dte > 0) else 0.0
 
     # REAL structure (VoPR Keltner position): low = falling = do not sell into it.
     struct = keltner_position(candles)
