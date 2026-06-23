@@ -163,10 +163,16 @@ def _fetch(ticker):
     return candles, closes
 
 
-def build_one(ticker, earnings_days=None):
+def build_one(ticker, earnings_days=None, lanes=None):
     candles, closes = _fetch(ticker)
     if not candles:
         return None
+    # Would a disciplined seller WANT assignment here? Default from the lane: the
+    # liquid lane is ownable staples (True); a name ONLY in the high-IV lane is
+    # speculative, so assignment is not automatically welcome (False). An explicit
+    # CLI scan (no lanes) is a name you chose, so default True. Kills the dead
+    # hardcoded-True that made the free-shares quality penalty never fire.
+    want_to_own = True if lanes is None else ("liquid" in (lanes or []))
     spot = closes[-1]
     rv = _realized_vol(closes[-63:]) or 0.25
 
@@ -207,7 +213,7 @@ def build_one(ticker, earnings_days=None):
     contract = {
         "opt_type": "put", "iv": iv, "rv": rv, "iv_rank": ivr,
         "prob_otm": prob_otm, "bid": bid, "ask": ask, "open_interest": oi, "volume": vol,
-        "annualized_roc": roc, "want_to_own": True, "dte": dte,
+        "annualized_roc": roc, "want_to_own": want_to_own, "dte": dte,
         "days_to_earnings": (earnings_days if earnings_days is not None else 999),
         "trend_align": struct,
     }
@@ -219,7 +225,7 @@ def build_one(ticker, earnings_days=None):
             "annualized_roc": round(roc * 100, 1), "prob_otm": round(prob_otm * 100, 1),
             "iv": round(iv * 100, 1), "iv_rank": contract["iv_rank"],
             "iv_rank_real": ivr_hist is not None, "source": source,
-            "earnings_days": earnings_days,
+            "earnings_days": earnings_days, "want_to_own": want_to_own,
             "free_shares": free_shares_read(spot, strike, premium, roc, prob_otm,
                                             want_to_own=True),
             **scored,
@@ -270,7 +276,7 @@ def main():
     for r in rows:
         tk = r["ticker"]
         try:
-            one = build_one(tk, r.get("earnings_days"))
+            one = build_one(tk, r.get("earnings_days"), r.get("lanes"))
             if one:
                 one["pick"]["lanes"] = r.get("lanes", [])
                 tickers.append(one)

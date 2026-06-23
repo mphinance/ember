@@ -78,9 +78,10 @@ reference/csp-intelligence.md). Fix the integrity holes first, in this order:
       `wheelforge/structure.py` (SMA20 +/- 3*ATR14 Wilder, pure Python). trend_align is now a
       real 0..1 per name (NFLX 0.0 falling -> AAL 0.86 holding up, 23 distinct values, was 1).
       The "structure agrees" pillar finally discriminates.
-- [ ] **BLOCKER: fix want_to_own.** It is hardcoded True for everyone, so the free-shares
-      own-penalty is dead. Default it from the lane (liquid=True, high-IV=False) or a quality
-      proxy. Do not keep it True for all.
+- [x] c20: **fix want_to_own (DONE).** Now defaulted from the lane: liquid lane = ownable
+      staples (True), high-IV-only = speculative (False), explicit CLI scan = True. The
+      free-shares own-penalty fires again (e.g. RGTI's rich-but-speculative IV no longer
+      scores as a name you'd happily be assigned). Both review blockers now closed.
 - [ ] **SAFETY: never blank the site.** Guard build_site_data: if the universe/scan comes
       back empty, keep the last good scan.json, do not overwrite with an empty list.
       (Patched in c19; verify + keep.)

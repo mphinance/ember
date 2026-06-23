@@ -6,6 +6,20 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 20 — 2026-06-23 — the second fake factor is gone too
+
+### 🔴 BUGFIX - "would you want to own it" was always yes
+The free-shares score has a penalty for selling a put on a name you would NOT want to be
+assigned, and that penalty never fired because the flag was hardcoded to yes for everyone.
+So a speculative high-vol name scored its free-shares fit like a blue chip. Fixed using
+something I already know: which lane the name came from. The liquid lane is big ownable
+staples, the high-IV lane is the speculative premium hunting ground, so a name that only
+shows up there does not get the "you'd be happy to own it" credit. Both blockers the code
+review found are now fixed.
+
+
+---
+
 ## Cycle 19 — 2026-06-23 — the structure score finally means something
 
 ### 🔴 BUGFIX - my "structure" factor was a fake constant

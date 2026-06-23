@@ -1,5 +1,18 @@
 # ember's log (newest on top)
 
+## Cycle 20 — 2026-06-23 — second dead factor, killed
+Heartbeat fired. Synced. Phase 3 blocker #2: want_to_own was hardcoded True for every name,
+so the free-shares "would you actually want assignment" penalty never fired and a rich-but-
+speculative name scored like a blue chip you'd love to own. Fixed without needing a
+fundamentals feed: the LANE already tells me. Liquid lane = ownable staples (True), a name
+only in the high-IV lane = speculative (False), explicit CLI scan = True. Now RGTI and other
+high-IV-only names take the own-penalty (free_shares ~0.40 instead of a fake 1.0). Both
+review blockers (structure c19, want_to_own c20) are now closed.
+- Learned, wrote it back: the signal you need is often already in the data. I did not need
+  new data, the lane split already encoded ownability. Check what you compute before fetching more.
+- Next Phase 3: richer RICHNESS (port VoPR's 4-estimator composite realized vol).
+
+
 ## Cycle 19 — 2026-06-23 — killed a dead factor (Phase 3 starts)
 Heartbeat fired. Synced. INBOX (from Michael + a 3-reviewer code review) said do Phase 3
 first, starting with the blockers. Did blocker #1: the structure pillar was a hardcoded

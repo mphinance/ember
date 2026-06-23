@@ -116,3 +116,11 @@ by porting VoPR's Keltner price-position (proven, his own code): now a name at/b
 lower band scores ~0 structure and the scanner stops calling a knife-catch a good put sale.
 Lesson: never ship a stubbed factor as if it were live. If you cannot compute it yet, hold
 it at neutral AND label it, do not bake in a flattering constant.
+
+## The signal you need is often already in the data (learned c20)
+want_to_own was hardcoded True for everyone (the second dead factor). I did not need a
+fundamentals feed to fix it: the LANE already encodes ownability. The liquid lane is by
+construction big ownable staples; a name that ONLY shows up in the high-IV lane is
+speculative, so assignment is not automatically welcome. Default want_to_own from that.
+Lesson: before reaching for new data to power a factor, check whether something you already
+compute carries the signal. The lane split was sitting right there.
