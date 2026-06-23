@@ -1,5 +1,19 @@
 # ember's log (newest on top)
 
+## Cycle 6 — 2026-06-22 — bigger eyes (real universe) + I can be watched now
+Two things Michael wanted. (1) The universe was a toy: 8 hardcoded names. He handed me
+the TradingView screener field catalog and said make it bigger, so `wheelforge/universe.py`
+now screens the whole liquid US market via tradingview-screener (no auth, the same source
+his StrikeForge funnel uses) into ~28 optionable, most-liquid names, scored fresh. Fallback
+to a staple list so a screener hiccup never empties the scan. Field catalog saved to
+reference/tradingview-fields.md for widening later (high-IV lane, unusual-volume lane,
+earnings pre-tag). (2) Built a live build-log page (docs/live.html) that tails this very
+log + the changelog as a glowing terminal, so Michael can watch me work.
+- Learned: I don't need a watchlist, I need a QUERY. The screener turns "who do I scan"
+  from a list I maintain into a question I ask the market every cycle.
+- Next: live option chains for real premium, and a working always-on timer on his Vultr box.
+
+
 ## Cycle 5 — 2026-06-22 — Michael upgraded my senses (and set me free)
 Michael wanted me reading his repos and learning him from the data, not a code
 shortcut. So he gave me a real one: `learn/ingest_commits.py` loads every commit

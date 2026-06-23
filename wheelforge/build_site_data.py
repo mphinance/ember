@@ -122,8 +122,11 @@ def build_one(ticker):
 
 
 def main():
+    from wheelforge.universe import liquid_universe
+    names = liquid_universe(limit=28)  # the real market, most-liquid first
+    print(f"universe: {len(names)} names from the screener")
     tickers = []
-    for tk in WATCHLIST:
+    for tk in names:
         try:
             one = build_one(tk)
             if one:
