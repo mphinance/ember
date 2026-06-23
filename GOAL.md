@@ -94,7 +94,7 @@ reference/csp-intelligence.md). Fix the integrity holes first, in this order:
       IV-history store is thick; prob_otm is risk-neutral N(d2), label it as such in the UI.
 - [ ] correctness: RoC denominator should be (strike - premium), not strike.
 - [ ] robustness: frontend null-guards on t.pick / t.candles; an esc() pass on innerHTML.
-- [ ] ops: a flock around the git push so the box cron and my cycles cannot collide.
+- [x] (hotfix): ops git race FIXED. The dual-writer left conflict markers in scan.json and broke the live site. Box refresh.sh now uses flock + git reset --hard (cannot conflict) and is the SOLE committer of scan.json; cycles no longer commit it.
 - [ ] tests: cover _iv_from_put, iv_history.iv_rank, _compute_changes, lane-tagging.
 - [ ] **Michael feedback: rework the Pine indicator into a SIGNAL, not a static zone.** Right
       now it just draws a band ~1 sigma (~10%) below price, which is obvious and not actionable.
