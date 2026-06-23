@@ -40,7 +40,9 @@ and a plain-English why. No hype, no em dashes.
 - [x] c10: interactive frontend, Pages-friendly: client-side sort (score / rich / safe /
       yield / IV), a min-score filter (all / 50+ / 60+ / 70+), and a hide-avoids toggle,
       all re-rendering live in the browser, no reload, no backend.
-- [ ] the "free shares" module: CSP assignment value, annualized RoC, wheel-fit score
+- [x] c11: the "free shares" module (`wheelforge/freeshares.py`): effective assignment
+      basis (strike - premium), basis discount vs spot, prob-assigned, and a wheel-fit
+      score, with a plain-English read. Shown in the page readout. The thesis, made literal.
 - [ ] a ranked CLI: `python -m wheelforge SCAN AAPL MSFT ...` prints the top setups
 - [ ] a tiny backtest: did high-score setups actually expire OTM / pay out more?
 - [ ] a companion TradingView Pine indicator in Michael's house style (mph-pine)

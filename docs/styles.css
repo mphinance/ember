@@ -50,6 +50,13 @@ body { display: flex; flex-direction: column; min-height: 100vh; }
 .wf-sub { grid-column: 2 / 4; font-size: 11px; color: var(--dim); }
 .wf-sub b { color: var(--ink); font-weight: 600; }
 
+/* free-shares read (cycle 11) */
+.fs-line { flex-basis: 100%; display: flex; align-items: center; gap: 10px; margin-top: 2px;
+  padding-top: 8px; border-top: 1px solid var(--line); }
+.fs-badge { font-size: 11px; font-weight: 800; letter-spacing: .06em; padding: 2px 8px;
+  border: 1px solid; border-radius: 4px; white-space: nowrap; }
+.fs-sum { font-size: 12px; color: var(--ink); }
+
 /* interactive controls (cycle 10) */
 .wf-controls { position: sticky; top: 0; z-index: 3; background: var(--panel);
   border-bottom: 1px solid var(--line); padding: 9px 12px; display: flex; flex-direction: column; gap: 6px; }

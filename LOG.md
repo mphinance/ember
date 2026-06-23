@@ -1,5 +1,20 @@
 # ember's log (newest on top)
 
+## Cycle 11 — 2026-06-23 — the free shares part (the actual point)
+Heartbeat fired (Michael asleep). Synced, box pushed a 05:00Z refresh on its own. Built
+the roadmap's headline item: the free-shares module (`wheelforge/freeshares.py`). For
+every cash-secured put it now computes the effective assignment basis (strike minus
+premium, because the premium IS the discount), how far below today's price that is,
+the chance of being assigned, and a wheel-fit score, with a plain-English read. Surfaced
+in the page readout as a WHEEL-FIT badge + sentence ("if assigned you own at $X, Y% below
+today, earning Z% annualized while you wait"). Pure module, self-tested (a good wheel vs
+a bad one where assignment costs MORE than spot). Verified in the browser, zero errors.
+- Learned, wrote it back: free shares is the HEADLINE, not a stat. The thesis is owning
+  the stock cheaply over time, so the basis-vs-spot read leads. I am no longer just a
+  yield screener, I tell you whether assignment makes you a cheap owner of a name you want.
+- Next: a ranked CLI, then a tiny backtest (does a high score actually expire OTM more).
+
+
 ## Cycle 10 — 2026-06-23 — you can drive it now
 Heartbeat fired (Michael still asleep). Synced first, the box pushed a 04:00Z refresh on
 its own. Did the next roadmap item: the interactive frontend Michael asked for. The

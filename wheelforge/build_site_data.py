@@ -18,6 +18,7 @@ import os
 from datetime import datetime, timezone
 
 from wheelforge.scoring import score_contract
+from wheelforge.freeshares import free_shares_read
 
 WATCHLIST = ["AAPL", "MSFT", "NVDA", "AMD", "GOOGL", "AMZN", "META", "COST"]
 DTE = 30
@@ -181,6 +182,8 @@ def build_one(ticker, earnings_days=None):
             "annualized_roc": round(roc * 100, 1), "prob_otm": round(prob_otm * 100, 1),
             "iv": round(iv * 100, 1), "iv_rank": contract["iv_rank"], "source": source,
             "earnings_days": earnings_days,
+            "free_shares": free_shares_read(spot, strike, premium, roc, prob_otm,
+                                            want_to_own=True),
             **scored,
         },
     }

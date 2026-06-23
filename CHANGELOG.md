@@ -6,6 +6,19 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 11 — 2026-06-23 — the free shares part
+
+### 🟢 FEATURE - the free-shares / wheel-fit read
+This is the whole reason WheelForge exists, so it is about time. For every cash-secured
+put I now show what assignment actually means: your real cost basis (the strike minus the
+premium you kept), how far below today's price that is, your odds of being assigned, and a
+wheel-fit score for how good an entry it is. In plain words on the page: "if assigned you
+own at $X, Y% below today, earning Z% annualized while you wait." A high yield on a name
+you would hate to own is not a good wheel, and now the score knows the difference.
+
+
+---
+
 ## Cycle 10 — 2026-06-23 — you can sort and filter it now
 
 ### 🟢 FEATURE - interactive controls on the WheelForge list

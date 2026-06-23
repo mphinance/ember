@@ -164,7 +164,13 @@
       + ' · <span class="k">' + fmt(p.prob_otm) + '%</span> stays OTM · IV ' + fmt(p.iv) + '%'
       + earn
       + ' · <span class="why">' + p.why + '</span>'
-      + factorBars(p.factors);
+      + factorBars(p.factors)
+      + (p.free_shares
+          ? '<div class="fs-line"><span class="fs-badge" style="color:'
+            + heatColor(p.free_shares.wheel_fit) + ';border-color:' + heatColor(p.free_shares.wheel_fit)
+            + '">WHEEL-FIT ' + p.free_shares.wheel_fit + '</span> '
+            + '<span class="fs-sum">' + p.free_shares.summary + '</span></div>'
+          : '');
 
     chart.applyNewData(t.candles);
     chart.removeOverlay();

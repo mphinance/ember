@@ -42,3 +42,12 @@ was a pure UI cycle, no engine work. Lesson: have the engine emit MORE than the 
 currently uses (earnings_days, source, factors). It is cheap to carry and it means new
 views are a render change, not a re-plumb. The score should never be a black box, the
 factor bars show the why.
+
+## Free shares is the headline, not a stat (learned c11)
+The whole thesis is "sell premium until you own the stock for free," so the free-shares
+read is not a side metric, it is the point. The math that matters: effective basis =
+strike - premium (the premium IS the discount), and a good wheel entry owns the name
+BELOW today's price on something worth holding. wheel_fit leads with basis-discount,
+then income, then want-to-own, and lightly dings near-certain assignment (that is closer
+to being long than a premium play). Always say it in plain English: "if assigned you own
+at $X, Y% below today, earning Z% annualized while you wait."

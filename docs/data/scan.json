@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-23T05:00:12+00:00",
+  "generated_at": "2026-06-23T05:21:02+00:00",
   "source_note": "Candles and option premium are LIVE off the yfinance chain for 19 of 20 names (real IV, bid/ask, OI); the rest fall back to a realized-vol model when the chain is missing.",
   "dte": 30,
   "tickers": [
@@ -1338,6 +1338,13 @@
         "iv_rank": 95.8,
         "source": "modeled",
         "earnings_days": 44,
+        "free_shares": {
+          "assignment_basis": 12.73,
+          "basis_discount_pct": 40.4,
+          "prob_assigned_pct": 12.8,
+          "wheel_fit": 87.0,
+          "summary": "If assigned you own at $12.73, 40.4% below today, earning 25.0% annualized on the cash while you wait."
+        },
         "score": 71.7,
         "direction": "cash-secured put",
         "avoid": false,
@@ -2686,6 +2693,13 @@
         "iv_rank": 99.0,
         "source": "live",
         "earnings_days": 58,
+        "free_shares": {
+          "assignment_basis": 214.26,
+          "basis_discount_pct": 30.4,
+          "prob_assigned_pct": 0.0,
+          "wheel_fit": 94.5,
+          "summary": "If assigned you own at $214.26, 30.4% below today, earning 30.7% annualized on the cash while you wait."
+        },
         "score": 61.9,
         "direction": "cash-secured put",
         "avoid": false,
@@ -4034,6 +4048,13 @@
         "iv_rank": 49.0,
         "source": "live",
         "earnings_days": 85,
+        "free_shares": {
+          "assignment_basis": 38.94,
+          "basis_discount_pct": 31.5,
+          "prob_assigned_pct": 0.0,
+          "wheel_fit": 95.1,
+          "summary": "If assigned you own at $38.94, 31.5% below today, earning 31.2% annualized on the cash while you wait."
+        },
         "score": 57.2,
         "direction": "cash-secured put",
         "avoid": false,
@@ -5382,6 +5403,13 @@
         "iv_rank": 100.0,
         "source": "live",
         "earnings_days": 49,
+        "free_shares": {
+          "assignment_basis": 22.68,
+          "basis_discount_pct": 36.0,
+          "prob_assigned_pct": 0.0,
+          "wheel_fit": 75.9,
+          "summary": "If assigned you own at $22.68, 36.0% below today, earning 16.4% annualized on the cash while you wait."
+        },
         "score": 55.4,
         "direction": "cash-secured put",
         "avoid": false,
@@ -6730,6 +6758,13 @@
         "iv_rank": 72.1,
         "source": "live",
         "earnings_days": 42,
+        "free_shares": {
+          "assignment_basis": 417.17,
+          "basis_discount_pct": 24.4,
+          "prob_assigned_pct": 0.0,
+          "wheel_fit": 82.7,
+          "summary": "If assigned you own at $417.17, 24.4% below today, earning 21.7% annualized on the cash while you wait."
+        },
         "score": 54.7,
         "direction": "cash-secured put",
         "avoid": false,
@@ -8078,6 +8113,13 @@
         "iv_rank": 87.6,
         "source": "live",
         "earnings_days": 64,
+        "free_shares": {
+          "assignment_basis": 183.36,
+          "basis_discount_pct": 12.1,
+          "prob_assigned_pct": 0.0,
+          "wheel_fit": 68.2,
+          "summary": "If assigned you own at $183.36, 12.1% below today, earning 10.4% annualized on the cash while you wait."
+        },
         "score": 54.1,
         "direction": "cash-secured put",
         "avoid": false,
@@ -9426,6 +9468,13 @@
         "iv_rank": 83.0,
         "source": "live",
         "earnings_days": 48,
+        "free_shares": {
+          "assignment_basis": 98.85,
+          "basis_discount_pct": 17.3,
+          "prob_assigned_pct": 0.0,
+          "wheel_fit": 72.2,
+          "summary": "If assigned you own at $98.85, 17.3% below today, earning 13.5% annualized on the cash while you wait."
+        },
         "score": 53.5,
         "direction": "cash-secured put",
         "avoid": false,
@@ -10774,6 +10823,13 @@
         "iv_rank": 25.0,
         "source": "live",
         "earnings_days": 36,
+        "free_shares": {
+          "assignment_basis": 12.21,
+          "basis_discount_pct": 23.0,
+          "prob_assigned_pct": 0.1,
+          "wheel_fit": 90.0,
+          "summary": "If assigned you own at $12.21, 23.0% below today, earning 27.3% annualized on the cash while you wait."
+        },
         "score": 51.8,
         "direction": "cash-secured put",
         "avoid": false,
@@ -12122,6 +12178,13 @@
         "iv_rank": 61.1,
         "source": "live",
         "earnings_days": 37,
+        "free_shares": {
+          "assignment_basis": 208.21,
+          "basis_discount_pct": 10.6,
+          "prob_assigned_pct": 0.0,
+          "wheel_fit": 62.2,
+          "summary": "If assigned you own at $208.21, 10.6% below today, earning 10.0% annualized on the cash while you wait."
+        },
         "score": 49.8,
         "direction": "cash-secured put",
         "avoid": false,
@@ -13470,6 +13533,13 @@
         "iv_rank": 48.5,
         "source": "live",
         "earnings_days": 42,
+        "free_shares": {
+          "assignment_basis": 13.82,
+          "basis_discount_pct": 19.2,
+          "prob_assigned_pct": 0.0,
+          "wheel_fit": 74.3,
+          "summary": "If assigned you own at $13.82, 19.2% below today, earning 15.1% annualized on the cash while you wait."
+        },
         "score": 49.4,
         "direction": "cash-secured put",
         "avoid": false,
@@ -14818,6 +14888,13 @@
         "iv_rank": 70.5,
         "source": "live",
         "earnings_days": 35,
+        "free_shares": {
+          "assignment_basis": 327.91,
+          "basis_discount_pct": 10.7,
+          "prob_assigned_pct": 0.0,
+          "wheel_fit": 60.3,
+          "summary": "If assigned you own at $327.91, 10.7% below today, earning 7.5% annualized on the cash while you wait."
+        },
         "score": 49.3,
         "direction": "cash-secured put",
         "avoid": false,
@@ -16166,6 +16243,13 @@
         "iv_rank": 60.6,
         "source": "live",
         "earnings_days": 37,
+        "free_shares": {
+          "assignment_basis": 273.4,
+          "basis_discount_pct": 7.9,
+          "prob_assigned_pct": 0.0,
+          "wheel_fit": 49.8,
+          "summary": "If assigned you own at $273.40, 7.9% below today, earning 6.9% annualized on the cash while you wait."
+        },
         "score": 48.2,
         "direction": "cash-secured put",
         "avoid": false,
@@ -17514,6 +17598,13 @@
         "iv_rank": 38.1,
         "source": "live",
         "earnings_days": 42,
+        "free_shares": {
+          "assignment_basis": 23.77,
+          "basis_discount_pct": 5.2,
+          "prob_assigned_pct": 0.0,
+          "wheel_fit": 43.8,
+          "summary": "If assigned you own at $23.77, 5.2% below today, earning 11.3% annualized on the cash while you wait."
+        },
         "score": 47.6,
         "direction": "cash-secured put",
         "avoid": false,
@@ -18862,6 +18953,13 @@
         "iv_rank": 72.1,
         "source": "live",
         "earnings_days": 30,
+        "free_shares": {
+          "assignment_basis": 99.43,
+          "basis_discount_pct": 29.5,
+          "prob_assigned_pct": 0.0,
+          "wheel_fit": 93.1,
+          "summary": "If assigned you own at $99.43, 29.5% below today, earning 29.7% annualized on the cash while you wait."
+        },
         "score": 0.0,
         "direction": "avoid",
         "avoid": true,
@@ -20210,6 +20308,13 @@
         "iv_rank": 76.6,
         "source": "live",
         "earnings_days": 23,
+        "free_shares": {
+          "assignment_basis": 13.34,
+          "basis_discount_pct": 17.0,
+          "prob_assigned_pct": 0.0,
+          "wheel_fit": 72.7,
+          "summary": "If assigned you own at $13.34, 17.0% below today, earning 14.0% annualized on the cash while you wait."
+        },
         "score": 0.0,
         "direction": "avoid",
         "avoid": true,
@@ -21558,6 +21663,13 @@
         "iv_rank": 59.6,
         "source": "live",
         "earnings_days": 29,
+        "free_shares": {
+          "assignment_basis": 349.88,
+          "basis_discount_pct": 13.6,
+          "prob_assigned_pct": 0.0,
+          "wheel_fit": 76.6,
+          "summary": "If assigned you own at $349.88, 13.6% below today, earning 17.0% annualized on the cash while you wait."
+        },
         "score": 0.0,
         "direction": "avoid",
         "avoid": true,
@@ -22906,6 +23018,13 @@
         "iv_rank": 30.7,
         "source": "live",
         "earnings_days": 23,
+        "free_shares": {
+          "assignment_basis": 64.8,
+          "basis_discount_pct": 11.1,
+          "prob_assigned_pct": 0.0,
+          "wheel_fit": 79.0,
+          "summary": "If assigned you own at $64.80, 11.1% below today, earning 21.4% annualized on the cash while you wait."
+        },
         "score": 0.0,
         "direction": "avoid",
         "avoid": true,
@@ -24254,6 +24373,13 @@
         "iv_rank": 72.7,
         "source": "live",
         "earnings_days": 29,
+        "free_shares": {
+          "assignment_basis": 19.8,
+          "basis_discount_pct": 10.4,
+          "prob_assigned_pct": 0.2,
+          "wheel_fit": 63.9,
+          "summary": "If assigned you own at $19.80, 10.4% below today, earning 11.8% annualized on the cash while you wait."
+        },
         "score": 0.0,
         "direction": "avoid",
         "avoid": true,
@@ -25602,6 +25728,13 @@
         "iv_rank": 33.9,
         "source": "live",
         "earnings_days": 21,
+        "free_shares": {
+          "assignment_basis": 53.4,
+          "basis_discount_pct": 6.9,
+          "prob_assigned_pct": 0.0,
+          "wheel_fit": 52.5,
+          "summary": "If assigned you own at $53.40, 6.9% below today, earning 13.1% annualized on the cash while you wait."
+        },
         "score": 0.0,
         "direction": "avoid",
         "avoid": true,
@@ -26950,6 +27083,13 @@
         "iv_rank": 26.0,
         "source": "live",
         "earnings_days": 30,
+        "free_shares": {
+          "assignment_basis": 19.71,
+          "basis_discount_pct": 11.7,
+          "prob_assigned_pct": 0.1,
+          "wheel_fit": 75.6,
+          "summary": "If assigned you own at $19.71, 11.7% below today, earning 17.1% annualized on the cash while you wait."
+        },
         "score": 0.0,
         "direction": "avoid",
         "avoid": true,
