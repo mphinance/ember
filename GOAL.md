@@ -99,6 +99,12 @@ reference/csp-intelligence.md). Fix the integrity holes first, in this order:
 - [ ] chart polish (Michael): SHADE the put-sell zone as a filled translucent band (not just
       lines), tinted by score; keep the Keltner walls. When covered-call mode lands, draw the
       call-sell zone above price too. Use the keltner_bands math already emitted.
+- [ ] **pattern read (Michael idea):** detect the few patterns a PUT SELLER cares about from
+      OHLCV, support test/bounce (price holding Keltner lower) = good, breakdown (slicing
+      through support) = avoid, range/coiling = sell both sides, downtrend = penalize. Port
+      from TraderDaddy bounce_finder (csp_trigger composite), learn from PatternPulse. Surface
+      a per-name pattern TAG + a chart annotation, and let it nudge the structure factor. Skip
+      the textbook-pattern zoo, only the ones that change a sell decision.
 - [ ] **Michael feedback: rework the Pine indicator into a SIGNAL, not a static zone.** Right
       now it just draws a band ~1 sigma (~10%) below price, which is obvious and not actionable.
       Make it fire a "sell-put NOW" marker only when premium is rich (high HV-rank) AND price is
