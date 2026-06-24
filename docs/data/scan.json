@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-24T21:00:17+00:00",
+  "generated_at": "2026-06-24T21:30:14+00:00",
   "source_note": "Candles and option premium are LIVE off the yfinance chain for 24 of 24 names (real IV, bid/ask, OI); the rest fall back to a realized-vol model when the chain is missing.",
   "dte": 7,
   "tickers": [
@@ -1321,7 +1321,7 @@
         },
         {
           "timestamp": 1782273600000,
-          "open": 16.46,
+          "open": 16.44,
           "high": 17.47,
           "low": 16.44,
           "close": 17.44,
@@ -1366,7 +1366,7 @@
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
-          "richness": 0.699,
+          "richness": 0.701,
           "safety": 0.552,
           "liquidity": 0.277,
           "free_shares": 1.0,
@@ -2696,7 +2696,7 @@
         },
         {
           "timestamp": 1782273600000,
-          "open": 17.22,
+          "open": 17.24,
           "high": 18.43,
           "low": 17.18,
           "close": 17.31,
@@ -2719,7 +2719,7 @@
         "at_support": true,
         "support": 15.6,
         "iv_gt_hv": true,
-        "vrp": 1.15,
+        "vrp": 1.16,
         "levels": {
           "keltner": {
             "upper": 20.01,
@@ -2741,7 +2741,7 @@
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
-          "richness": 0.348,
+          "richness": 0.349,
           "safety": 0.915,
           "liquidity": 0.814,
           "free_shares": 0.98,
@@ -5446,7 +5446,7 @@
         },
         {
           "timestamp": 1782273600000,
-          "open": 133.04,
+          "open": 132.92,
           "high": 136.08,
           "low": 127.95,
           "close": 131.65,
@@ -8196,7 +8196,7 @@
         },
         {
           "timestamp": 1782273600000,
-          "open": 200.12,
+          "open": 200.07,
           "high": 201.65,
           "low": 196.58,
           "close": 199.0,
@@ -9571,7 +9571,7 @@
         },
         {
           "timestamp": 1782273600000,
-          "open": 275.1,
+          "open": 275.35,
           "high": 276.15,
           "low": 249.21,
           "close": 259.66,
@@ -10946,7 +10946,7 @@
         },
         {
           "timestamp": 1782273600000,
-          "open": 114.12,
+          "open": 114.05,
           "high": 118.0,
           "low": 112.25,
           "close": 113.5,
@@ -12321,7 +12321,7 @@
         },
         {
           "timestamp": 1782273600000,
-          "open": 33.45,
+          "open": 33.32,
           "high": 33.98,
           "low": 31.39,
           "close": 32.45,
@@ -15071,7 +15071,7 @@
         },
         {
           "timestamp": 1782273600000,
-          "open": 295.36,
+          "open": 295.38,
           "high": 299.7,
           "low": 292.94,
           "close": 293.08,
@@ -16446,7 +16446,7 @@
         },
         {
           "timestamp": 1782273600000,
-          "open": 281.95,
+          "open": 281.49,
           "high": 281.54,
           "low": 263.66,
           "close": 276.7,
@@ -20571,7 +20571,7 @@
         },
         {
           "timestamp": 1782273600000,
-          "open": 72.68,
+          "open": 72.62,
           "high": 73.45,
           "low": 71.62,
           "close": 71.84,
@@ -20594,7 +20594,7 @@
         "at_support": false,
         "support": null,
         "iv_gt_hv": true,
-        "vrp": 1.18,
+        "vrp": 1.17,
         "levels": {
           "keltner": {
             "upper": 87.72,
@@ -21946,7 +21946,7 @@
         },
         {
           "timestamp": 1782273600000,
-          "open": 380.08,
+          "open": 380.01,
           "high": 384.58,
           "low": 373.05,
           "close": 375.53,
@@ -26071,7 +26071,7 @@
         },
         {
           "timestamp": 1782273600000,
-          "open": 89.27,
+          "open": 89.08,
           "high": 89.99,
           "low": 82.21,
           "close": 84.99,
@@ -27446,7 +27446,7 @@
         },
         {
           "timestamp": 1782273600000,
-          "open": 27.54,
+          "open": 27.45,
           "high": 27.46,
           "low": 24.95,
           "close": 26.22,
@@ -28821,7 +28821,7 @@
         },
         {
           "timestamp": 1782273600000,
-          "open": 20.81,
+          "open": 20.82,
           "high": 20.95,
           "low": 19.01,
           "close": 19.53,
@@ -30196,7 +30196,7 @@
         },
         {
           "timestamp": 1782273600000,
-          "open": 71.9,
+          "open": 71.6,
           "high": 72.1,
           "low": 67.06,
           "close": 68.01,
@@ -33009,20 +33009,7 @@
     "gone": [],
     "to_avoid": [],
     "from_avoid": [],
-    "movers": [
-      {
-        "ticker": "AMZN",
-        "delta": -6.2
-      },
-      {
-        "ticker": "MRVL",
-        "delta": -3.4
-      },
-      {
-        "ticker": "SMCI",
-        "delta": 3.0
-      }
-    ]
+    "movers": []
   },
-  "prev_generated_at": "2026-06-24T20:30:16+00:00"
+  "prev_generated_at": "2026-06-24T21:00:17+00:00"
 }
