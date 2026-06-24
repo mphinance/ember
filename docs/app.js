@@ -253,18 +253,46 @@
     hline(p.strike, heatColor(p.score), false, 2);
   }
 
+  // Paint a freshly fetched scan. Keeps the viewer where they were: same sort/
+  // filter state, and the same selected ticker if it survived the rescan;
+  // otherwise lands on the top-ranked pick (not raw ticker[0], which was AAL).
+  function applyData(d) {
+    DATA = d;
+    document.getElementById('wf-meta').textContent = 'updated ' + (d.generated_at || '') + ' UTC';
+    document.getElementById('wf-foot').textContent = d.source_note || '';
+    renderChanges(d.changes);
+    buildControls();
+    renderList();
+    var rows = displayRows();
+    var keep = selected && (DATA.tickers || []).some(function (t) { return t.ticker === selected; });
+    if (keep) select(selected);
+    else if (rows.length) select(rows[0].ticker);
+  }
+
+  // ember reships scan.json every cycle; an open tab should follow her without a
+  // manual reload. Poll on an interval and whenever the tab regains focus, and
+  // only repaint when the scan timestamp actually moved.
+  var POLL_MS = 120000;
+  function loadData(isInitial) {
+    return fetch('./data/scan.json?t=' + Date.now())
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        if (!isInitial && DATA && d.generated_at === DATA.generated_at) return;
+        applyData(d);
+      })
+      .catch(function (e) {
+        if (isInitial && !DATA) {
+          document.getElementById('wf-readout').textContent = 'no scan data yet (' + e + ')';
+        }
+      });
+  }
+
   function boot() {
     chart = klinecharts.init('wf-chart', { styles: chartStyles() });
-    fetch('./data/scan.json?t=' + Date.now()).then(function (r) { return r.json(); }).then(function (d) {
-      DATA = d;
-      document.getElementById('wf-meta').textContent = 'updated ' + (d.generated_at || '') + ' UTC';
-      document.getElementById('wf-foot').textContent = d.source_note || '';
-      renderChanges(d.changes);
-      buildControls();
-      renderList();
-      if (d.tickers && d.tickers.length) select(d.tickers[0].ticker);
-    }).catch(function (e) {
-      document.getElementById('wf-readout').textContent = 'no scan data yet (' + e + ')';
+    loadData(true);
+    setInterval(function () { loadData(false); }, POLL_MS);
+    document.addEventListener('visibilitychange', function () {
+      if (!document.hidden) loadData(false);
     });
     window.addEventListener('resize', function () { if (chart) chart.resize(); });
   }
