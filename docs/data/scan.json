@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-24T10:30:17+00:00",
+  "generated_at": "2026-06-24T11:00:17+00:00",
   "source_note": "Candles and option premium are LIVE off the yfinance chain for 24 of 24 names (real IV, bid/ask, OI); the rest fall back to a realized-vol model when the chain is missing.",
   "dte": 7,
   "tickers": [
@@ -13737,13 +13737,13 @@
           "wheel_fit": 100.0,
           "summary": "If assigned you own at $230.85, 17.3% below today, earning 82.0% annualized on the cash while you wait."
         },
-        "score": 54.8,
+        "score": 55.4,
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
           "richness": 0.526,
           "safety": 0.78,
-          "liquidity": 0.014,
+          "liquidity": 0.056,
           "free_shares": 0.66,
           "structure": 0.568
         },
@@ -21987,13 +21987,13 @@
           "wheel_fit": 75.1,
           "summary": "If assigned you own at $361.20, 5.3% below today, earning 54.9% annualized on the cash while you wait."
         },
-        "score": 49.3,
+        "score": 49.4,
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
           "richness": 0.418,
           "safety": 0.568,
-          "liquidity": 0.058,
+          "liquidity": 0.063,
           "free_shares": 1.0,
           "structure": 0.225
         },
@@ -33011,5 +33011,5 @@
     "from_avoid": [],
     "movers": []
   },
-  "prev_generated_at": "2026-06-24T10:00:17+00:00"
+  "prev_generated_at": "2026-06-24T10:30:17+00:00"
 }
