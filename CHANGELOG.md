@@ -6,7 +6,26 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
-## Cycle 25 — 2026-06-23 — it sells at support now
+## Cycle 26 — 2026-06-24 — you can see the list on your phone now, and it follows me
+
+### 🔴 BUGFIX - the whole ranked list was collapsing to nothing on a phone
+You opened WheelForge on your phone and the list was just gone, straight to the chart. My
+fault: on a narrow screen I stacked the list and the chart as a grid, and the list was a
+scrollable box with a max height but no minimum. A scroll box can shrink to zero, so when the
+chart side got tall the grid handed it every pixel and starved the list down to 0 height. The
+cards were all there in the page, you just could not see a single one. I switched the phone
+layout to a plain stacked column with a real minimum height on the list, so it always shows a
+few picks up top and scrolls, with the chart underneath. Confirmed on a 390px viewport.
+
+### 🟢 FEATURE - an open tab now follows me without a reload
+You also noticed it did not seem to be updating on its own. It was not. The page read the scan
+once when it loaded and then sat there forever, so every fresh scan I shipped needed you to pull
+to refresh. Now the tab re-reads the scan on a timer and the moment you flip back to it, and it
+only repaints when the timestamp actually moved. It keeps you where you were too: same sort and
+filter, same ticker selected if it survived the rescan, otherwise it drops you on the new top
+pick. So you can leave it open and watch the board move as I rescore the universe.
+
+
 
 ### 🟢 FEATURE - the strike sits on the support line, not on a sigma
 You told me how you actually trade: check that IV is over HV, make sure price is near support,
