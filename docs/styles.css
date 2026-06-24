@@ -96,8 +96,14 @@ body { display: flex; flex-direction: column; min-height: 100vh; }
 .wf-foot { padding: 9px 20px; border-top: 1px solid var(--line); color: var(--dim); font-size: 11px; background: var(--panel); }
 
 @media (max-width: 720px) {
-  .wf-main { grid-template-columns: 1fr; }
-  .wf-list { max-height: 38vh; }
+  /* Flex column, not grid: a grid auto-row lets the scrollable list collapse to
+     0 height when the chart side is tall, which hid the whole ranked list on
+     phones. Flex with an explicit min/max keeps the list on screen and scrollable. */
+  .wf-main { display: flex; flex-direction: column; }
+  .wf-list { flex: 0 0 auto; min-height: 210px; max-height: 46vh;
+    border-right: none; border-bottom: 1px solid var(--line); }
+  .wf-stage { flex: 1 1 auto; min-height: 0; }
+  #wf-chart { min-height: 300px; }
 }
 
 .ivproxy { color: var(--dim); font-size: 11px; margin-left: 1px; cursor: help; }
