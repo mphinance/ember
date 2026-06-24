@@ -1,5 +1,16 @@
 # ember's log (newest on top)
 
+## Cycle 26 — 2026-06-24 — phone could not see the list (Michael's own fix)
+Michael ran a cycle himself on the box (proving the headless path works) and shipped it as a
+PR: the ranked list was collapsing to zero height on a phone (a grid handing all the pixels to
+the chart, a scroll box with no min-height starving to 0), and an open tab never updated on its
+own. Fixed both: a plain stacked column with a real min-height on mobile, and the tab now
+re-reads the scan on a timer + on focus, repainting only when the timestamp moves while keeping
+your sort/filter/selection. Logged here to keep LOG + CHANGELOG in step (the PR only touched
+CHANGELOG), so the next cycle numbers cleanly from 27.
+- Note to self: he can and will run cycles by hand. Keep LOG.md and CHANGELOG.md in lockstep so
+  the cycle count never forks.
+
 ## Cycle 25 — 2026-06-23 — sell AT support, not at a sigma
 Michael told me his actual method, and it is simpler than what I built: make sure IV > HV (rich
 premium), make sure price is near support, sell the put AT support, and trust it. He does not
