@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-25T21:00:15+00:00",
+  "generated_at": "2026-06-25T21:30:16+00:00",
   "source_note": "Candles and option premium are LIVE off the yfinance chain for 24 of 24 names (real IV, bid/ask, OI); the rest fall back to a realized-vol model when the chain is missing.",
   "dte": 7,
   "tickers": [
@@ -2713,7 +2713,7 @@
         },
         {
           "timestamp": 1782360000000,
-          "open": 139.73,
+          "open": 139.67,
           "high": 140.72,
           "low": 125.41,
           "close": 132.87,
@@ -5481,7 +5481,7 @@
         },
         {
           "timestamp": 1782360000000,
-          "open": 17.49,
+          "open": 17.47,
           "high": 18.04,
           "low": 17.31,
           "close": 17.57,
@@ -9633,7 +9633,7 @@
         },
         {
           "timestamp": 1782360000000,
-          "open": 272.57,
+          "open": 273.0,
           "high": 275.52,
           "low": 252.56,
           "close": 256.63,
@@ -11017,7 +11017,7 @@
         },
         {
           "timestamp": 1782360000000,
-          "open": 17.4,
+          "open": 17.39,
           "high": 17.58,
           "low": 16.82,
           "close": 17.3,
@@ -12401,7 +12401,7 @@
         },
         {
           "timestamp": 1782360000000,
-          "open": 111.38,
+          "open": 111.43,
           "high": 112.14,
           "low": 106.38,
           "close": 107.27,
@@ -15169,7 +15169,7 @@
         },
         {
           "timestamp": 1782360000000,
-          "open": 375.27,
+          "open": 375.4,
           "high": 379.12,
           "low": 371.22,
           "close": 375.12,
@@ -17937,7 +17937,7 @@
         },
         {
           "timestamp": 1782360000000,
-          "open": 287.4,
+          "open": 287.51,
           "high": 288.8,
           "low": 273.75,
           "close": 275.15,
@@ -17982,7 +17982,7 @@
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
-          "richness": 0.592,
+          "richness": 0.593,
           "safety": 0.714,
           "yield": 0.234,
           "liquidity": 0.342,
@@ -20705,7 +20705,7 @@
         },
         {
           "timestamp": 1782360000000,
-          "open": 232.02,
+          "open": 231.93,
           "high": 232.32,
           "low": 225.55,
           "close": 227.01,
@@ -22089,7 +22089,7 @@
         },
         {
           "timestamp": 1782360000000,
-          "open": 288.53,
+          "open": 289.96,
           "high": 290.43,
           "low": 259.0,
           "close": 268.03,
@@ -22134,7 +22134,7 @@
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
-          "richness": 0.318,
+          "richness": 0.319,
           "safety": 0.834,
           "yield": 0.728,
           "liquidity": 0.004,
@@ -26241,7 +26241,7 @@
         },
         {
           "timestamp": 1782360000000,
-          "open": 71.33,
+          "open": 71.37,
           "high": 72.94,
           "low": 70.86,
           "close": 70.9,
@@ -30393,7 +30393,7 @@
         },
         {
           "timestamp": 1782360000000,
-          "open": 68.76,
+          "open": 68.6,
           "high": 68.72,
           "low": 63.72,
           "close": 65.62,
@@ -31777,7 +31777,7 @@
         },
         {
           "timestamp": 1782360000000,
-          "open": 151.19,
+          "open": 151.2,
           "high": 152.4,
           "low": 134.31,
           "close": 138.54,
@@ -33225,20 +33225,7 @@
     "gone": [],
     "to_avoid": [],
     "from_avoid": [],
-    "movers": [
-      {
-        "ticker": "AMZN",
-        "delta": -7.6
-      },
-      {
-        "ticker": "SOFI",
-        "delta": 3.5
-      },
-      {
-        "ticker": "AAPL",
-        "delta": -3.3
-      }
-    ]
+    "movers": []
   },
-  "prev_generated_at": "2026-06-25T20:30:14+00:00"
+  "prev_generated_at": "2026-06-25T21:00:15+00:00"
 }
