@@ -39,11 +39,11 @@ cp INBOX.md /tmp/ember-inbox.before
 timeout 360 "$PY" ops/critic.py
 echo "[$(stamp)] review: critic finished (exit $?)"
 
-# Hard guard: critic may ONLY change INBOX.md. Restore the rest of the tree to origin, drop
-# any stray untracked files, keep the inbox the critic just appended to.
+# Hard guard: critic may ONLY change INBOX.md. critic.py writes nothing else, but to be
+# certain, revert any tracked change and keep just the inbox it appended to. (No `git clean`
+# here on purpose: it could delete unrelated untracked files in the box working tree.)
 cp INBOX.md /tmp/ember-inbox.after
 git checkout -q -- . 2>/dev/null || true
-git clean -fdq 2>/dev/null || true     # untracked only; gitignored .venv/data are safe
 cp /tmp/ember-inbox.after INBOX.md
 
 if ! git diff --quiet -- INBOX.md; then
