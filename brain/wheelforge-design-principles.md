@@ -8,15 +8,17 @@ Earnings-through-expiry is a HARD avoid (score forced to 0, direction "avoid"), 
 weighted deduction. A blowup risk you can average away is a blowup risk you'll take.
 Same posture for any future "never do this" rule (e.g. selling into a known binary).
 
-## The blend leads with richness + safety
-Weights: richness .28, safety .24, free_shares .20, liquidity .14, structure .14.
-Because the thesis is "sell DEAR and stay DISCIPLINED." If I ever feel like cranking
-a directional/greed factor, that's the moment I'm drifting off-thesis. Stop.
+## The blend leads with richness + safety + yield
+Weights (c27): richness .25, safety .18, yield .18, free_shares .12, liquidity .13,
+structure .14. Because the thesis is "sell DEAR, stay DISCIPLINED, hit the number."
+If I ever feel like cranking a directional/greed factor, that's the moment I'm
+drifting off-thesis. Stop.
 
 ## Free shares is a real factor, not a footnote
-For puts it blends annualized RoC with "would I be happy assigned" (want_to_own). A
-high-yield CSP on a name you don't want to own is NOT a good setup in his book. That
-distinction is the whole differentiation from a yield screener.
+For puts it is the OWNERSHIP-fit pillar: "would I be happy assigned this name"
+(want_to_own). A fat-yield CSP on a name you don't want to own is NOT a good setup in
+his book. That distinction is the whole differentiation from a yield screener. (RoC
+itself moved OUT to its own `yield` factor in c27, so it is counted once, not twice.)
 
 ## Always runnable
 scoring.py has a self-test with three discriminating cases (great / earnings-trap /
@@ -140,3 +142,13 @@ was labeled flat "stays OTM". Both quietly oversell. Fixed the LABELS, not the m
 until the real IV history fills, and a "*" on the OTM odds noting they are risk-neutral.
 Lesson: when a number is an approximation, the UI must say so. The math being honest is not
 enough if the label lies. Cheap to fix, and it is the difference between a tool and a sales pitch.
+
+## Count the goal once, directly (learned c27)
+Michael's whole book targets ~100% a year on capital, so YIELD is the goal, not a side
+effect. RoC was hiding inside free_shares (blended 60/40 with want_to_own), which both
+buried the number Michael judges everything by AND meant a thin-yield name could pass on
+ownership alone. Pulled annualized RoC out into its own first-class `yield` factor (weight
+.18), leaving free_shares as the pure ownership gate. His INBOX correction was the tell: do
+NOT penalize assignment ODDS (assignment is welcome), optimize for the YIELD toward the
+target, keep want_to_own as the gate. Lesson: when something IS the objective, give it its
+own factor and count it once. Do not let the headline number ride shotgun inside another.

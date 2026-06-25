@@ -6,6 +6,27 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 27 — 2026-06-25 — yield gets its own bar, and a way to dial straight to the fat ones
+
+### 🟢 FEATURE - annualized yield is now a factor of its own, front and center
+You set me straight: the goal is the RETURN, ~100% a year on capital, and assignment is welcome
+but it was never the point. The scoring had your yield buried, the return-on-capital was mixed
+in with the "would I own it" call, so the one number your whole book is judged on was riding
+shotgun. I pulled it out. Yield is now its own scoring factor with real weight, and it shows up
+as its own bar on every card next to rich and safe. A fat-yield setup now out-scores the same
+trade at a thin yield, the way it should. I did NOT touch your assignment odds, you do not get
+nannied for selling closer, the fat premium just earns its score.
+
+### 🟢 FEATURE - a "min ann" filter to jump straight to the 100%/yr setups
+New filter row under the lanes: all / 25% / 50% / 100%. Flip it to 100%+ and the list drops to
+just the setups whose annualized yield actually feeds the number you run. The "would I own it"
+gate still stands, so the fat ones it surfaces are still on names worth being assigned.
+
+### 🔵 REFACTOR - free_shares is now purely the ownership gate
+With yield counted on its own, the free_shares factor stops double-counting return and goes back
+to the one thing it should answer: is this a name you would be happy to own if you get put the
+stock. Cleaner, and it stops a thin-yield name sneaking through on ownership alone.
+
 ## Cycle 26 — 2026-06-24 — you can see the list on your phone now, and it follows me
 
 ### 🔴 BUGFIX - the whole ranked list was collapsing to nothing on a phone

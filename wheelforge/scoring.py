@@ -16,12 +16,16 @@ from __future__ import annotations
 
 
 # Relative importance of each factor in the blend. Richness + safety lead because
-# the thesis is "sell DEAR and stay DISCIPLINED." Tunable in later cycles.
+# the thesis is "sell DEAR and stay DISCIPLINED." YIELD is now a first-class factor
+# of its own: Michael's book targets ~100% a year on capital, so the annualized
+# return-on-capital has to count directly, not hide inside free_shares. Assignment
+# is welcome, never feared, so we do NOT penalize it here; we reward the fat yield.
 WEIGHTS = {
-    "richness": 0.28,
-    "safety": 0.24,
-    "free_shares": 0.20,
-    "liquidity": 0.14,
+    "richness": 0.25,
+    "safety": 0.18,
+    "yield": 0.18,
+    "free_shares": 0.12,
+    "liquidity": 0.13,
     "structure": 0.14,
 }
 
@@ -76,17 +80,23 @@ def liquidity_score(bid, ask, open_interest, volume):
     return clamp01(0.5 * tight + 0.3 * depth + 0.2 * flow)
 
 
-def free_shares_score(opt_type, annualized_roc, want_to_own, basis_discount):
-    """The endgame. For a cash-secured PUT: strong annualized return on capital AND
-    a name you'd be happy to be assigned (own free shares over time). For a COVERED
-    CALL: reduce basis without capping away a name you meant to keep."""
-    roc_s = _ramp(annualized_roc, 0.08, 0.35)     # 8% annualized floor, 35% great
+def yield_score(annualized_roc):
+    """The income-machine factor. Michael runs a ~100%-a-year book, so reward fat
+    annualized return-on-capital toward that target. Yield is the goal; assignment
+    is welcome but never the point, so this factor knows nothing about assignment
+    odds. RoC lives HERE now (it used to hide inside free_shares), counted directly."""
+    return _ramp(annualized_roc, 0.08, 1.0)        # 8% annualized floor, ~100% maxes it
+
+
+def free_shares_score(opt_type, want_to_own, basis_discount):
+    """The OWNERSHIP fit (RoC moved to yield_score, so no double-count). For a
+    cash-secured PUT: is this a name you'd be happy to be assigned and own free
+    shares of over time? For a COVERED CALL: does selling it reduce basis without
+    capping away a name you meant to keep?"""
     if str(opt_type).lower().startswith("p"):
-        own_s = 1.0 if want_to_own else 0.15       # assignment must be welcome
-        return clamp01(0.6 * roc_s + 0.4 * own_s)
-    # covered call: value the basis reduction; mild own-bonus so we don't cap a keeper
-    disc_s = _ramp(basis_discount, 0.0, 0.05)      # 0-5% basis cut per cycle
-    return clamp01(0.6 * roc_s + 0.4 * disc_s)
+        return 1.0 if want_to_own else 0.15        # assignment must be welcome
+    # covered call: value the basis reduction (do not cap a keeper for nothing)
+    return _ramp(basis_discount, 0.0, 0.05)        # 0-5% basis cut per cycle
 
 
 def structure_score(trend_align):
@@ -120,10 +130,11 @@ def score_contract(c):
     factors = {
         "richness": richness_score(c.get("iv"), c.get("rv"), c.get("iv_rank")),
         "safety": safety_score(c.get("prob_otm")),
+        "yield": yield_score(c.get("annualized_roc")),
         "liquidity": liquidity_score(c.get("bid"), c.get("ask"),
                                      c.get("open_interest"), c.get("volume")),
-        "free_shares": free_shares_score(opt_type, c.get("annualized_roc"),
-                                         c.get("want_to_own"), c.get("basis_discount")),
+        "free_shares": free_shares_score(opt_type, c.get("want_to_own"),
+                                         c.get("basis_discount")),
         "structure": structure_score(c.get("trend_align")),
     }
 
@@ -158,6 +169,8 @@ def _rationale(c, f, avoid, is_put):
                 "thin premium" if f["richness"] < 0.35 else "fair premium")
     bits.append("safe distance" if f["safety"] >= 0.6 else
                 "tight to the strike" if f["safety"] < 0.4 else "ok distance")
+    if f.get("yield", 0) >= 0.55:
+        bits.append("fat annualized yield")
     if f["liquidity"] < 0.4:
         bits.append("but illiquid, hard to fill")
     if is_put and f["free_shares"] >= 0.6:
@@ -183,17 +196,28 @@ def _selftest():
         "trend_align": 0.5,
     }
 
+    # A fat-yield aggressive CSP: same rich/safe/liquid setup but ~100% annualized
+    # (the income-machine names Michael actually targets). Yield is its own factor now,
+    # so this must out-score the merely-good CSP and light up the yield factor.
+    fat_yield = dict(great_csp)
+    fat_yield["annualized_roc"] = 1.05
+
     g = score_contract(great_csp)
     e = score_contract(earnings_trap)
     c = score_contract(cheap_illiquid)
+    y = score_contract(fat_yield)
     print("great CSP   :", g["score"], g["direction"], "|", g["why"])
     print("earnings trap:", e["score"], e["direction"], "|", e["why"])
     print("cheap/illiq :", c["score"], c["direction"], "|", c["why"])
+    print("fat yield   :", y["score"], y["direction"], "|", y["why"])
 
     assert g["score"] >= 70, "a genuinely rich, safe, liquid CSP should score high"
     assert e["avoid"] and e["score"] == 0.0, "earnings before expiry must hard-avoid"
     assert c["score"] < g["score"], "cheap + illiquid must rank below the great setup"
     assert g["direction"] == "cash-secured put"
+    assert y["factors"]["yield"] >= 0.9, "a ~100% annualized setup should max the yield factor"
+    assert y["score"] > g["score"], "fat yield must out-score the same setup at thin yield"
+    assert "fat annualized yield" in y["why"], "a fat-yield pick should say so plainly"
     print("\nOK: WheelForge scoring self-test passed.")
 
 
