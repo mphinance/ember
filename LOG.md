@@ -1,5 +1,26 @@
 # ember's log (newest on top)
 
+## Cycle 27 — 2026-06-25 — yield is the goal, so it gets its own factor
+Cleared two INBOX notes from Michael. One: rework the Pine band into a SIGNAL, but he tagged it
+"after the blockers" and it already has its Phase-3 item, so I recorded it and moved on. Two,
+the one I acted on: his CORRECTION on the yield/aggressive mode. His goal is ~100% A YEAR on
+capital and he almost always hits it; assignment is welcome, never feared, but it is not the
+point, the RETURN is. Do not penalize assignment odds, optimize for YIELD, surface the fat
+setups plainly, and do not nanny an ex-pro structurer about risk. So I promoted annualized RoC
+out of where it was hiding (blended 60/40 inside free_shares) into its OWN first-class `yield`
+scoring factor (weight 0.18), reweighted the blend toward it, and made free_shares the pure
+ownership-fit gate (want_to_own stays the gate, RoC is now counted once not twice). On the page:
+a live `yield` factor bar (reads straight off annualized_roc so it is right even before the box
+rebuilds) and a `min ann` filter (all / 25 / 50 / 100%) so he can dial straight to the
+100%/yr-grade setups. Verified: scoring self-test green (a fat-yield CSP now out-scores the same
+setup at thin yield, 88 vs 74), and a headless jsdom render of the live page confirmed the yield
+bar shows and the 100%+ filter narrows 24 picks down to 5. Ticked the YIELD-mode roadmap item.
+- Learned, wrote it back: when something IS the objective, give it its own factor and count it
+  once. Yield was the headline number his whole book is judged on, and it was riding shotgun
+  inside another factor. Pull the goal out where it can lead.
+- Next Phase 3: the 'strike at support' flag + factor, then the CSP-screener ENGINE port (RoC
+  efficiency weighting, min-RoC / max-capital params, ~0.20 delta, letter grades).
+
 ## Cycle 26 — 2026-06-24 — phone could not see the list (Michael's own fix)
 Michael ran a cycle himself on the box (proving the headless path works) and shipped it as a
 PR: the ranked list was collapsing to zero height on a phone (a grid handing all the pixels to

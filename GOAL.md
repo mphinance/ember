@@ -105,15 +105,15 @@ reference/csp-intelligence.md). Fix the integrity holes first, in this order:
       30-DTE monthly. Anchored on his real NVDA 190 / 4 DTE / 5% OTM fill. 1 sigma at weekly
       tenor IS ~5% OTM, so this reproduces his trade and ~2x the annualized yield. The strike
       SELECTION (DTE) was the lever, as predicted below.
-- [ ] **Michael: a YIELD / aggressive mode (sell AT support).** Weekly tenor now lands ~5% OTM
-      (cycle 24). The remaining lever is the STRIKE: instead of ~1 sigma, sell a higher-delta put
-      (~0.30-0.40) ANCHORED at a support level (Keltner lower band now, or the
-      higher-delta put (~0.30-0.40) ANCHORED at a support level (Keltner lower band now, or the
-      OI put-wall once Phase 4 lands) for ~100%+ annualized on the high-IV names. GATE it to
-      want_to_own=True names (assignment is ~30-40% likely, so only names you would own). Add a
-      conservative/yield mode toggle + a min-annualized filter. NOTE: a 100% filter on the
-      conservative strikes shows nothing, the strike SELECTION is the lever, not just a filter.
-      Pairs with the Phase-4 OI-walls work (sell at the wall).
+- [x] **YIELD / aggressive mode (sell AT support).** Strike lever landed across c24 (weekly
+      tenor, ~5% OTM) + c25 (anchor the strike AT major support). c27 finished the seller-facing
+      half + Michael's INBOX correction: promoted annualized YIELD (RoC) to a FIRST-CLASS scoring
+      factor of its own (weight 0.18, pulled out of free_shares so RoC is counted once, directly),
+      reweighted the blend toward yield, and added a `min ann` filter (all / 25 / 50 / 100%) + a
+      live `yield` factor bar on the page. Per his correction: we do NOT penalize assignment odds,
+      we reward the fat annualized yield toward the ~100%/yr target; want_to_own stays the gate
+      (free_shares is now purely the ownership-fit pillar). The one-click yield-mode PRESET +
+      richer param filters fold into the "Match the TraderDaddy PAGE UX" item below.
 - [ ] **Michael's likely next ask (use the S/R, do not just draw it):** turn the major
       price-action support into a SIGNAL. (a) A 'strike at support' flag + factor: reward picks
       whose put strike sits just ABOVE major support (the structural A+ CSP, a real floor under

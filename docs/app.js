@@ -18,7 +18,7 @@
     { key: 'iv', label: 'IV', get: function (p) { return p.iv || 0; } },
     { key: 'ivrank', label: 'IV-rk', get: function (p) { return p.iv_rank || 0; } },
   ];
-  var state = { sort: 'score', minScore: 0, hideAvoid: false, lane: 'all' };
+  var state = { sort: 'score', minScore: 0, minAnnual: 0, hideAvoid: false, lane: 'all' };
 
   function displayRows() {
     var s = SORTS.filter(function (x) { return x.key === state.sort; })[0] || SORTS[0];
@@ -26,6 +26,7 @@
       .filter(function (t) {
         if (state.hideAvoid && t.pick.avoid) return false;
         if (state.lane !== 'all' && (t.pick.lanes || []).indexOf(state.lane) < 0) return false;
+        if ((t.pick.annualized_roc || 0) < state.minAnnual) return false;
         return (t.pick.score || 0) >= state.minScore;
       })
       .slice()
@@ -71,6 +72,17 @@
       laneRow.appendChild(b);
     });
     host.appendChild(laneRow);
+    // Yield mode: filter to the fat-premium setups that actually feed a ~100%/yr book.
+    var yRow = document.createElement('div'); yRow.className = 'ctl-row';
+    yRow.appendChild(label('min ann'));
+    [[0, 'all'], [25, '25%+'], [50, '50%+'], [100, '100%+']].forEach(function (m) {
+      var b = document.createElement('button');
+      b.className = 'ctl-pill' + (state.minAnnual === m[0] ? ' on' : '');
+      b.textContent = m[1];
+      b.onclick = function () { state.minAnnual = m[0]; buildControls(); renderList(); };
+      yRow.appendChild(b);
+    });
+    host.appendChild(yRow);
   }
   function label(t) { var s = document.createElement('span'); s.className = 'ctl-lab'; s.textContent = t; return s; }
 
@@ -130,13 +142,21 @@
     catch (e) { return ''; }
   }
 
-  // The score is a blend; show the bar-by-bar why behind it.
-  var FAC = { richness: 'rich', safety: 'safe', free_shares: 'shares', liquidity: 'liq', structure: 'struct' };
-  function factorBars(f) {
-    if (!f) return '';
+  // The score is a blend; show the bar-by-bar why behind it. Order matches the
+  // thesis: rich + safe + yield lead (sell dear, stay disciplined, hit the number).
+  var FAC = { richness: 'rich', safety: 'safe', yield: 'yield', free_shares: 'shares', liquidity: 'liq', structure: 'struct' };
+  // Same ramp the engine uses for the yield factor (8% floor, ~100% maxes it), so
+  // the bar reads live off annualized_roc even before the box rebuilds the factors.
+  function yieldFrac(p) {
+    var roc = (Number(p.annualized_roc) || 0) / 100.0;  // stored as a percent
+    return Math.max(0, Math.min(1, (roc - 0.08) / (1.0 - 0.08)));
+  }
+  function factorBars(p) {
+    var f = (p && p.factors) || {};
     var html = '<span class="facwrap">';
     Object.keys(FAC).forEach(function (k) {
-      var v = Math.round((Number(f[k]) || 0) * 100);
+      var raw = (k === 'yield' && f.yield == null) ? yieldFrac(p) : (Number(f[k]) || 0);
+      var v = Math.round(raw * 100);
       html += '<span class="fac"><span class="faclab">' + FAC[k] + '</span>'
         + '<span class="facbar"><span class="facfill" style="width:' + v + '%;background:'
         + heatColor(v) + '"></span></span></span>';
@@ -210,7 +230,7 @@
           : '')
       + earn
       + ' · <span class="why">' + p.why + '</span>'
-      + factorBars(p.factors)
+      + factorBars(p)
       + (p.free_shares
           ? '<div class="fs-line"><span class="fs-badge" style="color:'
             + heatColor(p.free_shares.wheel_fit) + ';border-color:' + heatColor(p.free_shares.wheel_fit)
