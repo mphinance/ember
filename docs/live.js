@@ -162,6 +162,7 @@
   // kind -> { label, bg, fg } for the little pill on each row.
   var KINDS = {
     cycle: { label: 'CYCLE', bg: '#39ff8a', fg: '#04140a' },
+    critic:{ label: 'CRITIC', bg: '#c79bff', fg: '#160a24' },
     feat:  { label: 'BUILD', bg: '#7ef0ff', fg: '#04140a' },
     fix:   { label: 'FIX',   bg: '#ff5b6e', fg: '#1a0608' },
     data:  { label: 'DATA',  bg: '#243042', fg: '#9fb0c4' },
@@ -170,6 +171,7 @@
   };
   function classify(msg) {
     var s = msg.toLowerCase();
+    if (/^critic/.test(s)) return 'critic';
     if (/cycle\s+\d+/.test(s)) return 'cycle';
     if (/scan refresh|data refresh|refresh data|scan\.json|site data|rebuild data/.test(s)) return 'data';
     if (/^fix|bugfix|hotfix|🔴|repair|broke|patch/.test(s)) return 'fix';
