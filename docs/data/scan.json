@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-25T03:30:16+00:00",
+  "generated_at": "2026-06-25T04:00:15+00:00",
   "source_note": "Candles and option premium are LIVE off the yfinance chain for 24 of 24 names (real IV, bid/ask, OI); the rest fall back to a realized-vol model when the chain is missing.",
   "dte": 7,
   "tickers": [
@@ -1321,11 +1321,11 @@
         },
         {
           "timestamp": 1782273600000,
-          "open": 132.92,
+          "open": 133.05,
           "high": 136.08,
           "low": 127.95,
           "close": 131.65,
-          "volume": 101683749
+          "volume": 103472200
         }
       ],
       "pick": {
@@ -2697,11 +2697,11 @@
         },
         {
           "timestamp": 1782273600000,
-          "open": 16.44,
+          "open": 16.46,
           "high": 17.47,
           "low": 16.44,
           "close": 17.44,
-          "volume": 207169194
+          "volume": 207202600
         }
       ],
       "pick": {
@@ -2742,7 +2742,7 @@
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
-          "richness": 0.792,
+          "richness": 0.79,
           "safety": 0.551,
           "yield": 0.679,
           "liquidity": 0.277,
@@ -4073,11 +4073,11 @@
         },
         {
           "timestamp": 1782273600000,
-          "open": 200.07,
-          "high": 201.65,
+          "open": 200.12,
+          "high": 201.67,
           "low": 196.58,
           "close": 199.0,
-          "volume": 149005898
+          "volume": 150824300
         }
       ],
       "pick": {
@@ -4099,9 +4099,9 @@
         "vrp": 1.45,
         "levels": {
           "keltner": {
-            "upper": 231.93,
+            "upper": 231.94,
             "sma": 209.69,
-            "lower": 187.46
+            "lower": 187.45
           },
           "support": 178.57,
           "resistance": 216.83,
@@ -5453,7 +5453,7 @@
           "high": 54.79,
           "low": 48.84,
           "close": 50.3,
-          "volume": 38344151
+          "volume": 38571200
         }
       ],
       "pick": {
@@ -6827,9 +6827,9 @@
           "timestamp": 1782273600000,
           "open": 58.21,
           "high": 58.33,
-          "low": 57.38,
+          "low": 57.39,
           "close": 57.73,
-          "volume": 30230060
+          "volume": 30286400
         }
       ],
       "pick": {
@@ -6875,7 +6875,7 @@
           "yield": 0.0,
           "liquidity": 0.206,
           "free_shares": 1.0,
-          "structure": 0.961
+          "structure": 0.962
         },
         "why": "rich premium, safe distance, but illiquid, hard to fill, good free-shares fit if assigned.",
         "lanes": [
@@ -8201,11 +8201,11 @@
         },
         {
           "timestamp": 1782273600000,
-          "open": 17.24,
+          "open": 17.22,
           "high": 18.43,
           "low": 17.18,
           "close": 17.31,
-          "volume": 119083264
+          "volume": 119677800
         }
       ],
       "pick": {
@@ -8246,7 +8246,7 @@
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
-          "richness": 0.428,
+          "richness": 0.427,
           "safety": 0.915,
           "yield": 0.337,
           "liquidity": 0.814,
@@ -9577,11 +9577,11 @@
         },
         {
           "timestamp": 1782273600000,
-          "open": 33.32,
+          "open": 33.45,
           "high": 33.98,
           "low": 31.39,
           "close": 32.45,
-          "volume": 49708199
+          "volume": 51414000
         }
       ],
       "pick": {
@@ -9618,7 +9618,7 @@
           "wheel_fit": 100.0,
           "summary": "If assigned you own at $28.46, 12.3% below today, earning 98.0% annualized on the cash while you wait."
         },
-        "score": 61.8,
+        "score": 61.9,
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
@@ -10953,11 +10953,11 @@
         },
         {
           "timestamp": 1782273600000,
-          "open": 275.35,
+          "open": 275.1,
           "high": 276.15,
           "low": 249.21,
           "close": 259.66,
-          "volume": 14692843
+          "volume": 15121600
         }
       ],
       "pick": {
@@ -12329,11 +12329,11 @@
         },
         {
           "timestamp": 1782273600000,
-          "open": 380.01,
+          "open": 380.08,
           "high": 384.58,
           "low": 373.05,
           "close": 375.53,
-          "volume": 35272666
+          "volume": 36926400
         }
       ],
       "pick": {
@@ -13705,11 +13705,11 @@
         },
         {
           "timestamp": 1782273600000,
-          "open": 281.49,
-          "high": 281.54,
+          "open": 281.95,
+          "high": 281.95,
           "low": 263.66,
           "close": 276.7,
-          "volume": 34013774
+          "volume": 35380200
         }
       ],
       "pick": {
@@ -13731,9 +13731,9 @@
         "vrp": 1.17,
         "levels": {
           "keltner": {
-            "upper": 352.63,
+            "upper": 352.72,
             "sma": 271.01,
-            "lower": 189.4
+            "lower": 189.31
           },
           "support": 75.66,
           "resistance": 324.2,
@@ -13750,7 +13750,7 @@
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
-          "richness": 0.566,
+          "richness": 0.565,
           "safety": 0.772,
           "yield": 0.913,
           "liquidity": 0.078,
@@ -15085,7 +15085,7 @@
           "high": 284.0,
           "low": 259.71,
           "close": 268.99,
-          "volume": 6077492
+          "volume": 6621600
         }
       ],
       "pick": {
@@ -16457,11 +16457,11 @@
         },
         {
           "timestamp": 1782273600000,
-          "open": 114.05,
+          "open": 114.12,
           "high": 118.0,
           "low": 112.25,
           "close": 113.5,
-          "volume": 45608183
+          "volume": 46237700
         }
       ],
       "pick": {
@@ -17833,11 +17833,11 @@
         },
         {
           "timestamp": 1782273600000,
-          "open": 295.38,
+          "open": 295.36,
           "high": 299.7,
           "low": 292.94,
           "close": 293.08,
-          "volume": 46572137
+          "volume": 52882100
         }
       ],
       "pick": {
@@ -19213,7 +19213,7 @@
           "high": 242.42,
           "low": 232.95,
           "close": 234.27,
-          "volume": 62415490
+          "volume": 70056700
         }
       ],
       "pick": {
@@ -20586,10 +20586,10 @@
         {
           "timestamp": 1782273600000,
           "open": 58.51,
-          "high": 58.49,
-          "low": 53.54,
+          "high": 58.51,
+          "low": 53.51,
           "close": 55.59,
-          "volume": 6321351
+          "volume": 6345000
         }
       ],
       "pick": {
@@ -20630,7 +20630,7 @@
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
-          "richness": 0.73,
+          "richness": 0.729,
           "safety": 0.698,
           "yield": 0.616,
           "liquidity": 0.069,
@@ -21961,11 +21961,11 @@
         },
         {
           "timestamp": 1782273600000,
-          "open": 20.82,
-          "high": 20.95,
+          "open": 20.81,
+          "high": 20.97,
           "low": 19.01,
           "close": 19.53,
-          "volume": 34825413
+          "volume": 34965800
         }
       ],
       "pick": {
@@ -21984,7 +21984,7 @@
         "at_support": false,
         "support": 15.38,
         "iv_gt_hv": true,
-        "vrp": 1.24,
+        "vrp": 1.23,
         "levels": {
           "keltner": {
             "upper": 29.29,
@@ -22006,7 +22006,7 @@
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
-          "richness": 0.435,
+          "richness": 0.434,
           "safety": 0.755,
           "yield": 0.998,
           "liquidity": 0.035,
@@ -23341,7 +23341,7 @@
           "high": 24.43,
           "low": 22.4,
           "close": 22.98,
-          "volume": 31710989
+          "volume": 31816900
         }
       ],
       "pick": {
@@ -24713,11 +24713,11 @@
         },
         {
           "timestamp": 1782273600000,
-          "open": 27.45,
-          "high": 27.46,
+          "open": 27.54,
+          "high": 27.54,
           "low": 24.95,
           "close": 26.22,
-          "volume": 22471221
+          "volume": 22831000
         }
       ],
       "pick": {
@@ -24758,7 +24758,7 @@
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
-          "richness": 0.325,
+          "richness": 0.324,
           "safety": 0.763,
           "yield": 0.887,
           "liquidity": 0.007,
@@ -26089,11 +26089,11 @@
         },
         {
           "timestamp": 1782273600000,
-          "open": 72.62,
+          "open": 72.69,
           "high": 73.45,
-          "low": 71.62,
+          "low": 71.63,
           "close": 71.84,
-          "volume": 46196293
+          "volume": 47848200
         }
       ],
       "pick": {
@@ -26134,7 +26134,7 @@
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
-          "richness": 0.367,
+          "richness": 0.368,
           "safety": 0.74,
           "yield": 0.227,
           "liquidity": 0.624,
@@ -27469,7 +27469,7 @@
           "high": 22.94,
           "low": 22.31,
           "close": 22.37,
-          "volume": 42235503
+          "volume": 57251800
         }
       ],
       "pick": {
@@ -28841,11 +28841,11 @@
         },
         {
           "timestamp": 1782273600000,
-          "open": 71.6,
+          "open": 71.9,
           "high": 72.1,
           "low": 67.06,
           "close": 68.01,
-          "volume": 19813658
+          "volume": 21377500
         }
       ],
       "pick": {
@@ -28886,7 +28886,7 @@
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
-          "richness": 0.413,
+          "richness": 0.414,
           "safety": 0.135,
           "yield": 1.0,
           "liquidity": 0.614,
@@ -30217,11 +30217,11 @@
         },
         {
           "timestamp": 1782273600000,
-          "open": 89.08,
+          "open": 89.27,
           "high": 89.99,
           "low": 82.21,
           "close": 84.99,
-          "volume": 2195827
+          "volume": 2235200
         }
       ],
       "pick": {
@@ -31597,7 +31597,7 @@
           "high": 150.34,
           "low": 137.7,
           "close": 146.97,
-          "volume": 9919159
+          "volume": 10456600
         }
       ],
       "pick": {
@@ -32970,10 +32970,10 @@
         {
           "timestamp": 1782273600000,
           "open": 28.07,
-          "high": 28.3,
+          "high": 28.88,
           "low": 25.54,
           "close": 26.3,
-          "volume": 12352472
+          "volume": 12466500
         }
       ],
       "pick": {
@@ -32992,12 +32992,12 @@
         "at_support": true,
         "support": 26.28,
         "iv_gt_hv": false,
-        "vrp": 0.95,
+        "vrp": 0.94,
         "levels": {
           "keltner": {
-            "upper": 47.14,
+            "upper": 47.22,
             "sma": 36.26,
-            "lower": 25.38
+            "lower": 25.31
           },
           "support": 26.28,
           "resistance": 27.57,
@@ -33019,7 +33019,7 @@
           "yield": 1.0,
           "liquidity": 0.015,
           "free_shares": 0.15,
-          "structure": 0.042
+          "structure": 0.045
         },
         "why": "fair premium, tight to the strike, fat annualized yield, but illiquid, hard to fill.",
         "lanes": [
@@ -33035,5 +33035,5 @@
     "from_avoid": [],
     "movers": []
   },
-  "prev_generated_at": "2026-06-25T03:00:14+00:00"
+  "prev_generated_at": "2026-06-25T03:30:16+00:00"
 }
