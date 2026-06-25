@@ -164,6 +164,27 @@ def _via_openrouter(prompt, key):
     return None, None
 
 
+def _via_gemini(prompt, key, model="gemini-2.5-flash"):
+    """Direct Google Generative Language API (Michael has a GEMINI_API_KEY)."""
+    try:
+        url = ("https://generativelanguage.googleapis.com/v1beta/models/"
+               + model + ":generateContent?key=" + key)
+        body = json.dumps({
+            "system_instruction": {"parts": [{"text": SYS}]},
+            "contents": [{"parts": [{"text": prompt}]}],
+            "generationConfig": {"maxOutputTokens": 700, "temperature": 0.7},
+        }).encode()
+        req = urllib.request.Request(url, data=body,
+                                     headers={"Content-Type": "application/json"})
+        with urllib.request.urlopen(req, timeout=90) as r:
+            out = json.load(r)
+        txt = out["candidates"][0]["content"]["parts"][0]["text"].strip()
+        return (txt, model) if txt else (None, None)
+    except Exception as e:
+        sys.stderr.write(f"gemini failed: {e}\n")
+        return None, None
+
+
 def _via_happy(prompt):
     """Keyless fallback: local Sonnet through happy print-mode."""
     try:
@@ -198,9 +219,23 @@ def main():
     lens_idx, (lens_name, lens_desc) = _pick(LENSES)
     prompt = ("LENS for this review: " + lens_desc + "\n\n"
               "Here is the current state of WheelForge:\n\n" + _context())
-    key = os.environ.get("OPENROUTER_API_KEY", "").strip()
-    txt, model = (_via_openrouter(prompt, key) if key else (None, None))
-    if not txt:
+    # Rotate across whatever models are available, for genuinely different eyes each run.
+    ork = os.environ.get("OPENROUTER_API_KEY", "").strip()
+    gk = os.environ.get("GEMINI_API_KEY", "").strip()
+    providers = []
+    if ork:
+        providers.append("openrouter")   # rotates its own roster (GPT/Gemini/DeepSeek/...)
+    if gk:
+        providers.append("gemini")       # Gemini 2.5 Flash, direct
+    providers.append("local")            # local Sonnet via happy — always available
+    _, prov = _pick(providers)
+    if prov == "openrouter":
+        txt, model = _via_openrouter(prompt, ork)
+    elif prov == "gemini":
+        txt, model = _via_gemini(prompt, gk)
+    else:
+        txt, model = _via_happy(prompt)
+    if not txt:                          # any provider error -> keyless fallback
         txt, model = _via_happy(prompt)
     if not txt:
         sys.stderr.write("critic: no model produced output; adding nothing\n")
