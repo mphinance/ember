@@ -60,6 +60,7 @@
         }
       });
       heartbeat(lastRefresh, refreshHr);
+      watchdog(commits);
       status();
       if (feed === 'activity') renderActivity();      // the always-current stream
       else if (lastEntries) render(lastEntries);      // re-paint with known times
@@ -80,6 +81,57 @@
       + ' &middot; data refreshed <b style="color:#c7d0d6">' + ago(lastRefresh) + '</b> (' + clock(lastRefresh) + ')'
       + ' &middot; ' + refreshHr + ' refreshes in the last hour'
       + ' &middot; <span style="color:#6b7a8d">every commit below; numbered CYCLEs are her idle-fired feature builds</span>';
+  }
+
+  // ---- clock watchdog: catch a stalled clock the way a human reads the log ----
+  // Each ember "clock" leaves a footprint in the commit stream. If one goes quiet
+  // past its cron interval + slack while the others keep ticking, paint a red bar.
+  // This is exactly the failure that took the feature + critic clocks down for a
+  // day: cron fired on schedule but the scripts were committed chmod 644, so every
+  // tick died "Permission denied" — no commits, while the data clock kept flowing.
+  // Watching from the commit stream the page already has means this watchdog can
+  // never itself silently die (it is just part of the page).
+  var CLOCKS = [
+    { key: 'feature', name: 'feature clock', limitH: 5,  cron: 'cron every 2h' },
+    { key: 'critic',  name: 'critic',        limitH: 15, cron: 'cron every 3h' },
+    { key: 'data',    name: 'data clock',    limitH: 1,  cron: 'cron every 30m' }
+  ];
+  // Newest-first commits -> first match per clock is its latest tick. Michael's own
+  // commits (committer "Michael H") are NOT a clock tick, so a quiet human doesn't
+  // mask a dead clock.
+  function lastByClock(commits) {
+    var last = { feature: null, critic: null, data: null };
+    commits.forEach(function (c) {
+      var msg = (c.commit.message || '').split('\n')[0];
+      var who = (c.commit.committer && c.commit.committer.name) || '';
+      var t = new Date(c.commit.committer.date).getTime();
+      var key = /scan refresh/i.test(msg) ? 'data'
+        : (/^critic/i.test(msg) || who === 'ember-critic') ? 'critic'
+        : (who === 'ember') ? 'feature' : null;
+      if (key && last[key] == null) last[key] = t;
+    });
+    return last;
+  }
+  function watchdog(commits) {
+    var el = document.getElementById('clockwatch');
+    if (!el) return;
+    if (!commits || !commits.length) { el.style.display = 'none'; return; }
+    var last = lastByClock(commits), now = Date.now(), down = [];
+    CLOCKS.forEach(function (cl) {
+      var t = last[cl.key];
+      // null = no footprint in the whole commit window => long dead. Else compare age.
+      if (t == null || (now - t) > cl.limitH * 3600000) down.push({ cl: cl, last: t });
+    });
+    if (!down.length) { el.style.display = 'none'; el.innerHTML = ''; return; }
+    el.style.display = 'block';
+    var rows = down.map(function (d) {
+      return '<b style="color:#fff">' + d.cl.name + '</b> silent '
+        + (d.last ? '<b style="color:#fff">' + ago(d.last) + '</b>' : 'over a day (off the log)')
+        + ' <span style="color:#d98">(' + d.cl.cron + ')</span>';
+    });
+    el.innerHTML = '<span style="font-weight:800;letter-spacing:.06em;color:#ff5b6e">⚠ CLOCK DOWN</span> &middot; '
+      + rows.join(' &middot; ')
+      + ' &middot; <span style="color:#c98">cron likely erroring — check /var/log/ember-*.log on the box</span>';
   }
 
   function status() {
