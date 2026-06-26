@@ -194,6 +194,20 @@ Lesson: a modeled fallback that fills a real-looking field is the same quiet lie
 proxy (c22). Do not present an assumption as a measurement, thread a flag from the fallback to
 the pixel so the invented number reads as invented. Same honesty family as c22 and c19.
 
+## Show the choice, do not just make it (learned c34)
+A growth critic in INBOX caught that `_live_put` silently committed to the nearest weekly and
+never showed whether a 14- or 21-DTE at the same support strike annualized better, even though a
+bi-weekly sometimes pays ~2x the premium for trivially more risk, exactly the yield Michael scans
+to maximize. The fix was two parts. (1) Quote up to 3 candidate weeklies and KEEP the highest
+annualized RoC, sharing the one `_annualized_roc` helper with the per-pick number so the winner's
+yield equals the headline (no drift, the c32 twin-constant lesson applied up front). (2) Emit the
+losers too, as a `dte_ladder`, and render it (winner lit) so the comparison Michael could have
+done by hand is on the page. Crucially, the candidate set is earnings-GATED: a tenor that holds
+through the next print is dropped before ranking, so chasing yield never re-opens the c8 blowup the
+veto closes. Lesson: when the engine picks among real alternatives, surface the runners-up, not
+just the winner. A silent pick reads as "there was no choice"; showing the ladder turns a hidden
+default into a decision Michael can see and overrule. Same family as c9 (emit rich, surface later).
+
 ## Count the goal once, directly (learned c27)
 Michael's whole book targets ~100% a year on capital, so YIELD is the goal, not a side
 effect. RoC was hiding inside free_shares (blended 60/40 with want_to_own), which both

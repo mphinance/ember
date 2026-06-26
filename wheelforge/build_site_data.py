@@ -96,6 +96,61 @@ def _iv_rank(closes, window=252):
     return 50.0 if hi == lo else round(100.0 * (cur - lo) / (hi - lo), 1)
 
 
+def _annualized_roc(premium, strike, dte):
+    """Annualized return on the capital a cash-secured put ties up. Net basis at risk is
+    (strike - premium) because the premium is pocketed up front (the ticked c23 call; the
+    strike-vs-net denominator debate is Michael's to settle, not a bot's). Shared by the
+    per-pick RoC and the DTE-ladder ranker so the two can never quietly drift apart."""
+    cap = strike - premium
+    return (premium / cap) * (365.0 / dte) if (cap > 0 and dte > 0) else 0.0
+
+
+def _pick_best_dte(quotes):
+    """From candidate-expiry quotes, pick the one with the highest ANNUALIZED yield. The
+    thesis is the income machine, and a 14- or 21-DTE at the same support strike often
+    pockets ~2x the premium for trivially more risk, a comparison that used to be invisible
+    (we always took the nearest weekly). Returns (best_quote, ladder), where ladder lists
+    every candidate as {dte, exp, strike, premium, ann_roc} sorted by yield so the page can
+    show the runner-up tenors next to the winner."""
+    ranked = sorted(quotes, reverse=True,
+                    key=lambda q: _annualized_roc(q["premium"], q["strike"], q["dte"]))
+    ladder = [{"dte": q["dte"], "exp": q["exp"], "strike": round(q["strike"], 2),
+               "premium": round(q["premium"], 2),
+               "ann_roc": round(_annualized_roc(q["premium"], q["strike"], q["dte"]) * 100, 1)}
+              for q in ranked]
+    return ranked[0], ladder
+
+
+def _candidate_expiries(exps, earnings_days=None, lo=3, hi=21, targets=(7, 14, 21)):
+    """Up to len(targets) DISTINCT listed expiries inside the weekly window [lo, hi], one
+    nearest each target DTE, for the yield ladder. Any expiry that would hold THROUGH the
+    next earnings print is dropped (pillar 4: never sell through earnings). Returns
+    [(exp, dte), ...] sorted by dte. Empty if nothing clears the window (the caller then
+    falls back to _nearest_expiry so the site never blanks)."""
+    from datetime import date
+    today = date.today()
+    parsed = []
+    for e in exps:
+        try:
+            d = (date.fromisoformat(e) - today).days
+        except Exception:
+            continue
+        if d < max(2, lo) or d > hi:
+            continue
+        if earnings_days is not None and earnings_days < 999 and d >= earnings_days:
+            continue   # this tenor expires on/after the print: do not sell through it
+        parsed.append((e, d))
+    cand = {}
+    for tgt in targets:
+        best = None
+        for e, d in parsed:
+            if best is None or abs(d - tgt) < abs(best[1] - tgt):
+                best = (e, d)
+        if best:
+            cand[best[0]] = best[1]
+    return sorted(((e, d) for e, d in cand.items()), key=lambda x: x[1])
+
+
 def _nearest_expiry(exps, target_dte, lo=3, hi=21):
     """Pick the listed expiry nearest target_dte, CONSTRAINED to the weekly CSP window
     [lo, hi] days (default 3-21). Michael sells short-dated weeklies (~4 DTE), so the
@@ -132,39 +187,61 @@ def _anchor_strike(spot, rv, dte, support):
     return sigma, False
 
 
-def _live_put(ticker, spot, rv, support=None):
-    """REAL nearest-weekly (~7 DTE) cash-secured put off the live yfinance chain, struck AT
-    support when there is one (else ~1 sigma OTM). Returns a dict with real
-    iv/bid/ask/oi/volume/strike/dte + at_support, or None (fail-open)."""
+def _quote_expiry(tk, exp, dte, spot, rv, support):
+    """Quote the support-anchored (else ~1 sigma OTM) cash-secured put for a SINGLE expiry
+    off the live chain. Returns the quote dict or None (no chain / no OTM strike / dead
+    quote). Pulled out of _live_put so the DTE ladder can quote each candidate tenor."""
+    puts = tk.option_chain(exp).puts
+    if puts is None or puts.empty:
+        return None
+    target, at_support = _anchor_strike(spot, rv, dte, support)
+    otm = puts[puts["strike"] <= spot].copy()
+    if otm.empty:
+        return None
+    otm["_d"] = (otm["strike"] - target).abs()
+    row = otm.sort_values("_d").iloc[0]
+    bid = float(row.get("bid") or 0); ask = float(row.get("ask") or 0)
+    mid = (bid + ask) / 2.0 if (bid > 0 and ask > 0) else float(row.get("lastPrice") or 0)
+    iv = float(row.get("impliedVolatility") or 0)
+    if mid <= 0 or iv <= 0:
+        return None
+    return {
+        "strike": float(row["strike"]), "dte": int(dte), "exp": exp, "premium": mid,
+        "iv": iv, "bid": bid, "ask": ask, "at_support": at_support,
+        "open_interest": int(row.get("openInterest") or 0),
+        "volume": int(row.get("volume") or 0),
+    }
+
+
+def _live_put(ticker, spot, rv, support=None, earnings_days=None):
+    """REAL cash-secured put off the live yfinance chain, struck AT support when there is
+    one (else ~1 sigma OTM). Quotes up to 3 candidate weekly expiries (~7/14/21 DTE) at the
+    same support strike and returns the one with the highest ANNUALIZED yield, plus a
+    `dte_ladder` of the alternatives so the comparison is visible. Tenors that would hold
+    through the next earnings print are excluded. Returns the winning quote dict (real
+    iv/bid/ask/oi/volume/strike/dte + at_support + dte_ladder) or None (fail-open)."""
     import yfinance as yf
     try:
         tk = yf.Ticker(ticker)
         exps = list(tk.options or [])
         if not exps:
             return None
-        exp, dte = _nearest_expiry(exps, DTE)
-        if not exp or not dte:
+        cands = _candidate_expiries(exps, earnings_days)
+        if not cands:                      # nothing in the weekly window: fall outside it
+            exp, dte = _nearest_expiry(exps, DTE)   # rather than blank the name entirely
+            if not exp or not dte:
+                return None
+            cands = [(exp, dte)]
+        quotes = []
+        for exp, dte in cands:
+            q = _quote_expiry(tk, exp, dte, spot, rv, support)
+            if q:
+                quotes.append(q)
+        if not quotes:
             return None
-        puts = tk.option_chain(exp).puts
-        if puts is None or puts.empty:
-            return None
-        target, at_support = _anchor_strike(spot, rv, dte, support)
-        otm = puts[puts["strike"] <= spot].copy()
-        if otm.empty:
-            return None
-        otm["_d"] = (otm["strike"] - target).abs()
-        row = otm.sort_values("_d").iloc[0]
-        bid = float(row.get("bid") or 0); ask = float(row.get("ask") or 0)
-        mid = (bid + ask) / 2.0 if (bid > 0 and ask > 0) else float(row.get("lastPrice") or 0)
-        iv = float(row.get("impliedVolatility") or 0)
-        if mid <= 0 or iv <= 0:
-            return None
-        return {
-            "strike": float(row["strike"]), "dte": int(dte), "exp": exp, "premium": mid,
-            "iv": iv, "bid": bid, "ask": ask, "at_support": at_support,
-            "open_interest": int(row.get("openInterest") or 0),
-            "volume": int(row.get("volume") or 0),
-        }
+        best, ladder = _pick_best_dte(quotes)
+        best["dte_ladder"] = ladder
+        return best
     except Exception:
         return None
 
@@ -225,13 +302,15 @@ def build_one(ticker, earnings_days=None, lanes=None):
     from datetime import date, timedelta
     # Major price-action support: the level he sells AT (computed once, reused for the chart).
     support, resistance = support_resistance(candles, spot)
-    live = _live_put(ticker, spot, rv, support=support)
+    live = _live_put(ticker, spot, rv, support=support, earnings_days=earnings_days)
+    dte_ladder = None
     vrp_rv = rv                                # VRP denominator; live weekly swaps to 5-day below
     if live:                                   # REAL chain: real IV is the edge
         strike, dte, exp = live["strike"], live["dte"], live["exp"]
         premium, bid, ask = live["premium"], live["bid"], live["ask"]
         oi, vol, source = live["open_interest"], live["volume"], "live"
         at_support = live["at_support"]
+        dte_ladder = live.get("dte_ladder")    # the runner-up tenors, ranked by yield
         # Trust the premium, not the quoted IV: solve IV from the real mid. Fall back
         # to a sane quoted IV, then to realized vol. Track whether IV is market-derived:
         # if we land on the realized-vol fallback there is no traded IV, so VRP (iv/rv)
@@ -268,11 +347,9 @@ def build_one(ticker, earnings_days=None, lanes=None):
     # (R still belongs in _iv_from_put, which is genuine risk-neutral option pricing.)
     prob_otm = (_norm_cdf((math.log(spot / strike) + (0.0 - 0.5 * iv * iv) * t) / (iv * math.sqrt(t)))
                 if (strike > 0 and iv > 0 and t > 0) else 0.0)
-    # Return on the capital actually tied up: a cash-secured put pockets the premium
-    # up front, so the net basis at risk is (strike - premium), not the full strike.
-    # That is the honest denominator a wheel seller uses to judge yield.
-    cap = strike - premium
-    roc = (premium / cap) * (365.0 / dte) if (cap > 0 and dte > 0) else 0.0
+    # Return on the capital actually tied up (shared with the DTE-ladder ranker so the
+    # winning tenor's yield matches the headline number exactly).
+    roc = _annualized_roc(premium, strike, dte)
 
     # REAL structure: the broad trend (VoPR Keltner position, low = falling = do not sell
     # into it) BLENDED with the per-strike support floor. Selling AT/just-above a major
@@ -309,6 +386,9 @@ def build_one(ticker, earnings_days=None, lanes=None):
             "at_support": at_support, "support": (round(support, 2) if support else None),
             "support_floor": (round(floor, 3) if floor is not None else None),
             "iv_gt_hv": iv_gt_hv, "vrp": vrp, "vrp_assumed": vrp_assumed,
+            # The yield ladder: this tenor won on annualized RoC vs the other candidate
+            # weeklies at the same support strike. None on the modeled (single-DTE) path.
+            "dte_ladder": dte_ladder,
             # Levels for the chart: the Keltner volatility walls PLUS the major
             # price-action support/resistance (where the stock actually bounces).
             "levels": _levels(candles, spot, support, resistance),
@@ -395,5 +475,52 @@ def main():
     print(f"\nwrote {OUT} ({len(tickers)} names)")
 
 
+def _selftest():
+    """Pure self-test of the DTE-ladder picker + candidate selection. No network, no
+    scan.json write (running `main()` by accident was the c32 footgun, so the flag now
+    has a real, side-effect-free home)."""
+    from datetime import date, timedelta
+    today = date.today()
+    iso = lambda n: (today + timedelta(days=n)).isoformat()
+
+    # Ladder: same support strike, fatter premium at longer tenor should NOT always win on
+    # annualized yield. A 7-DTE at 0.9 out-annualizes a 21-DTE at 2.0 here, so the picker
+    # must rank by ann_roc, not raw premium.
+    quotes = [
+        {"strike": 100.0, "dte": 7, "exp": iso(7), "premium": 0.90, "iv": 0.4, "bid": 0.85,
+         "ask": 0.95, "at_support": True, "open_interest": 500, "volume": 100},
+        {"strike": 100.0, "dte": 21, "exp": iso(21), "premium": 2.00, "iv": 0.4, "bid": 1.95,
+         "ask": 2.05, "at_support": True, "open_interest": 500, "volume": 100},
+    ]
+    best, ladder = _pick_best_dte(quotes)
+    r7 = _annualized_roc(0.90, 100.0, 7) * 100
+    r21 = _annualized_roc(2.00, 100.0, 21) * 100
+    print(f"ladder: 7d {r7:.0f}%/yr vs 21d {r21:.0f}%/yr -> best {best['dte']}d")
+    assert best["dte"] == 7, "the higher-annualized tenor must win, not the fatter premium"
+    assert len(ladder) == 2 and ladder[0]["dte"] == 7, "ladder is yield-sorted, winner first"
+    assert ladder[0]["ann_roc"] > ladder[1]["ann_roc"], "ladder must be descending by yield"
+
+    # Earnings gate: a print in 10 days drops the 14/21-DTE candidates (they hold through
+    # it) but keeps the ~7-DTE that clears before it.
+    exps = [iso(7), iso(14), iso(21)]
+    no_earn = _candidate_expiries(exps, earnings_days=999)
+    pre_earn = _candidate_expiries(exps, earnings_days=10)
+    print(f"candidates: clear={[d for _, d in no_earn]} earn@10d={[d for _, d in pre_earn]}")
+    assert [d for _, d in no_earn] == [7, 14, 21], "all three weeklies qualify with no print"
+    assert all(d < 10 for _, d in pre_earn) and pre_earn, "earnings in 10d must drop 14/21-DTE"
+
+    # Window: a far-out monthly never enters the ladder; a same-day expiry is excluded.
+    assert _candidate_expiries([iso(45)], 999) == [], "a 45-DTE monthly is outside the weekly window"
+    assert _candidate_expiries([iso(0), iso(5)], 999) == [(iso(5), 5)], "drop same/next-day gamma"
+
+    # RoC denominator stays (strike - premium), the ticked c23 call.
+    assert abs(_annualized_roc(2.0, 100.0, 7) - (2.0 / 98.0) * (365.0 / 7)) < 1e-9
+    print("OK: build_site_data DTE-ladder self-test passed.")
+
+
 if __name__ == "__main__":
-    main()
+    import sys
+    if "--selftest" in sys.argv:
+        _selftest()
+    else:
+        main()

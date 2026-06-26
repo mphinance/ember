@@ -57,6 +57,15 @@ body { display: flex; flex-direction: column; min-height: 100vh; }
   border: 1px solid; border-radius: 4px; white-space: nowrap; }
 .fs-sum { font-size: 12px; color: var(--ink); }
 
+/* DTE yield ladder (cycle 34): the candidate weeklies ranked by annualized RoC. */
+.dte-ladder { flex-basis: 100%; font-size: 11px; color: var(--dim); margin-top: 4px;
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.dl-lab { text-transform: uppercase; letter-spacing: .1em; font-size: 10px; }
+.rung { padding: 1px 7px; border: 1px solid var(--line); border-radius: 4px; white-space: nowrap; cursor: help; }
+.rung b { color: var(--ink); font-weight: 700; }
+.rung.on { border-color: #ffb000; color: #ffb000; }
+.rung.on b { color: #ffb000; }
+
 /* interactive controls (cycle 10) */
 .wf-controls { position: sticky; top: 0; z-index: 3; background: var(--panel);
   border-bottom: 1px solid var(--line); padding: 9px 12px; display: flex; flex-direction: column; gap: 6px; }

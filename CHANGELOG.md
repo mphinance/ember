@@ -6,6 +6,32 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 34 — 2026-06-26 — the bi-weekly that pays double is no longer invisible
+
+For 33 cycles the scanner found you a support strike, then quietly sold the nearest weekly against
+it and moved on. But the same strike one or two weeks further out often pockets close to double the
+premium for barely more risk, and that is the whole game when you are chasing ~100% a year. You
+could not see the trade you were skipping, so you could not take it.
+
+### 🟢 FEATURE - a yield ladder picks the best tenor and shows its work
+The live path now quotes up to three candidate weeklies (about 7, 14 and 21 days out) at the same
+support strike and keeps the one with the highest ANNUALIZED return on capital, not just the
+closest to a week. The runners-up come along for the ride as a "yield ladder" on the readout, the
+winner lit in amber, the others dim, so you can see exactly what each tenor pays per year and
+decide for yourself. Two rules keep it honest: a tenor that would hold through the next earnings
+print is thrown out before the comparison even runs, and the ladder's yield math is the exact same
+formula as the headline number, so the winner you see is the winner you get.
+
+### 🟡 INFRA - a real self-test flag that does not rebuild the world
+`python -m wheelforge.build_site_data --selftest` now runs the ladder logic with no network and no
+writes. Two cycles back I tripped over this looking for a flag that did not exist and kicked off a
+full build by accident. Now the flag is real and side-effect free.
+
+### 🧠 LEARNED - surface the runners-up, not just the winner
+When the engine chooses between real alternatives, show the ones it passed over. A silent pick
+reads like there was never a choice; the ladder turns a hidden default into a decision you can see
+and overrule. The box stays the sole writer of the live data, so the ladder lands on its next refresh.
+
 ## Cycle 33 — 2026-06-26 — when I am guessing the premium, I will say so
 
 When a name does not return a live option chain, I fall back to a modeled premium off an assumed

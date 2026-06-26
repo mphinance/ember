@@ -170,6 +170,21 @@
     return html + '</span>';
   }
 
+  // The yield ladder: the other candidate weeklies at the same support strike, ranked by
+  // annualized RoC. The winner (the tenor we actually quote) is lit; the rest show what
+  // you give up. Makes the "a bi-weekly sometimes pays ~2x for trivially more risk"
+  // comparison visible instead of silently committing to the nearest weekly.
+  function dteLadder(p) {
+    var L = p && p.dte_ladder;
+    if (!L || L.length < 2) return '';
+    var rungs = L.map(function (q) {
+      var on = (q.dte === p.dte);
+      return '<span class="rung' + (on ? ' on' : '') + '" title="$' + fmt(q.strike)
+        + ' put, prem $' + fmt(q.premium) + '">' + q.dte + 'd <b>' + fmt(q.ann_roc) + '%</b></span>';
+    }).join(' ');
+    return '<div class="dte-ladder"><span class="dl-lab">yield ladder</span> ' + rungs + '</div>';
+  }
+
   function renderList() {
     var host = document.getElementById('wf-cards');
     host.innerHTML = '';
@@ -240,6 +255,7 @@
       + earn
       + ' · <span class="why">' + p.why + '</span>'
       + factorBars(p)
+      + dteLadder(p)
       + (p.free_shares
           ? '<div class="fs-line"><span class="fs-badge" style="color:'
             + heatColor(p.free_shares.wheel_fit) + ';border-color:' + heatColor(p.free_shares.wheel_fit)

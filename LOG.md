@@ -1,5 +1,38 @@
 # ember's log (newest on top)
 
+## Cycle 34 — 2026-06-26 — stop committing to the first weekly, show the yield ladder
+Consumed the growth critic's third INBOX line: `_live_put` quoted exactly one expiry (nearest 7
+DTE) and never showed whether a 14- or 21-DTE at the same support strike annualized better, even
+though the bi-weekly sometimes pays ~2x the premium for trivially more risk, the exact number
+Michael scans to maximize. Closed it. `_live_put` now builds up to 3 candidate weeklies via a new
+`_candidate_expiries` (nearest ~7/14/21 DTE inside the [3,21] window), quotes each at the
+support-anchored strike through an extracted `_quote_expiry`, and keeps the one with the highest
+ANNUALIZED RoC via `_pick_best_dte`. Two disciplines baked in: (1) the candidate set is
+earnings-GATED, any tenor that expires on/after the next print is dropped before ranking, so
+chasing yield never re-opens the blowup the earnings veto closes; (2) the ranker shares one new
+`_annualized_roc` helper with the per-pick RoC (the c32 twin-constant lesson applied up front, so
+the winner's yield can never drift from the headline). The losing tenors ride along as a
+`dte_ladder` on the pick, and the page renders it (winner lit, runners-up dim) so the comparison is
+visible instead of a silent default. Kept the ticked c23 RoC denominator (strike - premium); the
+strike-vs-net debate the quant critic raised is still Michael's to settle, not a bot's, so I did
+not touch it. Also gave build_site_data a real `--selftest` flag (pure, no network, no scan.json
+write), which both tests the ladder logic AND closes the c32 footgun where probing for that flag
+accidentally ran a full build. Verified: `python -m wheelforge.build_site_data --selftest` green
+(picker ranks by annualized yield not raw premium, earnings@10d drops the 14/21-DTE, the 45-DTE
+monthly and same-day gamma are excluded); scoring/structure/freeshares/roll self-tests stay green;
+an offline build_one smoke test shows dte_ladder None on the modeled path and the winning tenor
+surfaced on an injected live path; and a headless Chromium load (playwright, served over http) with
+an injected ladder pick renders the yield-ladder strip with the 7d winner lit and zero JS errors.
+Did NOT touch scan.json, the box stays its sole writer and will surface the ladder on its next
+refresh once it runs this code.
+- Learned, wrote it back (brain/wheelforge-design-principles.md, c34): when the engine picks among
+  real alternatives, surface the runners-up, not just the winner. A silent pick reads as "there was
+  no choice"; showing the ladder turns a hidden default into a decision Michael can see and overrule.
+  Same family as c9 (emit rich, surface later), and the yield-gate stays earnings-disciplined (c8).
+- Next: the growth critic's portfolio.py morning brief (live IBKR positions ranked by roll urgency,
+  heavier, needs the MCP), the roll_target prescription on ROLL_ALERT, or the product critic's TOP-pick
+  card highlight (a pure UI cycle). The quant RoC-denominator question stays parked for Michael.
+
 ## Cycle 33 — 2026-06-26 — an assumed number should look assumed
 Consumed the quant critic's second INBOX line, the one cycle 32 flagged as next. When a name
 returns no live option chain, build_site_data fails open with `iv = rv * 1.15`, which makes VRP

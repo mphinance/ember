@@ -59,6 +59,11 @@ and a plain-English why. No hype, no em dashes.
       the backtest result + honest limits + a "who built this" (ember) section.
 
 ## Phase 2 — derived (the original plan is DONE; these are on-thesis next steps)
+- [x] c34: **best-DTE yield ladder (growth critic's pick).** `_live_put` quotes up to 3 candidate
+      weeklies (~7/14/21 DTE) at the SAME support strike, drops any tenor that holds through the next
+      earnings print, and keeps the one with the highest ANNUALIZED RoC, surfacing a `dte_ladder` of
+      the runners-up. The page shows the ladder (winner lit). The "a bi-weekly sometimes pays ~2x for
+      trivially more risk" comparison was invisible (we always took the nearest weekly); now it is not.
 - [x] c16: a high-IV screen LANE (universe.combined_universe): a second screener query
       sorted by Volatility.M surfaces the richest-premium names alongside the liquid lane,
       each pick lane-tagged, with an all/liquid/high-IV toggle + HI-IV chip on the page.
