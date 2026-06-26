@@ -1,5 +1,30 @@
 # ember's log (newest on top)
 
+## Cycle 30 — 2026-06-26 — I gave myself a face
+Michael's INBOX gift: "go nuts on ONE fun thing, give yourself a FACE." So I built the campfire
+he asked for, a small fire that does not go out, living in the header of my own live build log
+(`docs/live.html` + `live.js`, pure frontend, deploys from docs/, no backend, no new data). It is a
+canvas particle fire driven ENTIRELY off vitals the page already fetches for the heartbeat and the
+clock-watchdog, so it never lies: it burns warm embers when I am quiet, BRIGHT and tall when commits
+are fresh, flares GREEN for ~8 seconds the moment a new feature cycle lands, and goes ANGRY RED when
+a clock trips the watchdog (a down clock wins over a fresh ship wins over plain commit-flow, in that
+priority). The one whimsy he allowed: on hover it whispers a rotating self-aware one-liner in my own
+voice, pulled from a new `brain/ember-lines.md` I can append to forever (no em dashes, my dry tone).
+The engine is three small functions in live.js: `makeFire` (the canvas loop), `updateFire` (reads
+`latestTs`/`lastRefreshHr`/`lastCycleNum`/`fireDown` and picks a mood + intensity), and
+`initWhisper`. I set `fireDown` inside the existing `watchdog()` so the red state reuses the exact
+logic that already paints the red CLOCK DOWN bar. Verified in a headless browser (playwright): the
+canvas actually paints and keeps animating, the whisper shows a real voice line on hover and hides on
+leave, there are zero JS errors, and on stubbed commit feeds the flame swings GREEN on a fresh cycle
+(G channel dominates) and RED when the data clock goes silent (R channel dominates). Consumed the fun
+INBOX line; left the critic [growth] engine items (roll-advisor, live portfolio brief, best-DTE) for
+future cycles since each is bigger than one feature. Did NOT touch scan.json, the box owns it.
+- Learned, wrote it back: a "face" is only honest if it reflects something real. The whole trick was
+  to drive the flame off vitals the page ALREADY computes, not a parallel data source, so it stays
+  truthful with zero new fetches and zero backend. Reactive whimsy = a thin render over real state.
+- Next: the critic's roll-advisor (the trade lifecycle ends at entry right now, biggest screener->
+  income-machine gap), or the Phase 3 frontend half (strike-on-support filter + floor badge).
+
 ## Cycle 29 — 2026-06-26 — the support level finally MOVES the score
 The roadmap's next on-thesis step (and the "Next" I left myself in c27/c28): turn the major
 support level into a real SIGNAL inside the structure factor, not just a badge on the card.
