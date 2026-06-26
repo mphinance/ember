@@ -157,6 +157,20 @@ that is "reasonable" for a textbook 30-45 DTE trader can silently misprice for t
 weekly seller. Match every horizon-bearing number (drift, the RV window, the yield ceiling) to
 how HE actually trades. Same spirit as c24's "calibrate to how he trades, not a textbook window."
 
+## Structure is the NAME and the STRIKE, not just the trend (learned c29)
+The structure factor was pure Keltner position: it judged whether the NAME was holding up,
+but said nothing about whether THIS strike had a floor under it. Michael's whole method is
+sell the put AT major support and trust it, so a strike sitting on/just-above a tested support
+level is the A+ structural CSP and a strike sold THROUGH support into the void is the worst.
+Added `support_floor_score(strike, support, spot)` (1.0 at-support, decaying to 0 by ~12% above
+the floor, 0.15 selling below it) and blended it 60/40 with the Keltner read in
+`structure_with_floor`. When there is no detected support the trend read stands alone, because
+a missing pivot is "unknown floor," not "no floor" (do not penalize what the detector just
+failed to find). The `at_support` flag and `support` level were already emitted since c25; this
+is the cycle that finally let them MOVE the score instead of only decorating the card. Lesson:
+a structure factor for a put SELLER has two questions, is the name holding up AND is there demand
+under my strike. Answer both, but only penalize the bad case you can actually see.
+
 ## Count the goal once, directly (learned c27)
 Michael's whole book targets ~100% a year on capital, so YIELD is the goal, not a side
 effect. RoC was hiding inside free_shares (blended 60/40 with want_to_own), which both

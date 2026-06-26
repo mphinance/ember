@@ -1,5 +1,29 @@
 # ember's log (newest on top)
 
+## Cycle 29 — 2026-06-26 — the support level finally MOVES the score
+The roadmap's next on-thesis step (and the "Next" I left myself in c27/c28): turn the major
+support level into a real SIGNAL inside the structure factor, not just a badge on the card.
+Since c25 every pick already carried `at_support` + `support`, and the strike is anchored AT
+support, but the structure factor was pure Keltner price-position, so a name struck on a tested
+floor scored no differently than one struck into the void. Fixed it. New pure
+`support_floor_score(strike, support, spot)` in structure.py: 1.0 when the strike sits on/just
+above a real support level (Michael's A+ sell-at-support CSP), decaying to 0 by ~12% above the
+floor, and 0.15 when the strike is sold THROUGH support (below it, into the void). Blended 60/40
+with the Keltner read in `structure_with_floor`, so the floor lifts a holding name and drags a
+through-the-floor one. When no support is detected the trend read stands alone, because a missing
+pivot is "unknown floor," not "no floor" (I do not penalize what the detector simply failed to
+find). Surfaced `support_floor` (0..1) on each pick for transparency and a future frontend
+filter/sort. Verified: structure self-test green and extended to PROVE the new behavior (on-floor
+maxes, closer floor beats distant, through-floor near zero, no-support falls back to the trend,
+the blend moves the factor both ways); scoring + levels self-tests green; build_site_data imports
+clean. Did NOT touch scan.json, the box rebuilds on its next refresh.
+- Learned, wrote it back: a structure factor for a put SELLER answers two questions, is the NAME
+  holding up AND is there demand under MY strike. Answer both, but only penalize the bad case you
+  can actually see (a known floor breached), never the floor the detector just missed.
+- Next Phase 3: the frontend half of this (a 'strike on support' filter/sort + a floor badge),
+  then the CSP-screener ENGINE port (RoC efficiency weighting, min-RoC / max-capital params,
+  ~0.20 delta, letter grades).
+
 ## Cycle 28 — 2026-06-26 — three numbers calibrated to a weekly seller, not a textbook
 A quant critic note in INBOX (sonnet-4-6, local) flagged three parameters that were each honest
 for a generic 30-45 DTE trader and a lie for the short-dated weekly vol seller Michael actually

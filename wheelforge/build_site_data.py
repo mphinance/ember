@@ -20,7 +20,8 @@ from datetime import datetime, timezone
 from wheelforge.scoring import score_contract
 from wheelforge.freeshares import free_shares_read
 from wheelforge.iv_history import record as _iv_record, iv_rank as _iv_rank_hist
-from wheelforge.structure import keltner_position, keltner_bands
+from wheelforge.structure import (keltner_position, keltner_bands,
+                                  support_floor_score, structure_with_floor)
 from wheelforge.levels import support_resistance
 from wheelforge.vol_models import composite_realized_vol
 
@@ -265,9 +266,13 @@ def build_one(ticker, earnings_days=None, lanes=None):
     cap = strike - premium
     roc = (premium / cap) * (365.0 / dte) if (cap > 0 and dte > 0) else 0.0
 
-    # REAL structure (VoPR Keltner position): low = falling = do not sell into it.
-    struct = keltner_position(candles)
-    struct = 0.5 if struct is None else struct
+    # REAL structure: the broad trend (VoPR Keltner position, low = falling = do not sell
+    # into it) BLENDED with the per-strike support floor. Selling AT/just-above a major
+    # support level (Michael's method) is the A+ structural CSP, so a real floor under the
+    # strike lifts the factor; selling through the floor into the void drags it.
+    keltner = keltner_position(candles)
+    floor = support_floor_score(strike, support, spot)
+    struct = structure_with_floor(keltner, floor)
 
     # IV rank: record today's IV, then rank vs this name's own accumulated history.
     # Falls back to the realized-vol proxy until the store has enough days.
@@ -294,6 +299,7 @@ def build_one(ticker, earnings_days=None, lanes=None):
             # His method, surfaced: struck AT support (or 1-sigma fallback), and the
             # IV-over-HV edge gate (rich premium = VRP > 1).
             "at_support": at_support, "support": (round(support, 2) if support else None),
+            "support_floor": (round(floor, 3) if floor is not None else None),
             "iv_gt_hv": iv_gt_hv, "vrp": vrp,
             # Levels for the chart: the Keltner volatility walls PLUS the major
             # price-action support/resistance (where the stock actually bounces).

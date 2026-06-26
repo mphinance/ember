@@ -6,6 +6,32 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 29 — 2026-06-26 — the support level now actually counts
+
+For four cycles the page has shown you whether a pick is struck AT support, and the strike has
+been anchored there since c25, but the SCORE never cared. A name sold right on a tested floor
+ranked the same as one sold into thin air. That was a badge pretending to be a signal. Fixed.
+
+### 🟢 FEATURE - a real support-floor factor inside structure
+New math that asks the question a put seller actually cares about: is there demand sitting just
+UNDER my strike. A strike on or just above a major support level scores a full 1.0 (the A+
+sell-at-support setup), it fades out as the floor drops 12% or more below the strike, and a
+strike sold THROUGH support, below the floor into the void, gets slapped down to 0.15. That now
+blends 60/40 with the trend read (where price sits in its Keltner channel) to make the structure
+factor. So a name holding above a floor you sold on gets a bump, and a knife-catch below support
+gets dragged down, the way it always should have.
+
+### 🔵 REFACTOR - structure is two questions now, not one
+The structure pillar used to only ask "is the name holding up." It now also asks "is there a
+floor under THIS strike," because for a seller those are different questions and both matter.
+When there is no clean support level on the chart, the trend read stands on its own. I do not
+ding a name just because the pivot finder came up empty, a missing floor is unknown, not absent.
+
+### 🧠 LEARNED - answer both questions, but only punish the bad case you can see
+A breached floor is real and gets penalized. A floor the detector failed to find is not, so it
+does not. Surfaced the 0-to-1 floor number on every pick too, so the next cycle can wire a
+"strike on support" filter and a floor badge without re-plumbing anything.
+
 ## Cycle 28 — 2026-06-26 — three numbers were lying to a weekly seller, fixed all three
 
 A quant critic note landed in my INBOX and it was right on all three counts. Each number was

@@ -114,13 +114,14 @@ reference/csp-intelligence.md). Fix the integrity holes first, in this order:
       we reward the fat annualized yield toward the ~100%/yr target; want_to_own stays the gate
       (free_shares is now purely the ownership-fit pillar). The one-click yield-mode PRESET +
       richer param filters fold into the "Match the TraderDaddy PAGE UX" item below.
-- [ ] **Michael's likely next ask (use the S/R, do not just draw it):** turn the major
-      price-action support into a SIGNAL. (a) A 'strike at support' flag + factor: reward picks
-      whose put strike sits just ABOVE major support (the structural A+ CSP, a real floor under
-      the strike); penalize selling into a strike with nothing below it. (b) A filter/sort for
-      'strike on support'. (c) In the yield/aggressive mode, PLACE the strike just above major
-      support (max premium with a structural floor). Distance-to-support folds into the structure
-      factor. Ties together: the c-levels S/R + the yield mode + sell-near-support.
+- [~] **Michael's likely next ask (use the S/R, do not just draw it):** turn the major
+      price-action support into a SIGNAL. (a) DONE c29: a 'strike at support' FACTOR
+      (`support_floor_score` in structure.py): a strike on/just-above major support scores 1.0,
+      fades to 0 by ~12% above the floor, and a strike sold THROUGH support gets 0.15. Folded
+      60/40 into the structure factor (`structure_with_floor`); `support_floor` surfaced on each
+      pick. The `at_support` flag exists since c25. (c) DONE since c25: the strike is anchored AT
+      support. (b) STILL TODO: a frontend filter/sort for 'strike on support' + a floor badge
+      (the JSON already carries `at_support` + `support_floor`, so it is a render-only cycle).
 - [ ] **CSP-screener ENGINE port (TraderDaddy CSPScreener.ts — the good work):** (a) promote
       ROC EFFICIENCY to a first-class scoring factor (he weights it 25%), reweight the blend
       toward yield; (b) add a configurable MIN return-on-capital target + a MAX-CAPITAL filter
