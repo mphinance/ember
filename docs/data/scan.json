@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-26T21:00:23+00:00",
+  "generated_at": "2026-06-26T21:30:19+00:00",
   "source_note": "Candles and option premium are LIVE off the yfinance chain for 24 of 24 names (real IV, bid/ask, OI); the rest fall back to a realized-vol model when the chain is missing.",
   "dte": 7,
   "tickers": [
@@ -1337,7 +1337,7 @@
         },
         {
           "timestamp": 1782446400000,
-          "open": 46.65,
+          "open": 46.69,
           "high": 48.39,
           "low": 45.05,
           "close": 47.21,
@@ -2755,7 +2755,7 @@
         },
         {
           "timestamp": 1782446400000,
-          "open": 193.12,
+          "open": 193.1,
           "high": 195.55,
           "low": 191.22,
           "close": 192.53,
@@ -4173,7 +4173,7 @@
         },
         {
           "timestamp": 1782446400000,
-          "open": 128.71,
+          "open": 128.7,
           "high": 131.23,
           "low": 125.5,
           "close": 128.32,
@@ -5591,7 +5591,7 @@
         },
         {
           "timestamp": 1782446400000,
-          "open": 370.15,
+          "open": 370.14,
           "high": 387.8,
           "low": 368.6,
           "close": 379.71,
@@ -8413,7 +8413,7 @@
         },
         {
           "timestamp": 1782446400000,
-          "open": 17.0,
+          "open": 17.01,
           "high": 17.97,
           "low": 16.99,
           "close": 17.88,
@@ -8438,7 +8438,7 @@
         "support": 15.6,
         "support_floor": 0.814,
         "iv_gt_hv": true,
-        "vrp": 1.05,
+        "vrp": 1.04,
         "vrp_assumed": false,
         "dte_ladder": [
           {
@@ -8466,11 +8466,11 @@
           "wheel_fit": 69.5,
           "summary": "If assigned you own at $15.71, 12.2% below today, earning 32.6% annualized on the cash while you wait."
         },
-        "score": 54.1,
+        "score": 54.0,
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
-          "richness": 0.243,
+          "richness": 0.242,
           "safety": 0.633,
           "yield": 0.128,
           "liquidity": 0.961,
@@ -9817,7 +9817,7 @@
         },
         {
           "timestamp": 1782446400000,
-          "open": 30.97,
+          "open": 30.93,
           "high": 31.71,
           "low": 30.28,
           "close": 30.63,
@@ -12653,7 +12653,7 @@
         },
         {
           "timestamp": 1782446400000,
-          "open": 335.07,
+          "open": 335.25,
           "high": 339.9,
           "low": 326.8,
           "close": 334.27,
@@ -15489,7 +15489,7 @@
         },
         {
           "timestamp": 1782446400000,
-          "open": 64.68,
+          "open": 64.66,
           "high": 73.2,
           "low": 64.51,
           "close": 71.45,
@@ -18325,7 +18325,7 @@
         },
         {
           "timestamp": 1782446400000,
-          "open": 71.69,
+          "open": 71.6,
           "high": 75.2,
           "low": 71.54,
           "close": 73.81,
@@ -22551,7 +22551,7 @@
         },
         {
           "timestamp": 1782446400000,
-          "open": 261.26,
+          "open": 260.05,
           "high": 262.0,
           "low": 231.08,
           "close": 238.0,
@@ -22576,7 +22576,7 @@
         "support": 124.28,
         "support_floor": 0.0,
         "iv_gt_hv": true,
-        "vrp": 1.2,
+        "vrp": 1.19,
         "vrp_assumed": false,
         "dte_ladder": [
           {
@@ -22618,11 +22618,11 @@
           "wheel_fit": 76.8,
           "summary": "If assigned you own at $200.10, 15.9% below today, earning 73.0% annualized on the cash while you wait."
         },
-        "score": 40.4,
+        "score": 40.3,
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
-          "richness": 0.518,
+          "richness": 0.512,
           "safety": 0.877,
           "yield": 0.338,
           "liquidity": 0.0,
@@ -25387,7 +25387,7 @@
         },
         {
           "timestamp": 1782446400000,
-          "open": 227.21,
+          "open": 227.39,
           "high": 232.95,
           "low": 226.12,
           "close": 232.69,
@@ -25454,11 +25454,11 @@
           "wheel_fit": 42.3,
           "summary": "If assigned you own at $223.28, 4.0% below today, earning 47.0% annualized on the cash while you wait."
         },
-        "score": 39.0,
+        "score": 38.9,
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
-          "richness": 0.403,
+          "richness": 0.4,
           "safety": 0.569,
           "yield": 0.203,
           "liquidity": 0.0,
@@ -26805,7 +26805,7 @@
         },
         {
           "timestamp": 1782446400000,
-          "open": 131.68,
+          "open": 131.69,
           "high": 140.83,
           "low": 127.01,
           "close": 135.69,
@@ -29641,7 +29641,7 @@
         },
         {
           "timestamp": 1782446400000,
-          "open": 24.94,
+          "open": 24.97,
           "high": 26.13,
           "low": 23.8,
           "close": 25.94,
@@ -29666,7 +29666,7 @@
         "support": 13.06,
         "support_floor": 0.0,
         "iv_gt_hv": true,
-        "vrp": 1.19,
+        "vrp": 1.18,
         "vrp_assumed": false,
         "dte_ladder": [
           {
@@ -29708,11 +29708,11 @@
           "wheel_fit": 80.0,
           "summary": "If assigned you own at $22.17, 14.5% below today, earning 90.6% annualized on the cash while you wait."
         },
-        "score": 35.8,
+        "score": 35.7,
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
-          "richness": 0.302,
+          "richness": 0.301,
           "safety": 0.783,
           "yield": 0.43,
           "liquidity": 0.0,
@@ -33943,32 +33943,7 @@
     "gone": [],
     "to_avoid": [],
     "from_avoid": [],
-    "movers": [
-      {
-        "ticker": "IREN",
-        "delta": 18.1
-      },
-      {
-        "ticker": "AMZN",
-        "delta": -9.6
-      },
-      {
-        "ticker": "PFE",
-        "delta": 9.2
-      },
-      {
-        "ticker": "MRVL",
-        "delta": -9.1
-      },
-      {
-        "ticker": "ARM",
-        "delta": 6.4
-      },
-      {
-        "ticker": "NFLX",
-        "delta": -3.5
-      }
-    ]
+    "movers": []
   },
-  "prev_generated_at": "2026-06-26T20:30:21+00:00"
+  "prev_generated_at": "2026-06-26T21:00:23+00:00"
 }
