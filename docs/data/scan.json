@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-26T08:00:14+00:00",
+  "generated_at": "2026-06-26T08:30:15+00:00",
   "source_note": "Candles and option premium are LIVE off the yfinance chain for 24 of 24 names (real IV, bid/ask, OI); the rest fall back to a realized-vol model when the chain is missing.",
   "dte": 7,
   "tickers": [
@@ -1368,7 +1368,7 @@
           "assignment_basis": 39.27,
           "basis_discount_pct": 17.7,
           "prob_assigned_pct": 19.5,
-          "wheel_fit": 100.0,
+          "wheel_fit": 84.2,
           "summary": "If assigned you own at $39.27, 17.7% below today, earning 113.1% annualized on the cash while you wait."
         },
         "score": 64.6,
@@ -2753,7 +2753,7 @@
           "assignment_basis": 179.59,
           "basis_discount_pct": 8.3,
           "prob_assigned_pct": 8.7,
-          "wheel_fit": 58.6,
+          "wheel_fit": 52.0,
           "summary": "If assigned you own at $179.59, 8.3% below today, earning 13.9% annualized on the cash while you wait."
         },
         "score": 62.3,
@@ -5523,7 +5523,7 @@
           "assignment_basis": 16.34,
           "basis_discount_pct": 7.0,
           "prob_assigned_pct": 22.5,
-          "wheel_fit": 81.3,
+          "wheel_fit": 55.7,
           "summary": "If assigned you own at $16.34, 7.0% below today, earning 59.6% annualized on the cash while you wait."
         },
         "score": 58.9,
@@ -6908,7 +6908,7 @@
           "assignment_basis": 117.16,
           "basis_discount_pct": 11.8,
           "prob_assigned_pct": 22.0,
-          "wheel_fit": 99.3,
+          "wheel_fit": 80.3,
           "summary": "If assigned you own at $117.16, 11.8% below today, earning 95.5% annualized on the cash while you wait."
         },
         "score": 55.8,
@@ -8293,7 +8293,7 @@
           "assignment_basis": 295.47,
           "basis_discount_pct": 15.0,
           "prob_assigned_pct": 19.1,
-          "wheel_fit": 100.0,
+          "wheel_fit": 80.5,
           "summary": "If assigned you own at $295.47, 15.0% below today, earning 93.3% annualized on the cash while you wait."
         },
         "score": 54.4,
@@ -9678,7 +9678,7 @@
           "assignment_basis": 216.35,
           "basis_discount_pct": 15.7,
           "prob_assigned_pct": 26.1,
-          "wheel_fit": 100.0,
+          "wheel_fit": 95.1,
           "summary": "If assigned you own at $216.35, 15.7% below today, earning 172.9% annualized on the cash while you wait."
         },
         "score": 51.0,
@@ -11063,7 +11063,7 @@
           "assignment_basis": 15.42,
           "basis_discount_pct": 10.9,
           "prob_assigned_pct": 12.2,
-          "wheel_fit": 91.3,
+          "wheel_fit": 65.0,
           "summary": "If assigned you own at $15.42, 10.9% below today, earning 31.6% annualized on the cash while you wait."
         },
         "score": 50.5,
@@ -12448,7 +12448,7 @@
           "assignment_basis": 238.73,
           "basis_discount_pct": 15.1,
           "prob_assigned_pct": 19.4,
-          "wheel_fit": 100.0,
+          "wheel_fit": 81.1,
           "summary": "If assigned you own at $238.73, 15.1% below today, earning 96.1% annualized on the cash while you wait."
         },
         "score": 50.4,
@@ -13833,7 +13833,7 @@
           "assignment_basis": 28.47,
           "basis_discount_pct": 10.1,
           "prob_assigned_pct": 26.0,
-          "wheel_fit": 93.0,
+          "wheel_fit": 77.2,
           "summary": "If assigned you own at $28.47, 10.1% below today, earning 113.2% annualized on the cash while you wait."
         },
         "score": 49.4,
@@ -15218,7 +15218,7 @@
           "assignment_basis": 359.8,
           "basis_discount_pct": 4.1,
           "prob_assigned_pct": 34.7,
-          "wheel_fit": 70.3,
+          "wheel_fit": 49.9,
           "summary": "If assigned you own at $359.80, 4.1% below today, earning 87.9% annualized on the cash while you wait."
         },
         "score": 48.6,
@@ -16603,7 +16603,7 @@
           "assignment_basis": 225.75,
           "basis_discount_pct": 15.8,
           "prob_assigned_pct": 20.9,
-          "wheel_fit": 100.0,
+          "wheel_fit": 84.4,
           "summary": "If assigned you own at $225.75, 15.8% below today, earning 114.5% annualized on the cash while you wait."
         },
         "score": 48.2,
@@ -17988,7 +17988,7 @@
           "assignment_basis": 99.09,
           "basis_discount_pct": 7.6,
           "prob_assigned_pct": 20.8,
-          "wheel_fit": 83.6,
+          "wheel_fit": 57.3,
           "summary": "If assigned you own at $99.09, 7.6% below today, earning 55.9% annualized on the cash while you wait."
         },
         "score": 47.3,
@@ -19373,7 +19373,7 @@
           "assignment_basis": 263.44,
           "basis_discount_pct": 4.3,
           "prob_assigned_pct": 22.4,
-          "wheel_fit": 71.0,
+          "wheel_fit": 41.1,
           "summary": "If assigned you own at $263.44, 4.3% below today, earning 36.0% annualized on the cash while you wait."
         },
         "score": 44.9,
@@ -22143,7 +22143,7 @@
           "assignment_basis": 21.92,
           "basis_discount_pct": 14.6,
           "prob_assigned_pct": 26.0,
-          "wheel_fit": 100.0,
+          "wheel_fit": 92.9,
           "summary": "If assigned you own at $21.92, 14.6% below today, earning 161.0% annualized on the cash while you wait."
         },
         "score": 40.9,
@@ -23528,7 +23528,7 @@
           "assignment_basis": 15.34,
           "basis_discount_pct": 16.7,
           "prob_assigned_pct": 14.4,
-          "wheel_fit": 100.0,
+          "wheel_fit": 75.1,
           "summary": "If assigned you own at $15.34, 16.7% below today, earning 63.5% annualized on the cash while you wait."
         },
         "score": 40.4,
@@ -24913,7 +24913,7 @@
           "assignment_basis": 43.55,
           "basis_discount_pct": 27.3,
           "prob_assigned_pct": 21.6,
-          "wheel_fit": 100.0,
+          "wheel_fit": 74.1,
           "summary": "If assigned you own at $43.55, 27.3% below today, earning 57.9% annualized on the cash while you wait."
         },
         "score": 39.3,
@@ -29068,7 +29068,7 @@
           "assignment_basis": 21.89,
           "basis_discount_pct": 2.4,
           "prob_assigned_pct": 27.6,
-          "wheel_fit": 58.1,
+          "wheel_fit": 33.0,
           "summary": "If assigned you own at $21.89, 2.4% below today, earning 30.6% annualized on the cash while you wait."
         },
         "score": 35.8,
@@ -30453,7 +30453,7 @@
           "assignment_basis": 221.5,
           "basis_discount_pct": 2.4,
           "prob_assigned_pct": 43.9,
-          "wheel_fit": 64.1,
+          "wheel_fit": 45.2,
           "summary": "If assigned you own at $221.50, 2.4% below today, earning 96.1% annualized on the cash while you wait."
         },
         "score": 32.5,
@@ -31838,7 +31838,7 @@
           "assignment_basis": 67.73,
           "basis_discount_pct": 4.5,
           "prob_assigned_pct": 17.6,
-          "wheel_fit": 57.8,
+          "wheel_fit": 39.7,
           "summary": "If assigned you own at $67.73, 4.5% below today, earning 24.3% annualized on the cash while you wait."
         },
         "score": 32.3,
@@ -33223,7 +33223,7 @@
           "assignment_basis": 68.18,
           "basis_discount_pct": 27.8,
           "prob_assigned_pct": 18.8,
-          "wheel_fit": 100.0,
+          "wheel_fit": 72.0,
           "summary": "If assigned you own at $68.18, 27.8% below today, earning 46.4% annualized on the cash while you wait."
         },
         "score": 31.2,
@@ -33251,5 +33251,5 @@
     "from_avoid": [],
     "movers": []
   },
-  "prev_generated_at": "2026-06-26T07:30:13+00:00"
+  "prev_generated_at": "2026-06-26T08:00:14+00:00"
 }
