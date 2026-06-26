@@ -143,6 +143,20 @@ until the real IV history fills, and a "*" on the OTM odds noting they are risk-
 Lesson: when a number is an approximation, the UI must say so. The math being honest is not
 enough if the label lies. Cheap to fix, and it is the difference between a tool and a sales pitch.
 
+## Calibrate every number to the trader you actually serve (learned c28)
+A quant critic in INBOX caught three numbers that were each honest for a GENERIC trader and
+a lie for the WEEKLY vol seller Michael actually is. (1) prob_otm carried the risk-free drift
+R=0.045, tilting the median up and overstating safety on a downtrending name; dropped it to
+drift=0.0 (the lognormal median, a risk-neutral delta-equivalent). (2) the VRP denominator was
+20-day realized vol while the IV is solved from a 7-DTE contract, so a fresh weekly vol spike
+(exactly when you want to sell) read as fake richness because last month's RV was still cool;
+now the LIVE weekly path judges IV against a 5-day RV (`short_rv`), 20-day stays for trend
+context. (3) the yield ramp saturated at 100%/yr, his BASELINE, so a 200% weekly tied a 100%
+monthly on the very factor he scans to maximize; raised the ceiling to 2x. Lesson: a parameter
+that is "reasonable" for a textbook 30-45 DTE trader can silently misprice for the short-dated
+weekly seller. Match every horizon-bearing number (drift, the RV window, the yield ceiling) to
+how HE actually trades. Same spirit as c24's "calibrate to how he trades, not a textbook window."
+
 ## Count the goal once, directly (learned c27)
 Michael's whole book targets ~100% a year on capital, so YIELD is the goal, not a side
 effect. RoC was hiding inside free_shares (blended 60/40 with want_to_own), which both

@@ -213,11 +213,19 @@ def build_one(ticker, earnings_days=None, lanes=None):
     # Composite realized vol (VoPR: CC + Parkinson + Garman-Klass + Rogers-Satchell)
     # gives an honest VRP denominator vs the old close-to-close-only RV.
     rv = composite_realized_vol(candles, period=20) or _realized_vol(closes[-63:]) or 0.25
+    # Short-horizon RV for the VRP denominator. The 20-day rv is a LAGGED lie to a weekly
+    # vol seller: when this week's vol spikes (exactly when you want to sell), 20-day RV is
+    # still cool from last month and the VRP looks fat that isn't. A 7-DTE IV must be judged
+    # against a ~week of realized vol, so compare it to the 5-day. The 20-day stays as the
+    # HV-rank / trend context. Only the LIVE (weekly) path swaps the denominator; the modeled
+    # monthly keeps the 20-day match.
+    short_rv = composite_realized_vol(candles, period=5) or rv
 
     from datetime import date, timedelta
     # Major price-action support: the level he sells AT (computed once, reused for the chart).
     support, resistance = support_resistance(candles, spot)
     live = _live_put(ticker, spot, rv, support=support)
+    vrp_rv = rv                                # VRP denominator; live weekly swaps to 5-day below
     if live:                                   # REAL chain: real IV is the edge
         strike, dte, exp = live["strike"], live["dte"], live["exp"]
         premium, bid, ask = live["premium"], live["bid"], live["ask"]
@@ -228,6 +236,7 @@ def build_one(ticker, earnings_days=None, lanes=None):
         qiv = live["iv"]
         iv = (_iv_from_put(premium, spot, strike, dte / 365.0, R)
               or (qiv if (qiv and 0.33 * rv <= qiv <= 4 * rv) else rv))
+        vrp_rv = short_rv                      # a 7-DTE IV vs ~a week of realized vol
     else:                                      # fail-open: model it from realized vol
         iv, dte = rv * 1.15, DTE
         target, at_support = _anchor_strike(spot, iv, dte, support)
@@ -238,11 +247,17 @@ def build_one(ticker, earnings_days=None, lanes=None):
         oi, vol, source = 1500, 250, "modeled"
         exp = (date.today() + timedelta(days=dte)).isoformat()
     # His edge gate: rich premium = IV over HV (the VRP). A flag he reads at a glance.
-    iv_gt_hv = bool(iv > rv)
-    vrp = round(iv / rv, 2) if rv > 0 else None
+    # Judged against vrp_rv (5-day for a live weekly, 20-day for the modeled monthly).
+    iv_gt_hv = bool(iv > vrp_rv)
+    vrp = round(iv / vrp_rv, 2) if vrp_rv > 0 else None
 
     t = dte / 365.0
-    prob_otm = (_norm_cdf((math.log(spot / strike) + (R - 0.5 * iv * iv) * t) / (iv * math.sqrt(t)))
+    # Drift = 0.0, NOT the risk-free R. This is the cleanest physical-measure analog
+    # (the lognormal MEDIAN, no risk premium baked in): a "stays-OTM" estimate that is
+    # really a risk-neutral delta-equivalent. Using R=0.045 here would tilt the median
+    # UP, overstating safety on a downtrending name and understating it on a ripping one.
+    # (R still belongs in _iv_from_put, which is genuine risk-neutral option pricing.)
+    prob_otm = (_norm_cdf((math.log(spot / strike) + (0.0 - 0.5 * iv * iv) * t) / (iv * math.sqrt(t)))
                 if (strike > 0 and iv > 0 and t > 0) else 0.0)
     # Return on the capital actually tied up: a cash-secured put pockets the premium
     # up front, so the net basis at risk is (strike - premium), not the full strike.
@@ -261,7 +276,7 @@ def build_one(ticker, earnings_days=None, lanes=None):
     ivr = ivr_hist if ivr_hist is not None else _iv_rank(closes)
 
     contract = {
-        "opt_type": "put", "iv": iv, "rv": rv, "iv_rank": ivr,
+        "opt_type": "put", "iv": iv, "rv": vrp_rv, "iv_rank": ivr,
         "prob_otm": prob_otm, "bid": bid, "ask": ask, "open_interest": oi, "volume": vol,
         "annualized_roc": roc, "want_to_own": want_to_own, "dte": dte,
         "days_to_earnings": (earnings_days if earnings_days is not None else 999),

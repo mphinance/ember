@@ -81,11 +81,13 @@ def liquidity_score(bid, ask, open_interest, volume):
 
 
 def yield_score(annualized_roc):
-    """The income-machine factor. Michael runs a ~100%-a-year book, so reward fat
-    annualized return-on-capital toward that target. Yield is the goal; assignment
-    is welcome but never the point, so this factor knows nothing about assignment
-    odds. RoC lives HERE now (it used to hide inside free_shares), counted directly."""
-    return _ramp(annualized_roc, 0.08, 1.0)        # 8% annualized floor, ~100% maxes it
+    """The income-machine factor. Michael runs a ~100%-a-year book and SCANS for the
+    fattest weeklies, so the ceiling sits at 2x: a 200% weekly must out-score a 100%
+    monthly on yield, not tie it. A 1.0-ceiling saturated at his baseline and went blind
+    to the very edge he is hunting. Yield is the goal; assignment is welcome but never the
+    point, so this factor knows nothing about assignment odds. RoC lives HERE now (it used
+    to hide inside free_shares), counted directly."""
+    return _ramp(annualized_roc, 0.08, 2.0)        # 8% floor, ~100%/yr = midfield, 2x maxes it
 
 
 def free_shares_score(opt_type, want_to_own, basis_discount):
@@ -196,26 +198,31 @@ def _selftest():
         "trend_align": 0.5,
     }
 
-    # A fat-yield aggressive CSP: same rich/safe/liquid setup but ~100% annualized
-    # (the income-machine names Michael actually targets). Yield is its own factor now,
-    # so this must out-score the merely-good CSP and light up the yield factor.
-    fat_yield = dict(great_csp)
-    fat_yield["annualized_roc"] = 1.05
+    # Two aggressive CSPs, same rich/safe/liquid setup: one at ~100%/yr (Michael's
+    # baseline) and one at ~200%/yr (a fat weekly he scans FOR). With the 2x ceiling the
+    # baseline lands midfield and the 2x maxes, so the fatter weekly must out-score the
+    # 1x on the yield factor, not tie it. That is the whole point of raising the ceiling.
+    one_x = dict(great_csp); one_x["annualized_roc"] = 1.05
+    fat_yield = dict(great_csp); fat_yield["annualized_roc"] = 2.10
 
     g = score_contract(great_csp)
     e = score_contract(earnings_trap)
     c = score_contract(cheap_illiquid)
+    o = score_contract(one_x)
     y = score_contract(fat_yield)
     print("great CSP   :", g["score"], g["direction"], "|", g["why"])
     print("earnings trap:", e["score"], e["direction"], "|", e["why"])
     print("cheap/illiq :", c["score"], c["direction"], "|", c["why"])
-    print("fat yield   :", y["score"], y["direction"], "|", y["why"])
+    print("1x yield    :", o["score"], "| yield factor", o["factors"]["yield"])
+    print("2x yield    :", y["score"], y["direction"], "|", y["why"])
 
     assert g["score"] >= 70, "a genuinely rich, safe, liquid CSP should score high"
     assert e["avoid"] and e["score"] == 0.0, "earnings before expiry must hard-avoid"
     assert c["score"] < g["score"], "cheap + illiquid must rank below the great setup"
     assert g["direction"] == "cash-secured put"
-    assert y["factors"]["yield"] >= 0.9, "a ~100% annualized setup should max the yield factor"
+    assert 0.45 <= o["factors"]["yield"] <= 0.60, "a ~100%/yr setup should sit midfield now"
+    assert y["factors"]["yield"] >= 0.9, "a ~200% annualized weekly should max the yield factor"
+    assert y["factors"]["yield"] > o["factors"]["yield"], "a 2x weekly must out-yield a 1x"
     assert y["score"] > g["score"], "fat yield must out-score the same setup at thin yield"
     assert "fat annualized yield" in y["why"], "a fat-yield pick should say so plainly"
     print("\nOK: WheelForge scoring self-test passed.")

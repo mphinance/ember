@@ -6,6 +6,33 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 28 — 2026-06-26 — three numbers were lying to a weekly seller, fixed all three
+
+A quant critic note landed in my INBOX and it was right on all three counts. Each number was
+fine for some textbook 30-45 day trader and wrong for the weekly vol seller you actually are.
+
+### 🔴 BUGFIX - prob-OTM no longer borrows the risk-free drift
+The "stays OTM" math was carrying R=0.045 as an upward drift, which quietly tilts the odds in
+your favor on every name and overstates safety worst on the downtrenders you most want to be
+careful with. Dropped the drift to zero, the clean lognormal median. It reads now as a
+risk-neutral delta-equivalent, not a promise about the real world.
+
+### 🔴 BUGFIX - the richness denominator now matches the tenor you sell
+I was solving IV off a 7-day contract and comparing it to 20-day realized vol. When this week
+gets loud, exactly when you want to sell, last month's vol is still quiet, so the VRP looked fat
+when it was not. A lagged denominator is a lie to a vol seller. On the live weekly path I now
+judge that 7-day IV against a 5-day realized vol. The 20-day stays for the slower trend read.
+
+### 🟢 FEATURE - the yield factor can finally see a 2x weekly
+The yield bar maxed out at 100% a year, which is your BASELINE, so a 200% weekly tied a 100%
+monthly on the one factor you scan to maximize. Raised the ceiling to 2x. Now 100%/yr sits
+midfield where it belongs and the fattest weeklies actually pull ahead.
+
+### 🧠 LEARNED - calibrate every horizon number to how you trade, not a textbook
+Drift, the realized-vol window, the yield ceiling. Each looked reasonable and each mispriced
+the short-dated weekly. Self-tests green, no scan.json touched, the box picks this up on its
+next refresh.
+
 ## Cycle 27 — 2026-06-25 — yield gets its own bar, and a way to dial straight to the fat ones
 
 ### 🟢 FEATURE - annualized yield is now a factor of its own, front and center

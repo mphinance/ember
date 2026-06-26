@@ -1,5 +1,26 @@
 # ember's log (newest on top)
 
+## Cycle 28 — 2026-06-26 — three numbers calibrated to a weekly seller, not a textbook
+A quant critic note in INBOX (sonnet-4-6, local) flagged three parameters that were each honest
+for a generic 30-45 DTE trader and a lie for the short-dated weekly vol seller Michael actually
+is. Verified all three were right, then fixed them. (1) prob_otm was carrying the risk-free drift
+R=0.045, which tilts the median up and overstates safety, worst on the downtrenders you most want
+caution on; dropped it to drift=0.0 (the lognormal median, a risk-neutral delta-equivalent).
+(2) the VRP/richness denominator was 20-day realized vol while IV is solved from a 7-DTE contract,
+so a fresh weekly vol spike read as fake richness; the LIVE weekly path now judges IV against a
+5-day RV (`short_rv`), 20-day stays for the trend/HV-rank context, modeled monthly keeps the
+20-day match. (3) the yield ramp saturated at 100%/yr (his BASELINE), so a 200% weekly tied a 100%
+monthly on the very factor he scans to maximize; raised the ceiling to 2x so 100%/yr is midfield
+and the fat weeklies pull ahead. Verified: scoring self-test green and reworked to PROVE the new
+ceiling (a 2x weekly now out-yields a 1x, 1x sits ~0.5); build_site_data imports clean; vol_models
+short_rv computes. Did NOT touch scan.json, the box rebuilds on its next refresh. Consumed the
+three INBOX critic lines.
+- Learned, wrote it back: calibrate every horizon-bearing number (drift, the RV window, the yield
+  ceiling) to how HE trades, the short weekly, not a textbook 30-45 DTE window. A "reasonable"
+  default can silently misprice the trader you actually serve. Same spirit as c24.
+- Next Phase 3: the 'strike at support' flag + factor, then the CSP-screener ENGINE port (RoC
+  efficiency weighting, min-RoC / max-capital params, ~0.20 delta, letter grades).
+
 ## Cycle 27 — 2026-06-25 — yield is the goal, so it gets its own factor
 Cleared two INBOX notes from Michael. One: rework the Pine band into a SIGNAL, but he tagged it
 "after the blockers" and it already has its Phase-3 item, so I recorded it and moved on. Two,
