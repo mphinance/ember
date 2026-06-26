@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-26T10:30:15+00:00",
+  "generated_at": "2026-06-26T11:00:15+00:00",
   "source_note": "Candles and option premium are LIVE off the yfinance chain for 24 of 24 names (real IV, bid/ask, OI); the rest fall back to a realized-vol model when the chain is missing.",
   "dte": 7,
   "tickers": [
@@ -8320,6 +8320,1392 @@
       }
     },
     {
+      "ticker": "TSLA",
+      "spot": 375.12,
+      "candles": [
+        {
+          "timestamp": 1761537600000,
+          "open": 439.98,
+          "high": 460.16,
+          "low": 438.69,
+          "close": 452.42,
+          "volume": 105867500
+        },
+        {
+          "timestamp": 1761624000000,
+          "open": 454.78,
+          "high": 467.0,
+          "low": 451.6,
+          "close": 460.55,
+          "volume": 80185700
+        },
+        {
+          "timestamp": 1761710400000,
+          "open": 462.5,
+          "high": 465.7,
+          "low": 452.65,
+          "close": 461.51,
+          "volume": 67983500
+        },
+        {
+          "timestamp": 1761796800000,
+          "open": 451.05,
+          "high": 455.06,
+          "low": 439.61,
+          "close": 440.1,
+          "volume": 72447900
+        },
+        {
+          "timestamp": 1761883200000,
+          "open": 446.75,
+          "high": 458.0,
+          "low": 443.69,
+          "close": 456.56,
+          "volume": 83135800
+        },
+        {
+          "timestamp": 1762146000000,
+          "open": 455.99,
+          "high": 474.07,
+          "low": 453.8,
+          "close": 468.37,
+          "volume": 84595200
+        },
+        {
+          "timestamp": 1762232400000,
+          "open": 454.46,
+          "high": 460.22,
+          "low": 443.6,
+          "close": 444.26,
+          "volume": 87756600
+        },
+        {
+          "timestamp": 1762318800000,
+          "open": 452.05,
+          "high": 466.33,
+          "low": 440.71,
+          "close": 462.07,
+          "volume": 85573000
+        },
+        {
+          "timestamp": 1762405200000,
+          "open": 461.96,
+          "high": 467.45,
+          "low": 435.09,
+          "close": 445.91,
+          "volume": 109622900
+        },
+        {
+          "timestamp": 1762491600000,
+          "open": 437.92,
+          "high": 439.36,
+          "low": 421.88,
+          "close": 429.52,
+          "volume": 103471500
+        },
+        {
+          "timestamp": 1762750800000,
+          "open": 439.6,
+          "high": 449.67,
+          "low": 433.36,
+          "close": 445.23,
+          "volume": 76515900
+        },
+        {
+          "timestamp": 1762837200000,
+          "open": 439.4,
+          "high": 442.49,
+          "low": 432.36,
+          "close": 439.62,
+          "volume": 60533200
+        },
+        {
+          "timestamp": 1762923600000,
+          "open": 442.15,
+          "high": 442.33,
+          "low": 426.56,
+          "close": 430.6,
+          "volume": 58513500
+        },
+        {
+          "timestamp": 1763010000000,
+          "open": 423.13,
+          "high": 424.5,
+          "low": 396.34,
+          "close": 401.99,
+          "volume": 118948000
+        },
+        {
+          "timestamp": 1763096400000,
+          "open": 386.3,
+          "high": 412.19,
+          "low": 382.78,
+          "close": 404.35,
+          "volume": 105506700
+        },
+        {
+          "timestamp": 1763355600000,
+          "open": 398.74,
+          "high": 423.96,
+          "low": 398.74,
+          "close": 408.92,
+          "volume": 102214300
+        },
+        {
+          "timestamp": 1763442000000,
+          "open": 405.38,
+          "high": 408.9,
+          "low": 393.71,
+          "close": 401.25,
+          "volume": 80688600
+        },
+        {
+          "timestamp": 1763528400000,
+          "open": 406.18,
+          "high": 411.78,
+          "low": 398.5,
+          "close": 403.99,
+          "volume": 72047700
+        },
+        {
+          "timestamp": 1763614800000,
+          "open": 414.63,
+          "high": 428.94,
+          "low": 394.74,
+          "close": 395.23,
+          "volume": 113548800
+        },
+        {
+          "timestamp": 1763701200000,
+          "open": 402.32,
+          "high": 402.8,
+          "low": 383.76,
+          "close": 391.09,
+          "volume": 100460600
+        },
+        {
+          "timestamp": 1763960400000,
+          "open": 402.17,
+          "high": 421.72,
+          "low": 401.09,
+          "close": 417.78,
+          "volume": 96806400
+        },
+        {
+          "timestamp": 1764046800000,
+          "open": 414.42,
+          "high": 420.48,
+          "low": 405.95,
+          "close": 419.4,
+          "volume": 71915600
+        },
+        {
+          "timestamp": 1764133200000,
+          "open": 423.95,
+          "high": 426.94,
+          "low": 416.89,
+          "close": 426.58,
+          "volume": 63463000
+        },
+        {
+          "timestamp": 1764306000000,
+          "open": 426.59,
+          "high": 432.93,
+          "low": 426.2,
+          "close": 430.17,
+          "volume": 36252900
+        },
+        {
+          "timestamp": 1764565200000,
+          "open": 425.32,
+          "high": 433.66,
+          "low": 425.29,
+          "close": 430.14,
+          "volume": 57463600
+        },
+        {
+          "timestamp": 1764651600000,
+          "open": 430.81,
+          "high": 436.8,
+          "low": 422.12,
+          "close": 429.24,
+          "volume": 69336600
+        },
+        {
+          "timestamp": 1764738000000,
+          "open": 432.1,
+          "high": 447.92,
+          "low": 431.11,
+          "close": 446.74,
+          "volume": 87483000
+        },
+        {
+          "timestamp": 1764824400000,
+          "open": 449.94,
+          "high": 454.63,
+          "low": 445.39,
+          "close": 454.53,
+          "volume": 71906500
+        },
+        {
+          "timestamp": 1764910800000,
+          "open": 453.03,
+          "high": 458.87,
+          "low": 451.66,
+          "close": 455.0,
+          "volume": 56427500
+        },
+        {
+          "timestamp": 1765170000000,
+          "open": 447.45,
+          "high": 449.75,
+          "low": 435.25,
+          "close": 439.58,
+          "volume": 69165800
+        },
+        {
+          "timestamp": 1765256400000,
+          "open": 437.54,
+          "high": 452.39,
+          "low": 435.7,
+          "close": 445.17,
+          "volume": 62367400
+        },
+        {
+          "timestamp": 1765342800000,
+          "open": 446.07,
+          "high": 456.88,
+          "low": 443.61,
+          "close": 451.45,
+          "volume": 63257500
+        },
+        {
+          "timestamp": 1765429200000,
+          "open": 448.95,
+          "high": 449.27,
+          "low": 440.33,
+          "close": 446.89,
+          "volume": 55979500
+        },
+        {
+          "timestamp": 1765515600000,
+          "open": 448.09,
+          "high": 463.01,
+          "low": 441.67,
+          "close": 458.96,
+          "volume": 95656700
+        },
+        {
+          "timestamp": 1765774800000,
+          "open": 469.44,
+          "high": 481.77,
+          "low": 467.66,
+          "close": 475.31,
+          "volume": 114542200
+        },
+        {
+          "timestamp": 1765861200000,
+          "open": 472.21,
+          "high": 491.5,
+          "low": 465.83,
+          "close": 489.88,
+          "volume": 107608100
+        },
+        {
+          "timestamp": 1765947600000,
+          "open": 488.22,
+          "high": 495.28,
+          "low": 466.2,
+          "close": 467.26,
+          "volume": 106490400
+        },
+        {
+          "timestamp": 1766034000000,
+          "open": 478.16,
+          "high": 490.86,
+          "low": 473.12,
+          "close": 483.37,
+          "volume": 95168400
+        },
+        {
+          "timestamp": 1766120400000,
+          "open": 488.12,
+          "high": 490.49,
+          "low": 474.72,
+          "close": 481.2,
+          "volume": 103305400
+        },
+        {
+          "timestamp": 1766379600000,
+          "open": 489.88,
+          "high": 498.83,
+          "low": 485.33,
+          "close": 488.73,
+          "volume": 86916100
+        },
+        {
+          "timestamp": 1766466000000,
+          "open": 489.4,
+          "high": 491.97,
+          "low": 482.84,
+          "close": 485.56,
+          "volume": 58223600
+        },
+        {
+          "timestamp": 1766552400000,
+          "open": 488.48,
+          "high": 490.9,
+          "low": 476.8,
+          "close": 485.4,
+          "volume": 41285400
+        },
+        {
+          "timestamp": 1766725200000,
+          "open": 485.23,
+          "high": 489.09,
+          "low": 473.82,
+          "close": 475.19,
+          "volume": 58780700
+        },
+        {
+          "timestamp": 1766984400000,
+          "open": 469.0,
+          "high": 469.4,
+          "low": 459.0,
+          "close": 459.64,
+          "volume": 66263000
+        },
+        {
+          "timestamp": 1767070800000,
+          "open": 461.09,
+          "high": 463.12,
+          "low": 453.83,
+          "close": 454.43,
+          "volume": 59238500
+        },
+        {
+          "timestamp": 1767157200000,
+          "open": 456.1,
+          "high": 456.55,
+          "low": 449.3,
+          "close": 449.72,
+          "volume": 49078000
+        },
+        {
+          "timestamp": 1767330000000,
+          "open": 457.8,
+          "high": 458.34,
+          "low": 435.3,
+          "close": 438.07,
+          "volume": 85535400
+        },
+        {
+          "timestamp": 1767589200000,
+          "open": 447.99,
+          "high": 457.55,
+          "low": 444.57,
+          "close": 451.67,
+          "volume": 67940800
+        },
+        {
+          "timestamp": 1767675600000,
+          "open": 446.38,
+          "high": 448.25,
+          "low": 428.78,
+          "close": 432.96,
+          "volume": 89093800
+        },
+        {
+          "timestamp": 1767762000000,
+          "open": 435.9,
+          "high": 438.37,
+          "low": 431.29,
+          "close": 431.41,
+          "volume": 59828800
+        },
+        {
+          "timestamp": 1767848400000,
+          "open": 427.89,
+          "high": 436.89,
+          "low": 424.37,
+          "close": 435.8,
+          "volume": 57041100
+        },
+        {
+          "timestamp": 1767934800000,
+          "open": 435.95,
+          "high": 449.05,
+          "low": 430.39,
+          "close": 445.01,
+          "volume": 67331500
+        },
+        {
+          "timestamp": 1768194000000,
+          "open": 441.23,
+          "high": 454.3,
+          "low": 438.0,
+          "close": 448.96,
+          "volume": 61649600
+        },
+        {
+          "timestamp": 1768280400000,
+          "open": 450.2,
+          "high": 451.81,
+          "low": 443.95,
+          "close": 447.2,
+          "volume": 53719200
+        },
+        {
+          "timestamp": 1768366800000,
+          "open": 442.81,
+          "high": 443.91,
+          "low": 434.22,
+          "close": 439.2,
+          "volume": 57259500
+        },
+        {
+          "timestamp": 1768453200000,
+          "open": 441.13,
+          "high": 445.36,
+          "low": 437.65,
+          "close": 438.57,
+          "volume": 49465800
+        },
+        {
+          "timestamp": 1768539600000,
+          "open": 439.5,
+          "high": 447.25,
+          "low": 435.26,
+          "close": 437.5,
+          "volume": 60220600
+        },
+        {
+          "timestamp": 1768885200000,
+          "open": 429.36,
+          "high": 430.73,
+          "low": 417.44,
+          "close": 419.25,
+          "volume": 63187300
+        },
+        {
+          "timestamp": 1768971600000,
+          "open": 421.66,
+          "high": 438.2,
+          "low": 419.62,
+          "close": 431.44,
+          "volume": 68124000
+        },
+        {
+          "timestamp": 1769058000000,
+          "open": 435.16,
+          "high": 449.5,
+          "low": 432.63,
+          "close": 449.36,
+          "volume": 71546700
+        },
+        {
+          "timestamp": 1769144400000,
+          "open": 447.43,
+          "high": 452.43,
+          "low": 444.04,
+          "close": 449.06,
+          "volume": 56771400
+        },
+        {
+          "timestamp": 1769403600000,
+          "open": 445.0,
+          "high": 445.04,
+          "low": 434.28,
+          "close": 435.2,
+          "volume": 49397400
+        },
+        {
+          "timestamp": 1769490000000,
+          "open": 437.41,
+          "high": 437.52,
+          "low": 430.69,
+          "close": 430.9,
+          "volume": 37733100
+        },
+        {
+          "timestamp": 1769576400000,
+          "open": 431.91,
+          "high": 438.26,
+          "low": 430.1,
+          "close": 431.46,
+          "volume": 54857400
+        },
+        {
+          "timestamp": 1769662800000,
+          "open": 437.8,
+          "high": 440.23,
+          "low": 414.62,
+          "close": 416.56,
+          "volume": 81686100
+        },
+        {
+          "timestamp": 1769749200000,
+          "open": 425.35,
+          "high": 439.88,
+          "low": 422.7,
+          "close": 430.41,
+          "volume": 82626100
+        },
+        {
+          "timestamp": 1770008400000,
+          "open": 421.29,
+          "high": 427.15,
+          "low": 414.5,
+          "close": 421.81,
+          "volume": 58739500
+        },
+        {
+          "timestamp": 1770094800000,
+          "open": 424.27,
+          "high": 428.56,
+          "low": 413.69,
+          "close": 421.96,
+          "volume": 56886500
+        },
+        {
+          "timestamp": 1770181200000,
+          "open": 420.46,
+          "high": 423.9,
+          "low": 399.18,
+          "close": 406.01,
+          "volume": 74606900
+        },
+        {
+          "timestamp": 1770267600000,
+          "open": 397.02,
+          "high": 402.1,
+          "low": 387.53,
+          "close": 397.21,
+          "volume": 72819800
+        },
+        {
+          "timestamp": 1770354000000,
+          "open": 400.87,
+          "high": 414.55,
+          "low": 397.75,
+          "close": 411.11,
+          "volume": 62677100
+        },
+        {
+          "timestamp": 1770613200000,
+          "open": 409.91,
+          "high": 421.25,
+          "low": 407.29,
+          "close": 417.32,
+          "volume": 54484300
+        },
+        {
+          "timestamp": 1770699600000,
+          "open": 418.08,
+          "high": 427.25,
+          "low": 417.0,
+          "close": 425.21,
+          "volume": 64450200
+        },
+        {
+          "timestamp": 1770786000000,
+          "open": 427.96,
+          "high": 436.35,
+          "low": 420.03,
+          "close": 428.27,
+          "volume": 57362000
+        },
+        {
+          "timestamp": 1770872400000,
+          "open": 430.3,
+          "high": 436.23,
+          "low": 414.0,
+          "close": 417.07,
+          "volume": 61933400
+        },
+        {
+          "timestamp": 1770958800000,
+          "open": 414.31,
+          "high": 424.06,
+          "low": 410.88,
+          "close": 417.44,
+          "volume": 51434100
+        },
+        {
+          "timestamp": 1771304400000,
+          "open": 412.36,
+          "high": 413.72,
+          "low": 400.51,
+          "close": 410.63,
+          "volume": 59678800
+        },
+        {
+          "timestamp": 1771390800000,
+          "open": 411.11,
+          "high": 416.9,
+          "low": 409.58,
+          "close": 411.32,
+          "volume": 45921400
+        },
+        {
+          "timestamp": 1771477200000,
+          "open": 407.25,
+          "high": 415.25,
+          "low": 404.11,
+          "close": 411.71,
+          "volume": 51019600
+        },
+        {
+          "timestamp": 1771563600000,
+          "open": 408.3,
+          "high": 414.7,
+          "low": 405.5,
+          "close": 411.82,
+          "volume": 57912200
+        },
+        {
+          "timestamp": 1771822800000,
+          "open": 407.29,
+          "high": 407.7,
+          "low": 394.04,
+          "close": 399.83,
+          "volume": 69680000
+        },
+        {
+          "timestamp": 1771909200000,
+          "open": 399.5,
+          "high": 410.82,
+          "low": 397.64,
+          "close": 409.38,
+          "volume": 58579500
+        },
+        {
+          "timestamp": 1771995600000,
+          "open": 412.15,
+          "high": 420.34,
+          "low": 412.15,
+          "close": 417.4,
+          "volume": 54809700
+        },
+        {
+          "timestamp": 1772082000000,
+          "open": 414.42,
+          "high": 416.81,
+          "low": 403.66,
+          "close": 408.58,
+          "volume": 53602500
+        },
+        {
+          "timestamp": 1772168400000,
+          "open": 402.94,
+          "high": 407.12,
+          "low": 398.11,
+          "close": 402.51,
+          "volume": 56890100
+        },
+        {
+          "timestamp": 1772427600000,
+          "open": 390.6,
+          "high": 404.54,
+          "low": 388.25,
+          "close": 403.32,
+          "volume": 55088300
+        },
+        {
+          "timestamp": 1772514000000,
+          "open": 395.09,
+          "high": 396.34,
+          "low": 385.39,
+          "close": 392.43,
+          "volume": 62617300
+        },
+        {
+          "timestamp": 1772600400000,
+          "open": 397.85,
+          "high": 408.33,
+          "low": 394.58,
+          "close": 405.94,
+          "volume": 68305500
+        },
+        {
+          "timestamp": 1772686800000,
+          "open": 401.57,
+          "high": 408.62,
+          "low": 399.42,
+          "close": 405.55,
+          "volume": 51925900
+        },
+        {
+          "timestamp": 1772773200000,
+          "open": 398.09,
+          "high": 402.35,
+          "low": 394.21,
+          "close": 396.73,
+          "volume": 64054600
+        },
+        {
+          "timestamp": 1773028800000,
+          "open": 390.05,
+          "high": 401.59,
+          "low": 381.4,
+          "close": 398.68,
+          "volume": 67018900
+        },
+        {
+          "timestamp": 1773115200000,
+          "open": 402.22,
+          "high": 406.59,
+          "low": 398.19,
+          "close": 399.24,
+          "volume": 59258700
+        },
+        {
+          "timestamp": 1773201600000,
+          "open": 402.28,
+          "high": 416.38,
+          "low": 402.15,
+          "close": 407.82,
+          "volume": 62559900
+        },
+        {
+          "timestamp": 1773288000000,
+          "open": 405.18,
+          "high": 406.5,
+          "low": 394.65,
+          "close": 395.01,
+          "volume": 60973800
+        },
+        {
+          "timestamp": 1773374400000,
+          "open": 399.17,
+          "high": 400.2,
+          "low": 389.95,
+          "close": 391.2,
+          "volume": 58504100
+        },
+        {
+          "timestamp": 1773633600000,
+          "open": 396.22,
+          "high": 403.73,
+          "low": 394.42,
+          "close": 395.56,
+          "volume": 58068300
+        },
+        {
+          "timestamp": 1773720000000,
+          "open": 395.69,
+          "high": 400.12,
+          "low": 393.0,
+          "close": 399.27,
+          "volume": 46890500
+        },
+        {
+          "timestamp": 1773806400000,
+          "open": 399.0,
+          "high": 403.07,
+          "low": 392.31,
+          "close": 392.78,
+          "volume": 50853100
+        },
+        {
+          "timestamp": 1773892800000,
+          "open": 387.27,
+          "high": 387.27,
+          "low": 378.73,
+          "close": 380.3,
+          "volume": 67078300
+        },
+        {
+          "timestamp": 1773979200000,
+          "open": 379.85,
+          "high": 379.89,
+          "low": 364.46,
+          "close": 367.96,
+          "volume": 78628600
+        },
+        {
+          "timestamp": 1774238400000,
+          "open": 373.09,
+          "high": 385.33,
+          "low": 372.73,
+          "close": 380.85,
+          "volume": 74606000
+        },
+        {
+          "timestamp": 1774324800000,
+          "open": 376.56,
+          "high": 387.48,
+          "low": 376.31,
+          "close": 383.03,
+          "volume": 60004900
+        },
+        {
+          "timestamp": 1774411200000,
+          "open": 389.99,
+          "high": 396.23,
+          "low": 385.01,
+          "close": 385.95,
+          "volume": 55157300
+        },
+        {
+          "timestamp": 1774497600000,
+          "open": 381.6,
+          "high": 384.44,
+          "low": 371.87,
+          "close": 372.11,
+          "volume": 55522900
+        },
+        {
+          "timestamp": 1774584000000,
+          "open": 369.69,
+          "high": 369.86,
+          "low": 359.47,
+          "close": 361.83,
+          "volume": 62065700
+        },
+        {
+          "timestamp": 1774843200000,
+          "open": 365.86,
+          "high": 367.29,
+          "low": 352.14,
+          "close": 355.28,
+          "volume": 67954400
+        },
+        {
+          "timestamp": 1774929600000,
+          "open": 361.51,
+          "high": 373.33,
+          "low": 361.0,
+          "close": 371.75,
+          "volume": 75534900
+        },
+        {
+          "timestamp": 1775016000000,
+          "open": 378.63,
+          "high": 383.14,
+          "low": 374.08,
+          "close": 381.26,
+          "volume": 58683800
+        },
+        {
+          "timestamp": 1775102400000,
+          "open": 364.2,
+          "high": 370.28,
+          "low": 359.03,
+          "close": 360.59,
+          "volume": 83031200
+        },
+        {
+          "timestamp": 1775448000000,
+          "open": 362.59,
+          "high": 367.72,
+          "low": 346.64,
+          "close": 352.82,
+          "volume": 77697600
+        },
+        {
+          "timestamp": 1775534400000,
+          "open": 346.44,
+          "high": 348.02,
+          "low": 337.24,
+          "close": 346.65,
+          "volume": 74515400
+        },
+        {
+          "timestamp": 1775620800000,
+          "open": 363.79,
+          "high": 364.5,
+          "low": 339.67,
+          "close": 343.25,
+          "volume": 78838600
+        },
+        {
+          "timestamp": 1775707200000,
+          "open": 343.15,
+          "high": 348.88,
+          "low": 337.25,
+          "close": 345.62,
+          "volume": 62164000
+        },
+        {
+          "timestamp": 1775793600000,
+          "open": 346.29,
+          "high": 350.36,
+          "low": 342.74,
+          "close": 348.95,
+          "volume": 51336000
+        },
+        {
+          "timestamp": 1776052800000,
+          "open": 350.07,
+          "high": 356.35,
+          "low": 348.57,
+          "close": 352.42,
+          "volume": 53617500
+        },
+        {
+          "timestamp": 1776139200000,
+          "open": 357.67,
+          "high": 367.63,
+          "low": 354.77,
+          "close": 364.2,
+          "volume": 59979600
+        },
+        {
+          "timestamp": 1776225600000,
+          "open": 366.83,
+          "high": 394.65,
+          "low": 362.5,
+          "close": 391.95,
+          "volume": 113810400
+        },
+        {
+          "timestamp": 1776312000000,
+          "open": 393.81,
+          "high": 394.06,
+          "low": 381.8,
+          "close": 388.9,
+          "volume": 63515100
+        },
+        {
+          "timestamp": 1776398400000,
+          "open": 395.92,
+          "high": 409.28,
+          "low": 391.65,
+          "close": 400.62,
+          "volume": 90640000
+        },
+        {
+          "timestamp": 1776657600000,
+          "open": 402.58,
+          "high": 406.8,
+          "low": 388.33,
+          "close": 392.5,
+          "volume": 64603900
+        },
+        {
+          "timestamp": 1776744000000,
+          "open": 393.0,
+          "high": 393.95,
+          "low": 385.22,
+          "close": 386.42,
+          "volume": 50530600
+        },
+        {
+          "timestamp": 1776830400000,
+          "open": 387.57,
+          "high": 393.01,
+          "low": 385.3,
+          "close": 387.51,
+          "volume": 62362800
+        },
+        {
+          "timestamp": 1776916800000,
+          "open": 375.28,
+          "high": 386.0,
+          "low": 368.39,
+          "close": 373.72,
+          "volume": 93969500
+        },
+        {
+          "timestamp": 1777003200000,
+          "open": 373.5,
+          "high": 382.76,
+          "low": 370.73,
+          "close": 376.3,
+          "volume": 62893300
+        },
+        {
+          "timestamp": 1777262400000,
+          "open": 372.09,
+          "high": 380.78,
+          "low": 364.02,
+          "close": 378.67,
+          "volume": 66735800
+        },
+        {
+          "timestamp": 1777348800000,
+          "open": 374.68,
+          "high": 382.29,
+          "low": 372.54,
+          "close": 376.02,
+          "volume": 50864400
+        },
+        {
+          "timestamp": 1777435200000,
+          "open": 375.4,
+          "high": 376.4,
+          "low": 370.04,
+          "close": 372.8,
+          "volume": 45384800
+        },
+        {
+          "timestamp": 1777521600000,
+          "open": 372.75,
+          "high": 384.75,
+          "low": 368.17,
+          "close": 381.63,
+          "volume": 51076000
+        },
+        {
+          "timestamp": 1777608000000,
+          "open": 382.49,
+          "high": 397.82,
+          "low": 378.8,
+          "close": 390.82,
+          "volume": 65338300
+        },
+        {
+          "timestamp": 1777867200000,
+          "open": 390.23,
+          "high": 394.64,
+          "low": 384.8,
+          "close": 392.51,
+          "volume": 48765100
+        },
+        {
+          "timestamp": 1777953600000,
+          "open": 395.19,
+          "high": 402.12,
+          "low": 389.0,
+          "close": 389.37,
+          "volume": 47780600
+        },
+        {
+          "timestamp": 1778040000000,
+          "open": 386.25,
+          "high": 401.68,
+          "low": 384.02,
+          "close": 398.73,
+          "volume": 53465400
+        },
+        {
+          "timestamp": 1778126400000,
+          "open": 407.48,
+          "high": 415.83,
+          "low": 402.12,
+          "close": 411.79,
+          "volume": 64294200
+        },
+        {
+          "timestamp": 1778212800000,
+          "open": 416.48,
+          "high": 431.2,
+          "low": 416.39,
+          "close": 428.35,
+          "volume": 65050000
+        },
+        {
+          "timestamp": 1778472000000,
+          "open": 422.16,
+          "high": 449.16,
+          "low": 416.8,
+          "close": 445.0,
+          "volume": 78376100
+        },
+        {
+          "timestamp": 1778558400000,
+          "open": 441.41,
+          "high": 447.8,
+          "low": 422.26,
+          "close": 433.45,
+          "volume": 60569300
+        },
+        {
+          "timestamp": 1778644800000,
+          "open": 436.67,
+          "high": 453.4,
+          "low": 430.21,
+          "close": 445.27,
+          "volume": 68283200
+        },
+        {
+          "timestamp": 1778731200000,
+          "open": 446.49,
+          "high": 451.98,
+          "low": 441.16,
+          "close": 443.3,
+          "volume": 46070400
+        },
+        {
+          "timestamp": 1778817600000,
+          "open": 433.98,
+          "high": 434.66,
+          "low": 422.0,
+          "close": 422.24,
+          "volume": 52688700
+        },
+        {
+          "timestamp": 1779076800000,
+          "open": 419.27,
+          "high": 421.13,
+          "low": 405.33,
+          "close": 409.99,
+          "volume": 52474200
+        },
+        {
+          "timestamp": 1779163200000,
+          "open": 403.16,
+          "high": 405.63,
+          "low": 393.63,
+          "close": 404.11,
+          "volume": 46500600
+        },
+        {
+          "timestamp": 1779249600000,
+          "open": 407.6,
+          "high": 417.46,
+          "low": 406.39,
+          "close": 417.26,
+          "volume": 45294700
+        },
+        {
+          "timestamp": 1779336000000,
+          "open": 422.18,
+          "high": 426.95,
+          "low": 412.9,
+          "close": 417.85,
+          "volume": 42636900
+        },
+        {
+          "timestamp": 1779422400000,
+          "open": 422.67,
+          "high": 431.51,
+          "low": 420.51,
+          "close": 426.01,
+          "volume": 46104700
+        },
+        {
+          "timestamp": 1779768000000,
+          "open": 430.26,
+          "high": 435.2,
+          "low": 426.12,
+          "close": 433.59,
+          "volume": 45658900
+        },
+        {
+          "timestamp": 1779854400000,
+          "open": 442.89,
+          "high": 445.6,
+          "low": 435.52,
+          "close": 440.36,
+          "volume": 44656500
+        },
+        {
+          "timestamp": 1779940800000,
+          "open": 437.62,
+          "high": 443.96,
+          "low": 436.3,
+          "close": 442.1,
+          "volume": 32435000
+        },
+        {
+          "timestamp": 1780027200000,
+          "open": 439.85,
+          "high": 441.07,
+          "low": 428.14,
+          "close": 435.79,
+          "volume": 45176800
+        },
+        {
+          "timestamp": 1780286400000,
+          "open": 427.49,
+          "high": 429.6,
+          "low": 415.43,
+          "close": 415.88,
+          "volume": 44937900
+        },
+        {
+          "timestamp": 1780372800000,
+          "open": 418.22,
+          "high": 424.42,
+          "low": 413.65,
+          "close": 423.74,
+          "volume": 37596000
+        },
+        {
+          "timestamp": 1780459200000,
+          "open": 418.7,
+          "high": 433.6,
+          "low": 416.0,
+          "close": 423.7,
+          "volume": 44500700
+        },
+        {
+          "timestamp": 1780545600000,
+          "open": 419.84,
+          "high": 426.35,
+          "low": 417.16,
+          "close": 418.45,
+          "volume": 35323300
+        },
+        {
+          "timestamp": 1780632000000,
+          "open": 420.5,
+          "high": 424.68,
+          "low": 388.59,
+          "close": 391.0,
+          "volume": 63420200
+        },
+        {
+          "timestamp": 1780891200000,
+          "open": 396.33,
+          "high": 412.94,
+          "low": 394.72,
+          "close": 408.95,
+          "volume": 50328800
+        },
+        {
+          "timestamp": 1780977600000,
+          "open": 411.03,
+          "high": 418.5,
+          "low": 384.24,
+          "close": 396.68,
+          "volume": 59940200
+        },
+        {
+          "timestamp": 1781064000000,
+          "open": 391.54,
+          "high": 397.09,
+          "low": 380.15,
+          "close": 381.59,
+          "volume": 49695600
+        },
+        {
+          "timestamp": 1781150400000,
+          "open": 388.28,
+          "high": 399.54,
+          "low": 380.66,
+          "close": 399.15,
+          "volume": 45324300
+        },
+        {
+          "timestamp": 1781236800000,
+          "open": 399.49,
+          "high": 406.68,
+          "low": 386.76,
+          "close": 406.43,
+          "volume": 63514500
+        },
+        {
+          "timestamp": 1781496000000,
+          "open": 412.37,
+          "high": 416.0,
+          "low": 407.1,
+          "close": 411.15,
+          "volume": 45620500
+        },
+        {
+          "timestamp": 1781582400000,
+          "open": 404.11,
+          "high": 412.42,
+          "low": 400.54,
+          "close": 404.66,
+          "volume": 40255500
+        },
+        {
+          "timestamp": 1781668800000,
+          "open": 401.53,
+          "high": 405.94,
+          "low": 393.76,
+          "close": 396.38,
+          "volume": 43534300
+        },
+        {
+          "timestamp": 1781755200000,
+          "open": 398.1,
+          "high": 402.52,
+          "low": 384.7,
+          "close": 400.49,
+          "volume": 58384700
+        },
+        {
+          "timestamp": 1782100800000,
+          "open": 394.85,
+          "high": 414.75,
+          "low": 394.4,
+          "close": 405.05,
+          "volume": 47819500
+        },
+        {
+          "timestamp": 1782187200000,
+          "open": 392.61,
+          "high": 392.87,
+          "low": 379.06,
+          "close": 381.61,
+          "volume": 50420200
+        },
+        {
+          "timestamp": 1782273600000,
+          "open": 380.08,
+          "high": 384.58,
+          "low": 373.05,
+          "close": 375.53,
+          "volume": 37081400
+        },
+        {
+          "timestamp": 1782360000000,
+          "open": 375.27,
+          "high": 379.12,
+          "low": 371.22,
+          "close": 375.12,
+          "volume": 30138800
+        }
+      ],
+      "pick": {
+        "strike": 365.0,
+        "dte": 6,
+        "exp": "2026-07-02",
+        "premium": 5.2,
+        "annualized_roc": 87.9,
+        "prob_otm": 65.3,
+        "iv": 50.2,
+        "iv_rank": 75.8,
+        "iv_rank_real": false,
+        "source": "live",
+        "earnings_days": 26,
+        "want_to_own": true,
+        "at_support": true,
+        "support": 364.02,
+        "support_floor": 0.978,
+        "iv_gt_hv": true,
+        "vrp": 1.25,
+        "vrp_assumed": false,
+        "levels": {
+          "keltner": {
+            "upper": 454.47,
+            "sma": 404.67,
+            "lower": 354.88
+          },
+          "support": 364.02,
+          "resistance": 418.36,
+          "spot": 375.12
+        },
+        "free_shares": {
+          "assignment_basis": 359.8,
+          "basis_discount_pct": 4.1,
+          "prob_assigned_pct": 34.7,
+          "wheel_fit": 49.9,
+          "summary": "If assigned you own at $359.80, 4.1% below today, earning 87.9% annualized on the cash while you wait."
+        },
+        "score": 51.8,
+        "direction": "cash-secured put",
+        "avoid": false,
+        "factors": {
+          "richness": 0.55,
+          "safety": 0.311,
+          "yield": 0.416,
+          "liquidity": 0.444,
+          "free_shares": 1.0,
+          "structure": 0.513
+        },
+        "why": "fair premium, tight to the strike, good free-shares fit if assigned.",
+        "lanes": [
+          "liquid"
+        ]
+      }
+    },
+    {
       "ticker": "NBIS",
       "spot": 256.63,
       "candles": [
@@ -13858,1392 +15244,6 @@
           "structure": 0.192
         },
         "why": "fair premium, ok distance, but illiquid, hard to fill, good free-shares fit if assigned.",
-        "lanes": [
-          "liquid"
-        ]
-      }
-    },
-    {
-      "ticker": "TSLA",
-      "spot": 375.12,
-      "candles": [
-        {
-          "timestamp": 1761537600000,
-          "open": 439.98,
-          "high": 460.16,
-          "low": 438.69,
-          "close": 452.42,
-          "volume": 105867500
-        },
-        {
-          "timestamp": 1761624000000,
-          "open": 454.78,
-          "high": 467.0,
-          "low": 451.6,
-          "close": 460.55,
-          "volume": 80185700
-        },
-        {
-          "timestamp": 1761710400000,
-          "open": 462.5,
-          "high": 465.7,
-          "low": 452.65,
-          "close": 461.51,
-          "volume": 67983500
-        },
-        {
-          "timestamp": 1761796800000,
-          "open": 451.05,
-          "high": 455.06,
-          "low": 439.61,
-          "close": 440.1,
-          "volume": 72447900
-        },
-        {
-          "timestamp": 1761883200000,
-          "open": 446.75,
-          "high": 458.0,
-          "low": 443.69,
-          "close": 456.56,
-          "volume": 83135800
-        },
-        {
-          "timestamp": 1762146000000,
-          "open": 455.99,
-          "high": 474.07,
-          "low": 453.8,
-          "close": 468.37,
-          "volume": 84595200
-        },
-        {
-          "timestamp": 1762232400000,
-          "open": 454.46,
-          "high": 460.22,
-          "low": 443.6,
-          "close": 444.26,
-          "volume": 87756600
-        },
-        {
-          "timestamp": 1762318800000,
-          "open": 452.05,
-          "high": 466.33,
-          "low": 440.71,
-          "close": 462.07,
-          "volume": 85573000
-        },
-        {
-          "timestamp": 1762405200000,
-          "open": 461.96,
-          "high": 467.45,
-          "low": 435.09,
-          "close": 445.91,
-          "volume": 109622900
-        },
-        {
-          "timestamp": 1762491600000,
-          "open": 437.92,
-          "high": 439.36,
-          "low": 421.88,
-          "close": 429.52,
-          "volume": 103471500
-        },
-        {
-          "timestamp": 1762750800000,
-          "open": 439.6,
-          "high": 449.67,
-          "low": 433.36,
-          "close": 445.23,
-          "volume": 76515900
-        },
-        {
-          "timestamp": 1762837200000,
-          "open": 439.4,
-          "high": 442.49,
-          "low": 432.36,
-          "close": 439.62,
-          "volume": 60533200
-        },
-        {
-          "timestamp": 1762923600000,
-          "open": 442.15,
-          "high": 442.33,
-          "low": 426.56,
-          "close": 430.6,
-          "volume": 58513500
-        },
-        {
-          "timestamp": 1763010000000,
-          "open": 423.13,
-          "high": 424.5,
-          "low": 396.34,
-          "close": 401.99,
-          "volume": 118948000
-        },
-        {
-          "timestamp": 1763096400000,
-          "open": 386.3,
-          "high": 412.19,
-          "low": 382.78,
-          "close": 404.35,
-          "volume": 105506700
-        },
-        {
-          "timestamp": 1763355600000,
-          "open": 398.74,
-          "high": 423.96,
-          "low": 398.74,
-          "close": 408.92,
-          "volume": 102214300
-        },
-        {
-          "timestamp": 1763442000000,
-          "open": 405.38,
-          "high": 408.9,
-          "low": 393.71,
-          "close": 401.25,
-          "volume": 80688600
-        },
-        {
-          "timestamp": 1763528400000,
-          "open": 406.18,
-          "high": 411.78,
-          "low": 398.5,
-          "close": 403.99,
-          "volume": 72047700
-        },
-        {
-          "timestamp": 1763614800000,
-          "open": 414.63,
-          "high": 428.94,
-          "low": 394.74,
-          "close": 395.23,
-          "volume": 113548800
-        },
-        {
-          "timestamp": 1763701200000,
-          "open": 402.32,
-          "high": 402.8,
-          "low": 383.76,
-          "close": 391.09,
-          "volume": 100460600
-        },
-        {
-          "timestamp": 1763960400000,
-          "open": 402.17,
-          "high": 421.72,
-          "low": 401.09,
-          "close": 417.78,
-          "volume": 96806400
-        },
-        {
-          "timestamp": 1764046800000,
-          "open": 414.42,
-          "high": 420.48,
-          "low": 405.95,
-          "close": 419.4,
-          "volume": 71915600
-        },
-        {
-          "timestamp": 1764133200000,
-          "open": 423.95,
-          "high": 426.94,
-          "low": 416.89,
-          "close": 426.58,
-          "volume": 63463000
-        },
-        {
-          "timestamp": 1764306000000,
-          "open": 426.59,
-          "high": 432.93,
-          "low": 426.2,
-          "close": 430.17,
-          "volume": 36252900
-        },
-        {
-          "timestamp": 1764565200000,
-          "open": 425.32,
-          "high": 433.66,
-          "low": 425.29,
-          "close": 430.14,
-          "volume": 57463600
-        },
-        {
-          "timestamp": 1764651600000,
-          "open": 430.81,
-          "high": 436.8,
-          "low": 422.12,
-          "close": 429.24,
-          "volume": 69336600
-        },
-        {
-          "timestamp": 1764738000000,
-          "open": 432.1,
-          "high": 447.92,
-          "low": 431.11,
-          "close": 446.74,
-          "volume": 87483000
-        },
-        {
-          "timestamp": 1764824400000,
-          "open": 449.94,
-          "high": 454.63,
-          "low": 445.39,
-          "close": 454.53,
-          "volume": 71906500
-        },
-        {
-          "timestamp": 1764910800000,
-          "open": 453.03,
-          "high": 458.87,
-          "low": 451.66,
-          "close": 455.0,
-          "volume": 56427500
-        },
-        {
-          "timestamp": 1765170000000,
-          "open": 447.45,
-          "high": 449.75,
-          "low": 435.25,
-          "close": 439.58,
-          "volume": 69165800
-        },
-        {
-          "timestamp": 1765256400000,
-          "open": 437.54,
-          "high": 452.39,
-          "low": 435.7,
-          "close": 445.17,
-          "volume": 62367400
-        },
-        {
-          "timestamp": 1765342800000,
-          "open": 446.07,
-          "high": 456.88,
-          "low": 443.61,
-          "close": 451.45,
-          "volume": 63257500
-        },
-        {
-          "timestamp": 1765429200000,
-          "open": 448.95,
-          "high": 449.27,
-          "low": 440.33,
-          "close": 446.89,
-          "volume": 55979500
-        },
-        {
-          "timestamp": 1765515600000,
-          "open": 448.09,
-          "high": 463.01,
-          "low": 441.67,
-          "close": 458.96,
-          "volume": 95656700
-        },
-        {
-          "timestamp": 1765774800000,
-          "open": 469.44,
-          "high": 481.77,
-          "low": 467.66,
-          "close": 475.31,
-          "volume": 114542200
-        },
-        {
-          "timestamp": 1765861200000,
-          "open": 472.21,
-          "high": 491.5,
-          "low": 465.83,
-          "close": 489.88,
-          "volume": 107608100
-        },
-        {
-          "timestamp": 1765947600000,
-          "open": 488.22,
-          "high": 495.28,
-          "low": 466.2,
-          "close": 467.26,
-          "volume": 106490400
-        },
-        {
-          "timestamp": 1766034000000,
-          "open": 478.16,
-          "high": 490.86,
-          "low": 473.12,
-          "close": 483.37,
-          "volume": 95168400
-        },
-        {
-          "timestamp": 1766120400000,
-          "open": 488.12,
-          "high": 490.49,
-          "low": 474.72,
-          "close": 481.2,
-          "volume": 103305400
-        },
-        {
-          "timestamp": 1766379600000,
-          "open": 489.88,
-          "high": 498.83,
-          "low": 485.33,
-          "close": 488.73,
-          "volume": 86916100
-        },
-        {
-          "timestamp": 1766466000000,
-          "open": 489.4,
-          "high": 491.97,
-          "low": 482.84,
-          "close": 485.56,
-          "volume": 58223600
-        },
-        {
-          "timestamp": 1766552400000,
-          "open": 488.48,
-          "high": 490.9,
-          "low": 476.8,
-          "close": 485.4,
-          "volume": 41285400
-        },
-        {
-          "timestamp": 1766725200000,
-          "open": 485.23,
-          "high": 489.09,
-          "low": 473.82,
-          "close": 475.19,
-          "volume": 58780700
-        },
-        {
-          "timestamp": 1766984400000,
-          "open": 469.0,
-          "high": 469.4,
-          "low": 459.0,
-          "close": 459.64,
-          "volume": 66263000
-        },
-        {
-          "timestamp": 1767070800000,
-          "open": 461.09,
-          "high": 463.12,
-          "low": 453.83,
-          "close": 454.43,
-          "volume": 59238500
-        },
-        {
-          "timestamp": 1767157200000,
-          "open": 456.1,
-          "high": 456.55,
-          "low": 449.3,
-          "close": 449.72,
-          "volume": 49078000
-        },
-        {
-          "timestamp": 1767330000000,
-          "open": 457.8,
-          "high": 458.34,
-          "low": 435.3,
-          "close": 438.07,
-          "volume": 85535400
-        },
-        {
-          "timestamp": 1767589200000,
-          "open": 447.99,
-          "high": 457.55,
-          "low": 444.57,
-          "close": 451.67,
-          "volume": 67940800
-        },
-        {
-          "timestamp": 1767675600000,
-          "open": 446.38,
-          "high": 448.25,
-          "low": 428.78,
-          "close": 432.96,
-          "volume": 89093800
-        },
-        {
-          "timestamp": 1767762000000,
-          "open": 435.9,
-          "high": 438.37,
-          "low": 431.29,
-          "close": 431.41,
-          "volume": 59828800
-        },
-        {
-          "timestamp": 1767848400000,
-          "open": 427.89,
-          "high": 436.89,
-          "low": 424.37,
-          "close": 435.8,
-          "volume": 57041100
-        },
-        {
-          "timestamp": 1767934800000,
-          "open": 435.95,
-          "high": 449.05,
-          "low": 430.39,
-          "close": 445.01,
-          "volume": 67331500
-        },
-        {
-          "timestamp": 1768194000000,
-          "open": 441.23,
-          "high": 454.3,
-          "low": 438.0,
-          "close": 448.96,
-          "volume": 61649600
-        },
-        {
-          "timestamp": 1768280400000,
-          "open": 450.2,
-          "high": 451.81,
-          "low": 443.95,
-          "close": 447.2,
-          "volume": 53719200
-        },
-        {
-          "timestamp": 1768366800000,
-          "open": 442.81,
-          "high": 443.91,
-          "low": 434.22,
-          "close": 439.2,
-          "volume": 57259500
-        },
-        {
-          "timestamp": 1768453200000,
-          "open": 441.13,
-          "high": 445.36,
-          "low": 437.65,
-          "close": 438.57,
-          "volume": 49465800
-        },
-        {
-          "timestamp": 1768539600000,
-          "open": 439.5,
-          "high": 447.25,
-          "low": 435.26,
-          "close": 437.5,
-          "volume": 60220600
-        },
-        {
-          "timestamp": 1768885200000,
-          "open": 429.36,
-          "high": 430.73,
-          "low": 417.44,
-          "close": 419.25,
-          "volume": 63187300
-        },
-        {
-          "timestamp": 1768971600000,
-          "open": 421.66,
-          "high": 438.2,
-          "low": 419.62,
-          "close": 431.44,
-          "volume": 68124000
-        },
-        {
-          "timestamp": 1769058000000,
-          "open": 435.16,
-          "high": 449.5,
-          "low": 432.63,
-          "close": 449.36,
-          "volume": 71546700
-        },
-        {
-          "timestamp": 1769144400000,
-          "open": 447.43,
-          "high": 452.43,
-          "low": 444.04,
-          "close": 449.06,
-          "volume": 56771400
-        },
-        {
-          "timestamp": 1769403600000,
-          "open": 445.0,
-          "high": 445.04,
-          "low": 434.28,
-          "close": 435.2,
-          "volume": 49397400
-        },
-        {
-          "timestamp": 1769490000000,
-          "open": 437.41,
-          "high": 437.52,
-          "low": 430.69,
-          "close": 430.9,
-          "volume": 37733100
-        },
-        {
-          "timestamp": 1769576400000,
-          "open": 431.91,
-          "high": 438.26,
-          "low": 430.1,
-          "close": 431.46,
-          "volume": 54857400
-        },
-        {
-          "timestamp": 1769662800000,
-          "open": 437.8,
-          "high": 440.23,
-          "low": 414.62,
-          "close": 416.56,
-          "volume": 81686100
-        },
-        {
-          "timestamp": 1769749200000,
-          "open": 425.35,
-          "high": 439.88,
-          "low": 422.7,
-          "close": 430.41,
-          "volume": 82626100
-        },
-        {
-          "timestamp": 1770008400000,
-          "open": 421.29,
-          "high": 427.15,
-          "low": 414.5,
-          "close": 421.81,
-          "volume": 58739500
-        },
-        {
-          "timestamp": 1770094800000,
-          "open": 424.27,
-          "high": 428.56,
-          "low": 413.69,
-          "close": 421.96,
-          "volume": 56886500
-        },
-        {
-          "timestamp": 1770181200000,
-          "open": 420.46,
-          "high": 423.9,
-          "low": 399.18,
-          "close": 406.01,
-          "volume": 74606900
-        },
-        {
-          "timestamp": 1770267600000,
-          "open": 397.02,
-          "high": 402.1,
-          "low": 387.53,
-          "close": 397.21,
-          "volume": 72819800
-        },
-        {
-          "timestamp": 1770354000000,
-          "open": 400.87,
-          "high": 414.55,
-          "low": 397.75,
-          "close": 411.11,
-          "volume": 62677100
-        },
-        {
-          "timestamp": 1770613200000,
-          "open": 409.91,
-          "high": 421.25,
-          "low": 407.29,
-          "close": 417.32,
-          "volume": 54484300
-        },
-        {
-          "timestamp": 1770699600000,
-          "open": 418.08,
-          "high": 427.25,
-          "low": 417.0,
-          "close": 425.21,
-          "volume": 64450200
-        },
-        {
-          "timestamp": 1770786000000,
-          "open": 427.96,
-          "high": 436.35,
-          "low": 420.03,
-          "close": 428.27,
-          "volume": 57362000
-        },
-        {
-          "timestamp": 1770872400000,
-          "open": 430.3,
-          "high": 436.23,
-          "low": 414.0,
-          "close": 417.07,
-          "volume": 61933400
-        },
-        {
-          "timestamp": 1770958800000,
-          "open": 414.31,
-          "high": 424.06,
-          "low": 410.88,
-          "close": 417.44,
-          "volume": 51434100
-        },
-        {
-          "timestamp": 1771304400000,
-          "open": 412.36,
-          "high": 413.72,
-          "low": 400.51,
-          "close": 410.63,
-          "volume": 59678800
-        },
-        {
-          "timestamp": 1771390800000,
-          "open": 411.11,
-          "high": 416.9,
-          "low": 409.58,
-          "close": 411.32,
-          "volume": 45921400
-        },
-        {
-          "timestamp": 1771477200000,
-          "open": 407.25,
-          "high": 415.25,
-          "low": 404.11,
-          "close": 411.71,
-          "volume": 51019600
-        },
-        {
-          "timestamp": 1771563600000,
-          "open": 408.3,
-          "high": 414.7,
-          "low": 405.5,
-          "close": 411.82,
-          "volume": 57912200
-        },
-        {
-          "timestamp": 1771822800000,
-          "open": 407.29,
-          "high": 407.7,
-          "low": 394.04,
-          "close": 399.83,
-          "volume": 69680000
-        },
-        {
-          "timestamp": 1771909200000,
-          "open": 399.5,
-          "high": 410.82,
-          "low": 397.64,
-          "close": 409.38,
-          "volume": 58579500
-        },
-        {
-          "timestamp": 1771995600000,
-          "open": 412.15,
-          "high": 420.34,
-          "low": 412.15,
-          "close": 417.4,
-          "volume": 54809700
-        },
-        {
-          "timestamp": 1772082000000,
-          "open": 414.42,
-          "high": 416.81,
-          "low": 403.66,
-          "close": 408.58,
-          "volume": 53602500
-        },
-        {
-          "timestamp": 1772168400000,
-          "open": 402.94,
-          "high": 407.12,
-          "low": 398.11,
-          "close": 402.51,
-          "volume": 56890100
-        },
-        {
-          "timestamp": 1772427600000,
-          "open": 390.6,
-          "high": 404.54,
-          "low": 388.25,
-          "close": 403.32,
-          "volume": 55088300
-        },
-        {
-          "timestamp": 1772514000000,
-          "open": 395.09,
-          "high": 396.34,
-          "low": 385.39,
-          "close": 392.43,
-          "volume": 62617300
-        },
-        {
-          "timestamp": 1772600400000,
-          "open": 397.85,
-          "high": 408.33,
-          "low": 394.58,
-          "close": 405.94,
-          "volume": 68305500
-        },
-        {
-          "timestamp": 1772686800000,
-          "open": 401.57,
-          "high": 408.62,
-          "low": 399.42,
-          "close": 405.55,
-          "volume": 51925900
-        },
-        {
-          "timestamp": 1772773200000,
-          "open": 398.09,
-          "high": 402.35,
-          "low": 394.21,
-          "close": 396.73,
-          "volume": 64054600
-        },
-        {
-          "timestamp": 1773028800000,
-          "open": 390.05,
-          "high": 401.59,
-          "low": 381.4,
-          "close": 398.68,
-          "volume": 67018900
-        },
-        {
-          "timestamp": 1773115200000,
-          "open": 402.22,
-          "high": 406.59,
-          "low": 398.19,
-          "close": 399.24,
-          "volume": 59258700
-        },
-        {
-          "timestamp": 1773201600000,
-          "open": 402.28,
-          "high": 416.38,
-          "low": 402.15,
-          "close": 407.82,
-          "volume": 62559900
-        },
-        {
-          "timestamp": 1773288000000,
-          "open": 405.18,
-          "high": 406.5,
-          "low": 394.65,
-          "close": 395.01,
-          "volume": 60973800
-        },
-        {
-          "timestamp": 1773374400000,
-          "open": 399.17,
-          "high": 400.2,
-          "low": 389.95,
-          "close": 391.2,
-          "volume": 58504100
-        },
-        {
-          "timestamp": 1773633600000,
-          "open": 396.22,
-          "high": 403.73,
-          "low": 394.42,
-          "close": 395.56,
-          "volume": 58068300
-        },
-        {
-          "timestamp": 1773720000000,
-          "open": 395.69,
-          "high": 400.12,
-          "low": 393.0,
-          "close": 399.27,
-          "volume": 46890500
-        },
-        {
-          "timestamp": 1773806400000,
-          "open": 399.0,
-          "high": 403.07,
-          "low": 392.31,
-          "close": 392.78,
-          "volume": 50853100
-        },
-        {
-          "timestamp": 1773892800000,
-          "open": 387.27,
-          "high": 387.27,
-          "low": 378.73,
-          "close": 380.3,
-          "volume": 67078300
-        },
-        {
-          "timestamp": 1773979200000,
-          "open": 379.85,
-          "high": 379.89,
-          "low": 364.46,
-          "close": 367.96,
-          "volume": 78628600
-        },
-        {
-          "timestamp": 1774238400000,
-          "open": 373.09,
-          "high": 385.33,
-          "low": 372.73,
-          "close": 380.85,
-          "volume": 74606000
-        },
-        {
-          "timestamp": 1774324800000,
-          "open": 376.56,
-          "high": 387.48,
-          "low": 376.31,
-          "close": 383.03,
-          "volume": 60004900
-        },
-        {
-          "timestamp": 1774411200000,
-          "open": 389.99,
-          "high": 396.23,
-          "low": 385.01,
-          "close": 385.95,
-          "volume": 55157300
-        },
-        {
-          "timestamp": 1774497600000,
-          "open": 381.6,
-          "high": 384.44,
-          "low": 371.87,
-          "close": 372.11,
-          "volume": 55522900
-        },
-        {
-          "timestamp": 1774584000000,
-          "open": 369.69,
-          "high": 369.86,
-          "low": 359.47,
-          "close": 361.83,
-          "volume": 62065700
-        },
-        {
-          "timestamp": 1774843200000,
-          "open": 365.86,
-          "high": 367.29,
-          "low": 352.14,
-          "close": 355.28,
-          "volume": 67954400
-        },
-        {
-          "timestamp": 1774929600000,
-          "open": 361.51,
-          "high": 373.33,
-          "low": 361.0,
-          "close": 371.75,
-          "volume": 75534900
-        },
-        {
-          "timestamp": 1775016000000,
-          "open": 378.63,
-          "high": 383.14,
-          "low": 374.08,
-          "close": 381.26,
-          "volume": 58683800
-        },
-        {
-          "timestamp": 1775102400000,
-          "open": 364.2,
-          "high": 370.28,
-          "low": 359.03,
-          "close": 360.59,
-          "volume": 83031200
-        },
-        {
-          "timestamp": 1775448000000,
-          "open": 362.59,
-          "high": 367.72,
-          "low": 346.64,
-          "close": 352.82,
-          "volume": 77697600
-        },
-        {
-          "timestamp": 1775534400000,
-          "open": 346.44,
-          "high": 348.02,
-          "low": 337.24,
-          "close": 346.65,
-          "volume": 74515400
-        },
-        {
-          "timestamp": 1775620800000,
-          "open": 363.79,
-          "high": 364.5,
-          "low": 339.67,
-          "close": 343.25,
-          "volume": 78838600
-        },
-        {
-          "timestamp": 1775707200000,
-          "open": 343.15,
-          "high": 348.88,
-          "low": 337.25,
-          "close": 345.62,
-          "volume": 62164000
-        },
-        {
-          "timestamp": 1775793600000,
-          "open": 346.29,
-          "high": 350.36,
-          "low": 342.74,
-          "close": 348.95,
-          "volume": 51336000
-        },
-        {
-          "timestamp": 1776052800000,
-          "open": 350.07,
-          "high": 356.35,
-          "low": 348.57,
-          "close": 352.42,
-          "volume": 53617500
-        },
-        {
-          "timestamp": 1776139200000,
-          "open": 357.67,
-          "high": 367.63,
-          "low": 354.77,
-          "close": 364.2,
-          "volume": 59979600
-        },
-        {
-          "timestamp": 1776225600000,
-          "open": 366.83,
-          "high": 394.65,
-          "low": 362.5,
-          "close": 391.95,
-          "volume": 113810400
-        },
-        {
-          "timestamp": 1776312000000,
-          "open": 393.81,
-          "high": 394.06,
-          "low": 381.8,
-          "close": 388.9,
-          "volume": 63515100
-        },
-        {
-          "timestamp": 1776398400000,
-          "open": 395.92,
-          "high": 409.28,
-          "low": 391.65,
-          "close": 400.62,
-          "volume": 90640000
-        },
-        {
-          "timestamp": 1776657600000,
-          "open": 402.58,
-          "high": 406.8,
-          "low": 388.33,
-          "close": 392.5,
-          "volume": 64603900
-        },
-        {
-          "timestamp": 1776744000000,
-          "open": 393.0,
-          "high": 393.95,
-          "low": 385.22,
-          "close": 386.42,
-          "volume": 50530600
-        },
-        {
-          "timestamp": 1776830400000,
-          "open": 387.57,
-          "high": 393.01,
-          "low": 385.3,
-          "close": 387.51,
-          "volume": 62362800
-        },
-        {
-          "timestamp": 1776916800000,
-          "open": 375.28,
-          "high": 386.0,
-          "low": 368.39,
-          "close": 373.72,
-          "volume": 93969500
-        },
-        {
-          "timestamp": 1777003200000,
-          "open": 373.5,
-          "high": 382.76,
-          "low": 370.73,
-          "close": 376.3,
-          "volume": 62893300
-        },
-        {
-          "timestamp": 1777262400000,
-          "open": 372.09,
-          "high": 380.78,
-          "low": 364.02,
-          "close": 378.67,
-          "volume": 66735800
-        },
-        {
-          "timestamp": 1777348800000,
-          "open": 374.68,
-          "high": 382.29,
-          "low": 372.54,
-          "close": 376.02,
-          "volume": 50864400
-        },
-        {
-          "timestamp": 1777435200000,
-          "open": 375.4,
-          "high": 376.4,
-          "low": 370.04,
-          "close": 372.8,
-          "volume": 45384800
-        },
-        {
-          "timestamp": 1777521600000,
-          "open": 372.75,
-          "high": 384.75,
-          "low": 368.17,
-          "close": 381.63,
-          "volume": 51076000
-        },
-        {
-          "timestamp": 1777608000000,
-          "open": 382.49,
-          "high": 397.82,
-          "low": 378.8,
-          "close": 390.82,
-          "volume": 65338300
-        },
-        {
-          "timestamp": 1777867200000,
-          "open": 390.23,
-          "high": 394.64,
-          "low": 384.8,
-          "close": 392.51,
-          "volume": 48765100
-        },
-        {
-          "timestamp": 1777953600000,
-          "open": 395.19,
-          "high": 402.12,
-          "low": 389.0,
-          "close": 389.37,
-          "volume": 47780600
-        },
-        {
-          "timestamp": 1778040000000,
-          "open": 386.25,
-          "high": 401.68,
-          "low": 384.02,
-          "close": 398.73,
-          "volume": 53465400
-        },
-        {
-          "timestamp": 1778126400000,
-          "open": 407.48,
-          "high": 415.83,
-          "low": 402.12,
-          "close": 411.79,
-          "volume": 64294200
-        },
-        {
-          "timestamp": 1778212800000,
-          "open": 416.48,
-          "high": 431.2,
-          "low": 416.39,
-          "close": 428.35,
-          "volume": 65050000
-        },
-        {
-          "timestamp": 1778472000000,
-          "open": 422.16,
-          "high": 449.16,
-          "low": 416.8,
-          "close": 445.0,
-          "volume": 78376100
-        },
-        {
-          "timestamp": 1778558400000,
-          "open": 441.41,
-          "high": 447.8,
-          "low": 422.26,
-          "close": 433.45,
-          "volume": 60569300
-        },
-        {
-          "timestamp": 1778644800000,
-          "open": 436.67,
-          "high": 453.4,
-          "low": 430.21,
-          "close": 445.27,
-          "volume": 68283200
-        },
-        {
-          "timestamp": 1778731200000,
-          "open": 446.49,
-          "high": 451.98,
-          "low": 441.16,
-          "close": 443.3,
-          "volume": 46070400
-        },
-        {
-          "timestamp": 1778817600000,
-          "open": 433.98,
-          "high": 434.66,
-          "low": 422.0,
-          "close": 422.24,
-          "volume": 52688700
-        },
-        {
-          "timestamp": 1779076800000,
-          "open": 419.27,
-          "high": 421.13,
-          "low": 405.33,
-          "close": 409.99,
-          "volume": 52474200
-        },
-        {
-          "timestamp": 1779163200000,
-          "open": 403.16,
-          "high": 405.63,
-          "low": 393.63,
-          "close": 404.11,
-          "volume": 46500600
-        },
-        {
-          "timestamp": 1779249600000,
-          "open": 407.6,
-          "high": 417.46,
-          "low": 406.39,
-          "close": 417.26,
-          "volume": 45294700
-        },
-        {
-          "timestamp": 1779336000000,
-          "open": 422.18,
-          "high": 426.95,
-          "low": 412.9,
-          "close": 417.85,
-          "volume": 42636900
-        },
-        {
-          "timestamp": 1779422400000,
-          "open": 422.67,
-          "high": 431.51,
-          "low": 420.51,
-          "close": 426.01,
-          "volume": 46104700
-        },
-        {
-          "timestamp": 1779768000000,
-          "open": 430.26,
-          "high": 435.2,
-          "low": 426.12,
-          "close": 433.59,
-          "volume": 45658900
-        },
-        {
-          "timestamp": 1779854400000,
-          "open": 442.89,
-          "high": 445.6,
-          "low": 435.52,
-          "close": 440.36,
-          "volume": 44656500
-        },
-        {
-          "timestamp": 1779940800000,
-          "open": 437.62,
-          "high": 443.96,
-          "low": 436.3,
-          "close": 442.1,
-          "volume": 32435000
-        },
-        {
-          "timestamp": 1780027200000,
-          "open": 439.85,
-          "high": 441.07,
-          "low": 428.14,
-          "close": 435.79,
-          "volume": 45176800
-        },
-        {
-          "timestamp": 1780286400000,
-          "open": 427.49,
-          "high": 429.6,
-          "low": 415.43,
-          "close": 415.88,
-          "volume": 44937900
-        },
-        {
-          "timestamp": 1780372800000,
-          "open": 418.22,
-          "high": 424.42,
-          "low": 413.65,
-          "close": 423.74,
-          "volume": 37596000
-        },
-        {
-          "timestamp": 1780459200000,
-          "open": 418.7,
-          "high": 433.6,
-          "low": 416.0,
-          "close": 423.7,
-          "volume": 44500700
-        },
-        {
-          "timestamp": 1780545600000,
-          "open": 419.84,
-          "high": 426.35,
-          "low": 417.16,
-          "close": 418.45,
-          "volume": 35323300
-        },
-        {
-          "timestamp": 1780632000000,
-          "open": 420.5,
-          "high": 424.68,
-          "low": 388.59,
-          "close": 391.0,
-          "volume": 63420200
-        },
-        {
-          "timestamp": 1780891200000,
-          "open": 396.33,
-          "high": 412.94,
-          "low": 394.72,
-          "close": 408.95,
-          "volume": 50328800
-        },
-        {
-          "timestamp": 1780977600000,
-          "open": 411.03,
-          "high": 418.5,
-          "low": 384.24,
-          "close": 396.68,
-          "volume": 59940200
-        },
-        {
-          "timestamp": 1781064000000,
-          "open": 391.54,
-          "high": 397.09,
-          "low": 380.15,
-          "close": 381.59,
-          "volume": 49695600
-        },
-        {
-          "timestamp": 1781150400000,
-          "open": 388.28,
-          "high": 399.54,
-          "low": 380.66,
-          "close": 399.15,
-          "volume": 45324300
-        },
-        {
-          "timestamp": 1781236800000,
-          "open": 399.49,
-          "high": 406.68,
-          "low": 386.76,
-          "close": 406.43,
-          "volume": 63514500
-        },
-        {
-          "timestamp": 1781496000000,
-          "open": 412.37,
-          "high": 416.0,
-          "low": 407.1,
-          "close": 411.15,
-          "volume": 45620500
-        },
-        {
-          "timestamp": 1781582400000,
-          "open": 404.11,
-          "high": 412.42,
-          "low": 400.54,
-          "close": 404.66,
-          "volume": 40255500
-        },
-        {
-          "timestamp": 1781668800000,
-          "open": 401.53,
-          "high": 405.94,
-          "low": 393.76,
-          "close": 396.38,
-          "volume": 43534300
-        },
-        {
-          "timestamp": 1781755200000,
-          "open": 398.1,
-          "high": 402.52,
-          "low": 384.7,
-          "close": 400.49,
-          "volume": 58384700
-        },
-        {
-          "timestamp": 1782100800000,
-          "open": 394.85,
-          "high": 414.75,
-          "low": 394.4,
-          "close": 405.05,
-          "volume": 47819500
-        },
-        {
-          "timestamp": 1782187200000,
-          "open": 392.61,
-          "high": 392.87,
-          "low": 379.06,
-          "close": 381.61,
-          "volume": 50420200
-        },
-        {
-          "timestamp": 1782273600000,
-          "open": 380.08,
-          "high": 384.58,
-          "low": 373.05,
-          "close": 375.53,
-          "volume": 37081400
-        },
-        {
-          "timestamp": 1782360000000,
-          "open": 375.27,
-          "high": 379.12,
-          "low": 371.22,
-          "close": 375.12,
-          "volume": 30138800
-        }
-      ],
-      "pick": {
-        "strike": 365.0,
-        "dte": 6,
-        "exp": "2026-07-02",
-        "premium": 5.2,
-        "annualized_roc": 87.9,
-        "prob_otm": 65.3,
-        "iv": 50.2,
-        "iv_rank": 75.8,
-        "iv_rank_real": false,
-        "source": "live",
-        "earnings_days": 26,
-        "want_to_own": true,
-        "at_support": true,
-        "support": 364.02,
-        "support_floor": 0.978,
-        "iv_gt_hv": true,
-        "vrp": 1.25,
-        "vrp_assumed": false,
-        "levels": {
-          "keltner": {
-            "upper": 454.47,
-            "sma": 404.67,
-            "lower": 354.88
-          },
-          "support": 364.02,
-          "resistance": 418.36,
-          "spot": 375.12
-        },
-        "free_shares": {
-          "assignment_basis": 359.8,
-          "basis_discount_pct": 4.1,
-          "prob_assigned_pct": 34.7,
-          "wheel_fit": 49.9,
-          "summary": "If assigned you own at $359.80, 4.1% below today, earning 87.9% annualized on the cash while you wait."
-        },
-        "score": 48.6,
-        "direction": "cash-secured put",
-        "avoid": false,
-        "factors": {
-          "richness": 0.55,
-          "safety": 0.311,
-          "yield": 0.416,
-          "liquidity": 0.2,
-          "free_shares": 1.0,
-          "structure": 0.513
-        },
-        "why": "fair premium, tight to the strike, but illiquid, hard to fill, good free-shares fit if assigned.",
         "lanes": [
           "liquid"
         ]
@@ -33273,7 +33273,12 @@
     "gone": [],
     "to_avoid": [],
     "from_avoid": [],
-    "movers": []
+    "movers": [
+      {
+        "ticker": "TSLA",
+        "delta": 3.2
+      }
+    ]
   },
-  "prev_generated_at": "2026-06-26T10:00:16+00:00"
+  "prev_generated_at": "2026-06-26T10:30:15+00:00"
 }
