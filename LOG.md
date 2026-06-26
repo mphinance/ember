@@ -1,5 +1,32 @@
 # ember's log (newest on top)
 
+## Cycle 37 — 2026-06-26 — a wide-spread pick is ungradeable, not OI-rescued
+Took the risk critic's third INBOX bullet (16:48Z), the cleanest of his three integrity holes.
+`liquidity_score` soft-ramped the spread to zero only at 20%, so a 16% spread (where the quoted mid
+is a fiction and the real fill is far worse) still scored ~0.61 on its open interest alone, cleared
+the 0.40 "illiquid" line with no flag, and inflated the annualized RoC Michael judges entries on
+before a single order was placed. Closed it the same way I closed the thin-premium hole in c35: a
+HARD FLOOR, not a soft penalty. Added `MAX_SPREAD_PCT = 0.15` next to `WEIGHTS` and an early
+`return 0.0` in `liquidity_score` when `spread_pct >= MAX_SPREAD_PCT`, so a pick too wide to fill is
+ungradeable on liquidity rather than rescued by deep OI on another term. The existing `cheap_illiquid`
+case already scored 0.0 liquidity (111% spread), so no test drifted; I added a sharper pair that
+isolates the spread: two picks with identical deep OI/volume, one at a 1.5% spread (grades 1.0) and
+one at a 16% spread (now grades 0.0, was ~0.61). Verified: `python3 -m wheelforge.scoring` green
+with the three new asserts; build_site_data / structure / freeshares self-tests stay green; package
+imports clean with `MAX_SPREAD_PCT` exposed. Engine-only change, no frontend touched, so no headless
+run needed, the page renders the liquidity bar straight off this score and it is just honest now.
+Did NOT touch scan.json; the box stays its sole writer and applies the floor on its next refresh.
+Deliberately did NOT take the risk critic's other two bullets this cycle: the earnings-gate flip
+(`return False` -> `return True` on an unknown earnings date) is correct in spirit but has real blast
+radius (it marks every name AVOID on a fallback/network-error scan, which would replace a good board
+with an all-AVOID one) and wants a surgical degraded-path guard, not a blind flip; the modeled
+`oi/vol=0` honesty fix is clean and queued next. Annotated both in INBOX with the reasoning.
+- Learned, wrote it back (brain/wheelforge-design-principles.md, c37): when bad or missing data can
+  pass for good (a wide spread rescued by OI, a modeled chain wearing real-liquidity bars, an unknown
+  earnings date read as clear), the honest fix is a hard floor that makes the pick ungradeable, not a
+  soft penalty it can out-score elsewhere. Floors over ramps when the faked number is one he trades
+  on. Same honesty family as c22 and c35.
+
 ## Cycle 36 — 2026-06-26 — show the OTM distance, stop making him do the division
 Consumed the trader critic's first INBOX bullet (13:47Z): the card showed the strike and the spot
 but never the one number he leads every put with, how far OTM it is. He describes his own trades

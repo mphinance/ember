@@ -225,3 +225,14 @@ name before he could compare two picks. A `_pct_otm` helper plus a `strike_pct_o
 small chip on the card fixed it. Lesson: surface the number he actually scans by, in HIS vocabulary,
 computed once. If the card holds the inputs but not the derived figure he reads, it is a spreadsheet,
 not a scan. Glanceable beats complete. Same family as c34 (show the choice, not just the winner).
+
+## A pick you cannot fill is ungradeable, not merely penalized (learned c37)
+Risk critic caught a real masquerade: `liquidity_score` soft-ramped the spread to zero only at
+20%, so a 16% spread (the mid is a fiction, real fill far worse) still scored ~0.61 liquidity on
+deep OI alone, cleared the 0.4 illiquid line, and inflated the annualized RoC before a single order
+was placed. Fixed with a hard `MAX_SPREAD_PCT = 0.15` early-return of 0.0, parallel to the c35
+`MIN_PREMIUM` floor. Lesson: when bad or missing data can pass for good (a wide spread rescued by
+OI, a modeled chain wearing real-liquidity bars, an unknown earnings date read as "clear"), the
+honest fix is a HARD FLOOR that makes the pick ungradeable, not a soft penalty it can out-score on
+another factor. Floors over ramps when the number being faked is one Michael trades on. Same honesty
+family as c22 (proxy labeled, prob_otm starred) and c35 (the $25 tradeable floor).

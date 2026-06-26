@@ -29,6 +29,12 @@ WEIGHTS = {
     "structure": 0.14,
 }
 
+# A spread this wide makes the quoted mid a fiction: the real fill is far worse, so the
+# annualized RoC is overstated before a single order is placed. Parallel to MIN_PREMIUM
+# (the tradeable-dollar floor in build_site_data): beyond this the pick is ungradeable on
+# liquidity, not merely penalized, no matter how deep the open interest looks.
+MAX_SPREAD_PCT = 0.15
+
 
 def clamp01(x):
     """Coerce to a float in [0, 1]; junk -> 0.0."""
@@ -74,6 +80,8 @@ def liquidity_score(bid, ask, open_interest, volume):
     bid = float(bid or 0); ask = float(ask or 0)
     mid = (bid + ask) / 2.0
     spread_pct = ((ask - bid) / mid) if mid > 0 else 1.0
+    if spread_pct >= MAX_SPREAD_PCT:
+        return 0.0                                # too wide to grade: the mid is a fiction
     tight = 1.0 - _ramp(spread_pct, 0.02, 0.20)   # <=2% tight, >=20% awful
     depth = _ramp((open_interest or 0), 100, 2000)
     flow = _ramp((volume or 0), 10, 500)
@@ -205,6 +213,13 @@ def _selftest():
     one_x = dict(great_csp); one_x["annualized_roc"] = 1.05
     fat_yield = dict(great_csp); fat_yield["annualized_roc"] = 2.10
 
+    # Two picks with deep OI/volume, identical but for the SPREAD: a 1.6% spread (real,
+    # fillable) vs a 16% spread (the mid is a fiction). Before the MAX_SPREAD_PCT floor the
+    # wide one still scored ~0.61 liquidity on its OI alone, clearing the 0.4 illiquid line
+    # and inflating its RoC; now it is ungradeable (0.0) while the tight one stays strong.
+    tight_fill = liquidity_score(bid=1.99, ask=2.02, open_interest=3000, volume=600)
+    wide_fill = liquidity_score(bid=0.46, ask=0.54, open_interest=3000, volume=600)
+
     g = score_contract(great_csp)
     e = score_contract(earnings_trap)
     c = score_contract(cheap_illiquid)
@@ -225,6 +240,10 @@ def _selftest():
     assert y["factors"]["yield"] > o["factors"]["yield"], "a 2x weekly must out-yield a 1x"
     assert y["score"] > g["score"], "fat yield must out-score the same setup at thin yield"
     assert "fat annualized yield" in y["why"], "a fat-yield pick should say so plainly"
+    print("tight spread:", round(tight_fill, 3), "| wide spread:", round(wide_fill, 3))
+    assert wide_fill == 0.0, "a spread past MAX_SPREAD_PCT must be ungradeable, not OI-rescued"
+    assert tight_fill >= 0.6, "a tight, deep pick should still grade liquid"
+    assert tight_fill > wide_fill, "the fillable quote must out-liquidity the fictional one"
     print("\nOK: WheelForge scoring self-test passed.")
 
 

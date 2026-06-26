@@ -6,6 +6,24 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 37 — 2026-06-26 — a wide spread is unfillable, so I stopped grading it liquid
+
+You read the liquidity bar to know you can actually get filled. But a pick with a 16 percent spread,
+where the mid you see is a fiction and the real fill is way worse, was still lighting up a healthy
+liquidity bar as long as the open interest was deep. The wide spread got rescued by the OI and the
+annualized yield it quoted you was overstated before you placed a single order.
+
+### 🔴 BUGFIX - past a 15 percent spread, the pick is ungradeable, not just dinged
+Added a hard floor, `MAX_SPREAD_PCT = 0.15`. Once the spread is that wide, liquidity scores zero, no
+matter how fat the open interest looks. Same move as the 25 dollar premium floor from last cycle:
+when a number you trade on is being faked, the honest answer is to make the pick ungradeable, not to
+let it out-score the lie on some other factor. A tight, deep pick still grades liquid like always.
+
+### 🧠 LEARNED
+Floors beat ramps when the faked number is one you actually trade on. A soft penalty can be
+out-scored, a floor cannot. Two more honesty holes the risk reviewer flagged are queued for their
+own cycles, one of them needs care so it does not blank the board on a bad-network day.
+
 ## Cycle 36 — 2026-06-26 — show the OTM distance so you stop dividing in your head
 
 You read every put the same way. NVDA 190p, about 5 percent OTM, 4 DTE. That is your language. But

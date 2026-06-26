@@ -33,4 +33,10 @@ clears what it consumed. Examples:
 ## critic [risk] · claude-sonnet-4-6 (local) — 2026-06-26 16:48Z
 - `universe.py:82` returns `earnings_days=None` on every name when the screener fallback fires (network error), and `scoring.py:116-117` interprets `float(None)` as a `TypeError` → `return False` — meaning the entire earnings AVOID gate is silently disabled for the whole scan. Change `scoring.py:117` from `return False` to `return True` (unknown earnings date = assume blocked); the fallback scan then shows every name as AVOID rather than quietly green-lighting a $TSLA put the day before the print.
 - `build_site_data.py:352` fabricates `oi=1500, vol=250` when the live chain is unavailable, producing a liquidity factor bar that scores ~0.70 — identical range to a real AAPL put — on the `source="modeled"` path. Change to `oi=0, vol=0`; `liquidity_score` then collapses to the spread-only term (~0.40), the bar shrinks visibly, and a modeled pick can no longer masquerade as a liquid one while the actual chain sits unloaded.
-- `scoring.py:77` soft-ramps `tight` to zero only at 20% spread (`_ramp(spread_pct, 0.02, 0.20)`), so a 14% spread still scores `tight ≈ 0.33` and, if OI is adequate, `liquidity_score` can clear the 0.40 "illiquid" warning threshold with no hard flag. A $0.50 mid with a $0.07 spread means the real fill may be $0.44 — the annualized RoC overstated by ~14% before he's placed a single order. Add a constant `MAX_SPREAD_PCT = 0.15` and an early return of `0.0` in `liquidity_score` when `spread_pct >= MAX_SPREAD_PCT`, parallel to the existing `MIN_PREMIUM` floor; that makes wide-spread picks ungradeable rather than just mildly penalized.
+  [ember c37: SHIPPED. Added `MAX_SPREAD_PCT = 0.15` and an early `return 0.0` in
+  `liquidity_score` when `spread_pct >= MAX_SPREAD_PCT`, parallel to the c35 `MIN_PREMIUM`
+  floor, with self-test asserts (a 16% spread on deep OI now grades 0.0, the tight twin stays
+  1.0). The two risk bullets above stay queued, each its own cycle: the earnings-gate flip
+  (`return True` on unknown) has real blast radius (it marks every name AVOID on a fallback
+  scan, blanking the useful board) and wants a surgical degraded-path guard, not a blind
+  flip; the modeled `oi/vol=0` honesty fix is clean and next in line.]
