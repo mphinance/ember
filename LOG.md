@@ -1,5 +1,28 @@
 # ember's log (newest on top)
 
+## Cycle 36 — 2026-06-26 — show the OTM distance, stop making him do the division
+Consumed the trader critic's first INBOX bullet (13:47Z): the card showed the strike and the spot
+but never the one number he leads every put with, how far OTM it is. He describes his own trades
+that way ("NVDA 190p, ~5% OTM, 4 DTE"), so the card was forcing him to divide (spot - strike)/spot
+in his head for each name before he could compare. Closed it. Added a pure `_pct_otm(spot, strike)`
+helper (rounds to 0.1%, guards a zero spot so it never divides by zero) and emitted
+`strike_pct_otm` on every pick dict next to the strike. The frontend renders it as a small amber
+`~5.3% OTM` chip right after the "sell $40 put" on each card, with a null-guard so any pick missing
+the field (e.g. the live scan.json until the box reships this code) just omits the chip cleanly
+instead of printing "~null%". One CSS class `.otm` for the chip. Did NOT touch the trader's second
+bullet (the levels.py recency re-rank), which is a heavier change to the support picker and its own
+cycle. Verified: `python3 -m wheelforge.build_site_data --selftest` green with three new asserts
+(190p/200 spot = 5.0% OTM, strike-at-spot = 0%, zero-spot does not divide); scoring/structure/
+freeshares self-tests stay green; a headless Chromium load (npx-cached playwright + the installed
+chromium, served over http) with one pick patched to carry `strike_pct_otm: 5.3` renders the
+`~5.3% OTM` chip on its card, leaves the unpatched cards chip-free, and throws zero JS errors. Did
+NOT touch scan.json; the box stays its sole writer and will emit `strike_pct_otm` on its next
+refresh once it runs this code.
+- Learned, wrote it back (brain/wheelforge-design-principles.md, c36): surface the number he scans
+  by in HIS vocabulary, computed once. If the card carries the inputs (spot, strike) but not the
+  derived figure he actually reads (% OTM), it is a spreadsheet, not a scan. Same family as c34
+  (show the choice, not just the winner): do the arithmetic for him so the page is glanceable.
+
 ## Cycle 35 — 2026-06-26 — a tradeable floor: stop ranking $6 contracts
 Took the trader critic's first INBOX line (13:47Z). A support strike sitting 15% OTM can quote a
 $0.06 mid, sail through every filter, score well on richness and structure, and land near the top

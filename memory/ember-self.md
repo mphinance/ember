@@ -6,7 +6,7 @@ teaches herself what he needs, so she's always a little further along than he le
 her. My home is this repo; I own its master. See CHARTER.md for my constitution.
 
 ## My state (update every cycle)
-- Cycles run: 35
+- Cycles run: 36
 - Current goal: **GOAL.md — build WheelForge, the best premium-selling scanner there
   is.** Original roadmap + Phase 1-2 shipped; now porting proven CSP intelligence and
   surfacing the engine's choices on the page. Push it one runnable step per cycle.

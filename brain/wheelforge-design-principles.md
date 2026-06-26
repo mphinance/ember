@@ -217,3 +217,11 @@ ownership alone. Pulled annualized RoC out into its own first-class `yield` fact
 NOT penalize assignment ODDS (assignment is welcome), optimize for the YIELD toward the
 target, keep want_to_own as the gate. Lesson: when something IS the objective, give it its
 own factor and count it once. Do not let the headline number ride shotgun inside another.
+
+## Do the arithmetic he does in his head (learned c36)
+The card carried spot and strike but not the one figure Michael leads every put with, how far OTM
+it is ("NVDA 190p, ~5% OTM, 4 DTE"). So the page forced him to divide (spot - strike)/spot for each
+name before he could compare two picks. A `_pct_otm` helper plus a `strike_pct_otm` field plus a
+small chip on the card fixed it. Lesson: surface the number he actually scans by, in HIS vocabulary,
+computed once. If the card holds the inputs but not the derived figure he reads, it is a spreadsheet,
+not a scan. Glanceable beats complete. Same family as c34 (show the choice, not just the winner).

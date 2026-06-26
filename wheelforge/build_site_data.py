@@ -106,6 +106,13 @@ def _tradeable_premium(mid):
     return mid is not None and mid >= MIN_PREMIUM
 
 
+def _pct_otm(spot, strike):
+    """How far below spot the put strike sits, as a percent. His first question on every
+    put ("NVDA 190p, ~5% OTM, 4 DTE"), so we compute it once and surface it instead of
+    forcing him to divide (spot - strike)/spot in his head per name. Positive = OTM."""
+    return round((spot - strike) / spot * 100, 1) if spot else 0.0
+
+
 def _annualized_roc(premium, strike, dte):
     """Annualized return on the capital a cash-secured put ties up. Net basis at risk is
     (strike - premium) because the premium is pocketed up front (the ticked c23 call; the
@@ -393,6 +400,7 @@ def build_one(ticker, earnings_days=None, lanes=None):
         "ticker": ticker, "spot": round(spot, 2), "candles": candles,
         "pick": {
             "strike": round(strike, 2), "dte": dte, "exp": exp, "premium": round(premium, 2),
+            "strike_pct_otm": _pct_otm(spot, strike),
             "annualized_roc": round(roc * 100, 1), "prob_otm": round(prob_otm * 100, 1),
             "iv": round(iv * 100, 1), "iv_rank": contract["iv_rank"],
             "iv_rank_real": ivr_hist is not None, "source": source,
@@ -541,6 +549,13 @@ def _selftest():
     assert _tradeable_premium(MIN_PREMIUM), "exactly the floor is tradeable (inclusive)"
     assert _tradeable_premium(0.30), "a $30/contract mid clears the floor"
     print(f"floor: ${MIN_PREMIUM:.2f}/share min -> $0.06 mid dropped, $0.30 kept")
+
+    # Distance-to-strike: a 190 put on a 200 spot is 5.0% OTM (his trade vocabulary). A
+    # strike at spot is 0%, and a degenerate zero spot never divides.
+    assert _pct_otm(200.0, 190.0) == 5.0, "a 190 put on a 200 spot is 5% OTM"
+    assert _pct_otm(100.0, 100.0) == 0.0, "a strike at spot is 0% OTM"
+    assert _pct_otm(0.0, 10.0) == 0.0, "a zero spot must not divide"
+    print("pct_otm: 190p/200 spot -> 5.0% OTM")
     print("OK: build_site_data DTE-ladder + premium-floor self-test passed.")
 
 

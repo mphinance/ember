@@ -210,7 +210,9 @@
         var src = (p.source === 'live')
           ? '<span class="src live">LIVE</span>' : '<span class="src model">MODEL</span>';
         var hiv = ((p.lanes || []).indexOf('high_iv') >= 0) ? ' <span class="src hiv">HI-IV</span>' : '';
-        sub.innerHTML = 'sell <b>$' + fmt(p.strike) + ' put</b>'
+        var otm = (p.strike_pct_otm != null)
+          ? ' <span class="otm">~' + fmt(p.strike_pct_otm) + '% OTM</span>' : '';
+        sub.innerHTML = 'sell <b>$' + fmt(p.strike) + ' put</b>' + otm
           + (p.exp ? ' &middot; exp <b>' + fmtDate(p.exp) + '</b> (' + p.dte + 'd)' : ' (' + p.dte + 'd)')
           + '<br><b>' + fmt(p.annualized_roc) + '%</b> ann &middot; <b>' + fmt(p.prob_otm) + '%</b> OTM '
           + src + hiv + (p.earnings_days != null ? ' &middot; earn ' + p.earnings_days + 'd' : '');

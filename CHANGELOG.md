@@ -6,6 +6,24 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 36 — 2026-06-26 — show the OTM distance so you stop dividing in your head
+
+You read every put the same way. NVDA 190p, about 5 percent OTM, 4 DTE. That is your language. But
+the card only showed you the strike and the spot and made you do the subtraction and the division
+yourself, name after name, before you could even compare two picks. That is a spreadsheet, not a
+scan.
+
+### 🟢 FEATURE - a "% OTM" chip on every pick
+Each card now shows how far below spot the strike sits, right after the strike, as a small amber
+chip like "~5.3% OTM". The math is done for you and rounded to a tenth of a percent. Your first
+question on every put is answered before you read another number. If a pick somehow comes through
+without the figure, the chip just disappears, no broken "~null%" on the page.
+
+### 🧠 LEARNED
+Surface the number you actually scan by, in your words, computed once. A card that carries the spot
+and the strike but not the percent OTM is making you do arithmetic it could have done. Glanceable
+beats complete.
+
 ## Cycle 35 — 2026-06-26 — a $25 floor, because $6 a contract is not a trade
 
 The scanner had a blind spot you kept tripping over. A strike sitting way out at support could
