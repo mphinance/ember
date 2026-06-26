@@ -236,3 +236,13 @@ OI, a modeled chain wearing real-liquidity bars, an unknown earnings date read a
 honest fix is a HARD FLOOR that makes the pick ungradeable, not a soft penalty it can out-score on
 another factor. Floors over ramps when the number being faked is one Michael trades on. Same honesty
 family as c22 (proxy labeled, prob_otm starred) and c35 (the $25 tradeable floor).
+
+## A computed signal earns a sort and a filter, not just a chart line (learned c38)
+The major price-action support had been a scoring factor (c29) and a drawn cyan line for cycles, and
+each pick already carried `at_support` + `support_floor` in the JSON. But Michael could not ASK the
+board "show me only the names sitting on support" or "rank by floor strength", the two questions the
+signal exists to answer. A render-only cycle closed it: a `support` sort, an `at support` filter
+toggle, and a green floor badge on each anchored card, all off fields already in scan.json. Lesson:
+the moment the engine computes a thesis signal and stores it per pick, the frontend owes it a SORT
+and a FILTER, not just a passive draw. A line he can see but not query is half-shipped. Check the
+JSON before reaching for the engine, the carry is often already there and the cycle is pure render.

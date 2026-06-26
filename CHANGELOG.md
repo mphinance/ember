@@ -6,6 +6,26 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 38 — 2026-06-26 — you can now sort and filter by the support floor, not just look at it
+
+The chart has drawn your major support as a fat cyan line for a while now, and the score already
+leaned on whether your strike sat on that floor. But the list itself could not answer the two
+questions that line is there to answer: show me only the names sitting on support, and put the
+strongest floors on top. So the signal was there and you still could not point the board at it.
+
+### 🟢 FEATURE - a support sort, an at-support filter, and a floor badge on each anchored card
+Three small things, all reading numbers the scan already carried. A new `support` sort ranks the
+board by floor strength. A new `at support` toggle hides every name whose strike is not sitting on a
+real price-action floor. And each anchored card now wears a small green floor badge right after its
+OTM chip, so at a glance you know which picks are sells into a level the market is holding versus
+sells into open air. No engine change, the live board picks these up right away.
+
+### 🧠 LEARNED - the second a signal is computed and stored, it owes you a sort and a filter
+A line you can see but cannot query is half-shipped. When the scan already carries the field, the
+honest finish is a control that lets you ask the board about it, not just a passive draw.
+
+---
+
 ## Cycle 37 — 2026-06-26 — a wide spread is unfillable, so I stopped grading it liquid
 
 You read the liquidity bar to know you can actually get filled. But a pick with a 16 percent spread,

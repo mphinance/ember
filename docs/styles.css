@@ -50,6 +50,7 @@ body { display: flex; flex-direction: column; min-height: 100vh; }
 .wf-sub { grid-column: 2 / 4; font-size: 11px; color: var(--dim); }
 .wf-sub b { color: var(--ink); font-weight: 600; }
 .otm { color: var(--amber); font-weight: 700; font-size: 10px; letter-spacing: .02em; }
+.floor { color: var(--up); font-weight: 700; font-size: 10px; letter-spacing: .02em; }
 
 /* free-shares read (cycle 11) */
 .fs-line { flex-basis: 100%; display: flex; align-items: center; gap: 10px; margin-top: 2px;
@@ -78,6 +79,7 @@ body { display: flex; flex-direction: column; min-height: 100vh; }
 .ctl-pill.on { color: var(--bg); background: var(--amber); border-color: var(--amber); box-shadow: 0 0 10px rgba(255,176,0,.4); }
 .ctl-toggle { margin-left: auto; }
 .ctl-toggle.on { background: var(--up); border-color: var(--up); box-shadow: 0 0 10px rgba(38,208,124,.4); }
+.ctl-floor.on { color: var(--bg); background: var(--up); border-color: var(--up); box-shadow: 0 0 10px rgba(38,208,124,.4); }
 .ctl-empty { padding: 30px 16px; color: var(--dim); font-size: 12px; text-align: center; }
 
 /* earnings-avoid + source + factor breakdown (cycle 9) */

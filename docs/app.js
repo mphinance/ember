@@ -17,14 +17,16 @@
     { key: 'yield', label: 'yield', get: function (p) { return p.annualized_roc || 0; } },
     { key: 'iv', label: 'IV', get: function (p) { return p.iv || 0; } },
     { key: 'ivrank', label: 'IV-rk', get: function (p) { return p.iv_rank || 0; } },
+    { key: 'support', label: 'support', get: function (p) { return p.support_floor || 0; } },
   ];
-  var state = { sort: 'score', minScore: 0, minAnnual: 0, hideAvoid: false, lane: 'all' };
+  var state = { sort: 'score', minScore: 0, minAnnual: 0, hideAvoid: false, lane: 'all', atSupport: false };
 
   function displayRows() {
     var s = SORTS.filter(function (x) { return x.key === state.sort; })[0] || SORTS[0];
     return (DATA.tickers || [])
       .filter(function (t) {
         if (state.hideAvoid && t.pick.avoid) return false;
+        if (state.atSupport && !t.pick.at_support) return false;
         if (state.lane !== 'all' && (t.pick.lanes || []).indexOf(state.lane) < 0) return false;
         if ((t.pick.annualized_roc || 0) < state.minAnnual) return false;
         return (t.pick.score || 0) >= state.minScore;
@@ -71,6 +73,13 @@
       b.onclick = function () { state.lane = l[0]; buildControls(); renderList(); };
       laneRow.appendChild(b);
     });
+    // Strike-on-support toggle: keep only picks anchored AT a major price-action floor
+    // (the structural part of his thesis, sell where the market is actually holding).
+    var sup = document.createElement('button');
+    sup.className = 'ctl-pill ctl-floor' + (state.atSupport ? ' on' : '');
+    sup.textContent = state.atSupport ? '⌂ at support' : 'at support';
+    sup.onclick = function () { state.atSupport = !state.atSupport; buildControls(); renderList(); };
+    laneRow.appendChild(sup);
     host.appendChild(laneRow);
     // Yield mode: filter to the fat-premium setups that actually feed a ~100%/yr book.
     var yRow = document.createElement('div'); yRow.className = 'ctl-row';
@@ -212,7 +221,11 @@
         var hiv = ((p.lanes || []).indexOf('high_iv') >= 0) ? ' <span class="src hiv">HI-IV</span>' : '';
         var otm = (p.strike_pct_otm != null)
           ? ' <span class="otm">~' + fmt(p.strike_pct_otm) + '% OTM</span>' : '';
-        sub.innerHTML = 'sell <b>$' + fmt(p.strike) + ' put</b>' + otm
+        // Floor badge: the strike sits on a major support level he can sell into.
+        var floor = p.at_support
+          ? ' <span class="floor" title="strike anchored at major price-action support (floor strength '
+            + (p.support_floor != null ? p.support_floor : '?') + ')">⌂ support</span>' : '';
+        sub.innerHTML = 'sell <b>$' + fmt(p.strike) + ' put</b>' + otm + floor
           + (p.exp ? ' &middot; exp <b>' + fmtDate(p.exp) + '</b> (' + p.dte + 'd)' : ' (' + p.dte + 'd)')
           + '<br><b>' + fmt(p.annualized_roc) + '%</b> ann &middot; <b>' + fmt(p.prob_otm) + '%</b> OTM '
           + src + hiv + (p.earnings_days != null ? ' &middot; earn ' + p.earnings_days + 'd' : '');

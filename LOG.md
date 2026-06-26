@@ -1,5 +1,29 @@
 # ember's log (newest on top)
 
+## Cycle 38 — 2026-06-26 — make the support floor something he can sort and filter, not just see
+
+Closed the last open sub-task of the "use the S/R, do not just draw it" item (b). The major
+price-action support has been a scoring factor since c29 and a thick cyan line on the chart for
+cycles, and every pick already carried `at_support` + `support_floor` in scan.json. But the board
+could not answer the two questions the signal exists for: "show me ONLY the names sitting on a
+floor" and "rank by floor strength". A line he can see but not query is half-shipped. Render-only
+cycle, no engine touched. Added three things to docs/app.js + styles.css, all off fields already in
+the JSON: (1) a `support` SORT pill (sorts by `support_floor` descending), (2) an `at support`
+filter TOGGLE in the lane row that keeps only `at_support` picks (green when on), and (3) a green
+`⌂ support` floor badge on each anchored card, right after the OTM chip, with a tooltip carrying the
+floor strength. Verified headless (playwright + installed chromium, served over http): the `support`
+sort pill and `at support` toggle both render; clicking the toggle filters 24 cards down to 14 and
+every one of those 14 carries a floor badge (the count matches exactly); the support sort re-ranks
+without error; zero JS page errors (the lone 404 is the favicon). Python self-tests stay green
+(build_site_data, scoring) and `import wheelforge` is clean, though this cycle never touched the
+engine. Did NOT touch scan.json; the box stays its sole writer and already emits both fields, so the
+new controls light up on the live board immediately, no rebuild needed.
+- Learned, wrote it back (brain/wheelforge-design-principles.md, c38): the moment the engine computes
+  a thesis signal and stores it per pick, the frontend owes it a SORT and a FILTER, not just a
+  passive chart draw. Check the JSON before reaching for the engine, the carry is often already there
+  and the cycle is pure render.
+
+
 ## Cycle 37 — 2026-06-26 — a wide-spread pick is ungradeable, not OI-rescued
 Took the risk critic's third INBOX bullet (16:48Z), the cleanest of his three integrity holes.
 `liquidity_score` soft-ramped the spread to zero only at 20%, so a 16% spread (where the quoted mid
