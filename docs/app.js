@@ -157,7 +157,13 @@
     Object.keys(FAC).forEach(function (k) {
       var raw = (k === 'yield' && f.yield == null) ? yieldFrac(p) : (Number(f[k]) || 0);
       var v = Math.round(raw * 100);
-      html += '<span class="fac"><span class="faclab">' + FAC[k] + '</span>'
+      // No live chain means IV was assumed at 1.15x realized vol, so the richness bar
+      // is modeled not measured. Dim it and flag it rather than passing it off as real.
+      var assumed = (k === 'richness' && p.vrp_assumed);
+      var lab = FAC[k] + (assumed
+        ? '<span class="ivproxy" title="no live option chain: IV assumed at 1.15x realized vol, so this richness is modeled, not measured">~</span>'
+        : '');
+      html += '<span class="fac' + (assumed ? ' fac-assumed' : '') + '"><span class="faclab">' + lab + '</span>'
         + '<span class="facbar"><span class="facfill" style="width:' + v + '%;background:'
         + heatColor(v) + '"></span></span></span>';
     });
@@ -222,6 +228,9 @@
       + ' · <span class="k">' + fmt(p.prob_otm) + '%</span> stays OTM'
       + '<span class="ivproxy" title="risk-neutral N(d2); real-world odds run a bit higher on names with positive drift">*</span>'
       + ' · IV ' + fmt(p.iv) + '%'
+      + (p.vrp_assumed
+          ? '<span class="ivproxy" title="no live option chain: IV assumed at 1.15x realized vol, so VRP/richness here is modeled, not traded">~assumed</span>'
+          : '')
       + (p.iv_rank != null
           ? ' · ' + (p.iv_rank_real
                 ? 'IV-rank'

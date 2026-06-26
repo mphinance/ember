@@ -233,13 +233,21 @@ def build_one(ticker, earnings_days=None, lanes=None):
         oi, vol, source = live["open_interest"], live["volume"], "live"
         at_support = live["at_support"]
         # Trust the premium, not the quoted IV: solve IV from the real mid. Fall back
-        # to a sane quoted IV, then to realized vol.
+        # to a sane quoted IV, then to realized vol. Track whether IV is market-derived:
+        # if we land on the realized-vol fallback there is no traded IV, so VRP (iv/rv)
+        # collapses toward 1 and the richness it feeds is modeled, not measured.
         qiv = live["iv"]
-        iv = (_iv_from_put(premium, spot, strike, dte / 365.0, R)
-              or (qiv if (qiv and 0.33 * rv <= qiv <= 4 * rv) else rv))
+        solved_iv = _iv_from_put(premium, spot, strike, dte / 365.0, R)
+        if solved_iv:
+            iv, vrp_assumed = solved_iv, False
+        elif qiv and 0.33 * rv <= qiv <= 4 * rv:
+            iv, vrp_assumed = qiv, False
+        else:
+            iv, vrp_assumed = rv, True
         vrp_rv = short_rv                      # a 7-DTE IV vs ~a week of realized vol
     else:                                      # fail-open: model it from realized vol
         iv, dte = rv * 1.15, DTE
+        vrp_assumed = True                     # IV fixed at 1.15x RV -> VRP is invented, not traded
         target, at_support = _anchor_strike(spot, iv, dte, support)
         strike = round(target, 0)
         premium = _bs_put(spot, strike, dte / 365.0, R, iv)
@@ -300,7 +308,7 @@ def build_one(ticker, earnings_days=None, lanes=None):
             # IV-over-HV edge gate (rich premium = VRP > 1).
             "at_support": at_support, "support": (round(support, 2) if support else None),
             "support_floor": (round(floor, 3) if floor is not None else None),
-            "iv_gt_hv": iv_gt_hv, "vrp": vrp,
+            "iv_gt_hv": iv_gt_hv, "vrp": vrp, "vrp_assumed": vrp_assumed,
             # Levels for the chart: the Keltner volatility walls PLUS the major
             # price-action support/resistance (where the stock actually bounces).
             "levels": _levels(candles, spot, support, resistance),

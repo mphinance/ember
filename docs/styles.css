@@ -83,6 +83,9 @@ body { display: flex; flex-direction: column; min-height: 100vh; }
 .faclab { font-size: 10px; text-transform: uppercase; letter-spacing: .06em; color: var(--dim); }
 .facbar { width: 46px; height: 5px; border-radius: 3px; background: #11161f; overflow: hidden; }
 .facfill { display: block; height: 100%; border-radius: 3px; }
+/* modeled (no live chain) richness: dim the fill + label so it does not read as measured */
+.fac-assumed .facfill { opacity: .4; }
+.fac-assumed .faclab { opacity: .7; }
 
 .wf-stage { position: relative; display: flex; flex-direction: column; min-width: 0; }
 .wf-readout {

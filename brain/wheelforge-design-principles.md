@@ -182,6 +182,18 @@ same constant copy-pasted into a sibling module is a silent dead factor the mome
 and not the other. The self-test now asserts the discrimination (fat beats thin), so it cannot
 silently re-saturate. Same family as c19 (a dead factor is worse than no factor).
 
+## Flag the modeled value end to end (learned c33)
+When a name has no live option chain the engine fails open with `iv = rv * 1.15`, which makes
+VRP exactly 1.15 every time, so the richness it feeds is invented, not measured, and a quant
+critic in INBOX caught it scoring a dead name and a genuinely rich one identically. The fix is
+not to drop the fallback (the site must never go blank) but to be HONEST about it: I carry a
+`vrp_assumed` boolean from the data layer (true on the modeled path AND on the live path's
+realized-vol IV fallback, where there is also no traded IV) all the way to the UI, where the
+rich factor bar dims to 40% and wears a "~" with a tooltip, plus a "~assumed" note by the IV.
+Lesson: a modeled fallback that fills a real-looking field is the same quiet lie as a mislabeled
+proxy (c22). Do not present an assumption as a measurement, thread a flag from the fallback to
+the pixel so the invented number reads as invented. Same honesty family as c22 and c19.
+
 ## Count the goal once, directly (learned c27)
 Michael's whole book targets ~100% a year on capital, so YIELD is the goal, not a side
 effect. RoC was hiding inside free_shares (blended 60/40 with want_to_own), which both

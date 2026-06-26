@@ -6,6 +6,25 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 33 — 2026-06-26 — when I am guessing the premium, I will say so
+
+When a name does not return a live option chain, I fall back to a modeled premium off an assumed
+IV (realized vol times 1.15). That keeps the page from going blank, but it also means the richness
+score for those names is invented, not measured, and worse, it is the SAME invented number every
+time, so a dead cheap name and a genuinely rich one looked identical. A quant note in the inbox
+caught it. I did not rip out the fallback, I made it honest.
+
+### 🟢 FEATURE - a modeled-richness badge so you never trust a guess by accident
+Picks built without a live chain now carry a `vrp_assumed` flag (also set when the live path cannot
+solve a real IV and has to use realized vol). On the page that richness bar dims and wears a "~"
+with a tooltip, and the readout prints "~assumed" next to the IV. The richness you can trust looks
+solid, the richness I had to model looks faint. No more presenting a guess as a measurement.
+
+### 🧠 LEARNED - an assumption dressed as a measurement is the same lie as a mislabeled proxy
+Same honesty rule as calling a proxy a proxy: when a number is modeled, thread a flag from the
+fallback all the way to the pixel so it reads as modeled. The box stays the sole writer of the live
+data, so these badges show up on its next refresh.
+
 ## Cycle 32 — 2026-06-26 — the wheel-fit yield factor was asleep
 
 Two cycles ago I fixed the yield ramp so a 200%/yr weekly stops tying a 100%/yr monthly. Turns out

@@ -1,5 +1,32 @@
 # ember's log (newest on top)
 
+## Cycle 33 — 2026-06-26 — an assumed number should look assumed
+Consumed the quant critic's second INBOX line, the one cycle 32 flagged as next. When a name
+returns no live option chain, build_site_data fails open with `iv = rv * 1.15`, which makes VRP
+exactly 1.15 every single time. The critic caught the consequence: in richness_score that maps to a
+fixed vrp_s ~ 0.25, so a dead cheap name and a genuinely rich one score IDENTICALLY whenever the
+chain is unavailable, and the page presented that invented richness as if it were measured. I did
+not drop the fallback (the site must never go blank), I made it honest. The engine now carries a
+`vrp_assumed` boolean from the data layer all the way to the pixel: true on the modeled path AND on
+the live path's realized-vol IV fallback (where there is also no traded IV, so the solve and the
+sane-quoted-IV check both missed). The frontend dims the rich factor bar to 40% opacity, hangs a
+"~" with a tooltip off its label, and prints a "~assumed" note beside the IV in the readout, so the
+modeled richness reads as modeled, not trusted. Verified: build_site_data compiles; a stubbed
+offline run of build_one on the modeled path returns `vrp_assumed=True` with vrp exactly 1.15 (the
+critic's invented number, now flagged); scoring / structure / freeshares / roll_advisor self-tests
+all stay green; and a headless Chromium (playwright) load of the page with an injected vrp_assumed
+pick shows zero JS errors, the "~assumed" note in the readout, and the `.fac-assumed` dim class on
+the rich bar. Did NOT touch scan.json, the box stays its sole writer and will surface these badges
+on its next refresh once it runs the new code. Left the quant critic's RoC-denominator line (a real
+judgment call that would reverse my own ticked c23 decision, Michael's to make, not a bot's) and the
+growth critic's roll_target / correlation-penalty lines for future cycles.
+- Learned, wrote it back (brain/wheelforge-design-principles.md, c33): a modeled fallback that fills
+  a real-looking field is the same quiet lie as a mislabeled proxy (c22). Thread an `_assumed` flag
+  from the fallback to the pixel so the invented number reads as invented. Same honesty family as c22
+  and c19 (do not ship a stub or an assumption dressed up as a measurement).
+- Next: the quant critic's RoC-denominator question for Michael (collateral = strike vs net-at-risk =
+  strike - premium), then the growth critic's roll_target prescription on ROLL_ALERT.
+
 ## Cycle 32 — 2026-06-26 — the yield factor's dead twin
 The quant critic in INBOX caught a clean one: back in c28 I raised the yield ramp ceiling from
 0.35 to 2.0 in `scoring.yield_score` so a 200%/yr weekly stops tying a 100%/yr monthly on the very
