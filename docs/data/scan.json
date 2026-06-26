@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-26T10:00:16+00:00",
+  "generated_at": "2026-06-26T10:30:15+00:00",
   "source_note": "Candles and option premium are LIVE off the yfinance chain for 24 of 24 names (real IV, bid/ask, OI); the rest fall back to a realized-vol model when the chain is missing.",
   "dte": 7,
   "tickers": [
@@ -1354,6 +1354,7 @@
         "support_floor": 0.953,
         "iv_gt_hv": true,
         "vrp": 1.77,
+        "vrp_assumed": false,
         "levels": {
           "keltner": {
             "upper": 74.21,
@@ -2739,6 +2740,7 @@
         "support_floor": 0.939,
         "iv_gt_hv": true,
         "vrp": 1.5,
+        "vrp_assumed": false,
         "levels": {
           "keltner": {
             "upper": 231.36,
@@ -4124,6 +4126,7 @@
         "support_floor": 0.15,
         "iv_gt_hv": true,
         "vrp": 2.61,
+        "vrp_assumed": false,
         "levels": {
           "keltner": {
             "upper": 58.42,
@@ -5509,6 +5512,7 @@
         "support_floor": 0.0,
         "iv_gt_hv": true,
         "vrp": 1.48,
+        "vrp_assumed": false,
         "levels": {
           "keltner": {
             "upper": 17.06,
@@ -6894,6 +6898,7 @@
         "support_floor": 0.0,
         "iv_gt_hv": true,
         "vrp": 1.27,
+        "vrp_assumed": false,
         "levels": {
           "keltner": {
             "upper": 149.55,
@@ -8279,6 +8284,7 @@
         "support_floor": 0.961,
         "iv_gt_hv": true,
         "vrp": 1.41,
+        "vrp_assumed": false,
         "levels": {
           "keltner": {
             "upper": 483.69,
@@ -9664,6 +9670,7 @@
         "support_floor": 0.0,
         "iv_gt_hv": true,
         "vrp": 1.54,
+        "vrp_assumed": false,
         "levels": {
           "keltner": {
             "upper": 325.9,
@@ -11049,6 +11056,7 @@
         "support_floor": 0.15,
         "iv_gt_hv": true,
         "vrp": 1.23,
+        "vrp_assumed": false,
         "levels": {
           "keltner": {
             "upper": 20.02,
@@ -12434,6 +12442,7 @@
         "support_floor": 0.0,
         "iv_gt_hv": true,
         "vrp": 1.43,
+        "vrp_assumed": false,
         "levels": {
           "keltner": {
             "upper": 357.18,
@@ -13819,6 +13828,7 @@
         "support_floor": 0.15,
         "iv_gt_hv": true,
         "vrp": 1.09,
+        "vrp_assumed": false,
         "levels": {
           "keltner": {
             "upper": 47.64,
@@ -15204,6 +15214,7 @@
         "support_floor": 0.978,
         "iv_gt_hv": true,
         "vrp": 1.25,
+        "vrp_assumed": false,
         "levels": {
           "keltner": {
             "upper": 454.47,
@@ -16589,6 +16600,7 @@
         "support_floor": 0.0,
         "iv_gt_hv": true,
         "vrp": 1.45,
+        "vrp_assumed": false,
         "levels": {
           "keltner": {
             "upper": 322.44,
@@ -17974,6 +17986,7 @@
         "support_floor": null,
         "iv_gt_hv": true,
         "vrp": 1.24,
+        "vrp_assumed": false,
         "levels": {
           "keltner": {
             "upper": 153.29,
@@ -19359,6 +19372,7 @@
         "support_floor": 0.15,
         "iv_gt_hv": true,
         "vrp": 1.22,
+        "vrp_assumed": false,
         "levels": {
           "keltner": {
             "upper": 323.37,
@@ -20744,6 +20758,7 @@
         "support_floor": 0.801,
         "iv_gt_hv": true,
         "vrp": 1.33,
+        "vrp_assumed": false,
         "levels": {
           "keltner": {
             "upper": 120.21,
@@ -22129,6 +22144,7 @@
         "support_floor": 0.0,
         "iv_gt_hv": true,
         "vrp": 1.25,
+        "vrp_assumed": false,
         "levels": {
           "keltner": {
             "upper": 32.84,
@@ -23514,6 +23530,7 @@
         "support_floor": 0.946,
         "iv_gt_hv": true,
         "vrp": 1.18,
+        "vrp_assumed": false,
         "levels": {
           "keltner": {
             "upper": 28.94,
@@ -24899,6 +24916,7 @@
         "support_floor": 0.0,
         "iv_gt_hv": true,
         "vrp": 1.22,
+        "vrp_assumed": false,
         "levels": {
           "keltner": {
             "upper": 76.56,
@@ -26284,6 +26302,7 @@
         "support_floor": 0.857,
         "iv_gt_hv": true,
         "vrp": 1.23,
+        "vrp_assumed": false,
         "levels": {
           "keltner": {
             "upper": 239.08,
@@ -27669,6 +27688,7 @@
         "support_floor": 0.931,
         "iv_gt_hv": true,
         "vrp": 1.06,
+        "vrp_assumed": false,
         "levels": {
           "keltner": {
             "upper": 45.57,
@@ -29054,6 +29074,7 @@
         "support_floor": 0.15,
         "iv_gt_hv": false,
         "vrp": 0.95,
+        "vrp_assumed": false,
         "levels": {
           "keltner": {
             "upper": 24.98,
@@ -30439,6 +30460,7 @@
         "support_floor": 0.15,
         "iv_gt_hv": true,
         "vrp": 1.04,
+        "vrp_assumed": false,
         "levels": {
           "keltner": {
             "upper": 269.96,
@@ -31824,6 +31846,7 @@
         "support_floor": null,
         "iv_gt_hv": false,
         "vrp": 0.89,
+        "vrp_assumed": false,
         "levels": {
           "keltner": {
             "upper": 86.84,
@@ -33209,6 +33232,7 @@
         "support_floor": 0.0,
         "iv_gt_hv": true,
         "vrp": 1.09,
+        "vrp_assumed": false,
         "levels": {
           "keltner": {
             "upper": 116.38,
@@ -33251,5 +33275,5 @@
     "from_avoid": [],
     "movers": []
   },
-  "prev_generated_at": "2026-06-26T09:30:16+00:00"
+  "prev_generated_at": "2026-06-26T10:00:16+00:00"
 }
