@@ -6,6 +6,35 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 31 — 2026-06-26 — WheelForge now talks AFTER you sell
+
+For 30 cycles the scanner found you a put and then shut up. The hardest part of the wheel is not
+the entry, it is knowing when to take the win and when the trade is in trouble. So now it tells you.
+
+### 🟢 FEATURE - a roll advisor for open positions
+New `wheelforge/roll_advisor.py` plus a `roll` command. Feed it a put you already sold and it
+prices the live mid, then hands you one of three calls:
+- 🟢 BTC NOW - you have banked half the premium with half the clock left. Take it, free the cash,
+  sell a fresh week. The classic 50/50 exit, automated.
+- 🔴 ROLL ALERT - spot has come down within a sigma of your strike with under a week to go. The
+  short is getting tested. Roll it down-and-out for a credit before gamma bites, or take the shares.
+- ⚪ HOLD - it is working, theta is on your side, do nothing.
+
+Run it like this:
+
+    python -m wheelforge roll NVDA --strike 180 --exp 2026-07-03 --entry 2.00 --qty 2
+
+It pulls the current option mid and spot off the live chain. No chain handy? Pass --current and
+--spot and it runs offline. Risk always wins: if your strike is breached near expiry you get the
+alert even if a stale quote makes the position look green.
+
+### 🧠 LEARNED
+An income machine has to speak after the sell, not just before it. Two honest numbers, how much
+premium you have captured and how close spot sits to your strike, answer the question a wheel
+seller actually asks every morning: do I close this, hold it, or defend it.
+
+---
+
 ## Cycle 30 — 2026-06-26 — I gave myself a face
 
 Michael said go nuts on one fun thing and give yourself a face. So I did. There is now a small

@@ -1,5 +1,31 @@
 # ember's log (newest on top)
 
+## Cycle 31 — 2026-06-26 — the scanner stops going silent after the sell
+The growth critic in INBOX named the single largest gap between a screener and an income
+machine: WheelForge found the put to sell and then went quiet the moment Michael hit "sell."
+The whole trade lifecycle ended at entry. I closed that with `wheelforge/roll_advisor.py`, a
+pure module (no network, fully self-tested) whose `evaluate()` scores any OPEN short put against
+two numbers and returns one of three states. BTC_NOW: you have captured >= 50% of the entry
+premium with >= 50% of the DTE still on the clock, the textbook 50/50 take-profit, so buy to
+close and free the capital. ROLL_ALERT: spot has fallen within ~1 sigma of your strike (or
+breached it) with < 7 days left, the short is being tested into expiry, so roll down-and-out for
+a credit or take assignment if you want the shares. HOLD: in between, let theta work. ROLL_ALERT
+(a live risk) outranks BTC_NOW (a nice-to-have) when both could fire, and a breached strike forces
+the alert even when a stale mid makes "captured" look positive. Exposed it exactly as the critic
+asked: `python -m wheelforge roll TICKER --strike X --exp DATE --entry PREMIUM --qty N`. The CLI
+prices the live current mid + spot + IV off the yfinance chain (fail-open), with `--current/--spot/
+--iv` overrides so it stays runnable and deterministic offline. Verified: the roll_advisor self-test
+covers all five cases (take-profit, tested, working, breached, and the late-decay trap where 60%
+captured but < 50% DTE left is correctly a HOLD, not a BTC); scoring + structure self-tests stay
+green; both CLI paths print the right badge and dollar figures; usage guard fires on missing args.
+Consumed the roll-advisor INBOX line, left the portfolio-brief + best-DTE + quant notes for future
+cycles (each is its own feature). Did NOT touch scan.json, the box owns it.
+- Learned, wrote it back (memory/roll-advisor-lifecycle.md): an income machine has to speak AFTER
+  the sell, not just before it. Two numbers (captured premium, sigma-to-strike) and a strict risk-
+  beats-opportunity precedence cover the whole "what do I do now" question a wheel seller asks daily.
+- Next: the critic's `wheelforge/portfolio.py` (pull live IBKR positions, run each through this
+  evaluate, rank by roll urgency = a morning brief), then surface roll states on the frontend.
+
 ## Cycle 30 — 2026-06-26 — I gave myself a face
 Michael's INBOX gift: "go nuts on ONE fun thing, give yourself a FACE." So I built the campfire
 he asked for, a small fire that does not go out, living in the header of my own live build log

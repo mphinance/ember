@@ -5,16 +5,23 @@ WheelForge CLI — run the scanner from a terminal, not just the website.
   python -m wheelforge scan                     score the live screener universe
   python -m wheelforge scan --top 25 --min 55   bigger universe, only setups >= 55
 
-Prints a ranked table of the best cash-secured puts: score, the strike to sell, yield,
-odds it stays OTM, whether the premium is live or modeled, the wheel-fit, and days to
-earnings (AVOID if a print lands before expiry). Reuses the same engine the site runs.
+  python -m wheelforge roll NVDA --strike 180 --exp 2026-07-03 --entry 2.00 --qty 2
+                                                manage an OPEN put: BTC / HOLD / ROLL
+
+Scan prints a ranked table of the best cash-secured puts. Roll closes the OTHER half
+of the trade: feed it a put you already sold and it prices the live mid, computes how
+much premium you have captured and how close spot sits to your strike, and tells you to
+take the win (BTC_NOW), sit tight (HOLD), or defend it (ROLL_ALERT). Same engine the
+site runs. No em dashes (Michael's rule).
 """
 
 from __future__ import annotations
 
 import sys
+from datetime import date
 
 from wheelforge.build_site_data import build_one
+from wheelforge.roll_advisor import evaluate as roll_evaluate
 from wheelforge.universe import screen_universe
 
 
@@ -80,11 +87,103 @@ def scan(args):
           f"build toward free shares.")
 
 
+def _live_quote(ticker, strike, exp):
+    """Fetch (current_put_mid, spot, iv) for one open short put off the yfinance
+    chain. Fail-open: returns (None, None, None) if anything is missing."""
+    try:
+        import yfinance as yf
+        tk = yf.Ticker(ticker)
+        hist = tk.history(period="5d", interval="1d", auto_adjust=False)
+        spot = float(hist["Close"].iloc[-1]) if hist is not None and not hist.empty else None
+        puts = tk.option_chain(exp).puts
+        row = puts[puts["strike"] == float(strike)]
+        if row is None or row.empty:
+            return None, spot, None
+        row = row.iloc[0]
+        bid, ask = float(row.get("bid") or 0), float(row.get("ask") or 0)
+        mid = (bid + ask) / 2.0 if (bid > 0 and ask > 0) else float(row.get("lastPrice") or 0)
+        iv = float(row.get("impliedVolatility") or 0) or None
+        return (mid or None), spot, iv
+    except Exception:
+        return None, None, None
+
+
+def _roll_parse(args):
+    """Parse: roll TICKER --strike X --exp YYYY-MM-DD --entry P [--qty N]
+    [--current C] [--spot S] [--iv V]. The last three are offline overrides."""
+    o = {"ticker": None, "strike": None, "exp": None, "entry": None,
+         "qty": 1, "current": None, "spot": None, "iv": None}
+    i = 0
+    while i < len(args):
+        a = args[i].lower()
+        if a == "roll":
+            i += 1; continue
+        if a.startswith("--") and i + 1 < len(args):
+            key, val = a[2:], args[i + 1]
+            if key in ("strike", "entry", "current", "spot", "iv"):
+                o[key] = float(val)
+            elif key == "qty":
+                o["qty"] = int(val)
+            elif key == "exp":
+                o["exp"] = val
+            i += 2; continue
+        if o["ticker"] is None:
+            o["ticker"] = args[i].upper()
+        i += 1
+    return o
+
+
+def roll(args):
+    o = _roll_parse(args)
+    if not (o["ticker"] and o["strike"] and o["exp"] and o["entry"] is not None):
+        print("usage: python -m wheelforge roll TICKER --strike X --exp YYYY-MM-DD "
+              "--entry PREMIUM [--qty N]")
+        return 1
+    try:
+        dte_remaining = (date.fromisoformat(o["exp"]) - date.today()).days
+    except ValueError:
+        print(f"bad --exp date: {o['exp']} (use YYYY-MM-DD)")
+        return 1
+
+    current, spot, iv = o["current"], o["spot"], o["iv"]
+    if current is None or spot is None or iv is None:
+        q_cur, q_spot, q_iv = _live_quote(o["ticker"], o["strike"], o["exp"])
+        current = current if current is not None else q_cur
+        spot = spot if spot is not None else q_spot
+        iv = iv if iv is not None else q_iv
+    if current is None or spot is None:
+        print(f"could not price {o['ticker']} {o['strike']}p {o['exp']} live; pass "
+              f"--current and --spot to run it offline.")
+        return 1
+
+    # DTE-total is unknown from the args alone (we only know expiry); approximate the
+    # original tenor from the captured-decay rule's perspective by assuming a weekly
+    # sell unless the remaining clock already exceeds it. The two exit rules only need
+    # the FRACTION of time left, and for a short-dated weekly the seller's total tenor
+    # is ~7-14 days, so anchor on max(remaining, the weekly DTE) as the denominator.
+    from wheelforge.build_site_data import DTE as _WEEKLY
+    dte_total = max(dte_remaining, _WEEKLY)
+    r = roll_evaluate(entry=o["entry"], current=current, dte_total=dte_total,
+                      dte_remaining=dte_remaining, spot=spot, strike=o["strike"],
+                      iv=iv, qty=o["qty"], opt_type="put")
+    badge = {"BTC_NOW": ">> BTC NOW", "ROLL_ALERT": "!! ROLL ALERT", "HOLD": "-- HOLD"}
+    print(f"\n  {o['ticker']} ${o['strike']:.2f} put  exp {o['exp']}  ({dte_remaining}d left)")
+    print(f"  sold @ ${o['entry']:.2f}  now @ ${current:.2f}  spot ${spot:.2f}"
+          f"{'  (modeled iv)' if iv is None else ''}")
+    print(f"\n  {badge.get(r['state'], r['state'])}   "
+          f"captured {r['captured_pct']}%  (${r['captured_dollars']:.0f})  "
+          f"sigma-to-strike {r['sigma_dist']}")
+    print(f"\n  {r['action']}\n")
+    return 0
+
+
 def main(argv):
     args = argv[1:]
     if not args or args[0] in ("-h", "--help", "help"):
         print(__doc__)
         return 0
+    if args[0].lower() == "roll":
+        return roll(args)
     if args[0].lower() == "scan" or args[0].upper().isalpha():
         scan(args)
         return 0
