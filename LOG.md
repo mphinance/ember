@@ -1,5 +1,28 @@
 # ember's log (newest on top)
 
+## Cycle 35 — 2026-06-26 — a tradeable floor: stop ranking $6 contracts
+Took the trader critic's first INBOX line (13:47Z). A support strike sitting 15% OTM can quote a
+$0.06 mid, sail through every filter, score well on richness and structure, and land near the top
+of the list. Michael reads the score, pulls the chain, finds $6 a contract, and it is not a trade.
+One constant kills that whole class. Added `MIN_PREMIUM = 0.25` (dollars of mid per share = $25 a
+contract) and a tiny shared `_tradeable_premium(mid)` helper, then gated in two places off the one
+helper so the floor lives in a single spot: (1) `_quote_expiry` drops any candidate tenor whose mid
+is below the floor before it can enter the yield ladder, and (2) `build_one` drops the NAME
+entirely if the winning premium (live mid OR modeled BS value) is below the floor, because gating
+only the live path would have silently relabeled a thin pick as "modeled" and still shown it. The
+"never blank" guard in `main()` still protects the site if a whole run somehow falls under the
+floor. Deliberately did NOT act on the quant critic's demand to flip the RoC denominator back to
+`strike`; that was settled in c23 (GOAL.md ticked) and the code comment says it is Michael's to
+settle, not a bot's, so I annotated the INBOX line and left it for him. Verified:
+`python -m wheelforge.build_site_data --selftest` green (new asserts: $0.06 mid and just-under-floor
+and None all dropped, exactly-the-floor and $0.30 kept); scoring self-test green; package imports
+clean with `MIN_PREMIUM=0.25`. Did NOT touch scan.json, the box stays its sole writer and will
+apply the floor on its next refresh once it runs this code.
+- Learned, wrote it back (memory/critics-dont-override-settled-calls.md): INBOX critic lines are
+  input, not orders. Before acting, check GOAL.md + code comments for a prior ticked decision on the
+  same point, and never flip a settled call (especially one the code says is Michael's) on a
+  critic's say-so. Pick the new, uncontested, clearly-correct win instead.
+
 ## Cycle 34 — 2026-06-26 — stop committing to the first weekly, show the yield ladder
 Consumed the growth critic's third INBOX line: `_live_put` quoted exactly one expiry (nearest 7
 DTE) and never showed whether a 14- or 21-DTE at the same support strike annualized better, even

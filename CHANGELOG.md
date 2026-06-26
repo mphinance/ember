@@ -6,7 +6,28 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
-## Cycle 34 — 2026-06-26 — the bi-weekly that pays double is no longer invisible
+## Cycle 35 — 2026-06-26 — a $25 floor, because $6 a contract is not a trade
+
+The scanner had a blind spot you kept tripping over. A strike sitting way out at support could
+quote a six cent mid, score well on richness and structure because the math does not care how thin
+the premium is, and float right up near the top of the list. You would read the score, pull up the
+chain, and find six dollars a contract. Not a trade. Just noise wearing a good score.
+
+### 🟢 FEATURE - a tradeable floor that drops the noise picks
+Added a MIN_PREMIUM floor of 25 cents a share, which is 25 dollars a contract, the line below which
+a pick is not worth your attention no matter how it scores. It works in two places off one helper:
+a candidate tenor below the floor never makes it into the yield ladder, and a name whose best
+premium comes in under the floor gets dropped from the scan entirely instead of quietly falling
+back to a modeled number and showing anyway. The list is now the trades you would actually put on,
+not a spreadsheet you have to hand-filter. The number is one constant, so move it if 25 dollars is
+not your floor.
+
+### 🧠 LEARNED - I do not flip your settled calls on a critic's say-so
+A critic asked me to change the yield denominator back to the full strike. You already settled that
+one cycles ago, and the code even says it is your call, not a bot's. So I left it alone, wrote down
+why in the inbox, and went and shipped the thing nobody had argued about instead.
+
+
 
 For 33 cycles the scanner found you a support strike, then quietly sold the nearest weekly against
 it and moved on. But the same strike one or two weeks further out often pockets close to double the

@@ -29,6 +29,10 @@ WATCHLIST = ["AAPL", "MSFT", "NVDA", "AMD", "GOOGL", "AMZN", "META", "COST"]
 DTE = 7    # target the nearest WEEKLY — how Michael actually sells (e.g. NVDA 190 put,
            # 4 DTE, ~5% OTM). 1-sigma at ~weekly tenor lands ~5% OTM and annualizes ~2x a
            # monthly, into the ~100%/yr range he runs. Earnings veto still guards the week.
+MIN_PREMIUM = 0.25  # dollars of mid per share (= $25 a contract). Below this a "pick" is
+                    # noise: a 15% OTM support strike can quote a $0.06 mid, score well on
+                    # richness + structure, and sit near the top of the list — but it is $6
+                    # a contract, not a trade. One floor kills that whole class. Tunable.
 R = 0.045  # risk-free
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(HERE, "docs", "data", "scan.json")
@@ -94,6 +98,12 @@ def _iv_rank(closes, window=252):
     cur = rv_series[-1]
     lo, hi = min(rv_series), max(rv_series)
     return 50.0 if hi == lo else round(100.0 * (cur - lo) / (hi - lo), 1)
+
+
+def _tradeable_premium(mid):
+    """A mid below MIN_PREMIUM ($25 a contract) is not a trade, however well it would
+    score. Shared by the live-quote gate and the per-name drop so the floor is one place."""
+    return mid is not None and mid >= MIN_PREMIUM
 
 
 def _annualized_roc(premium, strike, dte):
@@ -203,8 +213,8 @@ def _quote_expiry(tk, exp, dte, spot, rv, support):
     bid = float(row.get("bid") or 0); ask = float(row.get("ask") or 0)
     mid = (bid + ask) / 2.0 if (bid > 0 and ask > 0) else float(row.get("lastPrice") or 0)
     iv = float(row.get("impliedVolatility") or 0)
-    if mid <= 0 or iv <= 0:
-        return None
+    if not _tradeable_premium(mid) or iv <= 0:
+        return None   # sub-$25/contract mid (or dead IV): noise, not a tenor worth ranking
     return {
         "strike": float(row["strike"]), "dte": int(dte), "exp": exp, "premium": mid,
         "iv": iv, "bid": bid, "ask": ask, "at_support": at_support,
@@ -334,6 +344,12 @@ def build_one(ticker, earnings_days=None, lanes=None):
         bid, ask = round(premium - spread / 2, 2), round(premium + spread / 2, 2)
         oi, vol, source = 1500, 250, "modeled"
         exp = (date.today() + timedelta(days=dte)).isoformat()
+    # The tradeable floor, applied to WHATEVER premium won (live mid or modeled): a sub-$25
+    # /contract pick is noise no matter how it scores, so drop the name entirely rather than
+    # rank a $6 contract near the top. The "never blank" guard in main() still protects the
+    # site if a whole run somehow falls below the floor.
+    if not _tradeable_premium(premium):
+        return None
     # His edge gate: rich premium = IV over HV (the VRP). A flag he reads at a glance.
     # Judged against vrp_rv (5-day for a live weekly, 20-day for the modeled monthly).
     iv_gt_hv = bool(iv > vrp_rv)
@@ -515,7 +531,17 @@ def _selftest():
 
     # RoC denominator stays (strike - premium), the ticked c23 call.
     assert abs(_annualized_roc(2.0, 100.0, 7) - (2.0 / 98.0) * (365.0 / 7)) < 1e-9
-    print("OK: build_site_data DTE-ladder self-test passed.")
+
+    # MIN_PREMIUM floor: a $0.06 mid (= $6 a contract) is noise, not a trade, no matter how
+    # richly it would score. A $0.30 mid (= $30 a contract) clears. The boundary is inclusive.
+    assert MIN_PREMIUM > 0, "the tradeable floor must be a positive dollar amount"
+    assert not _tradeable_premium(0.06), "a $6/contract mid must be dropped as noise"
+    assert not _tradeable_premium(MIN_PREMIUM - 1e-6), "just under the floor is not tradeable"
+    assert not _tradeable_premium(None), "a missing mid is not tradeable"
+    assert _tradeable_premium(MIN_PREMIUM), "exactly the floor is tradeable (inclusive)"
+    assert _tradeable_premium(0.30), "a $30/contract mid clears the floor"
+    print(f"floor: ${MIN_PREMIUM:.2f}/share min -> $0.06 mid dropped, $0.30 kept")
+    print("OK: build_site_data DTE-ladder + premium-floor self-test passed.")
 
 
 if __name__ == "__main__":
