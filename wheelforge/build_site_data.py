@@ -349,7 +349,12 @@ def build_one(ticker, earnings_days=None, lanes=None):
         premium = _bs_put(spot, strike, dte / 365.0, R, iv)
         spread = max(0.02, premium * 0.04)
         bid, ask = round(premium - spread / 2, 2), round(premium + spread / 2, 2)
-        oi, vol, source = 1500, 250, "modeled"
+        # No live chain means no real open interest or volume to claim. Faking thick OI
+        # (1500/250) made the modeled liquidity bar score ~0.76, the same range as a real
+        # liquid AAPL put, so a name with its chain unloaded masqueraded as fillable. Set
+        # them to 0 and let liquidity_score collapse to the spread-only term (~0.44): the
+        # bar shrinks visibly and a modeled pick can no longer pass for a liquid one.
+        oi, vol, source = 0, 0, "modeled"
         exp = (date.today() + timedelta(days=dte)).isoformat()
     # The tradeable floor, applied to WHATEVER premium won (live mid or modeled): a sub-$25
     # /contract pick is noise no matter how it scores, so drop the name entirely rather than

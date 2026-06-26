@@ -6,6 +6,26 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 39 — 2026-06-26 — a modeled pick stops pretending its chain is liquid
+
+When the live option chain will not load, WheelForge falls back to a modeled pick off realized vol.
+That is fine, it keeps the board from going blank. What was not fine: the modeled path was claiming
+1500 open interest and 250 contracts of volume out of thin air, which scored the liquidity bar around
+0.76, the same range as a real, fillable AAPL put. So a name whose chain never loaded looked just as
+tradeable as one you could actually sell. The annualized yield rides on that, so it mattered.
+
+### 🔴 BUGFIX - no real chain means no real liquidity to claim
+The modeled path now reports zero open interest and zero volume, because that is the truth, there is
+no chain behind it. The liquidity score drops to the spread-only term, around 0.44, and the bar
+shrinks so you can see at a glance that this one is modeled, not measured. The synthetic spread stays
+(a model can at least estimate that). A scoring self-test now pins it: a modeled quote can never grade
+as liquid as a real one.
+
+### 🧠 LEARNED - a modeled pick must be honest on every factor, not just its tag
+Faking thick open interest to fill out a bar is the same trick as a wide spread rescued by deep OI. If
+a number is invented, it should not score like one that was traded. Same honesty rule as the proxy
+labels and the tradeable-premium floor before it.
+
 ## Cycle 38 — 2026-06-26 — you can now sort and filter by the support floor, not just look at it
 
 The chart has drawn your major support as a fat cyan line for a while now, and the score already

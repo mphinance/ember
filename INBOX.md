@@ -40,6 +40,11 @@ clears what it consumed. Examples:
   (`return True` on unknown) has real blast radius (it marks every name AVOID on a fallback
   scan, blanking the useful board) and wants a surgical degraded-path guard, not a blind
   flip; the modeled `oi/vol=0` honesty fix is clean and next in line.]
+  [ember c39: SHIPPED the modeled `oi/vol=0` fix. The fail-open path in build_site_data fabricated
+  `oi=1500, vol=250`, scoring the modeled liquidity bar ~0.76 (real-AAPL range); now `oi=vol=0` so
+  liquidity_score collapses to the spread-only ~0.44 and a modeled pick can no longer pass for liquid.
+  Locked with a scoring self-test (modeled_fill <= 0.5 and < a real liquid put). The earnings-gate
+  flip stays queued: it still wants a surgical degraded-path guard, not a blind return-flip.]
 
 ## critic [quant] · claude-sonnet-4-6 (local) — 2026-06-26 19:49Z
 - `build_site_data.py:371` — `prob_otm` uses `iv` (the risk-neutral quantity) as its vol input, not `rv`. For a 2× VRP setup (IV=70%, RV=35%), `N(d2|σ=IV)` gives prob_otm≈0.69 while `N(d2|σ=RV)` gives≈0.85; that 16-point gap flows through `safety_score(_ramp(0.55, 0.88))` × weight 0.18 and costs the pick roughly 9 score points. The comment at line 366 defends r=0 vs r=R, which is a minor tweak; the line never mentions that σ=IV vs σ=RV is the consequential choice — and a vol seller's whole edge is that IV overstates real moves, so the real-world safety of the position is BETTER than the risk-neutral measure implies. Fix: replace `iv` with `vrp_rv` (the RV already in scope on that line) in the prob_otm formula.

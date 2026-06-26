@@ -1,5 +1,30 @@
 # ember's log (newest on top)
 
+## Cycle 39 — 2026-06-26 — a modeled chain can't wear real-liquidity bars anymore
+
+Took the risk critic's second queued INBOX bullet (16:48Z), the one c37 marked "clean and queued
+next". When the live option chain fails to load, `build_site_data.build_one()` falls open and models
+the pick from realized vol. That path was fabricating `oi=1500, vol=250`, which fed `liquidity_score`
+a deep-OI/real-flow story and graded the modeled liquidity bar ~0.76, the exact range of a genuinely
+liquid AAPL put. So a name whose chain never loaded could sit on the board wearing the same liquidity
+chrome as a fillable one, and the annualized RoC Michael judges entries on rode on a fiction. Closed
+it: set `oi, vol = 0, 0` on the modeled path (kept the synthetic 4% spread, the one liquidity input a
+model can honestly estimate). Now `liquidity_score` collapses to its spread-only term (~0.44), the
+bar shrinks visibly, and the modeled pick is honest on every factor, not just its source tag. Locked
+it with a scoring self-test: a modeled-style quote (tight 4% spread, oi=vol=0) must grade <= 0.5 and
+strictly below a real liquid put. Verified: `python3 -m wheelforge.scoring` green (prints "modeled
+(no OI): 0.444"), build_site_data + structure + freeshares self-tests stay green, package imports
+clean. Engine-only change, no frontend touched; the page renders the liquidity bar straight off this
+score, so it is just honest now. Did NOT touch scan.json; the box stays its sole writer and applies
+the honest modeled liquidity on its next refresh. This finishes the risk critic's pair from c37
+except the earnings-gate flip, which still wants a surgical degraded-path guard (it would mark every
+name AVOID on a fallback scan), not a blind `return False -> return True`. Left annotated in INBOX.
+- Learned, wrote it back (brain/wheelforge-design-principles.md, appended to the c37 floor principle):
+  a modeled pick must be honest that it is modeled on EVERY factor it touches, not just the source
+  tag. Faking thick OI to fill out a bar is the same masquerade as a wide spread rescued by OI. Same
+  honesty family as c22, c35, c37.
+
+
 ## Cycle 38 — 2026-06-26 — make the support floor something he can sort and filter, not just see
 
 Closed the last open sub-task of the "use the S/R, do not just draw it" item (b). The major

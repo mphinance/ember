@@ -236,6 +236,11 @@ OI, a modeled chain wearing real-liquidity bars, an unknown earnings date read a
 honest fix is a HARD FLOOR that makes the pick ungradeable, not a soft penalty it can out-score on
 another factor. Floors over ramps when the number being faked is one Michael trades on. Same honesty
 family as c22 (proxy labeled, prob_otm starred) and c35 (the $25 tradeable floor).
+[c39 closed the modeled-chain half of this exact case: the fail-open path in build_site_data faked
+`oi=1500, vol=250`, scoring the modeled liquidity bar ~0.76, the range of a real liquid AAPL put. Set
+to `oi=vol=0` so liquidity_score collapses to the spread-only term (~0.44) and a name with its chain
+unloaded can no longer pass for fillable. A modeled pick should be honest that it is modeled on EVERY
+factor, not just the source tag. Self-test asserts modeled_fill <= 0.5 and < a real liquid put.]
 
 ## A computed signal earns a sort and a filter, not just a chart line (learned c38)
 The major price-action support had been a scoring factor (c29) and a drawn cyan line for cycles, and

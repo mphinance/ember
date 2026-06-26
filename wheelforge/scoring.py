@@ -219,6 +219,9 @@ def _selftest():
     # and inflating its RoC; now it is ungradeable (0.0) while the tight one stays strong.
     tight_fill = liquidity_score(bid=1.99, ask=2.02, open_interest=3000, volume=600)
     wide_fill = liquidity_score(bid=0.46, ask=0.54, open_interest=3000, volume=600)
+    # The MODELED path carries a tight (4%) synthetic spread but NO real interest (oi=vol=0),
+    # so it must collapse to the spread-only term and never reach a real liquid pick's range.
+    modeled_fill = liquidity_score(bid=1.96, ask=2.04, open_interest=0, volume=0)
 
     g = score_contract(great_csp)
     e = score_contract(earnings_trap)
@@ -240,10 +243,13 @@ def _selftest():
     assert y["factors"]["yield"] > o["factors"]["yield"], "a 2x weekly must out-yield a 1x"
     assert y["score"] > g["score"], "fat yield must out-score the same setup at thin yield"
     assert "fat annualized yield" in y["why"], "a fat-yield pick should say so plainly"
-    print("tight spread:", round(tight_fill, 3), "| wide spread:", round(wide_fill, 3))
+    print("tight spread:", round(tight_fill, 3), "| wide spread:", round(wide_fill, 3),
+          "| modeled (no OI):", round(modeled_fill, 3))
     assert wide_fill == 0.0, "a spread past MAX_SPREAD_PCT must be ungradeable, not OI-rescued"
     assert tight_fill >= 0.6, "a tight, deep pick should still grade liquid"
     assert tight_fill > wide_fill, "the fillable quote must out-liquidity the fictional one"
+    assert modeled_fill <= 0.5, "a modeled pick (no real OI/vol) must not pass for a liquid one"
+    assert modeled_fill < tight_fill, "a real liquid put must out-liquidity a modeled one"
     print("\nOK: WheelForge scoring self-test passed.")
 
 
