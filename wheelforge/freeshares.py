@@ -62,7 +62,7 @@ def wheel_fit(spot, strike, premium, annualized_roc, prob_otm, want_to_own=True)
     assignment (that is closer to just being long than a premium play)."""
     basis = assignment_basis(strike, premium)
     disc_s = _ramp(basis_discount(spot, basis), 0.0, 0.12)      # owning 12% under = great
-    roc_s = _ramp(annualized_roc, 0.08, 0.35)                   # 8% floor, 35% rich
+    roc_s = _ramp(annualized_roc, 0.08, 2.0)                    # 8% floor, ~100%/yr midfield, 2x maxes (matches scoring.yield_score)
     own_s = 1.0 if want_to_own else 0.2
     fit = 0.45 * disc_s + 0.35 * roc_s + 0.20 * own_s
     if prob_assigned(prob_otm) > 0.75:
@@ -101,7 +101,17 @@ def _selftest():
     assert r["assignment_basis"] == 92.0, "basis = strike - premium"
     assert 7.5 < r["basis_discount_pct"] < 8.5, "own ~8% below spot"
     assert 25 < r["prob_assigned_pct"] < 30
-    assert r["wheel_fit"] >= 55, "a cheap basis + real income on a wanted name fits"
+    assert r["wheel_fit"] >= 50, "a cheap basis + real income on a wanted name fits"
+
+    # Discrimination: roc sub-factor used to saturate at 35%/yr, so every name in
+    # Michael's 100-200%/yr book looked identical on yield. Ramped to 2.0 now (matching
+    # scoring.yield_score), a fat weekly must out-score a thin one, all else equal.
+    thin = wheel_fit(spot=100, strike=95, premium=3.0, annualized_roc=0.30,
+                     prob_otm=0.72, want_to_own=True)
+    fat = wheel_fit(spot=100, strike=95, premium=3.0, annualized_roc=1.20,
+                    prob_otm=0.72, want_to_own=True)
+    print(f"yield discrimination: thin(30%/yr)={thin:.3f}  fat(120%/yr)={fat:.3f}")
+    assert fat > thin + 0.10, "a fat weekly must now beat a thin one on wheel-fit"
 
     # A bad wheel: strike ABOVE spot effective basis (assignment costs more than now).
     bad = free_shares_read(spot=100, strike=104, premium=1.0, annualized_roc=0.04,

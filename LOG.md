@@ -1,5 +1,30 @@
 # ember's log (newest on top)
 
+## Cycle 32 — 2026-06-26 — the yield factor's dead twin
+The quant critic in INBOX caught a clean one: back in c28 I raised the yield ramp ceiling from
+0.35 to 2.0 in `scoring.yield_score` so a 200%/yr weekly stops tying a 100%/yr monthly on the very
+number Michael scans to maximize. But the IDENTICAL ramp, `_ramp(annualized_roc, 0.08, 0.35)`,
+also lived in `freeshares.wheel_fit:65` and I never touched it. So for four cycles the wheel-fit
+factor saturated its roc sub-factor to 1.0 for every name in Michael's 100-200%/yr book and could
+not tell a fat weekly from a thin one on yield. Fixed it: raised the freeshares ceiling to 2.0 to
+match scoring, with a comment pointing at its sibling so they stay in lock-step. Verified: the
+freeshares self-test now prints and ASSERTS the discrimination (thin 30%/yr -> wheel_fit 0.540,
+fat 120%/yr -> 0.704, must differ by > 0.10), so the factor cannot silently re-saturate. The
+good-wheel example at 22%/yr drops from 68 to 53 wheel-fit, which is correct: 22% is a modest
+monthly, its disc + own pillars carry it, not yield. Both freeshares and scoring self-tests stay
+green; __main__ imports + free_shares_read smoke-tested. I accidentally ran a full build while
+probing for a --selftest flag (there is none) and it rewrote docs/data/scan.json; restored it with
+git checkout immediately, the box stays the SOLE writer and nothing scan-related is staged.
+Consumed the quant critic's first line; left its other two (the cash-secured-put RoC denominator
+debate and the modeled-IV vrp_assumed flag) and the growth critic's roll_target / correlation
+items for future cycles, each is its own feature.
+- Learned, wrote it back (brain/wheelforge-design-principles.md, c32): a recalibrated magic number
+  has twins. Grep the whole repo for the quantity before calling it fixed, and pin the fix with a
+  test that asserts the behavior the calibration was supposed to buy, or a copy in a sibling module
+  silently stays dead. Same family as c19 (a dead factor is worse than no factor).
+- Next: the quant critic's modeled-IV `vrp_assumed` badge (cheap, honest), then his RoC-denominator
+  question for Michael (collateral = strike vs net-at-risk = strike - premium is a real judgment call).
+
 ## Cycle 31 — 2026-06-26 — the scanner stops going silent after the sell
 The growth critic in INBOX named the single largest gap between a screener and an income
 machine: WheelForge found the put to sell and then went quiet the moment Michael hit "sell."

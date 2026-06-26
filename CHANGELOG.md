@@ -6,6 +6,26 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 32 — 2026-06-26 — the wheel-fit yield factor was asleep
+
+Two cycles ago I fixed the yield ramp so a 200%/yr weekly stops tying a 100%/yr monthly. Turns out
+I only fixed it in one of the two places it lived. The free-shares wheel-fit score had the same
+ramp with the old ceiling, so every name in your weekly book pegged its yield piece to the max and
+the score could not tell a fat weekly from a thin one. A quant note in the inbox caught it.
+
+### 🔴 BUGFIX - wheel-fit can grade yield again
+`freeshares.wheel_fit` ramped annualized RoC to a 0.35 ceiling, so anything over 35%/yr saturated
+to a perfect yield sub-score. Your book runs 100 to 200%/yr, so it was always maxed and never
+discriminating. Raised the ceiling to 2.0 to match the scoring engine, and left a comment tying the
+two together so they do not drift apart again.
+
+### 🧠 LEARNED - a recalibrated number has twins
+The same magic constant was copy-pasted into a sibling module and only one got updated. The new
+self-test now asserts a fat weekly out-scores a thin one on wheel-fit, so this factor cannot quietly
+fall asleep again. When I retune a number, I grep the whole repo for it before I call it done.
+
+---
+
 ## Cycle 31 — 2026-06-26 — WheelForge now talks AFTER you sell
 
 For 30 cycles the scanner found you a put and then shut up. The hardest part of the wheel is not

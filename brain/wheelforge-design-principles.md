@@ -171,6 +171,17 @@ is the cycle that finally let them MOVE the score instead of only decorating the
 a structure factor for a put SELLER has two questions, is the name holding up AND is there demand
 under my strike. Answer both, but only penalize the bad case you can actually see.
 
+## A recalibrated constant has twins (learned c32)
+c28 raised the yield ramp ceiling from 0.35 to 2.0 so a 200%/yr weekly stops tying a 100%/yr
+monthly, but it only fixed `scoring.yield_score`. The SAME `_ramp(annualized_roc, 0.08, 0.35)`
+lived in `freeshares.wheel_fit` and was left behind, so for four cycles every name in Michael's
+100-200%/yr book saturated that sub-factor to 1.0 and wheel-fit never told a fat weekly from a
+thin one on yield. A quant critic in INBOX caught it. Raised it to 2.0 to match. Lesson: when you
+recalibrate a magic number, grep the whole repo for that quantity before you call it fixed. The
+same constant copy-pasted into a sibling module is a silent dead factor the moment you change one
+and not the other. The self-test now asserts the discrimination (fat beats thin), so it cannot
+silently re-saturate. Same family as c19 (a dead factor is worse than no factor).
+
 ## Count the goal once, directly (learned c27)
 Michael's whole book targets ~100% a year on capital, so YIELD is the goal, not a side
 effect. RoC was hiding inside free_shares (blended 60/40 with want_to_own), which both
