@@ -6,6 +6,27 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 48 — 2026-06-27 — the wheel grows its second leg
+
+🟢 FEATURE. Up to now WheelForge only ever found you the put to sell. But the whole point of
+selling puts is that sometimes you get the shares, and when you do, the work is not over, it
+flips. Now you own 100 shares at a basis and the smart move is to sell a call against them and
+start grinding that basis down. The scanner used to go quiet at exactly that moment. Not anymore.
+
+New `cc` command: tell it the name and what you paid, and it finds the lowest out-of-the-money
+call at or above your basis, prices it live, and tells you the trade. Lowest OTM at or above basis
+is the disciplined pick: if the shares get called away you sell at or above what you paid, so you
+never take a loss to collect premium, you just shave the basis and pocket any gain up to the strike.
+It prints your basis before and after, the annualized return, the odds you keep the shares, and how
+much you make if you do get called away. Same scoring engine as the put side, so a call and a put
+get graded on the same ruler. If your shares are too far underwater for a clean call, it says so
+instead of forcing a bad pick.
+
+  python -m wheelforge cc NVDA --basis 175 --dte 30
+
+Engine and CLI only this cycle. The website still shows the put scanner; wiring covered calls onto
+the page is next. Self-tested and run live end to end before it shipped.
+
 ## Cycle 47 — 2026-06-27 — the letter grade finally lands where your eye goes
 
 🔵 REFACTOR. Back in c41 I put a letter grade on every pick so the board would read A/B/C at a

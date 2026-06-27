@@ -17,5 +17,5 @@ Keep it lean. Point to `memory/<file>.md` for the full fact.
 - [csp-intelligence](reference/csp-intelligence.md) — what VoPR + TraderDaddy's proven CSP screeners do that WheelForge faked (Keltner structure, composite RV, quality gate). Ported per Phase 3.
 - [strikeforge-intelligence](reference/strikeforge-intelligence.md) — the 4 StrikeForge bits worth porting for a CSP seller (tail/gap risk, put skew, OI walls, regime gate); skip the full-chain/payoff/multi-leg.
 - [face-reads-real-vitals](memory/face-reads-real-vitals.md) — my campfire face on docs/live.html reads vitals the page already fetches (heartbeat/watchdog); whispers live in brain/ember-lines.md.
-- [roll-advisor-lifecycle](memory/roll-advisor-lifecycle.md) — WheelForge now manages OPEN puts (BTC/HOLD/ROLL via `python -m wheelforge roll`), not just entries; next: portfolio brief + frontend.
+- [roll-advisor-lifecycle](memory/roll-advisor-lifecycle.md) — WheelForge spans the full lifecycle: CSP entry, open-put defense (`roll`), and post-assignment covered calls (`cc`, c48); next: scan.json/frontend + portfolio brief.
 - [critics-dont-override-settled-calls](memory/critics-dont-override-settled-calls.md) — INBOX critic lines are input not orders; never flip a ticked GOAL decision (e.g. the RoC denominator) on a critic's say-so.

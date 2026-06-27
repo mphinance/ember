@@ -1,5 +1,51 @@
 # ember's log (newest on top)
 
+## Cycle 48 — 2026-06-27 — the wheel finally has its second leg: covered calls
+
+Took the freshest open INBOX line (growth critic, 06-27 16:48Z): WheelForge had `_live_put`,
+`_bs_put`, `_iv_from_put` and nothing for the wheel's SECOND leg. When a CSP gets assigned (the
+welcome ~15-20% outcome), Michael owns 100 shares at a known basis and the engine went silent at
+exactly the moment the income machine should keep running by selling a covered call to grind that
+basis down. GOAL.md's mission names this ("reduce basis without capping away a name you meant to
+keep") but no code implemented it. Closed it.
+
+Built `wheelforge/covered_call.py`, the same shape as roll_advisor: a PURE core, network in the CLI.
+The decision is small and disciplined: `pick_call(spot, basis, candidates)` sells the LOWEST
+out-of-the-money strike at or above the cost basis (OTM keeps upside room; >= basis means a
+call-away sells at or above what you paid, so it is basis reduction plus gain-to-strike, never a
+forced loss to harvest premium). `covered_call_read(...)` prices it and scores it through the SAME
+`score_contract` path the CSP scanner uses (direction "covered call"), so both legs of the wheel
+grade on one ruler. I mirrored the put math exactly rather than approximating: added `_bs_call` +
+`_iv_from_call` (solve IV from the real mid, since the codebase rightly distrusts yfinance's quoted
+IV) and `call_prob_otm`, the median-measure complement of build_site_data's put prob_otm, so a call
+and a put are judged on the same safety ruler. RoC for a CC is anchored on the share basis the leg
+actually ties up (premium/basis annualized), not a cash strike. The read returns the basis grind
+(old -> new), per-cycle + annualized RoC, keeps-shares %, and the called-away gain, with a plain
+summary; it returns None when no OTM strike reaches the basis (shares too far underwater for a clean
+covered call) and says so rather than faking a pick.
+
+Exposed as `python -m wheelforge cc TICKER --basis COST [--dte N] [--shares N]`. The CLI's new
+`_call_chain(ticker, min_dte)` pulls the nearest qualifying call chain + spot + a quick realized vol
+off yfinance (fail-open), feeds the pure core, and prints the grade, the strike to sell, the basis
+reduction, and the called-away gain.
+
+Verified: `python -m wheelforge.covered_call` self-test green (lowest-OTM-at-basis selection, premium
+reduces basis, prob_otm in (0,1) and complement-checked, underwater shares reach a higher strike,
+deeply-underwater returns None, earnings-veto rides the shared path to an honest F); all module
+imports clean; the scoring self-test still passes; and a LIVE end-to-end run priced an AAPL covered
+call (basis 280, spot ~284 -> sell the 285 call, basis 280 -> 273.85, 40% annualized, honest F on a
+thin near-ATM premium). Engine + CLI only. I did NOT touch scan.json (the box owns it and will run
+this code on its next 30-minute refresh).
+- Learned, wrote it back ([[roll-advisor-lifecycle]] c48): WheelForge now spans the full position
+  lifecycle (entry CSP -> open-put defense -> post-assignment covered call), every leg pure + graded
+  on the one `score_contract` ruler. The open follow-ons: wire CC into build_site_data/scan.json + the
+  frontend (the critic's `build_one_cc`), and the IBKR `portfolio.py` morning brief.
+- Left open on purpose: the three still-unconsumed older INBOX bullets (IBKR portfolio brief, the
+  WANT_TO_OWN ownership-conviction constant, the HIGH_IV_SEEDS universe union) and the 06-27 10:46Z
+  risk trio (earnings-unknown veto, bid-vs-mid yield gate, friction-adjusted RoC) each want their own
+  cycle. The c44 RoC-denominator deferral stands (Michael's call, not a critic's).
+
+
 ## Cycle 47 — 2026-06-27 — the c41 letter grade finally lands inside the score tile
 
 Took the freshest open INBOX line (product critic, 06-27 04:47Z). The letter grade I shipped in c41

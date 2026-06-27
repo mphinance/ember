@@ -8,11 +8,16 @@ WheelForge CLI — run the scanner from a terminal, not just the website.
   python -m wheelforge roll NVDA --strike 180 --exp 2026-07-03 --entry 2.00 --qty 2
                                                 manage an OPEN put: BTC / HOLD / ROLL
 
+  python -m wheelforge cc NVDA --basis 175 [--dte 30] [--shares 100]
+                                                got assigned? sell a call to grind the basis
+
 Scan prints a ranked table of the best cash-secured puts. Roll closes the OTHER half
 of the trade: feed it a put you already sold and it prices the live mid, computes how
 much premium you have captured and how close spot sits to your strike, and tells you to
-take the win (BTC_NOW), sit tight (HOLD), or defend it (ROLL_ALERT). Same engine the
-site runs. No em dashes (Michael's rule).
+take the win (BTC_NOW), sit tight (HOLD), or defend it (ROLL_ALERT). cc runs the wheel's
+SECOND leg: feed it shares you hold and their cost basis and it finds the lowest OTM call
+at or above that basis, prices it live, and tells you how much it grinds the basis down.
+Same engine the site runs. No em dashes (Michael's rule).
 """
 
 from __future__ import annotations
@@ -242,6 +247,113 @@ def roll(args):
     return 0
 
 
+def _call_chain(ticker, min_dte):
+    """Fetch (exp, spot, rv, [candidate calls]) for the nearest expiry at least min_dte out,
+    so covered_call_read can pick and price the call to sell. Each candidate carries the
+    strike, mid premium, bid/ask, OI and volume. rv is a quick realized-vol read off recent
+    closes (the VRP denominator). Fail-open: returns (None, None, None, []) on any error."""
+    try:
+        import yfinance as yf
+        from wheelforge.build_site_data import _realized_vol
+        tk = yf.Ticker(ticker)
+        hist = tk.history(period="1y", interval="1d", auto_adjust=False)
+        if hist is None or hist.empty:
+            return None, None, None, []
+        closes = [float(c) for c in hist["Close"].tolist() if c == c]
+        spot = closes[-1]
+        rv = _realized_vol(closes[-63:]) or None
+        today = date.today()
+        future = []
+        for e in (tk.options or ()):
+            try:
+                d = (date.fromisoformat(e) - today).days
+            except ValueError:
+                continue
+            if d >= min_dte:
+                future.append((e, d))
+        if not future:
+            return None, spot, rv, []
+        exp = min(future, key=lambda ed: ed[1])[0]
+        cands = []
+        for _, row in tk.option_chain(exp).calls.iterrows():
+            bid, ask = float(row.get("bid") or 0), float(row.get("ask") or 0)
+            mid = (bid + ask) / 2.0 if (bid > 0 and ask > 0) else float(row.get("lastPrice") or 0)
+            k = float(row.get("strike") or 0)
+            if k > 0 and mid > 0:
+                cands.append({
+                    "strike": k, "premium": mid, "bid": bid, "ask": ask,
+                    "open_interest": float(row.get("openInterest") or 0),
+                    "volume": float(row.get("volume") or 0),
+                    "iv": float(row.get("impliedVolatility") or 0) or None,
+                })
+        return exp, spot, rv, cands
+    except Exception:
+        return None, None, None, []
+
+
+def _cc_parse(args):
+    """Parse: cc TICKER --basis B [--dte N] [--shares N] [--spot S] [--earnings D]."""
+    o = {"ticker": None, "basis": None, "dte": 30, "shares": 100,
+         "spot": None, "earnings": None}
+    i = 0
+    while i < len(args):
+        a = args[i].lower()
+        if a == "cc":
+            i += 1; continue
+        if a.startswith("--") and i + 1 < len(args):
+            key, val = a[2:], args[i + 1]
+            if key in ("basis", "spot"):
+                o[key] = float(val)
+            elif key in ("dte", "shares"):
+                o[key] = int(val)
+            elif key == "earnings":
+                o["earnings"] = float(val)
+            i += 2; continue
+        if o["ticker"] is None:
+            o["ticker"] = args[i].upper()
+        i += 1
+    return o
+
+
+def cc(args):
+    from wheelforge.covered_call import covered_call_read
+    o = _cc_parse(args)
+    if not (o["ticker"] and o["basis"] is not None):
+        print("usage: python -m wheelforge cc TICKER --basis COST [--dte N] [--shares N]")
+        return 1
+
+    exp, spot, rv, cands = _call_chain(o["ticker"], o["dte"])
+    if o["spot"] is not None:
+        spot = o["spot"]
+    if spot is None or not cands:
+        print(f"could not load a live call chain for {o['ticker']}; try a different "
+              f"--dte, or check the ticker.")
+        return 1
+    dte = (date.fromisoformat(exp) - date.today()).days if exp else o["dte"]
+
+    read = covered_call_read(spot=spot, basis=o["basis"], dte=dte, candidates=cands,
+                             exp=exp, rv=rv, days_to_earnings=o["earnings"],
+                             want_to_own=True)
+    if read is None:
+        print(f"\n  {o['ticker']}: no out-of-the-money call reaches your ${o['basis']:.2f} "
+              f"basis at {dte}d (spot ${spot:.2f}). The shares are too far underwater to "
+              f"sell a clean covered call here; hold, or roll the basis down another way.")
+        return 0
+
+    grade = read.get("grade", "?")
+    score = "AVOID" if read.get("avoid") else f"{read['score']}"
+    print(f"\n  {o['ticker']}  covered call  exp {exp}  ({dte}d)   spot ${spot:.2f}  "
+          f"basis ${o['basis']:.2f}  x{o['shares']//100 or 1}")
+    print(f"\n  [{grade}] score {score}   sell ${read['strike']:.2f} call @ ${read['premium']:.2f}"
+          f"   keeps-shares {read['prob_otm']}%")
+    print(f"  basis ${o['basis']:.2f} -> ${read['new_basis']:.2f}  "
+          f"({read['basis_reduction_pct']}% this cycle, {read['annualized_roc']}% annualized)"
+          f"  called-away gain {read['called_away_gain_pct']}%")
+    print(f"\n  {read['summary']}")
+    print(f"\n  {read['why']}\n")
+    return 0
+
+
 def main(argv):
     args = argv[1:]
     if not args or args[0] in ("-h", "--help", "help"):
@@ -249,6 +361,8 @@ def main(argv):
         return 0
     if args[0].lower() == "roll":
         return roll(args)
+    if args[0].lower() == "cc":
+        return cc(args)
     if args[0].lower() == "scan" or args[0].upper().isalpha():
         scan(args)
         return 0

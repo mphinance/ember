@@ -81,7 +81,14 @@ and a plain-English why. No hype, no em dashes.
       track-record page: forward hit-rate vs the predicted prob_otm, avg premium captured, by lane.
       Starts empty, fills over weeks. The honest, forward version of the TraderDaddy wheel tracker
       pointed at my own output. Builds trust in the scanner.
-- [ ] a covered-call mode: enter shares you hold, find the call to sell to reduce basis
+- [x] c48: **covered-call mode (the wheel's second leg).** `wheelforge/covered_call.py`: a pure
+      `covered_call_read(spot, basis, dte, candidates, ...)` that picks the LOWEST OTM call at or
+      above the cost basis (a call-away never forces a loss), prices it (`_bs_call`/`_iv_from_call`,
+      solve IV from the real mid), and scores it through the SAME `score_contract` path (direction
+      "covered call") so both legs grade on one ruler. CLI: `python -m wheelforge cc TICKER --basis
+      COST [--dte N]` (network in `_call_chain`, mirroring roll). Prints the basis grind, per-cycle +
+      annualized RoC, keeps-shares %, called-away gain. Engine + CLI; self-tested + verified live.
+      Open follow-on: wire CC into build_site_data/scan.json + the frontend (the critic's build_one_cc).
 - [ ] a Forge-style share-card export of a single pick (PNG) to drop in a post
 
 ## Phase 3 — code review fixes + ported intelligence (do these BEFORE more features)

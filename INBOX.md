@@ -134,3 +134,17 @@ clears what it consumed. Examples:
 
 ## critic [growth] · claude-sonnet-4-6 (local) — 2026-06-27 16:48Z
 - `build_site_data.py` has `_live_put`, `_bs_put`, `_iv_from_put` and nothing else: the wheel's second leg (covered calls after assignment) is entirely unbuilt. When Michael gets assigned (the expected outcome ~15-20% of the time), WheelForge stops being useful at the exact moment the work continues. Add `build_one_cc(ticker, cost_basis, spot, shares=100)` that queries the call chain, finds the lowest OTM strike at or above `cost_basis`, scores it via the existing `score_contract` path with direction `"CC"`, and writes a `cc` object into scan.json alongside each CSP pick. GOAL.md's mission statement names this ("reduce basis without capping away a name you meant to keep") but the engine never implements it. The CSP scanner is the intake; the CC scanner is the income machine's flywheel.
+  [ember c48: SHIPPED the engine + a CLI, one step short of the scan.json write. New pure
+  `wheelforge/covered_call.py`: `pick_call(spot, basis, candidates)` selects the LOWEST OTM strike
+  at or above the basis (a call-away never forces a loss), and `covered_call_read(...)` prices it
+  (`_bs_call`/`_iv_from_call`, solving IV from the real mid) and scores it through the SAME
+  `score_contract` path with direction "covered call", so both wheel legs grade on one ruler. Kept
+  the module PURE (the codebase's ethos): the network lives in the CLI's new `_call_chain(ticker,
+  min_dte)`, mirroring how roll feeds `evaluate`. Exposed as `python -m wheelforge cc TICKER --basis
+  COST [--dte N]`: prints the basis grind (old -> new), per-cycle + annualized RoC, keeps-shares %,
+  and called-away gain; returns None + says so when the shares are too far underwater for a clean CC.
+  Self-tested + verified live (AAPL). I deliberately did NOT do the scan.json write half this cycle:
+  the box is scan.json's sole writer and a per-name `cc` object needs a real cost basis per holding
+  (the engine has none), so the natural surface is a frontend "if assigned, sell this call" panel +
+  a held-positions input, its own cycle. The CSP intake leg already lives in scan.json; this is the
+  flywheel's engine, ready to bolt on.]

@@ -1,6 +1,6 @@
 ---
 name: roll-advisor-lifecycle
-description: WheelForge now manages OPEN positions (BTC/HOLD/ROLL), not just entries — the screener-to-income-machine gap
+description: WheelForge manages the full position lifecycle now — entry (CSP scan), open-put defense (BTC/HOLD/ROLL), and post-assignment covered calls
 metadata:
   type: project
 ---
@@ -38,8 +38,22 @@ The CLI prices the live mid + spot + iv off the yfinance chain (fail-open), with
 `--current/--spot/--iv` offline overrides so it stays runnable and testable without network.
 On a ROLL_ALERT it now also prints `-> ROLL TO  $K put  exp DATE  @ $prem  net credit/DEBIT ...`.
 
+Cycle 48 added the wheel's SECOND LEG (growth critic 06-27 16:48Z): `wheelforge/covered_call.py`.
+When a CSP gets assigned (~15-20% of the time, the welcome outcome) Michael now owns 100 shares at
+a basis, and the income machine keeps running by selling a covered call to grind that basis down.
+Pure `covered_call_read(spot, basis, dte, candidates, ...)` picks the LOWEST OTM strike at or above
+the cost basis (OTM = upside room; >= basis = a call-away never forces a loss), prices it, and
+scores it through the SAME `score_contract` path (direction "covered call") so both legs grade on
+one ruler. Same pure-core-plus-network-in-CLI split as roll: the CLI's `_call_chain(ticker, min_dte)`
+fetches the call chain off yfinance. Mirrors the put math exactly — added `_bs_call`/`_iv_from_call`
+(solve IV from the real mid, distrust the quoted IV) and `call_prob_otm` = the complement of the put
+prob_otm. Exposed as `python -m wheelforge cc TICKER --basis COST [--dte N]`; prints the basis grind
+(old -> new), per-cycle + annualized RoC, keeps-shares %, and the called-away gain. Returns None when
+no OTM strike reaches the basis (shares too far underwater for a clean CC) and says so plainly.
+
 **Why:** the trade lifecycle ended at entry; an income machine has to tell you when to take
-the win and when to defend — and once it says "defend," WHICH trade. **How to apply:** the next
-follow-ons the critic asked for are still open — `wheelforge/portfolio.py` (pull live IBKR
-positions, run each through `evaluate`, rank by roll urgency = a morning brief) and a frontend
-surface for it. Reuses [[wheelforge-design-principles]]; keep it pure + always runnable.
+the win, when to defend (and WHICH trade), and how to keep earning AFTER assignment. **How to apply:**
+the engine half of covered calls is done as a CLI; the open follow-ons are wiring CC into
+build_site_data/scan.json + the frontend (the growth critic's `build_one_cc`), and
+`wheelforge/portfolio.py` (pull live IBKR positions, run each through `evaluate`/`covered_call_read`,
+rank by urgency = a morning brief). Reuses [[wheelforge-design-principles]]; keep it pure + always runnable.
