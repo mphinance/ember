@@ -22,6 +22,7 @@ from datetime import date
 
 from wheelforge.build_site_data import build_one, _sector_crowding
 from wheelforge.roll_advisor import evaluate as roll_evaluate
+from wheelforge.roll_advisor import roll_target, ROLL_OUT_DTE
 from wheelforge.universe import screen_universe
 
 
@@ -112,6 +113,37 @@ def _live_quote(ticker, strike, exp):
         return None, None, None
 
 
+def _roll_chain(ticker, min_dte):
+    """Pick the nearest expiry at least min_dte out and return (exp, [(strike, mid)...])
+    for its puts, so roll_target can price the down-and-out roll. Fail-open: ('', []) on
+    any error or empty chain (the alert then stands without a specific prescription)."""
+    try:
+        import yfinance as yf
+        tk = yf.Ticker(ticker)
+        today = date.today()
+        future = []
+        for e in (tk.options or ()):
+            try:
+                d = (date.fromisoformat(e) - today).days
+            except ValueError:
+                continue
+            if d >= min_dte:
+                future.append((e, d))
+        if not future:
+            return "", []
+        exp = min(future, key=lambda ed: ed[1])[0]
+        out = []
+        for _, row in tk.option_chain(exp).puts.iterrows():
+            bid, ask = float(row.get("bid") or 0), float(row.get("ask") or 0)
+            mid = (bid + ask) / 2.0 if (bid > 0 and ask > 0) else float(row.get("lastPrice") or 0)
+            k = float(row.get("strike") or 0)
+            if k > 0 and mid > 0:
+                out.append((k, mid))
+        return exp, out
+    except Exception:
+        return "", []
+
+
 def _roll_parse(args):
     """Parse: roll TICKER --strike X --exp YYYY-MM-DD --entry P [--qty N]
     [--current C] [--spot S] [--iv V]. The last three are offline overrides."""
@@ -178,6 +210,27 @@ def roll(args):
           f"captured {r['captured_pct']}%  (${r['captured_dollars']:.0f})  "
           f"sigma-to-strike {r['sigma_dist']}")
     print(f"\n  {r['action']}")
+    # The diagnostic above says "roll down-and-out for a credit"; this is the PRESCRIPTION.
+    # On a live ROLL_ALERT, fetch the roll-out chain (~two weeks past the current expiry)
+    # and name the specific strike, expiry and net credit, so Michael reads a trade he can
+    # place, not generic advice. Needs a live IV to size the 1 sigma target; if the chain or
+    # IV is unavailable the alert simply stands without the line (fail-open, never throws).
+    if r["state"] == "ROLL_ALERT":
+        new_exp, cands = _roll_chain(o["ticker"], dte_remaining + ROLL_OUT_DTE)
+        new_dte = (date.fromisoformat(new_exp) - date.today()).days if new_exp else None
+        tgt = (roll_target(current_mid=current, spot=spot, iv=iv, new_dte=new_dte,
+                           candidates=cands, qty=o["qty"], opt_type="put")
+               if (cands and new_dte) else None)
+        if tgt:
+            kind = "credit" if tgt["net_credit"] >= 0 else "DEBIT"
+            print(f"\n  -> ROLL TO  ${tgt['picked_strike']:.2f} put  exp {new_exp}  "
+                  f"({new_dte}d)  @ ${tgt['new_premium']:.2f}")
+            print(f"     net {kind} ${abs(tgt['net_credit']):.2f}/share  "
+                  f"(${abs(tgt['net_credit_dollars']):.0f} on {o['qty']}x)   "
+                  f"target ~1 sigma below spot = ${tgt['target_strike']:.2f}")
+        else:
+            print("\n  -> ROLL TO  no live roll-out chain (or IV) available to size the "
+                  "specific strike; the alert stands.")
     # The won-trade advisory rides alongside the state: it can fire while state is HOLD
     # (a short weekly past the BTC DTE gate but already at 50% of max profit). Only worth
     # printing when it adds something the state did not already say (state == HOLD).

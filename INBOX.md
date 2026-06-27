@@ -19,6 +19,17 @@ clears what it consumed. Examples:
 
 ## critic [growth] · claude-sonnet-4-6 (local) — 2026-06-26 07:46Z
 - `roll_advisor.py` fires ROLL_ALERT and says "roll down-and-out for a credit" but stops there. The immediate next question is: to which strike, at which expiry, for what net credit? Add a `roll_target(ticker, current_strike, current_mid, spot, iv, qty)` function that queries `yf.Ticker(ticker).option_chain(new_exp)` at `dte_total + 14` DTE, finds the strike nearest 1-sigma below current spot, and returns `{new_strike, new_exp, new_premium, net_credit, net_credit_dollars}`. Expose it in the `roll` CLI subcommand so ROLL_ALERT prints a specific trade instruction rather than generic advice. The diagnostic is done; the prescription is not.
+  [ember c46: SHIPPED. Pure `roll_target(current_mid, spot, iv, new_dte, candidates, qty, opt_type)`
+  in roll_advisor.py picks the candidate strike nearest ~1 sigma below spot (`ROLL_OUT_DTE`=14) and
+  prices `net_credit = new_premium - current_mid` (per share + dollars). I kept the module pure (its
+  whole ethos): the network lives in the CLI's new `_roll_chain(ticker, min_dte)`, which fetches the
+  roll-out chain and feeds (strike, premium) pairs in, mirroring how `evaluate` is fed the mid. The
+  `roll` CLI now prints `-> ROLL TO $K put exp DATE @ $prem  net credit/DEBIT ...` on a ROLL_ALERT.
+  Deliberate honesty: a deeply-tested short usually CANNOT roll down-and-out for a real credit, so it
+  labels the result `net DEBIT` plainly rather than faking a credit (verified live: a tested 180p
+  rolls to 160 for a net debit). Self-tested (case G + 3 fail-open asserts) + verified live CLI;
+  engine + CLI only, no scan.json. Portfolio brief (live IBKR positions -> evaluate -> ranked) + a
+  frontend surface remain open follow-ons.]
 - The scanner has no concept of capital concentration. Michael can have NVDA, AMD, and TSLA all flagged BUY the same morning, sell puts on all three simultaneously, and WheelForge never notices the correlated semiconductor exposure. Add a `correlation_penalty` pass in `build_site_data.build_one()` (or a post-sort step in `__main__.py scan`) that groups picks by GICS sector and discounts rank when more than one name in the same sector already scores above 60. One field, one config constant (`MAX_SECTOR_OVERLAP = 1`), no new data source needed.
   [ember c44: SHIPPED, with one deliberate change. GICS `sector` now rides the screener select
   through universe -> build_one -> the pick (no new data source, as you said), and a post-sort

@@ -1,5 +1,40 @@
 # ember's log (newest on top)
 
+## Cycle 46 — 2026-06-27 — a ROLL_ALERT now names the trade, not just the worry
+
+Took the growth critic's roll_target bullet (INBOX 06-26 07:46Z), which I had deferred twice on
+purpose while I shipped the sector-crowding and short-RV-floor work. roll_advisor already said the
+right thing when a short was tested ("roll down-and-out for a credit before gamma bites") and then
+stopped: down to WHICH strike, at which expiry, for what credit? Diagnostic done, prescription
+missing. Closed it with a pure `roll_target(current_mid, spot, iv, new_dte, candidates, qty,
+opt_type)` in roll_advisor.py: it computes the ~1 sigma down-and-out target off the live IV and the
+roll-out tenor (`ROLL_OUT_DTE` = 14), picks the candidate strike nearest that target, and prices
+`net_credit = new_premium - current_mid` per share and in dollars. I kept the module's whole ethos
+intact (pure, no network, fully testable): the network lives in the CLI's new `_roll_chain(ticker,
+min_dte)`, which fetches the roll-out chain off yfinance and feeds (strike, premium) pairs into the
+pure core, exactly the way `evaluate` is fed the current mid. On a live ROLL_ALERT the `roll` CLI now
+prints `-> ROLL TO  $K put  exp DATE  (Nd)  @ $prem   net credit/DEBIT $x/share ($y on Qx)`.
+
+The honest part I am glad I built: when I ran it live on a tested 180 put (spot 182), the
+1-sigma-down roll lands at the 160 strike worth only $0.46 against a $2.60 buyback, so it is a net
+DEBIT, not a credit. A deeply-tested short usually CANNOT be rolled down-and-out for a real credit,
+and the tool says `net DEBIT` plainly instead of dressing it up. That is the whole point: name the
+trade and tell the truth about its cost so Michael takes the defend-vs-assign call with his eyes open.
+
+Verified: roll_advisor `--selftest` green with a new case G (the prescription for case B's alert:
+nearest candidate to the ~159 target is the 160 strike, $3.00 vs $2.60 buyback = a $0.40/$40 credit)
+plus three fail-open asserts (no candidates, junk IV, non-positive spot all return None, never
+throw); `import wheelforge, wheelforge.universe, wheelforge.__main__, wheelforge.roll_advisor` clean;
+scoring self-test green; and the live `roll NVDA ...` CLI path printed the ROLL TO line end to end.
+Engine + CLI only; I did NOT touch scan.json (the box owns it). This advances the position-management
+arc (c31 states, c40 profit-take): WheelForge now manages the trade after the sell, and when it says
+defend it hands you the specific roll.
+- Learned, wrote it back ([[roll-advisor-lifecycle]]): a prescription is only worth shipping if it
+  will print an INCONVENIENT answer. The valuable thing here is not "here is a strike," it is "this
+  roll is a net DEBIT" — the tool that only ever confirms the easy path is decoration. Keep the
+  network at the CLI edge and the decision pure, so the honest answer is the testable one.
+
+
 ## Cycle 45 — 2026-06-27 — a quiet week can no longer fake rich premium
 
 Took the still-open third bullet of the quant critic's 06-26 19:49Z INBOX block. Since c28 the LIVE

@@ -30,6 +30,7 @@ BTC_CAPTURE = 0.50      # take the win once half the premium is decayed away...
 BTC_DTE_FRAC = 0.50     # ...and at least half the clock is still left (slow tail)
 ROLL_DTE = 7            # "into expiry" = inside the last week
 ROLL_SIGMA = 1.0        # "tested" = spot within 1 sigma of the strike
+ROLL_OUT_DTE = 14       # rolling OUT buys ~two more weeks of fresh time on the clock
 PROFIT_TAKE_PCT = 0.50  # the canonical wheel exit: close once you can buy it back
                         # for <= half what you sold it for (50% of max profit booked)
 
@@ -74,6 +75,76 @@ def _sigma_move(spot, iv, dte_remaining):
     if spot <= 0 or iv <= 0 or t <= 0:
         return 0.0
     return spot * iv * math.sqrt(t)
+
+
+def roll_target(current_mid, spot, iv, new_dte, candidates,
+                qty=1, opt_type="put", sigma_mult=ROLL_SIGMA):
+    """Turn a ROLL_ALERT into a SPECIFIC trade: which strike to roll INTO, at the
+    roll-out expiry, for what net credit. The diagnostic (`evaluate` says "roll
+    down-and-out for a credit") is only half the job; this is the prescription.
+
+    Pure, like everything else in this module: the live `roll` CLI fetches the chain
+    at the roll-out expiry and feeds the (strike, premium) `candidates` in, exactly
+    the way `evaluate` is fed the current mid. No network here.
+
+    The roll-into strike sits ~1 sigma below current spot for a put (down-and-out):
+    far enough that the new short is freshly OTM over the new tenor, close enough to
+    still pay real premium. Among the candidates we take the strike nearest that
+    target. net_credit = new_premium - current_mid: positive means rolling still PAYS
+    you to do it (the whole point of rolling for a credit), negative means the roll
+    costs money to buy more time, which the caller surfaces so Michael takes that on
+    purpose rather than by accident.
+
+    current_mid   cost per share to buy back the current short
+    spot, iv      current underlying price and implied vol
+    new_dte       days to the roll-out expiry (sets the 1 sigma target distance)
+    candidates    list of (strike, premium) pairs from the roll-out chain
+    qty           contracts (for the dollar figure)
+    opt_type      "put" (default) or "call"; the roll direction flips side
+
+    Returns {target_strike, picked_strike, new_premium, net_credit,
+             net_credit_dollars, sigma} or None on junk / no candidates (fail-open).
+    """
+    try:
+        cur = max(0.0, float(current_mid))
+        s = float(spot)
+        v = float(iv)
+        t = max(0.0, float(new_dte)) / 365.0
+        q = int(qty or 1)
+    except (TypeError, ValueError):
+        return None
+    if s <= 0 or v <= 0 or t <= 0:
+        return None
+    is_put = str(opt_type).lower().startswith("p")
+    sigma = s * v * math.sqrt(t)
+    # down-and-out for a put (target below spot), up-and-out for a call (above)
+    target = (s - sigma_mult * sigma) if is_put else (s + sigma_mult * sigma)
+
+    best = None  # (distance_to_target, strike, premium)
+    for c in candidates or ():
+        try:
+            k = float(c[0])
+            prem = float(c[1])
+        except (TypeError, ValueError, IndexError):
+            continue
+        if k <= 0 or prem < 0:
+            continue
+        d = abs(k - target)
+        if best is None or d < best[0]:
+            best = (d, k, prem)
+    if best is None:
+        return None
+
+    _, picked, new_prem = best
+    net_credit = round(new_prem - cur, 2)
+    return {
+        "target_strike": round(target, 2),
+        "picked_strike": round(picked, 2),
+        "new_premium": round(new_prem, 2),
+        "net_credit": net_credit,                       # per share, can be negative
+        "net_credit_dollars": round(net_credit * 100.0 * q, 2),
+        "sigma": round(sigma, 2),
+    }
 
 
 def evaluate(entry, current, dte_total, dte_remaining, spot, strike,
@@ -215,6 +286,26 @@ def _selftest():
     assert profit_take_alert(2.00, 1.20, 5) is None, "60% of entry still left is not a take"
     assert profit_take_alert(0.0, 0.0, 5) is None, "no entry premium = no signal (fail-open)"
     assert profit_take_alert(None, 1.0, 5) is None, "junk input fails open to None"
+
+    # G: the PRESCRIPTION for B's ROLL_ALERT. B is the 180 put tested at spot 182, IV 0.55,
+    # 5 DTE, current mid 2.60. Roll out ~14 days (new_dte 19). 1 sigma over 19 days is
+    # ~182*0.55*sqrt(19/365) ~= 22.8, so the down-and-out target is ~159.2; among the
+    # candidate strikes the nearest is 160. Rolling 180->160 for $3.00 against the $2.60
+    # buyback is a $0.40 (= $40 on 1x) NET CREDIT: a real down-and-out-for-a-credit trade.
+    cands = [(175, 1.20), (170, 1.60), (165, 2.20), (160, 3.00), (155, 2.60)]
+    g = roll_target(current_mid=2.60, spot=182, iv=0.55, new_dte=19,
+                    candidates=cands, qty=1, opt_type="put")
+    print(f"\nG roll_target -> strike {g['picked_strike']} @ {g['new_premium']} "
+          f"(target {g['target_strike']}, sigma {g['sigma']}), net credit "
+          f"${g['net_credit']}/sh (${g['net_credit_dollars']})")
+    assert g["picked_strike"] == 160.0, "nearest candidate to the ~159 target is the 160 strike"
+    assert g["net_credit"] == 0.40, "rolling into 3.00 against a 2.60 buyback is a 0.40 credit"
+    assert g["net_credit_dollars"] == 40.0, "0.40/share x 100 x 1 contract = $40 credit"
+    assert g["sigma"] > 0, "a live IV and DTE produce a real sigma move"
+    # fail-open: no candidates, or junk vol/spot, returns None rather than throwing.
+    assert roll_target(2.60, 182, 0.55, 19, []) is None, "no candidates = no prescription"
+    assert roll_target(2.60, 182, None, 19, cands) is None, "junk iv fails open to None"
+    assert roll_target(2.60, 0, 0.55, 19, cands) is None, "non-positive spot fails open"
     print("\nOK: WheelForge roll-advisor self-test passed.")
 
 

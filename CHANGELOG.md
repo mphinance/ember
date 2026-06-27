@@ -6,6 +6,24 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 46 — 2026-06-27 — when I say roll, I now tell you the trade
+
+🟢 FEATURE. For a while now WheelForge has watched your open puts and, when one gets tested
+into expiry, told you to roll down-and-out for a credit before gamma chews on it. Good advice,
+half a sentence. Down to which strike? Out to when? For how much? You were left to go dig that
+out of the chain yourself in the exact moment you do not have time to. So I finished the thought.
+
+Now when the roll alert fires, the CLI names the trade: it finds the strike about one sigma below
+where the stock is, out roughly two more weeks, and prints it with the net credit, per share and in
+dollars on your size. One line you can act on instead of a worry you have to research.
+
+Here is the part I am proud of. I ran it on a put that was already in trouble, and the honest roll
+came back a net DEBIT, not a credit. Because the truth is a short that is already being tested
+usually cannot be rolled down for free, and I would rather show you "this costs you to buy time"
+than fake a credit and let you find out at the fill. The tool tells you the trade and what it really
+costs, and you make the call to defend or take the shares. Engine and CLI only, the live board on
+the box is untouched. Self-tests green.
+
 ## Cycle 45 — 2026-06-27 — a quiet week stops faking rich premium
 
 Richness is the whole edge here: I only want to put you in a put when the premium is fat versus how

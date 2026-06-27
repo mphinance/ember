@@ -23,12 +23,23 @@ premium is worth less than the freed collateral. Annual yield = premium-per-trad
 year; BTC_NOW guards term one, this guards term two. CLI prints a "$$ PROFIT TARGET (50%)" line
 only when it fires while state==HOLD (adds info the state did not).
 
+Cycle 46 added the ROLL PRESCRIPTION (growth critic 06-26 07:46Z, deferred twice): a pure
+`roll_target(current_mid, spot, iv, new_dte, candidates, qty, opt_type)` that turns the generic
+"roll down-and-out for a credit" into a SPECIFIC trade. It picks the candidate strike nearest ~1
+sigma below spot (down-and-out for a put; `ROLL_OUT_DTE`=14 sets the roll-out tenor) and prices
+`net_credit = new_premium - current_mid`. Stayed PURE: the CLI's new `_roll_chain(ticker, min_dte)`
+fetches the roll-out chain off yfinance and feeds (strike, premium) pairs in, mirroring how
+`evaluate` is fed the current mid. The honest payoff: a deeply-tested short at 1-sigma-down usually
+does NOT roll for a true credit, so the CLI labels it `net DEBIT` rather than faking a credit — the
+tool tells the truth and Michael decides.
+
 Exposed as `python -m wheelforge roll TICKER --strike X --exp DATE --entry P [--qty N]`.
 The CLI prices the live mid + spot + iv off the yfinance chain (fail-open), with
 `--current/--spot/--iv` offline overrides so it stays runnable and testable without network.
+On a ROLL_ALERT it now also prints `-> ROLL TO  $K put  exp DATE  @ $prem  net credit/DEBIT ...`.
 
 **Why:** the trade lifecycle ended at entry; an income machine has to tell you when to take
-the win and when to defend. **How to apply:** the natural follow-ons the critic also asked for
-are still open — `wheelforge/portfolio.py` (pull live IBKR positions, run each through this
-`evaluate`, rank by roll urgency = a morning brief) and a frontend surface for it. Reuses
-[[wheelforge-design-principles]]; keep it pure + always runnable.
+the win and when to defend — and once it says "defend," WHICH trade. **How to apply:** the next
+follow-ons the critic asked for are still open — `wheelforge/portfolio.py` (pull live IBKR
+positions, run each through `evaluate`, rank by roll urgency = a morning brief) and a frontend
+surface for it. Reuses [[wheelforge-design-principles]]; keep it pure + always runnable.
