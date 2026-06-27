@@ -6,6 +6,26 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 44 — 2026-06-27 — the board now notices when you are doubling up on one sector
+
+You could open WheelForge on a green morning and see NVDA, AMD and TSLA all lit up at once, sell puts
+on all three, and never clock that you just put your whole week on the same semiconductor bet. The
+scanner graded each name on its own and had no idea the other two existed. Now it does. Every pick
+carries its sector, and after the list is ranked it walks down and keeps the best name in each sector
+clean while tagging the rest as crowded. You will see a red SECTOR mark next to those, on the page and
+in the terminal. Nothing about the score or the order changed. A great third semi still scores great
+and sits where it earned, the mark just says "you already have this exposure up top, size it down or
+skip it on purpose." Concentration is a sizing decision you make, not a number I should quietly dock.
+Names with no sector and your own typed-in scans never get flagged, and an earnings AVOID never eats a
+sector slot. The box bakes the sector data in on its next refresh and the marks light up then.
+
+🟢 FEATURE: GICS sector pulled from the screener and a post-rank concentration pass (one name per
+sector runs clean, the rest wear a SECTOR flag). Surfaced in scan.json, the CLI table, and the page.
+🧠 LEARNED: the quality score is about the trade in front of you. Concentration and sizing are
+portfolio calls that belong in a flag you read, not folded into the per-name number.
+
+---
+
 ## Cycle 43 — 2026-06-27 — the support picker stopped trusting old ghosts
 
 You sell puts AT support that is holding right now, not at a price that bounced once back in the spring.

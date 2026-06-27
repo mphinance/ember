@@ -253,10 +253,17 @@
         var floor = p.at_support
           ? ' <span class="floor" title="strike anchored at major price-action support (floor strength '
             + (p.support_floor != null ? p.support_floor : '?') + ')">⌂ support</span>' : '';
+        // Capital-concentration chip: a fine setup that doubles up a sector already owned by a
+        // higher-ranked pick. Correlated exposure WheelForge used to miss; now he sizes or skips
+        // it on purpose. Server sets sector_crowded over the full ranked universe.
+        var crowd = p.sector_crowded
+          ? ' <span class="crowd" title="' + (p.sector || 'this sector')
+            + ' is already represented by a higher-ranked pick: correlated exposure, so size it down or skip it on purpose">⚠ '
+            + (p.sector ? String(p.sector).toUpperCase().slice(0, 4) : 'SECTOR') + '</span>' : '';
         sub.innerHTML = 'sell <b>$' + fmt(p.strike) + ' put</b>' + otm + floor
           + (p.exp ? ' &middot; exp <b>' + fmtDate(p.exp) + '</b> (' + p.dte + 'd)' : ' (' + p.dte + 'd)')
           + '<br><b>' + fmt(p.annualized_roc) + '%</b> ann &middot; <b>' + fmt(p.prob_otm) + '%</b> OTM '
-          + src + hiv + (p.earnings_days != null ? ' &middot; earn ' + p.earnings_days + 'd' : '');
+          + src + hiv + crowd + (p.earnings_days != null ? ' &middot; earn ' + p.earnings_days + 'd' : '');
       }
       card.appendChild(sc); card.appendChild(gr); card.appendChild(tk); card.appendChild(dir); card.appendChild(sub);
       card.addEventListener('click', function () { select(t.ticker); });

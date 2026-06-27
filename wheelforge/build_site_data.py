@@ -34,6 +34,14 @@ MIN_PREMIUM = 0.25  # dollars of mid per share (= $25 a contract). Below this a 
                     # richness + structure, and sit near the top of the list — but it is $6
                     # a contract, not a trade. One floor kills that whole class. Tunable.
 R = 0.045  # risk-free
+MAX_SECTOR_OVERLAP = 1   # how many qualifying picks one GICS sector may own before the rest
+                         # are flagged crowded. Capital concentration is a discipline veto, not
+                         # a quality signal: three rich semis the same morning is correlated tail
+                         # risk WheelForge never noticed. 1 = keep the single best name per sector
+                         # clean, flag the duplicates so he sizes (or skips) them on purpose.
+SECTOR_CROWD_SCORE = 60.0  # only names that actually score a setup (>= this) count toward / get
+                           # flagged for crowding. A 40-scoring also-ran in the same sector is not
+                           # competing for capital, so it neither fills the slot nor gets marked.
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(HERE, "docs", "data", "scan.json")
 
@@ -294,7 +302,32 @@ def _levels(candles, spot, support=None, resistance=None):
     }
 
 
-def build_one(ticker, earnings_days=None, lanes=None):
+def _sector_crowding(tickers, threshold=SECTOR_CROWD_SCORE, max_overlap=MAX_SECTOR_OVERLAP):
+    """Capital-concentration pass. Given picks ALREADY sorted best-first, walk them in rank
+    order and, within each GICS sector, let the first `max_overlap` qualifying names through
+    clean; flag every further name in that same sector as crowded. Sets pick['sector_crowded']
+    (True/False) on every pick and returns the count flagged. This is a portfolio-fit signal,
+    not a quality one, so it never touches the 0-100 score or the rank order: the rich-but-third
+    semiconductor still scores what it scores, it just wears a chip so he stacks correlated names
+    on purpose, not by accident. Fail-open: a pick with no sector (the screener did not supply
+    one, or an explicit CLI scan) is never crowded and never fills a sector slot."""
+    counts = {}
+    flagged = 0
+    for t in tickers:
+        p = t["pick"]
+        p["sector_crowded"] = False
+        sec = p.get("sector")
+        if not sec or p.get("avoid") or (p.get("score") or 0) < threshold:
+            continue
+        if counts.get(sec, 0) >= max_overlap:
+            p["sector_crowded"] = True
+            flagged += 1
+        else:
+            counts[sec] = counts.get(sec, 0) + 1
+    return flagged
+
+
+def build_one(ticker, earnings_days=None, lanes=None, sector=None):
     candles, closes = _fetch(ticker)
     if not candles:
         return None
@@ -410,6 +443,10 @@ def build_one(ticker, earnings_days=None, lanes=None):
             "iv": round(iv * 100, 1), "iv_rank": contract["iv_rank"],
             "iv_rank_real": ivr_hist is not None, "source": source,
             "earnings_days": earnings_days, "want_to_own": want_to_own,
+            # GICS sector (from the screener) + the capital-concentration flag set by the
+            # post-sort _sector_crowding pass. sector_crowded starts False here and is filled
+            # once the whole ranked list is known; None sector simply never gets flagged.
+            "sector": sector, "sector_crowded": False,
             # His method, surfaced: struck AT support (or 1-sigma fallback), and the
             # IV-over-HV edge gate (rich premium = VRP > 1).
             "at_support": at_support, "support": (round(support, 2) if support else None),
@@ -471,7 +508,7 @@ def main():
     for r in rows:
         tk = r["ticker"]
         try:
-            one = build_one(tk, r.get("earnings_days"), r.get("lanes"))
+            one = build_one(tk, r.get("earnings_days"), r.get("lanes"), r.get("sector"))
             if one:
                 one["pick"]["lanes"] = r.get("lanes", [])
                 tickers.append(one)
@@ -482,6 +519,11 @@ def main():
         except Exception as exc:
             print(f"  {tk}: skipped ({exc})")
     tickers.sort(key=lambda x: x["pick"]["score"], reverse=True)
+    # Capital-concentration flag, computed AFTER the rank so "first in the sector" means
+    # highest-scoring in the sector. Does not reorder; just marks the correlated duplicates.
+    crowded_n = _sector_crowding(tickers)
+    if crowded_n:
+        print(f"sector crowding: {crowded_n} pick(s) flagged (>{MAX_SECTOR_OVERLAP}/sector)")
     live_n = sum(1 for t in tickers if t["pick"].get("source") == "live")
     note = (f"Candles and option premium are LIVE off the yfinance chain for {live_n} of "
             f"{len(tickers)} names (real IV, bid/ask, OI); the rest fall back to a "
@@ -561,7 +603,31 @@ def _selftest():
     assert _pct_otm(100.0, 100.0) == 0.0, "a strike at spot is 0% OTM"
     assert _pct_otm(0.0, 10.0) == 0.0, "a zero spot must not divide"
     print("pct_otm: 190p/200 spot -> 5.0% OTM")
-    print("OK: build_site_data DTE-ladder + premium-floor self-test passed.")
+
+    # Sector crowding: walk a pre-sorted list, keep the best name per sector clean, flag the
+    # rest. Two Technology names above 60 -> the SECOND (lower-ranked) is crowded, the first is
+    # not. A Healthcare name is alone in its sector -> clean. A sub-60 Technology also-ran does
+    # not get flagged (it is not competing for capital) and a no-sector name is always clean.
+    mk = lambda tk, score, sec, avoid=False: {
+        "ticker": tk, "pick": {"score": score, "sector": sec, "avoid": avoid}}
+    lst = [mk("NVDA", 72, "Technology"), mk("AMD", 68, "Technology"),
+           mk("LLY", 64, "Healthcare"), mk("MU", 55, "Technology"),
+           mk("XYZ", 70, None)]
+    flagged = _sector_crowding(lst)
+    crowded = {t["ticker"]: t["pick"]["sector_crowded"] for t in lst}
+    print(f"crowding: flagged {flagged} -> {[k for k, v in crowded.items() if v]}")
+    assert crowded["NVDA"] is False, "the top name in a sector is never crowded"
+    assert crowded["AMD"] is True, "the second qualifying name in the same sector is crowded"
+    assert crowded["LLY"] is False, "a name alone in its sector is clean"
+    assert crowded["MU"] is False, "a sub-threshold also-ran does not get flagged"
+    assert crowded["XYZ"] is False, "a name with no sector is always clean (fail-open)"
+    assert flagged == 1, "exactly one duplicate semiconductor should be flagged"
+    # An AVOID name neither fills a sector slot nor gets flagged, so a real pick behind it
+    # still passes clean.
+    lst2 = [mk("META", 0, "Communication", avoid=True), mk("GOOGL", 66, "Communication")]
+    _sector_crowding(lst2)
+    assert lst2[1]["pick"]["sector_crowded"] is False, "an AVOID must not consume a sector slot"
+    print("OK: build_site_data DTE-ladder + premium-floor + sector-crowding self-test passed.")
 
 
 if __name__ == "__main__":

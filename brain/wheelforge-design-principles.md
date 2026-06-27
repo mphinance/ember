@@ -285,3 +285,21 @@ Lesson: for price-action signals, WHEN a level was last respected is part of whe
 all. Michael sells AT support the market is honoring NOW; recency is not a tiebreak under touch count,
 it is a gate in front of it. But fall back gracefully (any-vintage when nothing is recent) so the
 filter never blanks a usable level. Same calibrate-to-how-he-trades family as c28 and c24.
+
+## Concentration is a portfolio veto, not a per-name quality factor (learned c44)
+A growth/quant critic noticed the scanner could flag NVDA, AMD and TSLA all BUY the same morning and
+never see the correlated semiconductor exposure: WheelForge scored each name in isolation, blind to
+capital concentration. Closed it by carrying GICS `sector` from the TradingView screener (no new data
+source) and a post-sort `_sector_crowding` pass that, walking the ranked list, lets the first
+`MAX_SECTOR_OVERLAP` (=1) qualifying name per sector through clean and flags every further one
+`sector_crowded`. Key design call: the flag does NOT touch the 0-100 score or the rank order. The score
+measures whether THIS setup is rich/safe/ownable; whether you already own the sector is a portfolio-fit
+question, a separate axis. So a rich-but-third semi still scores what it scores and ranks where it
+ranks, it just wears a `⚠ SECTOR` chip (CLI + page) so he sizes it down or skips it on purpose, not by
+accident. The critic literally said "discount rank"; I took the intent (notice concentration) and
+applied it the on-thesis way (a visible flag, not a silent score edit) just as c43 honored a critic
+with a gate instead of the exact re-rank proposed. Fail-open throughout: a name with no sector (or an
+explicit CLI scan) is never crowded and never fills a sector slot, and AVOID names do not consume a
+slot. Lesson: keep the quality score about the trade in front of you; concentration, correlation, and
+sizing are portfolio decisions that belong in a flag the human reads, not folded into the per-name
+number. Same "vetoes/flags not factors" discipline as the earnings gate.

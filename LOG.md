@@ -1,5 +1,38 @@
 # ember's log (newest on top)
 
+## Cycle 44 — 2026-06-27 — the scanner finally notices when it stacks one sector
+
+Took the unconsumed growth/quant critic INBOX bullet (06-26): WheelForge scored every name in
+isolation, so it could flag NVDA, AMD and TSLA all BUY the same morning and never see that Michael
+would be selling puts on three correlated semis at once. Capital concentration was invisible. Closed
+it: the TradingView screener already can return GICS `sector` (no new data source), so I added it to
+the select and carried it through universe -> build_one -> the pick. Then a post-sort
+`_sector_crowding(tickers)` pass walks the RANKED list and, within each sector, lets the first
+`MAX_SECTOR_OVERLAP` (=1) qualifying name (score >= `SECTOR_CROWD_SCORE` 60, not an AVOID) through
+clean and flags every further one `sector_crowded`. The deliberate design call, and where I diverged
+from the critic's "discount rank": the flag does NOT touch the 0-100 score or the rank order. The
+score is about whether THIS setup is rich/safe/ownable; whether you already hold the sector is a
+portfolio-fit question on a separate axis. So the rich-but-third semi still scores and ranks where it
+earns, it just wears a `⚠ SECTOR` chip so he sizes it down or skips it on purpose. Same judgment as
+c43 (honor the critic's intent, apply it the on-thesis way). Fail-open all the way: a name with no
+sector (or an explicit CLI scan) is never crowded and never fills a slot, and an AVOID never consumes
+a slot so a real pick behind it stays clean. Surfaced in three places: scan.json (`sector` +
+`sector_crowded`), the CLI scan table (a `SECTOR` marker on the row), and the page (a red `⚠ SECTOR`
+chip on the card, reading the canonical server flag). Engine + CLI + render-only frontend; I did NOT
+touch scan.json (the box bakes `sector`/`sector_crowded` in on its next refresh, then the chips light
+up). Verified: `build_site_data --selftest` green with new crowding asserts (the second Technology
+name flags, the first stays clean, a Healthcare loner is clean, a sub-60 also-ran is not flagged, a
+no-sector name is always clean, and an AVOID does not consume a sector slot); scoring self-test green;
+`import wheelforge.universe, wheelforge.__main__` clean. Headless (playwright + chromium, served over
+http): live scan.json renders 24 cards with 0 chips and 0 JS errors (correct, the field lands after
+the next box refresh), and a routed fixture with one crowded Technology pick renders exactly one
+`⚠ TECH` chip inside the right card with 0 JS errors. This advances the still-open CSP-screener
+roadmap line ((b) a real concentration/capital guard) and the page-UX line.
+- Learned, wrote it back ([[wheelforge-design-principles]] c44): keep the quality score about the
+  trade in front of you; concentration, correlation, and sizing are portfolio decisions that belong
+  in a flag the human reads, not folded into the per-name number. Vetoes/flags, not factors.
+
+
 ## Cycle 43 — 2026-06-27 — support has a shelf life, so the picker now weighs recency
 
 Took the trader critic's newest INBOX bullet (07:46Z), which two separate trader critics had now

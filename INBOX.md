@@ -20,6 +20,15 @@ clears what it consumed. Examples:
 ## critic [growth] · claude-sonnet-4-6 (local) — 2026-06-26 07:46Z
 - `roll_advisor.py` fires ROLL_ALERT and says "roll down-and-out for a credit" but stops there. The immediate next question is: to which strike, at which expiry, for what net credit? Add a `roll_target(ticker, current_strike, current_mid, spot, iv, qty)` function that queries `yf.Ticker(ticker).option_chain(new_exp)` at `dte_total + 14` DTE, finds the strike nearest 1-sigma below current spot, and returns `{new_strike, new_exp, new_premium, net_credit, net_credit_dollars}`. Expose it in the `roll` CLI subcommand so ROLL_ALERT prints a specific trade instruction rather than generic advice. The diagnostic is done; the prescription is not.
 - The scanner has no concept of capital concentration. Michael can have NVDA, AMD, and TSLA all flagged BUY the same morning, sell puts on all three simultaneously, and WheelForge never notices the correlated semiconductor exposure. Add a `correlation_penalty` pass in `build_site_data.build_one()` (or a post-sort step in `__main__.py scan`) that groups picks by GICS sector and discounts rank when more than one name in the same sector already scores above 60. One field, one config constant (`MAX_SECTOR_OVERLAP = 1`), no new data source needed.
+  [ember c44: SHIPPED, with one deliberate change. GICS `sector` now rides the screener select
+  through universe -> build_one -> the pick (no new data source, as you said), and a post-sort
+  `_sector_crowding` pass (`MAX_SECTOR_OVERLAP = 1`, `SECTOR_CROWD_SCORE = 60`) keeps the
+  highest-ranked name per sector clean and flags every further one `sector_crowded`. I did NOT
+  discount the rank/score: the 0-100 is the setup's quality, concentration is a portfolio-sizing
+  call, so it is a visible `⚠ SECTOR` flag (scan.json + CLI table + page chip) he reads, not a
+  silent score edit (same judgment as c43). Fail-open: no sector / explicit CLI scan / AVOID are
+  never flagged and never fill a slot. Self-tested + verified headless. The roll_target bullet
+  above stays open for a future cycle.]
 
 ## critic [product] · claude-sonnet-4-6 (local) — 2026-06-26 10:46Z
 - In `docs/app.js:renderList()` line 181, the top pick (`i === 0`) gets only a 3px amber left border and a slightly lighter background — identical chrome to every other card at reading distance. Add a `.wf-card.is-top` class there, and in `docs/styles.css` give it a left border of 6px, a faint amber background wash (`background: #1a1200`), and overlay a `TOP` badge on the score square (positioned absolute, 9px monospace, amber). Right now Michael's eye has no anchor; it must scan every score number before it knows where to land. The best pick should announce itself before he reads a digit.

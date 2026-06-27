@@ -55,7 +55,7 @@ def screen_universe(limit: int = 30, min_cap: float = 5e9,
         q = (Query()
              .set_markets("america")
              .select("name", "close", "market_cap_basic", "average_volume_90d_calc",
-                     "Volatility.M", "earnings_release_next_date")
+                     "Volatility.M", "earnings_release_next_date", "sector")
              .where(
                  col("market_cap_basic") >= min_cap,
                  col("average_volume_90d_calc") >= (min_dollar_vol / max(price_lo, 1)),
@@ -71,15 +71,18 @@ def screen_universe(limit: int = 30, min_cap: float = 5e9,
             if not s or s in seen:
                 continue
             seen.add(s)
+            sec = row.get("sector")
+            sec = str(sec).strip() if sec else None
             out.append({"ticker": s,
-                        "earnings_days": _earnings_days(row.get("earnings_release_next_date"))})
+                        "earnings_days": _earnings_days(row.get("earnings_release_next_date")),
+                        "sector": sec or None})
             if len(out) >= limit:
                 break
         if out:
             return out
     except Exception as exc:
         print(f"  universe: screener unavailable ({exc}); using fallback")
-    return [{"ticker": t, "earnings_days": None} for t in FALLBACK[:limit]]
+    return [{"ticker": t, "earnings_days": None, "sector": None} for t in FALLBACK[:limit]]
 
 
 def combined_universe(liquid_n: int = 13, highiv_n: int = 11):
@@ -92,13 +95,14 @@ def combined_universe(liquid_n: int = 13, highiv_n: int = 11):
     by_t = {}
     for d in liquid:
         by_t[d["ticker"]] = {"ticker": d["ticker"], "earnings_days": d["earnings_days"],
-                             "lanes": ["liquid"]}
+                             "sector": d.get("sector"), "lanes": ["liquid"]}
     for d in high:
         if d["ticker"] in by_t:
             by_t[d["ticker"]]["lanes"].append("high_iv")
+            by_t[d["ticker"]]["sector"] = by_t[d["ticker"]].get("sector") or d.get("sector")
         else:
             by_t[d["ticker"]] = {"ticker": d["ticker"], "earnings_days": d["earnings_days"],
-                                 "lanes": ["high_iv"]}
+                                 "sector": d.get("sector"), "lanes": ["high_iv"]}
     return list(by_t.values())
 
 

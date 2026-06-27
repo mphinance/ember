@@ -20,7 +20,7 @@ from __future__ import annotations
 import sys
 from datetime import date
 
-from wheelforge.build_site_data import build_one
+from wheelforge.build_site_data import build_one, _sector_crowding
 from wheelforge.roll_advisor import evaluate as roll_evaluate
 from wheelforge.universe import screen_universe
 
@@ -37,10 +37,13 @@ def _row(rank, t):
     earn = "" if p.get("earnings_days") is None else f"{p['earnings_days']}d"
     if avoid:
         earn += " !"
+    # A crowded pick is a fine setup that doubles up an already-represented sector: mark it
+    # so he sizes (or skips) the correlated name on purpose, not by accident.
+    crowd = " SECTOR" if p.get("sector_crowded") else ""
     return (f"{rank:>2}  {score:>5}  {t['ticker']:<6} "
             f"{('$'+format(p['strike'],'.2f')):>9} {p['dte']:>3}d "
             f"{_num(p.get('annualized_roc')):>6}% {_num(p.get('prob_otm')):>5}% "
-            f"{p.get('source','?'):<6} wf {_num(fs.get('wheel_fit')):>5} {earn:>6}")
+            f"{p.get('source','?'):<6} wf {_num(fs.get('wheel_fit')):>5} {earn:>6}{crowd}")
 
 
 def _parse(args):
@@ -70,13 +73,14 @@ def scan(args):
     rows = []
     for r in plan:
         try:
-            one = build_one(r["ticker"], r.get("earnings_days"))
+            one = build_one(r["ticker"], r.get("earnings_days"), sector=r.get("sector"))
             if one:
                 rows.append(one)
         except Exception as exc:
             print(f"  {r['ticker']}: skipped ({exc})")
     rows = [x for x in rows if x["pick"]["score"] >= minscore or x["pick"]["avoid"]]
     rows.sort(key=lambda x: (not x["pick"]["avoid"], x["pick"]["score"]), reverse=True)
+    _sector_crowding(rows)   # flag correlated duplicates AFTER the rank (does not reorder)
 
     print("\n  SCORE  TICKER     STRIKE  DTE   YIELD  OTM%  SOURCE  WHEEL  EARN")
     print("  " + "-" * 68)
