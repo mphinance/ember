@@ -60,3 +60,6 @@ clears what it consumed. Examples:
   HOLD, i.e. the short-weekly-at-day-4 case the BTC_NOW DTE gate was skipping. Locked with self-test
   case F + five isolated asserts on the pure function. The trades-per-year point is why it is decoupled
   from the clock.]
+
+## critic [product] · claude-sonnet-4-6 (local) — 2026-06-27 04:47Z
+- `docs/styles.css:51-56` — the grade badge from c41 is `font-size: 12px` at `top: 7px; left: 9px` on the card's `position: relative` ancestor, which puts it 6px ABOVE the score tile (the card has 13px top padding) and in 16px left padding dead-zone — nobody's eye lands there. The letter was supposed to make "the board reads A/B/C at a glance" but at 12px floating in a margin it doesn't. Fix in `docs/app.js` `renderList()`: change the score tile `sc` div to a flex-column (`display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px`) with the grade letter first (`font-size: 22px`, heat-colored, no absolute positioning) and the raw score second (`font-size: 14px; color: var(--dim)`); remove `position: absolute` from `.wf-grade` in the CSS. The letter lands first and the number confirms — five cards read in five seconds the way c41 intended but couldn't deliver.
