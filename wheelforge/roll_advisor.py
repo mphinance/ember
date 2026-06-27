@@ -30,6 +30,37 @@ BTC_CAPTURE = 0.50      # take the win once half the premium is decayed away...
 BTC_DTE_FRAC = 0.50     # ...and at least half the clock is still left (slow tail)
 ROLL_DTE = 7            # "into expiry" = inside the last week
 ROLL_SIGMA = 1.0        # "tested" = spot within 1 sigma of the strike
+PROFIT_TAKE_PCT = 0.50  # the canonical wheel exit: close once you can buy it back
+                        # for <= half what you sold it for (50% of max profit booked)
+
+
+def profit_take_alert(entry_premium, current_mid, dte_remaining):
+    """The WON-trade signal, decoupled from the clock. Fires CLOSE_50 the moment the
+    short can be bought back for <= PROFIT_TAKE_PCT of the entry premium, i.e. you have
+    locked half the max profit, no matter how many days are left.
+
+    This is the half of position management the BTC_NOW state in `evaluate` deliberately
+    gates behind >=50% DTE remaining. That gate is right for a monthly grinding out its
+    last few days of slow decay (let it expire, keep it all). It is WRONG for a short
+    weekly that hits 50% on day 3 or 4: there the last half of the premium is small and
+    the days left are worth more as freed collateral than as residual theta. Annual yield
+    = premium-per-trade x trades-per-year; BTC_NOW guards the first term, this guards the
+    second. So it travels as an advisory ALONGSIDE the state, never overriding it.
+
+    entry_premium  premium received per share when the put was sold
+    current_mid    the option's current mid per share (cost to buy to close)
+    dte_remaining  days left to expiry (unused by the trigger; kept for the caller's line)
+
+    Returns "CLOSE_50" when the target is hit, else None. Fail-open on junk input.
+    """
+    try:
+        entry = float(entry_premium)
+        mid = max(0.0, float(current_mid))
+    except (TypeError, ValueError):
+        return None
+    if entry <= 0:
+        return None
+    return "CLOSE_50" if mid <= entry * PROFIT_TAKE_PCT else None
 
 
 def _sigma_move(spot, iv, dte_remaining):
@@ -94,6 +125,10 @@ def evaluate(entry, current, dte_total, dte_remaining, spot, strike,
 
     captured_dollars = round((entry - current) * 100.0 * qty, 2)
     action = _action(state, captured, dte_remaining, sigma_dist, breached, is_put)
+    # The won-trade advisory, computed independently of the state machine. On a short
+    # weekly this fires while state is still HOLD (the BTC_NOW DTE gate has not opened),
+    # which is exactly the early-close opportunity that frees collateral for more cycles.
+    profit_take = profit_take_alert(entry, current, dte_remaining)
     return {
         "state": state,
         "captured": round(captured, 3),          # fraction of premium decayed
@@ -103,6 +138,7 @@ def evaluate(entry, current, dte_total, dte_remaining, spot, strike,
         "dte_frac": round(dte_frac, 3),
         "sigma_dist": (round(sigma_dist, 2) if sigma_dist is not None else None),
         "breached": breached,
+        "profit_take": profit_take,              # "CLOSE_50" or None (advisory, not state)
         "action": action,
     }
 
@@ -150,10 +186,18 @@ def _selftest():
     e = evaluate(entry=2.00, current=0.80, dte_total=30, dte_remaining=3,
                  spot=200, strike=180, iv=0.35, qty=1)
 
+    # F: a 7-DTE weekly bought back at 50% of entry on day 4 (3 DTE left). The BTC_NOW
+    # state will NOT fire (only 3/7 = 43% of the clock left, under the 50% gate), but the
+    # profit-take target IS hit. This is the early-close-on-a-weekly case the advisory
+    # exists for: state HOLD, profit_take CLOSE_50.
+    f = evaluate(entry=2.00, current=1.00, dte_total=7, dte_remaining=3,
+                 spot=195, strike=180, iv=0.40, qty=1)
+
     for name, r in [("A take-profit", a), ("B tested", b), ("C working", c),
-                    ("D breached", d), ("E late-decay", e)]:
+                    ("D breached", d), ("E late-decay", e), ("F weekly-50", f)]:
         print(f"{name:14} {r['state']:11} cap={r['captured_pct']:>5}% "
-              f"dte={r['dte_remaining']:>2} sig={r['sigma_dist']} | {r['action']}")
+              f"dte={r['dte_remaining']:>2} sig={r['sigma_dist']} "
+              f"take={r['profit_take'] or '-':>8} | {r['action']}")
 
     assert a["state"] == "BTC_NOW", "50%+ captured with 50%+ DTE left is the take-profit"
     assert a["captured_dollars"] == 240.0, "2 contracts, $1.20 decay = $240 locked"
@@ -162,6 +206,15 @@ def _selftest():
     assert c["state"] == "HOLD", "an early, working trade holds"
     assert d["state"] == "ROLL_ALERT" and d["breached"], "a breached strike near expiry alerts"
     assert e["state"] == "HOLD", "captured but <50% DTE left and far from strike is a hold"
+    assert f["state"] == "HOLD", "a 7-DTE weekly at day 4 is past the BTC_NOW DTE gate"
+    assert f["profit_take"] == "CLOSE_50", "but it HAS hit the 50% profit target (advisory)"
+
+    # the pure function, in isolation: trigger is purely current_mid <= entry * 0.50.
+    assert profit_take_alert(2.00, 1.00, 3) == "CLOSE_50", "exactly 50% of entry is hit"
+    assert profit_take_alert(2.00, 0.90, 9) == "CLOSE_50", "below 50% is hit"
+    assert profit_take_alert(2.00, 1.20, 5) is None, "60% of entry still left is not a take"
+    assert profit_take_alert(0.0, 0.0, 5) is None, "no entry premium = no signal (fail-open)"
+    assert profit_take_alert(None, 1.0, 5) is None, "junk input fails open to None"
     print("\nOK: WheelForge roll-advisor self-test passed.")
 
 

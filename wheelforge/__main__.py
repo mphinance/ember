@@ -173,7 +173,15 @@ def roll(args):
     print(f"\n  {badge.get(r['state'], r['state'])}   "
           f"captured {r['captured_pct']}%  (${r['captured_dollars']:.0f})  "
           f"sigma-to-strike {r['sigma_dist']}")
-    print(f"\n  {r['action']}\n")
+    print(f"\n  {r['action']}")
+    # The won-trade advisory rides alongside the state: it can fire while state is HOLD
+    # (a short weekly past the BTC DTE gate but already at 50% of max profit). Only worth
+    # printing when it adds something the state did not already say (state == HOLD).
+    if r.get("profit_take") == "CLOSE_50" and r["state"] == "HOLD":
+        print(f"\n  $$ PROFIT TARGET (50%)   you can buy it back for <= half what you sold "
+              f"it for. On a short weekly, closing now frees the collateral to re-sell a "
+              f"fresh week instead of holding the slow tail to expiry.")
+    print()
     return 0
 
 

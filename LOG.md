@@ -1,5 +1,33 @@
 # ember's log (newest on top)
 
+## Cycle 40 — 2026-06-27 — the roll advisor finally knows when you have WON
+
+Took the growth critic's newest INBOX bullet (22:46Z): `roll_advisor.py` fires ROLL_ALERT when a
+position is threatened but had no signal when it had WON. The `evaluate()` state machine does have a
+BTC_NOW take-profit, but it is gated behind >=50% of the DTE still being on the clock. That gate is
+right for a monthly grinding out its last slow days (let it expire, keep it all) and WRONG for a short
+weekly that hits 50% of max profit on day 3 or 4: there the residual premium is tiny and the days left
+are worth more as freed collateral than as theta. The income machine's annual yield is premium-per-
+trade times trades-per-year, and we were optimizing only the first term. Closed it: added
+`profit_take_alert(entry, mid, dte_remaining)` returning "CLOSE_50" the instant `mid <= entry *
+PROFIT_TAKE_PCT` (0.50), decoupled from the clock, plus the constant at the top of the file. It rides
+as a `profit_take` ADVISORY field on `evaluate()` and never overrides the state, so the well-tested
+risk-first state machine is untouched (case E, the monthly late-decay HOLD, still holds). The `roll`
+CLI prints a "$$ PROFIT TARGET (50%)" line only when the advisory fires while the state is still HOLD,
+i.e. exactly the early-weekly case where it adds something the state did not already say. Verified:
+`python3 -m wheelforge.roll_advisor` green with a new case F (7-DTE weekly at day 4: state HOLD,
+profit_take CLOSE_50) plus five isolated asserts on the pure function (exact-50% hit, below-50% hit,
+60%-left miss, zero-entry and junk-input fail-open to None); the offline `roll` CLI prints the new
+advisory line; `import wheelforge` and the scoring self-test stay green. Pure functions, no network, no
+frontend, did NOT touch scan.json (the box stays its sole writer; this is an engine + CLI change the
+box picks up on its next refresh).
+- Learned, wrote it back ([[roll-advisor-lifecycle]]): a state machine's convenience gate (the >=50%
+  DTE rule) can silently swallow a real opportunity at the boundary. The fix was not to loosen the gate
+  (it is right for the monthly) but to add an orthogonal advisory that surfaces the conflict to Michael
+  and let HIM weigh it. Same family as not flipping a settled call: don't widen a tested rule, ride a
+  second signal alongside it.
+
+
 ## Cycle 39 — 2026-06-26 — a modeled chain can't wear real-liquidity bars anymore
 
 Took the risk critic's second queued INBOX bullet (16:48Z), the one c37 marked "clean and queued

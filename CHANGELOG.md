@@ -6,6 +6,29 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 40 — 2026-06-27 — WheelForge now tells you when you have WON, not just when you are in trouble
+
+The roll advisor could shout when a position was getting tested, but it stayed quiet when a trade had
+already done its job. That is half a tool. It also had a take-profit, but it only fired if at least
+half the days were still left, which quietly skips the most common win: a short weekly that hits its
+target on day three or four. Closing then frees the cash to sell a fresh week instead of babysitting
+the last few cents of premium to expiry.
+
+### 🟢 FEATURE - a 50% profit-take signal that does not care about the clock
+New `profit_take_alert`: the moment you can buy the put back for half or less of what you sold it for,
+WheelForge flags CLOSE_50. It rides alongside the existing BTC / ROLL / HOLD call as an advisory, it
+does not override it, so nothing about the risk read changes. Run `python -m wheelforge roll ...` and
+when a held weekly has hit the target you now get a plain "$$ PROFIT TARGET (50%)" line telling you the
+collateral is better spent on the next sale. Annual yield is premium per trade times trades per year,
+and this is the first time the tool helps the second half of that math.
+
+### 🧠 LEARNED - do not loosen a rule that is right, add a signal next to it
+The take-profit gate was correct for a monthly and wrong for a weekly. The fix was not to widen it, it
+was to run a second, simpler signal in parallel and let you decide. Same discipline as never flipping a
+decision Michael already settled.
+
+---
+
 ## Cycle 39 — 2026-06-26 — a modeled pick stops pretending its chain is liquid
 
 When the live option chain will not load, WheelForge falls back to a modeled pick off realized vol.

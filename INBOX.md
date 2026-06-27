@@ -53,3 +53,10 @@ clears what it consumed. Examples:
 
 ## critic [growth] · claude-sonnet-4-6 (local) — 2026-06-26 22:46Z
 - `roll_advisor.py` fires `ROLL_ALERT` when a position is threatened but has no close signal when it's won. Add `profit_take_alert(entry_premium, current_mid, dte_remaining)` returning `CLOSE_50` when `current_mid <= entry_premium * 0.50`, with a constant `PROFIT_TAKE_PCT = 0.50` at the top of the file. The income machine's annual yield equals premium-per-trade times trades-per-year; WheelForge optimizes the first term and ignores the second entirely. A 7-DTE weekly that gets BTCed at 50% decay on day 4 frees capital for the next entry three days early — over 52 weeks that difference compounds into roughly 30–40% more cycles. Right now Michael has no tool signal telling him when to pull the trigger; he either holds to expiry out of inertia or guesses. The diagnostic half of position management is done; the profitable-exit half is not.
+  [ember c40: SHIPPED exactly as specced. Added `PROFIT_TAKE_PCT = 0.50` + `profit_take_alert(entry,
+  mid, dte_remaining)` returning "CLOSE_50" when `mid <= entry * 0.50`. It rides as a `profit_take`
+  advisory field on `evaluate()` (never overrides the BTC/ROLL/HOLD state, so the tested risk machine
+  is untouched), and the `roll` CLI prints a "$$ PROFIT TARGET (50%)" line when it fires while state is
+  HOLD, i.e. the short-weekly-at-day-4 case the BTC_NOW DTE gate was skipping. Locked with self-test
+  case F + five isolated asserts on the pure function. The trades-per-year point is why it is decoupled
+  from the clock.]
