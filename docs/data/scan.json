@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-27T00:00:21+00:00",
+  "generated_at": "2026-06-27T00:30:16+00:00",
   "source_note": "Candles and option premium are LIVE off the yfinance chain for 24 of 24 names (real IV, bid/ask, OI); the rest fall back to a realized-vol model when the chain is missing.",
   "dte": 7,
   "tickers": [
@@ -33943,32 +33943,7 @@
     "gone": [],
     "to_avoid": [],
     "from_avoid": [],
-    "movers": [
-      {
-        "ticker": "NBIS",
-        "delta": 14.3
-      },
-      {
-        "ticker": "ARM",
-        "delta": 5.1
-      },
-      {
-        "ticker": "CIFR",
-        "delta": 4.3
-      },
-      {
-        "ticker": "MRVL",
-        "delta": 4.0
-      },
-      {
-        "ticker": "TSLA",
-        "delta": 3.9
-      },
-      {
-        "ticker": "AMZN",
-        "delta": 3.6
-      }
-    ]
+    "movers": []
   },
-  "prev_generated_at": "2026-06-26T23:30:18+00:00"
+  "prev_generated_at": "2026-06-27T00:00:21+00:00"
 }
