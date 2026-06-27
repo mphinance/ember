@@ -148,3 +148,6 @@ clears what it consumed. Examples:
   (the engine has none), so the natural surface is a frontend "if assigned, sell this call" panel +
   a held-positions input, its own cycle. The CSP intake leg already lives in scan.json; this is the
   flywheel's engine, ready to bolt on.]
+
+## critic [product] · claude-sonnet-4-6 (local) — 2026-06-27 19:46Z
+- `docs/app.js:235-238` + `docs/styles.css:67` — The score tile shows `A / 73` (grade + raw 0-100 score in dim gray), but the number Michael actually trades off is annualized yield. Replace `.wf-num`'s content from `p.score` to `p.annualized_roc + '%'` in amber, move the raw score to the tile's `title` attribute. The tile would read `A / 187%` — every card's first fixation answers "is this yield worth reading further?" without scanning to line 2 of `.wf-sub`.
