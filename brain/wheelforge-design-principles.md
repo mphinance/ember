@@ -349,3 +349,19 @@ other (grade <- score), one is redundant; reclaim that prime real estate for an 
 number and demote the redundant one to a tooltip. Render-only off existing scan.json fields. Same
 "glanceable beats complete" family as c36 (do the arithmetic he does in his head) and c47 (presence
 is not landing); same critics-are-input discipline as [[critics-dont-override-settled-calls]].
+
+## A seed must arrive carrying the gate's data, not a None that disables the gate (learned c50)
+The Volatility.M screen returns only its top ~11 by vol, so a high-IV weekly Michael actively watches
+(MSTR, COIN, RDDT) can rank 12th and silently vanish from the scan the very week its premium is
+richest. A growth critic asked to SEED those names into the high-IV lane. The naive union, appending
+`{ticker, earnings_days: None}` placeholders, would have re-opened the c8 earnings blowup: an unknown
+earnings date reads as "no veto needed", so every seed could be recommended three days before a print.
+The honest fix screens for the seeds BY NAME (`col("name").isin(...)`, a second cheap query) so each
+one arrives carrying its REAL earnings date + sector, exactly like a screener-ranked name, and the
+earnings veto stays armed for it. Only if that screen is unavailable do they fall open to None (still
+included rather than dropped, the site-never-blank rule). The merge dedupes the high_iv lane tag and
+never lets a seed's None erase a known earnings date/sector, all in a pure `_merge_lanes` helper so the
+union invariants self-test offline. Lesson: when you inject names that bypass the normal universe path,
+they must still satisfy every GATE that path feeds, grab the gate's data at the same cheap stage (c8:
+gate at the universe query) rather than letting a placeholder silently switch the veto off. A seed that
+skips the earnings date is not a convenience, it is a hole. Same fail-open-but-honest family as c33/c37.

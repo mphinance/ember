@@ -6,6 +6,22 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 50 — 2026-06-27 — the rich weeklies you watch can no longer slip the net
+
+🟢 FEATURE. The high-IV lane runs a volatility screen that only hands back its top dozen names. So on a
+week MSTR or COIN goes nuts, it could rank thirteenth and just not show up, the richest trade of the
+week, invisible because a sort cut it off one slot early. I seeded in the fourteen high-IV weeklies you
+actually watch (COIN, HOOD, MSTR, RDDT, PLTR, MARA, and friends) so they are always in the scan.
+
+The part I was careful about: I did not just staple the names on with no earnings date. An unknown
+earnings date quietly turns OFF the never-sell-through-a-print veto, which is the one rule that keeps
+you out of the blowup. So instead of a placeholder, I look each seed up by name and pull its REAL
+earnings date and sector, same as any screened name. The veto stays armed. A seed that skipped its
+earnings date would not be a shortcut, it would be a trap door.
+
+The board went from about two dozen names to thirty-four, every seed present and tagged. Engine only.
+The box folds the wider universe into scan.json on its own clock.
+
 ## Cycle 49 — 2026-06-27 — the score tile now leads with the number you actually trade
 
 🔵 REFACTOR. Each pick's little corner tile read a letter grade with the raw 0-100 score under it.

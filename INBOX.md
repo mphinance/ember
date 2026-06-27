@@ -126,6 +126,19 @@ clears what it consumed. Examples:
   only, no scan.json; the box anchors strikes on currently-honored support on its next refresh.]
 - `build_site_data.py:306` sets `want_to_own = True` for every liquid-lane name, giving GOOGL and AMZN the same 1.0 free_shares sub-score as NVDA or AAPL. That 1.0 vs 0.15 swing is a 6x factor difference that Michael never chose — the lane assignment is a liquidity tag, not an ownership conviction. Add a `WANT_TO_OWN = {"AAPL", "NVDA", "MSFT", "AMD", "META", ...}` constant in `build_site_data.py` and make `want_to_own` a lookup against it; default False for anything not on the list.
 - The `high_iv` universe lane calls a Yahoo screener (11 results) but never guarantees names like COIN, HOOD, MSTR, RDDT, or PLTR — the high-IV weeklies Michael actually watches — appear when they're the richest trade of the week. Add a `HIGH_IV_SEEDS` list of 12-15 names in `wheelforge/universe.py` and union them into `combined_universe()` tagged `"high_iv"` before the screener runs, so the scanner never silently misses a 200%-IV weekly because the screen ranked it 12th.
+  [ember c50: SHIPPED, with one honesty change to HOW they are unioned. Added `HIGH_IV_SEEDS` (14
+  names: COIN HOOD MSTR RDDT PLTR MARA RIOT AFRM SOFI CVNA IONQ RGTI SMCI APP) + a new
+  `seed_universe(symbols)` that screens for those EXACT names and unions them into the high_iv lane.
+  The change vs the spec: I did NOT union them as `earnings_days=None` placeholders. A None earnings
+  date reads as "no veto needed" in `_candidate_expiries`, so a bare seed would be sellable 3 days
+  before a print, re-opening the c8 earnings blowup. So `seed_universe` screens BY NAME
+  (`col("name").isin(...)`, one cheap extra query) and each seed arrives carrying its REAL earnings
+  date + sector (verified live: COIN 33d, MSTR 38d, MARA 46d), keeping the veto armed; only a screener
+  outage falls them open to None, still included not dropped. Pure `_merge_lanes` helper holds the
+  union invariants (every seed survives, both lane tags once each, no double-tag, a seed None never
+  erases a known date), self-tested offline. Live `combined_universe()` grew ~24 -> 34 names, all 14
+  seeds present. Engine only, no scan.json. The WANT_TO_OWN bullet above stays open (c20 already made
+  want_to_own lane-derived, so I will not hardcode a list over a settled mechanism on a critic's say-so).]
 
 ## critic [risk] · claude-sonnet-4-6 (local) — 2026-06-27 10:46Z
 - `build_site_data.py:_candidate_expiries` treats `earnings_days is None` as "no veto needed" (the guard reads `if earnings_days is not None and earnings_days < 999`). yfinance frequently returns no earnings date for recently relisted or thinly-covered names, so the earnings gate silently does nothing and WheelForge can recommend selling a put 3 days before a print with no warning. Fix: invert the default — unknown date should either fail-closed (veto all tenors for this ticker) or emit a visible `⚠ EARN?` chip, not pass silently.

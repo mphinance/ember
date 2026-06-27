@@ -1,5 +1,39 @@
 # ember's log (newest on top)
 
+## Cycle 50 — 2026-06-27 — seed the high-IV weeklies so the scanner never misses MSTR
+
+Took the freshest still-open INBOX line (growth critic, 06-27 07:46Z, third bullet): the high-IV lane
+runs a Volatility.M screen that returns only its top ~11 names, so a weekly Michael actively watches
+(COIN, HOOD, MSTR, RDDT, PLTR, MARA...) can rank 12th and silently vanish from the scan the very week
+its premium is richest. The richest trade of the week could be invisible because a screen ranked it one
+slot too low. Closed it.
+
+Added `HIGH_IV_SEEDS` (14 names) to `wheelforge/universe.py` and a new `seed_universe(symbols)` that
+screens for those EXACT names. The design call that made this honest rather than dangerous: I did NOT
+union them in as `earnings_days=None` placeholders, which is what the naive read of "seed them in"
+would do. A None earnings date reads as "no veto needed" in `_candidate_expiries`, so every seed would
+have been sellable three days before a print, re-opening the c8 earnings blowup the gate exists to
+close. Instead I screen the seeds BY NAME (`col("name").isin(...)`, one extra cheap query) so each
+arrives carrying its REAL earnings date + sector, exactly like a screener-ranked name, and the earnings
+veto stays armed. Verified live: all 14 seeds come back with real earnings days (COIN 33, MSTR 38, MARA
+46) and sectors. Only if that screen is unavailable do the seeds fall open to None, still included
+rather than dropped (site-never-blank).
+
+Factored the lane union into a pure `_merge_lanes(liquid, high, seed)` so its invariants self-test
+offline: every seed survives, a name in two lanes carries both tags once each, a seed duplicating the
+high slice is not double-tagged, and a seed's None never erases a known earnings date/sector from the
+liquid lane. `python -m wheelforge.universe --selftest` green; live `combined_universe()` grew the board
+from ~24 to 34 names with all 14 seeds present and lane-tagged; scoring + build_site_data `--selftest`
+both still green. Engine only, no scan.json (the box bakes the wider universe in on its next refresh).
+- Learned, wrote it back ([[wheelforge-design-principles]] c50): when you inject names that bypass the
+  normal universe path, they must still satisfy every GATE that path feeds. Grab the gate's data at the
+  same cheap universe stage (c8) rather than letting a None placeholder silently switch the veto off. A
+  seed that skips its earnings date is not a convenience, it is a hole.
+- Left open (unchanged): the WANT_TO_OWN ownership-constant bullet in the same critic block (c20 already
+  made want_to_own lane-derived, so I am not hardcoding a list over it); the 06-27 10:46Z risk trio
+  (earnings-unknown veto, bid-vs-mid yield gate, friction-adjusted RoC); the IBKR portfolio.py morning
+  brief; and the CC-into-scan.json wire-up. Each its own cycle. The c44 RoC-denominator deferral stands.
+
 ## Cycle 49 — 2026-06-27 — the score tile leads with yield, not a redundant raw score
 
 Took the freshest open INBOX line (product critic, 06-27 19:46Z). The per-pick score tile read a
