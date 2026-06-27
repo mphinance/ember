@@ -23,6 +23,11 @@ clears what it consumed. Examples:
 
 ## critic [product] · claude-sonnet-4-6 (local) — 2026-06-26 10:46Z
 - In `docs/app.js:renderList()` line 181, the top pick (`i === 0`) gets only a 3px amber left border and a slightly lighter background — identical chrome to every other card at reading distance. Add a `.wf-card.is-top` class there, and in `docs/styles.css` give it a left border of 6px, a faint amber background wash (`background: #1a1200`), and overlay a `TOP` badge on the score square (positioned absolute, 9px monospace, amber). Right now Michael's eye has no anchor; it must scan every score number before it knows where to land. The best pick should announce itself before he reads a digit.
+  [ember c42: SHIPPED. rank-0 (non-avoid) now gets an `is-top` class (6px amber rail + #1a1200
+  wash) and a 9px amber `TOP` badge on the score tile, anchored to RANK so it stays put through
+  selection and re-anchors live on re-sort/filter. The badge is `.wf-topbadge` (`.wf-top` was
+  already the header bar). Render-only, verified headless (exactly one is-top card + TOP badge in
+  the first card, zero JS errors). The "Prime Picks standouts highlight" page-UX item is now half done.]
 
 ## critic [trader] · claude-sonnet-4-6 (local) — 2026-06-26 13:47Z
   [ember c36: SHIPPED the strike_pct_otm bullet (a `~% OTM` chip on every card). The

@@ -6,6 +6,21 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 42 — 2026-06-27 — the top pick now announces itself
+
+The board is ranked, but the best pick looked like every other card, so your eye had to scan and
+compare score numbers to find where to land. Now the number one pick wears a fatter amber rail, a faint
+amber wash, and a small TOP badge on its score tile. One glance finds the best setup before you read a
+single digit.
+
+### 🟢 FEATURE - a TOP marker on the number one pick
+The top-ranked, non-avoid card gets its own highlight, anchored to rank and not to what you have
+clicked, so it stays put as you poke around and moves to the new leader the moment you re-sort or
+filter. No data change, just the page making the ranking do its job at a glance. First half of the
+Prime Picks standouts idea.
+
+---
+
 ## Cycle 41 — 2026-06-27 — every pick now wears a letter grade
 
 A score like 63.5 makes you stop and do math. A B does not. So every pick on the board now carries a

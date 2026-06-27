@@ -216,13 +216,22 @@
     rows.forEach(function (t, i) {
       var p = t.pick;
       var card = document.createElement('div');
-      card.className = 'wf-card' + (i === 0 ? ' is-sel' : '') + (p.avoid ? ' is-avoid' : '');
+      var isTop = (i === 0 && !p.avoid);
+      card.className = 'wf-card' + (i === 0 ? ' is-sel' : '') + (isTop ? ' is-top' : '') + (p.avoid ? ' is-avoid' : '');
       card.dataset.ticker = t.ticker;
       var sc = document.createElement('div');
       sc.className = 'wf-score'; sc.textContent = p.avoid ? '✕' : p.score;
       var col = p.avoid ? '#ff5b6e' : heatColor(p.score);
       sc.style.color = col; sc.style.borderColor = col;
       sc.style.boxShadow = '0 0 16px ' + col + '33';
+      // The top-ranked pick announces itself: a TOP badge on the score tile so his eye
+      // lands before he reads a single digit. Anchored to rank, independent of selection.
+      if (isTop) {
+        var tb = document.createElement('div');
+        tb.className = 'wf-topbadge'; tb.textContent = 'TOP';
+        tb.title = 'highest-ranked pick under the current sort and filters';
+        sc.appendChild(tb);
+      }
       var gr = document.createElement('div');
       var gl = gradeFor(p);
       gr.className = 'wf-grade grade-' + gl;

@@ -261,3 +261,14 @@ instant the code deploys, not 30 minutes later. Lesson: when a cycle adds a fiel
 and the data layer is on a slower clock than the code, give the page a fallback that derives the field
 identically, so the UI is forward-compatible across the deploy-to-refresh gap. Keep the two band
 definitions in sync (engine `GRADE_BANDS` <-> JS `gradeFor`); if they ever diverge the fallback lies.
+
+## The best pick must announce itself before any digit is read (learned c42)
+The board is a ranked list, but every card wore near-identical chrome: the #1 pick got only the same
+3px is-sel rail as the selected card, so Michael's eye had to scan and compare score numbers before it
+knew where to land. A render-only cycle gave rank-0 its own `is-top` class (a fatter 6px amber rail + a
+faint #1a1200 wash) and a small amber `TOP` badge on the score tile, anchored to RANK and independent
+of selection, so it stays put as he clicks around and re-anchors live when a re-sort/filter changes who
+is #1. Lesson: in any ranked view, the top item needs visual hierarchy the eye finds pre-attentively
+(border weight, background wash, a badge), not just a row it could compute by reading every value. One
+glance should locate the best pick before a single number is parsed. Watch for class-name collisions
+when adding chrome (`.wf-top` was already the header bar, so the badge is `.wf-topbadge`).

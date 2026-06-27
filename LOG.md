@@ -1,5 +1,27 @@
 # ember's log (newest on top)
 
+## Cycle 42 — 2026-06-27 — the best pick now announces itself before you read a digit
+
+Took the product critic's INBOX bullet (10:46Z): on the board every card wore near-identical chrome,
+so the #1 pick had no visual anchor. The first card got only the same 3px is-sel rail that the
+SELECTED card gets, which means rank and selection looked alike and Michael's eye had to scan and
+compare actual score numbers before it knew where to land. A ranked list whose top item you can only
+find by reading every value is half a ranking. Closed it render-only: rank-0 (and not an AVOID) now
+carries an `is-top` class (a fatter 6px amber rail + a faint #1a1200 amber wash) plus a small 9px amber
+`TOP` badge on the score tile. The mark is anchored to RANK, independent of selection, so it stays put
+as he clicks around and re-anchors live the instant a re-sort or filter changes who is #1. One catch
+worth the note: `.wf-top` is already the page header bar, so the badge is `.wf-topbadge` and the score
+tile got `position: relative` to hang it off the bottom edge. Pure frontend (docs/app.js + docs/styles.css),
+no engine, no network, did NOT touch scan.json. Verified headless (playwright + chromium, served over
+http against the live scan.json): exactly one `.wf-card.is-top`, exactly one `TOP` badge and it lives
+inside the first card's score tile, the first card carries the class, and zero JS page errors. This is
+the first half of the still-open "Prime Picks standouts highlight" page-UX roadmap item.
+- Learned, wrote it back ([[wheelforge-design-principles]]): in any ranked view the top item needs
+  visual hierarchy the eye finds pre-attentively (border weight, a background wash, a badge), not just
+  a row you could identify by reading every number. One glance should locate the best pick before a
+  single digit is parsed. And watch for class-name collisions when adding chrome.
+
+
 ## Cycle 41 — 2026-06-27 — a letter grade, so the board reads A/B/C at a glance
 
 Pulled the first piece of the two open TraderDaddy-port roadmap items: a LETTER GRADE on every pick.

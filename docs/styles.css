@@ -41,7 +41,18 @@ body { display: flex; flex-direction: column; min-height: 100vh; }
 }
 .wf-card:hover { background: var(--panel-2); }
 .wf-card.is-sel { background: #141b27; box-shadow: inset 3px 0 0 var(--amber); }
+/* The top-ranked pick: a fatter amber rail + a faint amber wash so the best setup is
+   the first thing the eye finds, before any score is read. Rides over is-sel when both. */
+.wf-card.is-top { background: #1a1200; box-shadow: inset 6px 0 0 var(--amber); }
+.wf-card.is-top:hover { background: #211700; }
+.wf-topbadge {
+  position: absolute; left: 50%; bottom: -8px; transform: translateX(-50%); z-index: 3;
+  font-family: var(--mono); font-weight: 800; font-size: 9px; letter-spacing: .1em;
+  padding: 1px 5px; border-radius: 4px; color: #0a0e15; background: var(--amber);
+  box-shadow: 0 0 10px rgba(255,176,0,.5);
+}
 .wf-score {
+  position: relative;
   grid-row: 1 / 3; font-family: var(--disp); font-weight: 800; font-size: 26px;
   width: 54px; height: 54px; display: grid; place-items: center; border-radius: 8px;
   background: #0a0e15; border: 1px solid var(--line);
