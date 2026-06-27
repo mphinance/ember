@@ -220,10 +220,22 @@
       card.className = 'wf-card' + (i === 0 ? ' is-sel' : '') + (isTop ? ' is-top' : '') + (p.avoid ? ' is-avoid' : '');
       card.dataset.ticker = t.ticker;
       var sc = document.createElement('div');
-      sc.className = 'wf-score'; sc.textContent = p.avoid ? '✕' : p.score;
+      sc.className = 'wf-score';
       var col = p.avoid ? '#ff5b6e' : heatColor(p.score);
-      sc.style.color = col; sc.style.borderColor = col;
+      sc.style.borderColor = col;
       sc.style.boxShadow = '0 0 16px ' + col + '33';
+      // The letter grade leads INSIDE the score tile and the raw number confirms below it,
+      // so the board reads A/B/C at a glance before the eye decodes a single digit (c47).
+      // The c41 grade used to float in the card's top-left padding dead-zone; this lands it.
+      var gl = gradeFor(p);
+      var gr = document.createElement('div');
+      gr.className = 'wf-grade grade-' + gl;
+      gr.textContent = gl;
+      gr.title = 'grade ' + gl + ' (A>=80 B>=65 C>=50 D>=35 F below; an AVOID is an honest F)';
+      var num = document.createElement('div');
+      num.className = 'wf-num'; num.textContent = p.avoid ? '✕' : p.score;
+      if (p.avoid) num.style.color = col;
+      sc.appendChild(gr); sc.appendChild(num);
       // The top-ranked pick announces itself: a TOP badge on the score tile so his eye
       // lands before he reads a single digit. Anchored to rank, independent of selection.
       if (isTop) {
@@ -232,11 +244,6 @@
         tb.title = 'highest-ranked pick under the current sort and filters';
         sc.appendChild(tb);
       }
-      var gr = document.createElement('div');
-      var gl = gradeFor(p);
-      gr.className = 'wf-grade grade-' + gl;
-      gr.textContent = gl;
-      gr.title = 'grade ' + gl + ' (A>=80 B>=65 C>=50 D>=35 F below; an AVOID is an honest F)';
       var tk = document.createElement('div'); tk.className = 'wf-tk'; tk.textContent = t.ticker;
       var dir = document.createElement('div'); dir.className = 'wf-dir'; dir.textContent = p.direction;
       var sub = document.createElement('div'); sub.className = 'wf-sub';
@@ -265,7 +272,7 @@
           + '<br><b>' + fmt(p.annualized_roc) + '%</b> ann &middot; <b>' + fmt(p.prob_otm) + '%</b> OTM '
           + src + hiv + crowd + (p.earnings_days != null ? ' &middot; earn ' + p.earnings_days + 'd' : '');
       }
-      card.appendChild(sc); card.appendChild(gr); card.appendChild(tk); card.appendChild(dir); card.appendChild(sub);
+      card.appendChild(sc); card.appendChild(tk); card.appendChild(dir); card.appendChild(sub);
       card.addEventListener('click', function () { select(t.ticker); });
       host.appendChild(card);
     });

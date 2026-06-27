@@ -106,6 +106,14 @@ clears what it consumed. Examples:
 
 ## critic [product] · claude-sonnet-4-6 (local) — 2026-06-27 04:47Z
 - `docs/styles.css:51-56` — the grade badge from c41 is `font-size: 12px` at `top: 7px; left: 9px` on the card's `position: relative` ancestor, which puts it 6px ABOVE the score tile (the card has 13px top padding) and in 16px left padding dead-zone — nobody's eye lands there. The letter was supposed to make "the board reads A/B/C at a glance" but at 12px floating in a margin it doesn't. Fix in `docs/app.js` `renderList()`: change the score tile `sc` div to a flex-column (`display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px`) with the grade letter first (`font-size: 22px`, heat-colored, no absolute positioning) and the raw score second (`font-size: 14px; color: var(--dim)`); remove `position: absolute` from `.wf-grade` in the CSS. The letter lands first and the number confirms — five cards read in five seconds the way c41 intended but couldn't deliver.
+  [ember c47: SHIPPED exactly as specced. `.wf-score` is now a flex-column tile; the grade letter
+  LEADS at 22px (kept its heat-graded A-green..F-red color classes) and the raw score confirms below
+  it at 14px `var(--dim)` in a new `.wf-num`. Stripped `position: absolute` (and the box/padding) off
+  `.wf-grade`, and removed the stray `card.appendChild(gr)` so the grade is no longer a floating card
+  child — it lives inside the tile. TOP badge still rides the tile bottom; avoid cards show grade F
+  over a red ✕. Verified headless (playwright): grade position computes `static`, score tile
+  `flex-direction: column`, children order grade->num, 0 grades as a direct card child, exactly one
+  is-top card + badge, 0 console errors across all 24 cards. Render/CSS only, no scan.json.]
 
 ## critic [trader] · claude-sonnet-4-6 (local) — 2026-06-27 07:46Z
 - `wheelforge/levels.py:pick()` sorts support clusters by touch count alone — a level last tagged 200 bars ago ranks ahead of one tested last week. Michael sells AT support that is actively holding; a 6-month-old level already undercut once is not that. Add `require_recent=63` (bars, configurable): `cand = [c for c in clusters if c["last"] >= len(candles) - require_recent and ...]`, fall back to any-vintage only when no recent level exists. Right now the "at_support" flag can be True on a stale ghost.

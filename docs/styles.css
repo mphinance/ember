@@ -53,18 +53,18 @@ body { display: flex; flex-direction: column; min-height: 100vh; }
 }
 .wf-score {
   position: relative;
-  grid-row: 1 / 3; font-family: var(--disp); font-weight: 800; font-size: 26px;
-  width: 54px; height: 54px; display: grid; place-items: center; border-radius: 8px;
+  grid-row: 1 / 3; font-family: var(--disp); font-weight: 800;
+  width: 54px; height: 54px; border-radius: 8px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
   background: #0a0e15; border: 1px solid var(--line);
 }
-/* The letter grade: a corner badge on the score tile so the board reads A/B/C at a
-   glance. Absolutely placed so it never disturbs the score/ticker/sub grid. */
+/* The letter grade LEADS inside the score tile (heat-colored, big) and the raw number
+   confirms below it, so the board reads A/B/C at a glance before the eye decodes a digit. */
 .wf-grade {
-  position: absolute; top: 7px; left: 9px; z-index: 2;
-  font-family: var(--disp); font-weight: 800; font-size: 12px; line-height: 1;
-  padding: 2px 5px; border-radius: 5px; letter-spacing: .02em;
-  background: #0a0e15; border: 1px solid currentColor;
+  font-family: var(--disp); font-weight: 800; font-size: 22px; line-height: 1;
+  letter-spacing: .02em;
 }
+.wf-num { font-family: var(--disp); font-weight: 700; font-size: 14px; line-height: 1; color: var(--dim); }
 .wf-grade.grade-A { color: #7dffb0; }
 .wf-grade.grade-B { color: #ffd24a; }
 .wf-grade.grade-C { color: #ff9a3c; }

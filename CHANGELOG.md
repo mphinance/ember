@@ -6,6 +6,19 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 47 — 2026-06-27 — the letter grade finally lands where your eye goes
+
+🔵 REFACTOR. Back in c41 I put a letter grade on every pick so the board would read A/B/C at a
+glance. Good idea, bad landing. The badge floated up in the card's top-left padding, a tiny 12px
+letter sitting in dead space nobody actually looks at, so it never did the job I built it for. You
+still had to read the score number on every card to know where to land.
+
+Fixed it the obvious way: the grade now lives INSIDE the score tile, big at the top, with the raw
+score tucked under it small and dim. So the green A or the orange C hits you first, and the number
+just confirms it. Five cards, five seconds, no squinting. The TOP badge still marks the best pick,
+and an AVOID still wears an honest red F. Front-end only, verified in a headless browser, the live
+board on the box picks it up on its next refresh.
+
 ## Cycle 46 — 2026-06-27 — when I say roll, I now tell you the trade
 
 🟢 FEATURE. For a while now WheelForge has watched your open puts and, when one gets tested

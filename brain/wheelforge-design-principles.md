@@ -322,3 +322,16 @@ swapping prob_otm's IV for RV (a meaning change to a number deliberately labeled
 Michael's call not a critic's) and "unifying" sqrt(252)/dte-365 (already the standard consistent
 convention, the proposed change would CREATE the 20% inflation it claims to fix). Read each bullet on
 its own merits. Same critics-are-input-not-orders discipline as [[critics-dont-override-settled-calls]].
+
+## A readability feature only ships when the eye actually lands on it (learned c47)
+c41 put a letter grade on every pick so the board would read A/B/C at a glance, but I placed it as a
+12px badge absolutely positioned in the card's top-left padding, a dead-zone 6px above the score tile
+and inside the left margin. The value was correct and present, but nobody's eye goes there, so it was
+decoration: you still had to decode the score number on every card. c47 moved the grade INSIDE the
+score tile (the place the eye already lands) as a flex-column, grade letter leading at 22px and the raw
+score confirming below it small and dim. Lesson: presence is not landing. A signal placed in a margin,
+a padding gap, or a corner the layout does not draw attention to is decoration no matter how right its
+value. Put the LEAD signal where the eye already goes, size it to lead, demote the confirming detail
+under it, and verify placement (computed position/layout in a headless browser), not just that the
+element exists. Same "the human reads it" instinct as the visible flags in c43/c44, applied to UI not
+just data.

@@ -1,5 +1,38 @@
 # ember's log (newest on top)
 
+## Cycle 47 — 2026-06-27 — the c41 letter grade finally lands inside the score tile
+
+Took the freshest open INBOX line (product critic, 06-27 04:47Z). The letter grade I shipped in c41
+was supposed to let the board read A/B/C at a glance, but I had placed it as a 12px corner badge
+absolutely positioned at top:7px/left:9px, which dropped it into the card's top padding dead-zone, 6px
+above the score tile and inside the 16px left padding margin. Nobody's eye lands there, so the grade
+was decoration: you still had to decode every score number to know where to look. A real readability
+feature that, as built, did not deliver the read.
+
+Fixed it exactly as the critic specced. `.wf-score` is now a flex-column tile: the grade letter LEADS
+at 22px (I kept its heat-graded color classes, A-green through F-red) and the raw score confirms below
+it at 14px `var(--dim)` in a new `.wf-num` element. I stripped `position: absolute` plus the badge
+box/border/padding off `.wf-grade` so it is a plain colored letter in the tile, and removed the stray
+`card.appendChild(gr)` in `renderList()` so the grade is no longer a floating direct child of the
+card; it now nests in the score tile alongside the existing TOP badge. Avoid cards show grade F over a
+red ✕, so the honest-F intent from c41 survives. Render + CSS only; I did NOT touch scan.json (the box
+owns it and re-renders this code on its next 30-minute refresh).
+
+Verified headless (playwright + the bundled chromium, served docs/ over a local http server against
+the real scan.json): the grade's computed `position` is now `static` (was absolute), the score tile's
+`flex-direction` is `column`, the tile's children order is grade -> num, exactly 0 cards carry a grade
+as a direct child, exactly one is-top card with one TOP badge, and 0 console/page errors across all 24
+rendered cards. This advances the "match the TraderDaddy CSP-wheel page UX / standouts highlight"
+front-end arc (c41 grade, c42 TOP anchor): the board now reads grade-first the way c41 intended.
+- Learned, wrote it back ([[wheelforge-design-principles]] c47): a readability feature is only shipped
+  when the eye actually lands on it. A signal placed in a margin or padding dead-zone is decoration no
+  matter how correct its value; put the lead signal where the eye already goes (the score tile here),
+  size it to lead, and demote the confirming detail. Verify placement, not just presence.
+- Left open on purpose: the three still-unconsumed INBOX bullets (the IBKR portfolio morning-brief, the
+  WANT_TO_OWN ownership-conviction constant, and the HIGH_IV_SEEDS universe union) each want their own
+  cycle. The c44 RoC-denominator deferral stands (Michael's call, not a critic's).
+
+
 ## Cycle 46 — 2026-06-27 — a ROLL_ALERT now names the trade, not just the worry
 
 Took the growth critic's roll_target bullet (INBOX 06-26 07:46Z), which I had deferred twice on
