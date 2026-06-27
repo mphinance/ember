@@ -303,3 +303,22 @@ explicit CLI scan) is never crowded and never fills a sector slot, and AVOID nam
 slot. Lesson: keep the quality score about the trade in front of you; concentration, correlation, and
 sizing are portfolio decisions that belong in a flag the human reads, not folded into the per-name
 number. Same "vetoes/flags not factors" discipline as the earnings gate.
+
+## A noisy short estimator needs a floor against its own sampling error (learned c45)
+c28 switched the live-weekly VRP denominator to a 5-day realized vol so a fresh vol spike (when you
+want to sell) is not masked by a stale 20-day RV. But a 5-day window is ~5 returns, so its sampling
+error is large in BOTH directions, and c28 only reasoned about the spike-UP case. The spike-DOWN case
+is the trap a quant critic caught: one unusually quiet week drops short_rv to ~0.4x the 20-day rv, so
+VRP (iv/short_rv) blows past the richness saturation ceiling on a name whose vol is actually cheap, the
+scanner manufactures richness out of a quiet tape. Fixed with `SHORT_RV_FLOOR = 0.70` (a pure, tested
+`_floor_short_rv`): the 5-day denominator can compress by at most 30%, not 60%. Crucially it is a
+LOW-TAIL clamp only, a genuinely hot week (short_rv already above the floor) passes through untouched,
+so c28's spike-UP honesty is fully preserved, I only stopped the lie in the other direction. Lesson:
+when you swap a stable estimator for a short noisy one to gain responsiveness, you inherit its sampling
+error in BOTH tails, floor (or cap) the tail that produces the FLATTERING error while leaving the tail
+that produces the honest one free. A one-sided clamp keeps the responsiveness and kills only the lie.
+And: a critic can bundle a real fix with bad ones, take only the right bullet. The same block proposed
+swapping prob_otm's IV for RV (a meaning change to a number deliberately labeled risk-neutral, c22, so
+Michael's call not a critic's) and "unifying" sqrt(252)/dte-365 (already the standard consistent
+convention, the proposed change would CREATE the 20% inflation it claims to fix). Read each bullet on
+its own merits. Same critics-are-input-not-orders discipline as [[critics-dont-override-settled-calls]].

@@ -6,6 +6,32 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 45 — 2026-06-27 — a quiet week stops faking rich premium
+
+Richness is the whole edge here: I only want to put you in a put when the premium is fat versus how
+much the stock actually moves. To stay honest on a weekly, I measure that move over the last five days,
+not the last month, so a fresh vol pop shows up the moment it matters. The catch is five days is a tiny
+sample, and a freakishly calm week made that number tiny too, which made the premium look rich when it
+was just average premium on a sleepy tape. So a boring name could float up the board wearing a richness
+score it did not earn. Fixed it with a simple floor: the five-day move I divide by can now sit no lower
+than 70 percent of the 20-day move, so one quiet week can shave the yardstick by at most a third, not by
+half. It only clamps the low side. A genuinely wild week still counts in full, so the responsive part
+you actually wanted is untouched, I just closed the one direction that flattered a cheap name. Engine
+only, the box re-scores on its next refresh.
+
+While I was in there I left two other critic suggestions alone on purpose. One wanted me to swap the
+stay-OTM odds over to a different volatility, but that number is deliberately the risk-neutral one and
+relabeling what it means is your call, not a bot's. The other claimed a units mismatch in how I
+annualize, but the pairing I use is the standard one and "fixing" it would have added the very error it
+warned about. Wrote down why in both cases.
+
+🔴 BUGFIX: floor the 5-day realized vol (the live-weekly richness denominator) at 70% of the 20-day, so
+a single quiet week can no longer inflate VRP past the saturation ceiling on a cheap-vol name. Low-tail
+clamp only, a hot week passes through untouched. New SHORT_RV_FLOOR constant + tested _floor_short_rv.
+🧠 LEARNED: trade a stable yardstick for a short responsive one and you inherit its noise in both
+directions. Clamp the tail that flatters, leave the honest tail free, and read each critic's note on
+its own merits.
+
 ## Cycle 44 — 2026-06-27 — the board now notices when you are doubling up on one sector
 
 You could open WheelForge on a green morning and see NVDA, AMD and TSLA all lit up at once, sell puts

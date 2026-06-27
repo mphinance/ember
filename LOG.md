@@ -1,5 +1,39 @@
 # ember's log (newest on top)
 
+## Cycle 45 — 2026-06-27 — a quiet week can no longer fake rich premium
+
+Took the still-open third bullet of the quant critic's 06-26 19:49Z INBOX block. Since c28 the LIVE
+weekly path judges IV against a 5-day realized vol (`short_rv`) instead of the 20-day, so a fresh vol
+spike (exactly when you want to sell) is not masked by last month's cool RV. Good fix, but c28 only
+reasoned about the spike-UP direction. The critic caught the other tail: a 5-day window is ~5 returns,
+so its sampling error is large in BOTH directions, and one unusually QUIET week drops short_rv to ~0.4x
+the 20-day rv, which pushes VRP (iv/short_rv) past the richness saturation ceiling on a name whose vol
+is actually cheap. The scanner was manufacturing richness out of a quiet tape. Closed it with a
+`SHORT_RV_FLOOR = 0.70` constant + a pure `_floor_short_rv(short_rv, rv)` helper: the 5-day denominator
+can now compress by at most 30%, not 60%. The deliberate design call is that it is a LOW-TAIL clamp
+ONLY, a genuinely hot week (short_rv already above the floor) passes through untouched, so c28's
+spike-UP honesty (a live week shrinking a stale 20-day VRP) is fully preserved; I only killed the lie
+in the flattering direction. Engine only; the modeled monthly path (which keeps the 20-day match) is
+untouched, and I did NOT touch scan.json (the box re-scores on its next refresh). Verified:
+`build_site_data --selftest` green with four new asserts (a quiet 0.10 vs 20d 0.40 floors to 0.28, a
+hot 0.60 passes through, no-20d-rv returns unchanged, and the inflated VRP that read 4.0 unfloored now
+caps at 1.43, back under the ceiling); scoring + vol_models self-tests green; `import wheelforge,
+wheelforge.universe, wheelforge.__main__` clean. This advances the richness/honesty work (c21, c33, c37,
+c39): high IV is not rich premium, and now neither is a quiet week pretending to be one.
+- The other two bullets in that block I did NOT act on, on purpose. The σ=IV-vs-σ=RV prob_otm swap is a
+  meaning change to a number deliberately labeled risk-neutral (the c22 `*`), so it is Michael's call,
+  not a critic's (same rule as the RoC denominator). The sqrt(252)-vs-dte/365 "mismatch" is wrong:
+  pairing RV-over-252-trading-days with a calendar BS time of dte/365 IS the standard consistent
+  convention (dte calendar days hold ~dte*252/365 trading days, so solved IV already equals RV at zero
+  VRP); the proposed "unify on dte/252" would CREATE the 20% inflation it claims to remove. Annotated in
+  INBOX and left.
+- Learned, wrote it back ([[wheelforge-design-principles]] c45): when you swap a stable estimator for a
+  short noisy one to gain responsiveness, you inherit its sampling error in BOTH tails; floor/cap the
+  tail that produces the FLATTERING error and leave the honest tail free. A one-sided clamp keeps the
+  responsiveness and kills only the lie. And read each critic bullet on its own merits, a real fix can
+  ride in the same block as two bad ones.
+
+
 ## Cycle 44 — 2026-06-27 — the scanner finally notices when it stacks one sector
 
 Took the unconsumed growth/quant critic INBOX bullet (06-26): WheelForge scored every name in

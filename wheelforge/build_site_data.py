@@ -34,6 +34,14 @@ MIN_PREMIUM = 0.25  # dollars of mid per share (= $25 a contract). Below this a 
                     # richness + structure, and sit near the top of the list — but it is $6
                     # a contract, not a trade. One floor kills that whole class. Tunable.
 R = 0.045  # risk-free
+SHORT_RV_FLOOR = 0.70  # the live-weekly VRP denominator is a 5-day realized vol (~5 returns), so
+                       # its sampling error is large: one unusually quiet week can drop it to ~0.4x
+                       # the 20-day rv and push VRP (iv / short_rv) past the richness saturation
+                       # ceiling on a name whose vol is actually cheap — manufacturing richness out
+                       # of a quiet tape. Floor the short RV at this fraction of the 20-day rv so a
+                       # quiet week compresses the denominator by at most 30%, not 60%. It clamps
+                       # ONLY the low tail: a genuinely hot week (short_rv > 0.70*rv) is untouched,
+                       # so the spike-UP honesty (a live week shrinking a fake-fat 20-day VRP) holds.
 MAX_SECTOR_OVERLAP = 1   # how many qualifying picks one GICS sector may own before the rest
                          # are flagged crowded. Capital concentration is a discipline veto, not
                          # a quality signal: three rich semis the same morning is correlated tail
@@ -90,6 +98,17 @@ def _realized_vol(closes):
     mean = sum(rets) / len(rets)
     var = sum((x - mean) ** 2 for x in rets) / (len(rets) - 1)
     return math.sqrt(var) * math.sqrt(252.0)
+
+
+def _floor_short_rv(short_rv, rv):
+    """Floor the live-weekly VRP denominator (5-day RV) at SHORT_RV_FLOOR * the 20-day rv.
+    Low-tail clamp only: a genuinely hot week (short_rv already above the floor) passes
+    through untouched, so a live week can still shrink a fake-fat 20-day VRP; we only stop
+    a quiet 5-day window from inventing richness on a name whose vol is actually cheap. With
+    no 20-day rv to compare against, return short_rv unchanged (nothing to floor against)."""
+    if rv and rv > 0:
+        return max(short_rv, SHORT_RV_FLOOR * rv)
+    return short_rv
 
 
 def _iv_rank(closes, window=252):
@@ -347,7 +366,7 @@ def build_one(ticker, earnings_days=None, lanes=None, sector=None):
     # against a ~week of realized vol, so compare it to the 5-day. The 20-day stays as the
     # HV-rank / trend context. Only the LIVE (weekly) path swaps the denominator; the modeled
     # monthly keeps the 20-day match.
-    short_rv = composite_realized_vol(candles, period=5) or rv
+    short_rv = _floor_short_rv(composite_realized_vol(candles, period=5) or rv, rv)
 
     from datetime import date, timedelta
     # Major price-action support: the level he sells AT (computed once, reused for the chart).
@@ -597,6 +616,20 @@ def _selftest():
     assert _tradeable_premium(0.30), "a $30/contract mid clears the floor"
     print(f"floor: ${MIN_PREMIUM:.2f}/share min -> $0.06 mid dropped, $0.30 kept")
 
+    # short-RV floor: a quiet 5-day window cannot drop the VRP denominator below 70% of the
+    # 20-day rv (a 5-obs window is too noisy to be trusted with the richness ceiling), but a
+    # genuinely hot week passes through untouched so a live week can still shrink a stale VRP.
+    assert _floor_short_rv(0.10, 0.40) == SHORT_RV_FLOOR * 0.40, "a quiet week is floored at 70% of 20d rv"
+    assert _floor_short_rv(0.60, 0.40) == 0.60, "a hot week (above the floor) is left untouched"
+    assert _floor_short_rv(0.10, 0.0) == 0.10, "with no 20d rv there is nothing to floor against"
+    # The floor must actually cap the inflated VRP below the saturation ceiling: a cheap-vol
+    # name (iv ~= rv, true VRP ~1) whose 5-day went quiet would read VRP 4.0 unfloored, but at
+    # most iv/(0.70*rv) ~= 1.43 floored — back under the richness ceiling, not falsely rich.
+    iv, rv = 0.40, 0.40
+    assert iv / (0.10) == 4.0 and round(iv / _floor_short_rv(0.10, rv), 2) == 1.43, \
+        "the floor pulls an inflated VRP back under the richness saturation ceiling"
+    print("short-rv floor: quiet 5d clamped to 0.70x 20d, hot week untouched")
+
     # Distance-to-strike: a 190 put on a 200 spot is 5.0% OTM (his trade vocabulary). A
     # strike at spot is 0%, and a degenerate zero spot never divides.
     assert _pct_otm(200.0, 190.0) == 5.0, "a 190 put on a 200 spot is 5% OTM"
@@ -627,7 +660,7 @@ def _selftest():
     lst2 = [mk("META", 0, "Communication", avoid=True), mk("GOOGL", 66, "Communication")]
     _sector_crowding(lst2)
     assert lst2[1]["pick"]["sector_crowded"] is False, "an AVOID must not consume a sector slot"
-    print("OK: build_site_data DTE-ladder + premium-floor + sector-crowding self-test passed.")
+    print("OK: build_site_data DTE-ladder + premium-floor + short-rv-floor + sector-crowding self-test passed.")
 
 
 if __name__ == "__main__":
