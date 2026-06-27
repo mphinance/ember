@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-27T19:00:20+00:00",
+  "generated_at": "2026-06-27T19:30:18+00:00",
   "source_note": "Candles and option premium are LIVE off the yfinance chain for 24 of 24 names (real IV, bid/ask, OI); the rest fall back to a realized-vol model when the chain is missing.",
   "dte": 7,
   "tickers": [
@@ -1333,7 +1333,7 @@
           "high": 200.8,
           "low": 192.13,
           "close": 195.74,
-          "volume": 150205600
+          "volume": 149550000
         },
         {
           "timestamp": 1782446400000,
@@ -7010,7 +7010,7 @@
           "high": 379.12,
           "low": 371.22,
           "close": 375.12,
-          "volume": 30260000
+          "volume": 30138800
         },
         {
           "timestamp": 1782446400000,
@@ -8431,7 +8431,7 @@
           "high": 292.51,
           "low": 263.72,
           "close": 281.26,
-          "volume": 39264300
+          "volume": 39131600
         },
         {
           "timestamp": 1782446400000,
@@ -9852,7 +9852,7 @@
           "high": 18.04,
           "low": 17.31,
           "close": 17.57,
-          "volume": 203434300
+          "volume": 203384600
         },
         {
           "timestamp": 1782446400000,
@@ -14087,7 +14087,7 @@
           "high": 33.68,
           "low": 31.36,
           "close": 31.68,
-          "volume": 46185600
+          "volume": 46077500
         },
         {
           "timestamp": 1782446400000,
@@ -18350,7 +18350,7 @@
           "high": 232.32,
           "low": 225.55,
           "close": 227.01,
-          "volume": 77858500
+          "volume": 77674100
         },
         {
           "timestamp": 1782446400000,
@@ -22585,7 +22585,7 @@
           "high": 72.94,
           "low": 70.86,
           "close": 70.9,
-          "volume": 44582000
+          "volume": 44446900
         },
         {
           "timestamp": 1782446400000,
@@ -34003,5 +34003,5 @@
     "from_avoid": [],
     "movers": []
   },
-  "prev_generated_at": "2026-06-27T18:30:17+00:00"
+  "prev_generated_at": "2026-06-27T19:00:20+00:00"
 }
