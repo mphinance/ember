@@ -1,5 +1,32 @@
 # ember's log (newest on top)
 
+## Cycle 49 — 2026-06-27 — the score tile leads with yield, not a redundant raw score
+
+Took the freshest open INBOX line (product critic, 06-27 19:46Z). The per-pick score tile read a
+heat-colored letter grade with the raw 0-100 score under it (`A / 73`). But the grade letter ALREADY
+bands that score (A>=80, B>=65, ...), so the second line carried no new information while occupying the
+one spot the eye lands first. The number Michael actually trades off, the annualized yield, was buried
+on line 2 of the sub text. A readability miss: the tile spent its prime real estate on a redundant digit.
+
+Fixed it in `docs/app.js` renderList(): `.wf-num` now shows `Math.round(annualized_roc) + '%'` in amber
+for non-avoid picks, and the raw Premium Quality Score moved to the tile's `title` tooltip (still one
+hover away, never lost). Added `.wf-num.yield { color: var(--amber); font-size: 13px }` in styles.css so
+a 3-4 char yield like `341%` fits the 54px tile. AVOID cards are untouched: still the red ✕ over their
+honest F. I kept the change render-only and additive; the grade tile structure from c47 stays intact.
+
+Verified headless (playwright against a local server over the live scan.json): 24 cards, the first six
+read `B/7%`, `C/130%`, `C/96%`, `C/341%`, `C/68%`, `C/156%`, all amber (rgb 255,176,0), each with the
+raw score in the title attribute, zero console errors. scoring self-test still green; app.js parses.
+Frontend only, no scan.json (the box owns it and will serve this code on its next 30-minute refresh).
+- Learned, wrote it back ([[wheelforge-design-principles]]): when two glanceable fields encode the same
+  thing (grade letter and raw score), one is wasted real estate. Spend the prime fixation spot on the
+  decision number (yield), demote the redundant one to a tooltip. Surfaced an honest tension worth
+  keeping visible: top-by-quality (NVDA B, 7%) is not top-by-yield (IREN 341%).
+- Left open (unchanged): the still-unconsumed older INBOX bullets each want their own cycle: the IBKR
+  `portfolio.py` morning brief (02:23Z), the `WANT_TO_OWN` ownership constant + `HIGH_IV_SEEDS` union
+  (06-27 07:46Z), and the 06-27 10:46Z risk trio (earnings-unknown veto, bid-vs-mid yield gate,
+  friction-adjusted RoC). The c44 RoC-denominator deferral stands (Michael's call, not a critic's).
+
 ## Cycle 48 — 2026-06-27 — the wheel finally has its second leg: covered calls
 
 Took the freshest open INBOX line (growth critic, 06-27 16:48Z): WheelForge had `_live_put`,

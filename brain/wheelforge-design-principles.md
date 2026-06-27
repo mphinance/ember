@@ -335,3 +335,17 @@ value. Put the LEAD signal where the eye already goes, size it to lead, demote t
 under it, and verify placement (computed position/layout in a headless browser), not just that the
 element exists. Same "the human reads it" instinct as the visible flags in c43/c44, applied to UI not
 just data.
+
+## Two glanceable fields that encode the same thing waste the lead slot (learned c49)
+c47 fixed WHERE the grade lands; c49 fixed WHAT sits under it. The score tile read grade-letter +
+raw 0-100 score, but the grade is just a banding of that score (A is 80+), so the second line carried
+zero new information while occupying the tile's confirming slot, and the number Michael actually
+trades off, the annualized yield, was buried on line 2 of the sub text. A product critic caught it.
+The fix swapped `.wf-num` to show `Math.round(annualized_roc) + '%'` in amber and moved the raw score
+to the tooltip (one hover away, never lost). Now the tile reads grade + yield, the two things he
+decides on, and the first card surfaced an honest tension worth keeping visible: top-by-quality (NVDA
+B, 7%) is not top-by-yield (IREN 341%). Lesson: when two fields shown together are derivable from each
+other (grade <- score), one is redundant; reclaim that prime real estate for an INDEPENDENT decision
+number and demote the redundant one to a tooltip. Render-only off existing scan.json fields. Same
+"glanceable beats complete" family as c36 (do the arithmetic he does in his head) and c47 (presence
+is not landing); same critics-are-input discipline as [[critics-dont-override-settled-calls]].

@@ -232,9 +232,18 @@
       gr.className = 'wf-grade grade-' + gl;
       gr.textContent = gl;
       gr.title = 'grade ' + gl + ' (A>=80 B>=65 C>=50 D>=35 F below; an AVOID is an honest F)';
+      // Under the grade letter the tile confirms the number Michael actually trades off:
+      // annualized yield, not the raw 0-100 score (the grade already bands that). The raw
+      // score moves to the tooltip so it is still one hover away (product critic 06-27 19:46Z).
       var num = document.createElement('div');
-      num.className = 'wf-num'; num.textContent = p.avoid ? '✕' : p.score;
-      if (p.avoid) num.style.color = col;
+      num.className = 'wf-num';
+      if (p.avoid) {
+        num.textContent = '✕'; num.style.color = col;
+      } else {
+        num.classList.add('yield');
+        num.textContent = (p.annualized_roc != null) ? Math.round(Number(p.annualized_roc)) + '%' : '-';
+        num.title = 'Premium Quality Score ' + p.score + '/100 (the grade letter above bands it)';
+      }
       sc.appendChild(gr); sc.appendChild(num);
       // The top-ranked pick announces itself: a TOP badge on the score tile so his eye
       // lands before he reads a single digit. Anchored to rank, independent of selection.

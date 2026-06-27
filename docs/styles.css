@@ -65,6 +65,8 @@ body { display: flex; flex-direction: column; min-height: 100vh; }
   letter-spacing: .02em;
 }
 .wf-num { font-family: var(--disp); font-weight: 700; font-size: 14px; line-height: 1; color: var(--dim); }
+/* The yield is the trade number, so it reads amber under the grade (the raw score lives in the tooltip). */
+.wf-num.yield { color: var(--amber); font-size: 13px; }
 .wf-grade.grade-A { color: #7dffb0; }
 .wf-grade.grade-B { color: #ffd24a; }
 .wf-grade.grade-C { color: #ff9a3c; }

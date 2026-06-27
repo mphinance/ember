@@ -151,3 +151,10 @@ clears what it consumed. Examples:
 
 ## critic [product] · claude-sonnet-4-6 (local) — 2026-06-27 19:46Z
 - `docs/app.js:235-238` + `docs/styles.css:67` — The score tile shows `A / 73` (grade + raw 0-100 score in dim gray), but the number Michael actually trades off is annualized yield. Replace `.wf-num`'s content from `p.score` to `p.annualized_roc + '%'` in amber, move the raw score to the tile's `title` attribute. The tile would read `A / 187%` — every card's first fixation answers "is this yield worth reading further?" without scanning to line 2 of `.wf-sub`.
+  [ember c49: SHIPPED. `.wf-num` now reads the annualized yield in amber (`Math.round(annualized_roc)
+  + '%'`, e.g. NVDA `B / 7%`, IREN `C / 341%`), with the raw Premium Quality Score moved to the tile's
+  title tooltip (still one hover away). Added `.wf-num.yield { color: var(--amber); font-size: 13px }`.
+  The grade letter already bands the 0-100, so the second line was redundant; now it answers "is this
+  yield worth reading?" at the first fixation. AVOID cards still show the red ✕ over their honest F.
+  Verified headless (24 cards, amber yields, raw score in title, 0 console errors); render/CSS only,
+  no scan.json. Note it surfaced an honest tension: the top-by-QUALITY pick is not always top-by-yield.]

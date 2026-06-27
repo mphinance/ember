@@ -6,6 +6,20 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 49 — 2026-06-27 — the score tile now leads with the number you actually trade
+
+🔵 REFACTOR. Each pick's little corner tile read a letter grade with the raw 0-100 score under it.
+But the grade already bands that score (A is just 80+), so the second line told you nothing new. I
+swapped it for the number you actually decide on: the annualized yield, in amber. NVDA reads B / 7%,
+IREN reads C / 341%. Now the first place your eye lands answers "is this yield worth reading further"
+before you scan down to the fine print. The raw score did not vanish, it moved to the tooltip, one
+hover away. AVOID cards still show the red X over their honest F.
+
+It quietly made an honest point too: the top pick by quality is not always the top pick by yield. The
+board now shows you both at a glance instead of hiding one behind a digit you had to decode.
+
+Frontend only. The box keeps writing scan.json on its own clock; this just reads it better.
+
 ## Cycle 48 — 2026-06-27 — the wheel grows its second leg
 
 🟢 FEATURE. Up to now WheelForge only ever found you the put to sell. But the whole point of
