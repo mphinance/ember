@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-27T04:00:19+00:00",
+  "generated_at": "2026-06-27T04:30:20+00:00",
   "source_note": "Candles and option premium are LIVE off the yfinance chain for 24 of 24 names (real IV, bid/ask, OI); the rest fall back to a realized-vol model when the chain is missing.",
   "dte": 7,
   "tickers": [
@@ -1405,6 +1405,7 @@
           "summary": "If assigned you own at $39.41, 16.5% below today, earning 110.2% annualized on the cash while you wait."
         },
         "score": 69.8,
+        "grade": "B",
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
@@ -2823,6 +2824,7 @@
           "summary": "If assigned you own at $114.50, 10.8% below today, earning 95.6% annualized on the cash while you wait."
         },
         "score": 62.1,
+        "grade": "C",
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
@@ -4241,6 +4243,7 @@
           "summary": "If assigned you own at $177.62, 7.7% below today, earning 24.4% annualized on the cash while you wait."
         },
         "score": 61.5,
+        "grade": "C",
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
@@ -5659,6 +5662,7 @@
           "summary": "If assigned you own at $361.62, 4.8% below today, earning 68.1% annualized on the cash while you wait."
         },
         "score": 61.4,
+        "grade": "C",
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
@@ -7077,6 +7081,7 @@
           "summary": "If assigned you own at $205.18, 14.6% below today, earning 171.7% annualized on the cash while you wait."
         },
         "score": 61.0,
+        "grade": "C",
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
@@ -8481,6 +8486,7 @@
           "summary": "If assigned you own at $16.25, 9.1% below today, earning 44.1% annualized on the cash while you wait."
         },
         "score": 58.9,
+        "grade": "C",
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
@@ -9899,6 +9905,7 @@
           "summary": "If assigned you own at $28.43, 7.2% below today, earning 145.1% annualized on the cash while you wait."
         },
         "score": 55.9,
+        "grade": "C",
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
@@ -11303,6 +11310,7 @@
           "summary": "If assigned you own at $15.71, 12.2% below today, earning 34.3% annualized on the cash while you wait."
         },
         "score": 54.8,
+        "grade": "C",
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
@@ -12721,6 +12729,7 @@
           "summary": "If assigned you own at $295.02, 11.7% below today, earning 123.1% annualized on the cash while you wait."
         },
         "score": 54.0,
+        "grade": "C",
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
@@ -14139,6 +14148,7 @@
           "summary": "If assigned you own at $104.48, 7.5% below today, earning 36.3% annualized on the cash while you wait."
         },
         "score": 52.8,
+        "grade": "C",
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
@@ -15557,6 +15567,7 @@
           "summary": "If assigned you own at $229.72, 13.9% below today, earning 88.3% annualized on the cash while you wait."
         },
         "score": 52.2,
+        "grade": "C",
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
@@ -16975,6 +16986,7 @@
           "summary": "If assigned you own at $67.19, 6.0% below today, earning 305.9% annualized on the cash while you wait."
         },
         "score": 50.6,
+        "grade": "C",
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
@@ -18393,6 +18405,7 @@
           "summary": "If assigned you own at $204.45, 14.1% below today, earning 108.9% annualized on the cash while you wait."
         },
         "score": 43.7,
+        "grade": "D",
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
@@ -19804,6 +19817,7 @@
           "summary": "If assigned you own at $21.74, 4.3% below today, earning 33.6% annualized on the cash while you wait."
         },
         "score": 43.6,
+        "grade": "D",
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
@@ -21208,6 +21222,7 @@
           "summary": "If assigned you own at $39.05, 30.7% below today, earning 44.4% annualized on the cash while you wait."
         },
         "score": 43.6,
+        "grade": "D",
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
@@ -22619,6 +22634,7 @@
           "summary": "If assigned you own at $70.68, 4.2% below today, earning 33.1% annualized on the cash while you wait."
         },
         "score": 43.3,
+        "grade": "D",
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
@@ -24037,6 +24053,7 @@
           "summary": "If assigned you own at $223.28, 4.0% below today, earning 56.4% annualized on the cash while you wait."
         },
         "score": 41.9,
+        "grade": "D",
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
@@ -25455,6 +25472,7 @@
           "summary": "If assigned you own at $126.55, 6.7% below today, earning 487.4% annualized on the cash while you wait."
         },
         "score": 41.3,
+        "grade": "D",
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
@@ -26873,6 +26891,7 @@
           "summary": "If assigned you own at $22.59, 12.9% below today, earning 134.1% annualized on the cash while you wait."
         },
         "score": 40.0,
+        "grade": "D",
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
@@ -28291,6 +28310,7 @@
           "summary": "If assigned you own at $263.15, 7.3% below today, earning 12.8% annualized on the cash while you wait."
         },
         "score": 39.2,
+        "grade": "D",
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
@@ -29709,6 +29729,7 @@
           "summary": "If assigned you own at $25.52, 5.7% below today, earning 278.8% annualized on the cash while you wait."
         },
         "score": 38.4,
+        "grade": "D",
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
@@ -31113,6 +31134,7 @@
           "summary": "If assigned you own at $23.68, 2.5% below today, earning 24.7% annualized on the cash while you wait."
         },
         "score": 33.4,
+        "grade": "F",
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
@@ -32517,6 +32539,7 @@
           "summary": "If assigned you own at $68.58, 29.0% below today, earning 37.9% annualized on the cash while you wait."
         },
         "score": 30.6,
+        "grade": "F",
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
@@ -33921,6 +33944,7 @@
           "summary": "If assigned you own at $14.66, 20.1% below today, earning 41.7% annualized on the cash while you wait."
         },
         "score": 26.7,
+        "grade": "F",
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
@@ -33945,5 +33969,5 @@
     "from_avoid": [],
     "movers": []
   },
-  "prev_generated_at": "2026-06-27T03:30:18+00:00"
+  "prev_generated_at": "2026-06-27T04:00:19+00:00"
 }
