@@ -128,14 +128,21 @@ reference/csp-intelligence.md). Fix the integrity holes first, in this order:
       support. (b) DONE c38: the frontend now has a `support` SORT (by support_floor), an
       `at support` filter TOGGLE (keep only `at_support` picks), and a green `⌂ support` floor
       badge on each anchored card. Render-only off the existing JSON; all three verified headless.
+- [x] c41: **LETTER GRADE (A-F) on every pick** (the piece BOTH port items below share). Pure
+      `letter_grade(score)` in scoring.py on the EdgeScore bands (A>=80 B>=65 C>=50 D>=35 F below,
+      fail-open to F); folded into `score_contract` so it rides scan.json via `**scored`, no
+      build_site_data change. Frontend: a colored corner badge on each score tile + a `gradeFor()`
+      client fallback so the page grades correctly before the box bakes the field in. An
+      earnings-veto (score 0) grades F honestly. Verified headless (24/24 cards graded). This closes
+      engine (d)'s grade-from-EdgeScore and the page-UX grade bullet; still open: grade ADJUSTMENTS.
 - [ ] **CSP-screener ENGINE port (TraderDaddy CSPScreener.ts — the good work):** (a) promote
       ROC EFFICIENCY to a first-class scoring factor (he weights it 25%), reweight the blend
       toward yield; (b) add a configurable MIN return-on-capital target + a MAX-CAPITAL filter
       (strike*100<=capital) as real params; (c) target ~0.20 delta (fatter than my 1-sigma);
-      (d) derive a letter grade A>=80/B>=65/C>=50/D>=35 with put-wall/max-pain/EM adjustments.
+      (d) [grade DONE c41] the put-wall/max-pain/EM grade ADJUSTMENTS remain (tie into Phase-4 OI walls).
       This is the engine version of the 100%/yr yield focus. Ref: reference/csp-intelligence.md.
-- [ ] **Match the TraderDaddy CSP-wheel PAGE UX (Michael's shipped page, study its code):** a
-      LETTER GRADE (A-F) on each pick led front-and-center; a supportFloor shown per name; a
+- [ ] **Match the TraderDaddy CSP-wheel PAGE UX (Michael's shipped page, study its code):** [letter
+      GRADE DONE c41] a supportFloor shown per name; a
       "Prime Picks" standouts highlight; and real configurable param FILTERS (incl. min-annualized
       to power the yield mode), not just sort + min-score. Ref: reference/csp-intelligence.md.
 - [ ] **Michael: EXPLAIN the model on the site (for him + any user).** The page shows scores

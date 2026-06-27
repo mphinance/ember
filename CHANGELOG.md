@@ -6,6 +6,24 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 41 — 2026-06-27 — every pick now wears a letter grade
+
+A score like 63.5 makes you stop and do math. A B does not. So every pick on the board now carries a
+letter grade, the same A to F cut TraderDaddy uses, right on the score tile where your eye already
+lands. A is 80 and up, B is 65, C is 50, D is 35, and anything below is an F. A name you have to skip
+for earnings grades F too, because a setup you cannot sell is a failing one.
+
+### 🟢 FEATURE - a letter grade on every pick, led front and center
+New `letter_grade` in the scoring core maps the 0-100 Premium Quality Score to a letter and rides
+into every pick. On the page it shows as a small badge on the score tile, green at A and fading to red
+at F. The number is still there if you want it; the grade is for the glance. This is the first piece
+of the TraderDaddy screener port, the part that answers "the scoring is not clear" in one character.
+
+### 🧠 LEARNED - grade the page client-side too, so it is right the instant it ships
+The engine bakes the grade into the data, but the live data only rebuilds every half hour. So the page
+also grades client-side with the exact same bands when the field is not there yet. No half hour where
+the badges are missing, no flash of a blank corner. Correct the moment it deploys.
+
 ## Cycle 40 — 2026-06-27 — WheelForge now tells you when you have WON, not just when you are in trouble
 
 The roll advisor could shout when a position was getting tested, but it stayed quiet when a trade had

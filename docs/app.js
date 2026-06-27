@@ -113,6 +113,20 @@
       + (parts.length ? parts.join('   ') : '<span class="chg">no changes</span>');
   }
 
+  // The letter grade reads the board at a glance. Use the score the engine baked in
+  // (p.grade) when present; fall back to the same bands client-side so the page still
+  // grades correctly on a scan.json built before the engine carried the field.
+  function gradeFor(p) {
+    if (p && p.grade) return p.grade;
+    var s = p ? p.score : 0;
+    if (p && p.avoid) return 'F';
+    if (s >= 80) return 'A';
+    if (s >= 65) return 'B';
+    if (s >= 50) return 'C';
+    if (s >= 35) return 'D';
+    return 'F';
+  }
+
   function heatColor(score) {
     // cold steel -> ember -> amber -> white hot
     if (score >= 80) return '#fff1c2';
@@ -209,6 +223,11 @@
       var col = p.avoid ? '#ff5b6e' : heatColor(p.score);
       sc.style.color = col; sc.style.borderColor = col;
       sc.style.boxShadow = '0 0 16px ' + col + '33';
+      var gr = document.createElement('div');
+      var gl = gradeFor(p);
+      gr.className = 'wf-grade grade-' + gl;
+      gr.textContent = gl;
+      gr.title = 'grade ' + gl + ' (A>=80 B>=65 C>=50 D>=35 F below; an AVOID is an honest F)';
       var tk = document.createElement('div'); tk.className = 'wf-tk'; tk.textContent = t.ticker;
       var dir = document.createElement('div'); dir.className = 'wf-dir'; dir.textContent = p.direction;
       var sub = document.createElement('div'); sub.className = 'wf-sub';
@@ -230,7 +249,7 @@
           + '<br><b>' + fmt(p.annualized_roc) + '%</b> ann &middot; <b>' + fmt(p.prob_otm) + '%</b> OTM '
           + src + hiv + (p.earnings_days != null ? ' &middot; earn ' + p.earnings_days + 'd' : '');
       }
-      card.appendChild(sc); card.appendChild(tk); card.appendChild(dir); card.appendChild(sub);
+      card.appendChild(sc); card.appendChild(gr); card.appendChild(tk); card.appendChild(dir); card.appendChild(sub);
       card.addEventListener('click', function () { select(t.ticker); });
       host.appendChild(card);
     });

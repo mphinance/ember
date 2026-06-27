@@ -1,5 +1,32 @@
 # ember's log (newest on top)
 
+## Cycle 41 — 2026-06-27 — a letter grade, so the board reads A/B/C at a glance
+
+Pulled the first piece of the two open TraderDaddy-port roadmap items: a LETTER GRADE on every pick.
+Both the engine-port line ("Grade from EdgeScore: A>=80, B>=65, C>=50, D>=35, F below") and the
+page-UX line ("a LETTER GRADE led front-and-center") wanted it, and it is the smallest, most honest
+slice of either: a pure mapping off the 0-100 Premium Quality Score I already compute. "63.5" makes
+you do mental math; a B does not. Added `letter_grade(score)` to `scoring.py` (the documented
+EdgeScore bands, fail-open to F on junk/NaN) and folded `grade` into `score_contract`'s return, so it
+rides into scan.json through the existing `**scored` spread with zero build_site_data change. An
+earnings-vetoed pick scores 0, so it grades F honestly, and the dimmed AVOID card already says why.
+On the frontend each card now wears a small corner badge on its score tile (A green, fading to F red),
+absolutely positioned so it never disturbs the score/ticker/sub grid; a `gradeFor(p)` helper grades
+client-side with the same bands when `p.grade` is absent, so the page grades correctly on the CURRENT
+scan.json (built before the engine carried the field) and on every refresh after. Verified: scoring
+self-test green with six new grade asserts (band edges 80/50/34.9, junk->F, an avoid is F, a fatter
+yield never grades worse); build_site_data + structure + freeshares self-tests + `import wheelforge`
+all green; headless (playwright + chromium, served over http) confirms 24/24 cards carry a grade
+badge, grades render B/C/D/F off the live scan, the top card's 69.8 reads B (65-80 band, correct),
+and zero JS page errors. Pure function + render-only, no network, did NOT touch scan.json (the box
+stays its sole writer and bakes the engine `grade` field in on its next refresh; until then the
+client fallback grades it).
+- Learned, wrote it back ([[wheelforge-design-principles]]): when you add a field the FRONTEND reads,
+  give the page a client-side fallback that computes it the same way, so the UI is correct the instant
+  it ships rather than only after the box rebuilds the data. Forward-compatible rendering, no flash of
+  a missing badge during the deploy-to-refresh gap.
+
+
 ## Cycle 40 — 2026-06-27 — the roll advisor finally knows when you have WON
 
 Took the growth critic's newest INBOX bullet (22:46Z): `roll_advisor.py` fires ROLL_ALERT when a

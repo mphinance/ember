@@ -129,6 +129,29 @@ def earnings_blocks(days_to_earnings, dte):
     return d <= float(dte or 0)
 
 
+# ── the letter grade (reads instantly; "63.5" does not) ──────────────────────
+
+# Map the 0-100 Premium Quality Score to a letter so the board reads at a glance.
+# Bands are TraderDaddy's EdgeScore cuts (csp-intelligence.md): A>=80, B>=65, C>=50,
+# D>=35, F below. An earnings-vetoed pick scores 0, so it lands F honestly: a setup
+# you must skip IS a failing setup, and the dimmed AVOID card already says why.
+GRADE_BANDS = (("A", 80.0), ("B", 65.0), ("C", 50.0), ("D", 35.0))
+
+
+def letter_grade(score):
+    """A>=80, B>=65, C>=50, D>=35, else F. Pure; junk -> 'F'."""
+    try:
+        s = float(score)
+    except (TypeError, ValueError):
+        return "F"
+    if s != s:  # NaN
+        return "F"
+    for letter, floor in GRADE_BANDS:
+        if s >= floor:
+            return letter
+    return "F"
+
+
 # ── the composite ────────────────────────────────────────────────────────────
 
 def score_contract(c):
@@ -162,6 +185,7 @@ def score_contract(c):
     factors = {k: round(v, 3) for k, v in factors.items()}
     return {
         "score": score,
+        "grade": letter_grade(score),
         "direction": direction,
         "avoid": avoid,
         "factors": factors,
@@ -243,6 +267,16 @@ def _selftest():
     assert y["factors"]["yield"] > o["factors"]["yield"], "a 2x weekly must out-yield a 1x"
     assert y["score"] > g["score"], "fat yield must out-score the same setup at thin yield"
     assert "fat annualized yield" in y["why"], "a fat-yield pick should say so plainly"
+
+    # The letter grade reads the score at a glance (and an avoid is an honest F).
+    print("grades      :", "great", g["grade"], "| 2x", y["grade"], "| cheap",
+          c["grade"], "| avoid", e["grade"])
+    assert g["grade"] in ("A", "B"), "a 70+ setup should grade A or B"
+    assert e["grade"] == "F", "an earnings-vetoed (score 0) pick must grade F"
+    assert letter_grade(80) == "A" and letter_grade(79.9) == "B", "A band starts at 80"
+    assert letter_grade(50) == "C" and letter_grade(34.9) == "F", "C floor 50, F below 35"
+    assert letter_grade(None) == "F" and letter_grade("x") == "F", "junk grades F, fail-open"
+    assert y["grade"] >= g["grade"] or y["score"] > g["score"], "fatter yield never grades worse"
     print("tight spread:", round(tight_fill, 3), "| wide spread:", round(wide_fill, 3),
           "| modeled (no OI):", round(modeled_fill, 3))
     assert wide_fill == 0.0, "a spread past MAX_SPREAD_PCT must be ungradeable, not OI-rescued"

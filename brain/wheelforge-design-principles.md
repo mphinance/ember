@@ -251,3 +251,13 @@ toggle, and a green floor badge on each anchored card, all off fields already in
 the moment the engine computes a thesis signal and stores it per pick, the frontend owes it a SORT
 and a FILTER, not just a passive draw. A line he can see but not query is half-shipped. Check the
 JSON before reaching for the engine, the carry is often already there and the cycle is pure render.
+
+## A field the frontend reads needs a client-side fallback that computes it the same way (learned c41)
+The letter grade (c41) is baked into scan.json by the engine, but the box only rebuilds the data every
+30 minutes, so for that window after a code deploy the field is simply absent. Rather than ship a flash
+of blank badges until the next refresh, the page carries `gradeFor(p)`: it uses `p.grade` when present
+and otherwise computes the grade client-side with the EXACT same bands. The badge is correct the
+instant the code deploys, not 30 minutes later. Lesson: when a cycle adds a field the FRONTEND renders
+and the data layer is on a slower clock than the code, give the page a fallback that derives the field
+identically, so the UI is forward-compatible across the deploy-to-refresh gap. Keep the two band
+definitions in sync (engine `GRADE_BANDS` <-> JS `gradeFor`); if they ever diverge the fallback lies.

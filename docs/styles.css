@@ -34,6 +34,7 @@ body { display: flex; flex-direction: column; min-height: 100vh; }
 .wf-list { border-right: 1px solid var(--line); overflow-y: auto; background: var(--panel); }
 
 .wf-card {
+  position: relative;
   padding: 13px 16px; border-bottom: 1px solid var(--line); cursor: pointer;
   display: grid; grid-template-columns: auto 1fr auto; gap: 4px 12px; align-items: center;
   transition: background .12s;
@@ -45,6 +46,20 @@ body { display: flex; flex-direction: column; min-height: 100vh; }
   width: 54px; height: 54px; display: grid; place-items: center; border-radius: 8px;
   background: #0a0e15; border: 1px solid var(--line);
 }
+/* The letter grade: a corner badge on the score tile so the board reads A/B/C at a
+   glance. Absolutely placed so it never disturbs the score/ticker/sub grid. */
+.wf-grade {
+  position: absolute; top: 7px; left: 9px; z-index: 2;
+  font-family: var(--disp); font-weight: 800; font-size: 12px; line-height: 1;
+  padding: 2px 5px; border-radius: 5px; letter-spacing: .02em;
+  background: #0a0e15; border: 1px solid currentColor;
+}
+.wf-grade.grade-A { color: #7dffb0; }
+.wf-grade.grade-B { color: #ffd24a; }
+.wf-grade.grade-C { color: #ff9a3c; }
+.wf-grade.grade-D { color: #ff6b4a; }
+.wf-grade.grade-F { color: #ff5b6e; }
+.wf-card.is-avoid .wf-grade { opacity: .85; }
 .wf-tk { font-weight: 800; font-size: 16px; letter-spacing: .03em; }
 .wf-dir { font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--dim); justify-self: end; }
 .wf-sub { grid-column: 2 / 4; font-size: 11px; color: var(--dim); }
