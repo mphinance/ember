@@ -59,12 +59,19 @@ def _cluster(pivs, tol):
     return clusters
 
 
-def support_resistance(candles, spot, win=5, tol=0.015):
+def support_resistance(candles, spot, win=5, tol=0.015, require_recent=63):
     """Major price-action support (below spot) + resistance (above spot).
-    Major = most-tested level; tiebreak nearer to spot. Returns (support, resistance),
-    either None. Needs enough history."""
+    Major = most-tested level among those still ACTIVELY tested; tiebreak nearer to
+    spot. Returns (support, resistance), either None. Needs enough history.
+
+    `require_recent` (bars): a level whose LAST touch is older than this is treated as
+    stale and only used as a fallback when nothing has been tested recently. Michael
+    sells AT support the market is respecting NOW; a 6-month-old floor already undercut
+    once is a ghost, not a level. Set require_recent=0 to disable the recency gate.
+    """
     if not candles or len(candles) < 2 * win + 10 or not spot or spot <= 0:
         return None, None
+    n = len(candles)
     piv_hi, piv_lo = _pivots(candles, win)
     hi_c = _cluster(piv_hi, tol)
     lo_c = _cluster(piv_lo, tol)
@@ -74,6 +81,12 @@ def support_resistance(candles, spot, win=5, tol=0.015):
                 if (c["level"] > spot if above else c["level"] < spot)]
         if not cand:
             return None
+        # prefer levels still actively tested; fall back to any vintage only if none
+        # are recent, so a name that has gone quiet still reports its best old level.
+        if require_recent:
+            recent = [c for c in cand if c["last"] >= n - require_recent]
+            if recent:
+                cand = recent
         # most touches first; tiebreak nearer to spot, then more recent
         cand.sort(key=lambda c: (c["touches"], -abs(c["level"] - spot), c["last"]),
                   reverse=True)
@@ -98,6 +111,24 @@ def _selftest():
     assert res is not None and 118 <= res <= 122, "resistance should sit near 120"
     assert sup < 110 < res, "support below spot, resistance above"
     assert support_resistance([], 100) == (None, None)
+
+    # Recency: a heavily-touched but STALE support must lose to a fresher level.
+    # Early bars dip to ~95 seven times (many touches, all old); late bars dip to
+    # ~100 three times (fewer touches, but recent). Spot 104, both are support.
+    seq2 = []
+    for _ in range(8):   # early: repeated bounces off ~95
+        seq2 += [95.0, 106.0]
+    for _ in range(4):   # late: fewer, recent bounces off ~100
+        seq2 += [100.0, 106.0]
+    cs2 = [{"high": p * 1.004, "low": p * 0.996, "close": p} for p in seq2]
+    sup_recent, _ = support_resistance(cs2, spot=104, win=2, tol=0.02, require_recent=8)
+    sup_any, _ = support_resistance(cs2, spot=104, win=2, tol=0.02, require_recent=0)
+    print(f"recent-support={sup_recent}  any-vintage-support={sup_any}")
+    assert sup_recent is not None and 99 <= sup_recent <= 101, \
+        "recency gate should pick the fresh ~100 level over the stale ~95 one"
+    assert sup_any is not None and 94 <= sup_any <= 96, \
+        "no recency gate should pick the most-touched ~95 level"
+    assert sup_recent != sup_any, "the recency gate must actually change the pick here"
     print("OK: levels self-test passed.")
 
 

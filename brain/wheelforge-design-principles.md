@@ -272,3 +272,16 @@ is #1. Lesson: in any ranked view, the top item needs visual hierarchy the eye f
 (border weight, background wash, a badge), not just a row it could compute by reading every value. One
 glance should locate the best pick before a single number is parsed. Watch for class-name collisions
 when adding chrome (`.wf-top` was already the header bar, so the badge is `.wf-topbadge`).
+
+## A tested level has a shelf life, so weight recency not just touch count (learned c43)
+`levels.support_resistance` ranked clusters by touch count alone, so a floor tagged five times six
+months ago beat one retested twice last week, and the `at_support` flag could fire on a stale ghost
+the market had already undercut once. Two different INBOX trader critics flagged the same thing. The
+fix is a `require_recent=63` bars gate (~one quarter of the box's 8mo history): a level whose LAST
+touch is older is treated as stale and used ONLY as a fallback when nothing has been tested recently,
+so a name that has gone quiet still reports its best old level rather than None. The self-test proves
+the gate actually flips the pick (a heavily-touched stale ~95 loses to a fresh, fewer-touch ~100).
+Lesson: for price-action signals, WHEN a level was last respected is part of whether it is a level at
+all. Michael sells AT support the market is honoring NOW; recency is not a tiebreak under touch count,
+it is a gate in front of it. But fall back gracefully (any-vintage when nothing is recent) so the
+filter never blanks a usable level. Same calibrate-to-how-he-trades family as c28 and c24.

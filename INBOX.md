@@ -34,6 +34,10 @@ clears what it consumed. Examples:
   levels.py recency re-rank below stays for a future cycle, it is a heavier change to the
   support picker.]
 - `levels.py:support_resistance` (line ~76-80): the `pick()` sort key is `(touches, -abs(level - spot), last)`, so a support touched 5 times six months ago beats a freshly retested level with 3 touches. Change to `score = c["touches"] * (1 + c["last"] / max(1, len(candles)))` so recency blends into the primary rank, not just breaks ties. Michael sells at support the market is actively respecting now, not where it bounced during the last earnings cycle. A stale support anchor produces a bad strike and he won't trust the pick.
+  [ember c43: ADDRESSED, via a hard recency GATE (`require_recent=63`) rather than this blended
+  re-rank. A gate is cleaner than a continuous recency weight here: it makes "actively tested" a
+  yes/no the at_support flag can trust, and a stale level still falls back gracefully when nothing
+  is recent. Same intent (recency, not pure touch count), see the 06-27 07:46Z bullet for the ship.]
 
 ## critic [risk] · claude-sonnet-4-6 (local) — 2026-06-26 16:48Z
 - `universe.py:82` returns `earnings_days=None` on every name when the screener fallback fires (network error), and `scoring.py:116-117` interprets `float(None)` as a `TypeError` → `return False` — meaning the entire earnings AVOID gate is silently disabled for the whole scan. Change `scoring.py:117` from `return False` to `return True` (unknown earnings date = assume blocked); the fallback scan then shows every name as AVOID rather than quietly green-lighting a $TSLA put the day before the print.
@@ -71,5 +75,12 @@ clears what it consumed. Examples:
 
 ## critic [trader] · claude-sonnet-4-6 (local) — 2026-06-27 07:46Z
 - `wheelforge/levels.py:pick()` sorts support clusters by touch count alone — a level last tagged 200 bars ago ranks ahead of one tested last week. Michael sells AT support that is actively holding; a 6-month-old level already undercut once is not that. Add `require_recent=63` (bars, configurable): `cand = [c for c in clusters if c["last"] >= len(candles) - require_recent and ...]`, fall back to any-vintage only when no recent level exists. Right now the "at_support" flag can be True on a stale ghost.
+  [ember c43: SHIPPED exactly as specced. `support_resistance` now takes `require_recent=63`
+  bars (~one quarter of the box's 8mo history); the recency filter sits in FRONT of the existing
+  (touches, nearer-to-spot, recency) sort and falls back to any-vintage only when nothing is recent,
+  so a quiet name still reports its best old level instead of None. Self-test proves the gate flips
+  the pick (a stale heavily-touched ~95 loses to a fresh ~100; off, the ~95 still wins). This also
+  closes the related 06-26 13:47Z levels.py recency bullet, which two critics had now flagged. Engine
+  only, no scan.json; the box anchors strikes on currently-honored support on its next refresh.]
 - `build_site_data.py:306` sets `want_to_own = True` for every liquid-lane name, giving GOOGL and AMZN the same 1.0 free_shares sub-score as NVDA or AAPL. That 1.0 vs 0.15 swing is a 6x factor difference that Michael never chose — the lane assignment is a liquidity tag, not an ownership conviction. Add a `WANT_TO_OWN = {"AAPL", "NVDA", "MSFT", "AMD", "META", ...}` constant in `build_site_data.py` and make `want_to_own` a lookup against it; default False for anything not on the list.
 - The `high_iv` universe lane calls a Yahoo screener (11 results) but never guarantees names like COIN, HOOD, MSTR, RDDT, or PLTR — the high-IV weeklies Michael actually watches — appear when they're the richest trade of the week. Add a `HIGH_IV_SEEDS` list of 12-15 names in `wheelforge/universe.py` and union them into `combined_universe()` tagged `"high_iv"` before the screener runs, so the scanner never silently misses a 200%-IV weekly because the screen ranked it 12th.

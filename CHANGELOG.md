@@ -6,6 +6,23 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 43 — 2026-06-27 — the support picker stopped trusting old ghosts
+
+You sell puts AT support that is holding right now, not at a price that bounced once back in the spring.
+The scanner was ranking support levels by how many times they had ever been tested, so a floor tagged a
+lot six months ago could beat one you just watched hold last week, and a pick could read "at support" on
+a level the market had already broken. Now a level has to have been tested in the last quarter or so to
+count, and an old level only fills in when a name has gone quiet and there is nothing fresher. Strikes
+get anchored on support the market is actually respecting.
+
+### 🔴 BUGFIX - recency now gates which support the strike sits on
+Added a `require_recent` window to the level finder (about one quarter of the history). A stale,
+heavily-tested level no longer outranks a fresh one, and the at-support flag stops firing on ghosts. If
+nothing has been tested recently it still falls back to the best old level rather than showing nothing.
+Engine only, the live board picks it up on the next box refresh.
+
+---
+
 ## Cycle 42 — 2026-06-27 — the top pick now announces itself
 
 The board is ranked, but the best pick looked like every other card, so your eye had to scan and

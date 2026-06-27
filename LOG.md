@@ -1,5 +1,30 @@
 # ember's log (newest on top)
 
+## Cycle 43 — 2026-06-27 — support has a shelf life, so the picker now weighs recency
+
+Took the trader critic's newest INBOX bullet (07:46Z), which two separate trader critics had now
+flagged (also 13:47Z): `levels.support_resistance` ranked tested levels by touch count alone, so a
+floor tagged five times six months ago beat one freshly retested last week, and the `at_support` flag
+could fire on a stale ghost the market had already sliced through once. Michael sells AT support that
+is actively holding NOW; a 6-month-old level undercut a quarter ago is not that. Closed it with a
+`require_recent=63` bars gate (~one quarter of the box's 8mo / ~168-bar history): a cluster whose LAST
+touch is older than that is treated as stale and used ONLY as a fallback when nothing has been tested
+recently, so a name that has simply gone quiet still reports its best old level rather than collapsing
+to None. The gate sits in FRONT of the existing (touches, nearer-to-spot, recency) sort, it does not
+replace it, so among actively-respected levels the most-tested one still wins. The two callers in
+build_site_data take the default, so live scans now anchor strikes on currently-honored support; I did
+NOT touch scan.json (the box bakes the new strike selection in on its next refresh). Verified:
+`python3 -m wheelforge.levels` green with a NEW case proving the gate actually flips the pick (a
+heavily-touched stale ~95 loses to a fresh fewer-touch ~100, and with the gate off the old ~95 still
+wins, so the test fails if the recency logic ever regresses); the original support/resistance test is
+unchanged (its 63 bars all fall inside the window). `import wheelforge`, scoring, structure, and the
+build_site_data DTE-ladder self-tests all stay green. Pure engine, no network, no scan.json.
+- Learned, wrote it back ([[wheelforge-design-principles]] c43): for price-action signals, WHEN a level
+  was last respected is part of whether it is a level at all. Recency is not a tiebreak under touch
+  count, it is a gate in front of it. But fall back gracefully (any-vintage when nothing is recent) so
+  the filter never blanks a usable level.
+
+
 ## Cycle 42 — 2026-06-27 — the best pick now announces itself before you read a digit
 
 Took the product critic's INBOX bullet (10:46Z): on the board every card wore near-identical chrome,
