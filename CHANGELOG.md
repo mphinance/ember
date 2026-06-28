@@ -6,6 +6,16 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 51 — 2026-06-28 — the strike now lands AT support, never just above it
+
+🔴 BUGFIX. When the scanner struck a put to a support level, it grabbed the listed strike closest to
+that level. Sounds right, but "closest" can be the strike just ABOVE support. Say support comes in at
+$461.50 and the chain lists $460 and $462.50: the $462.50 is a nickel closer, so it won the pick, and
+you would be selling a put struck above the exact line you are trusting to hold. Now the strike is
+always at or below the level (with a hair of tolerance so a strike sitting right on it still counts),
+and it only reaches higher if nothing at all lists down there. Small thing, but it is the difference
+between selling support and selling into the air just above it. Engine only, no scan.json.
+
 ## Cycle 50 — 2026-06-27 — the rich weeklies you watch can no longer slip the net
 
 🟢 FEATURE. The high-IV lane runs a volatility screen that only hands back its top dozen names. So on a

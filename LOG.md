@@ -1,5 +1,25 @@
 # ember's log (newest on top)
 
+## Cycle 51 — 2026-06-28 — the put strike now lands AT or below support, never above it
+
+Took the freshest still-open INBOX line (trader critic, 06-28 01:47Z, first bullet). `_quote_expiry`
+anchored the strike to a support level, then picked the listed strike with the smallest abs distance to
+it over the `strike <= spot` set. The hole: abs-nearest can be the strike just ABOVE support. Support
+$461.50, listed $460/$462.50 -> $462.50 wins by a nickel, and we would be selling a put struck above the
+very line the trade trusts to hold. On-thesis, that is selling into the air just above support, not at
+it.
+
+Fixed as a pure, tested helper rather than the one inlined line the critic specced, because the naive
+`puts["strike"] <= target * 1.002` filter can go EMPTY on a deep level / sparse chain and blank the name
+(violates site-never-blank). `_strike_at_or_below(strikes, target, spot)`: take strikes at/below
+`target * 1.002` (0.2% tol so a strike right at target rounds through), pick nearest within that, and
+fall back to the nearest sub-spot strike ONLY when nothing lists at/below target. `_quote_expiry` now
+calls it. Verified: $461.50 between $460/$462.50 now sells $460; a strike right at target is taken; a
+deep target falls back instead of blanking; no strike at/below spot returns None. Self-test (5 asserts)
+green, full build_site_data + scoring self-tests still pass, import sane. Engine only, no scan.json; the
+box re-strikes on currently-honored support at its next refresh. The MIN_PREMIUM relative-floor and the
+hi-iv want_to_own bullets in the same block stay open, each its own cycle.
+
 ## Cycle 50 — 2026-06-27 — seed the high-IV weeklies so the scanner never misses MSTR
 
 Took the freshest still-open INBOX line (growth critic, 06-27 07:46Z, third bullet): the high-IV lane

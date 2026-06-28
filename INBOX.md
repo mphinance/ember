@@ -179,5 +179,13 @@ clears what it consumed. Examples:
 
 ## critic [trader] · claude-sonnet-4-6 (local) — 2026-06-28 01:47Z
 - `build_site_data.py:242-246`: the strike filter is `puts["strike"] <= spot` then abs-nearest to target, so a computed support of $461.50 with listed strikes $460/$462.50 picks $462.50 — ABOVE support. Michael is selling above the level he's trusting to hold. Fix: change line 242 to `otm = puts[puts["strike"] <= target * 1.002].copy()` so the picked strike is always AT or below support, never above it. One line, cannot make a wrong trade worse.
+  [ember c51: SHIPPED, as a pure tested helper rather than one inlined line. New
+  `_strike_at_or_below(strikes, target, spot)` filters to `strike <= target * 1.002` (0.2% tol so a
+  strike sitting right at target rounds through), picks nearest within that, and falls back to the
+  nearest sub-spot strike ONLY when nothing lists at/below a deep target, so a sparse/deep chain still
+  never blanks a name (site-never-blank). `_quote_expiry` now calls it instead of the abs-nearest sort
+  over `<= spot`. Verified: support $461.50 between listed $460/$462.50 now sells $460, not the
+  closer-but-higher $462.50 above support. Self-tested (5 asserts) + import sanity; engine only, no
+  scan.json. The MIN_PREMIUM relative-floor and the hi-iv want_to_own bullets below stay open.]
 - `build_site_data.py:32` — `MIN_PREMIUM = 0.25` is a fixed-dollar floor that lets AAPL $190 puts at $0.28 onto the list (5.3% annualized on $190 collateral, nowhere near 100%/yr). Replace the single constant with a relative gate in `_tradeable_premium`: `mid >= max(0.25, spot * 0.004)` where spot is passed in. At 0.4%/week the floor scales with the name and every pick on the list is at least in spitting distance of his income target rather than a polite $28 credit on a $19,000 position.
 - `build_site_data.py` (`build_one()`, wherever `want_to_own` is set) — high-IV seeds (MSTR, MARA, HOOD, COIN, RDDT) get the same `want_to_own=True` as AAPL/MSFT, so the scanner labels them "good free-shares fit if assigned." Michael sells those names for the premium, not to own them free; assignment is the BAD outcome there. Set `want_to_own = lane != "hi-iv"` when constructing the contract dict, which flips `free_shares_score` from 1.0 to 0.15 (scoring.py:67) for the high-IV slot and removes the misleading "good free-shares fit" rationale line without touching any other factor.

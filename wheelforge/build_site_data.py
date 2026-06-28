@@ -231,6 +231,21 @@ def _anchor_strike(spot, rv, dte, support):
     return sigma, False
 
 
+def _strike_at_or_below(strikes, target, spot):
+    """Pick the listed put strike nearest `target` but NEVER above it. Selling a put is a
+    bet that price holds the level you struck; a support of $461.50 with listed strikes
+    $460 / $462.50 must sell the $460, not the closer-but-higher $462.50 that sits ABOVE
+    the level you are trusting to hold. A 0.2% tolerance lets a strike sitting right at
+    target round through. Falls back to the nearest sub-spot strike only when nothing
+    lists at/below target (a deep level on a sparse chain), so a name is never blanked.
+    Returns the chosen strike (float) or None when no strike sits at/below spot."""
+    at = [s for s in strikes if s <= target * 1.002]
+    pool = at or [s for s in strikes if s <= spot]
+    if not pool:
+        return None
+    return min(pool, key=lambda s: abs(s - target))
+
+
 def _quote_expiry(tk, exp, dte, spot, rv, support):
     """Quote the support-anchored (else ~1 sigma OTM) cash-secured put for a SINGLE expiry
     off the live chain. Returns the quote dict or None (no chain / no OTM strike / dead
@@ -239,11 +254,10 @@ def _quote_expiry(tk, exp, dte, spot, rv, support):
     if puts is None or puts.empty:
         return None
     target, at_support = _anchor_strike(spot, rv, dte, support)
-    otm = puts[puts["strike"] <= spot].copy()
-    if otm.empty:
+    strike = _strike_at_or_below([float(s) for s in puts["strike"].tolist()], target, spot)
+    if strike is None:
         return None
-    otm["_d"] = (otm["strike"] - target).abs()
-    row = otm.sort_values("_d").iloc[0]
+    row = puts[puts["strike"] == strike].iloc[0]
     bid = float(row.get("bid") or 0); ask = float(row.get("ask") or 0)
     mid = (bid + ask) / 2.0 if (bid > 0 and ask > 0) else float(row.get("lastPrice") or 0)
     iv = float(row.get("impliedVolatility") or 0)
@@ -636,6 +650,20 @@ def _selftest():
     assert _pct_otm(100.0, 100.0) == 0.0, "a strike at spot is 0% OTM"
     assert _pct_otm(0.0, 10.0) == 0.0, "a zero spot must not divide"
     print("pct_otm: 190p/200 spot -> 5.0% OTM")
+
+    # Strike-at-support: the picked put strike is AT or BELOW the level we trust to hold,
+    # never above it. A support of $461.50 between listed $460 / $462.50 must sell $460
+    # (the $462.50 is closer but sits ABOVE support). A strike sitting right at target
+    # rounds through the 0.2% tolerance. When nothing lists at/below a deep target we fall
+    # back to the nearest sub-spot strike rather than blank the name; no strike at/below
+    # spot at all returns None.
+    chain = [450.0, 455.0, 460.0, 462.5, 465.0, 470.0]
+    assert _strike_at_or_below(chain, 461.5, 470.0) == 460.0, "pick $460, never the higher $462.50 above support"
+    assert _strike_at_or_below(chain, 462.5, 470.0) == 462.5, "a strike right at target is taken"
+    assert _strike_at_or_below(chain, 463.0, 470.0) == 462.5, "0.2% tol lets 462.5 (<=463.9) round through"
+    assert _strike_at_or_below(chain, 100.0, 470.0) == 450.0, "deep target falls back to nearest sub-spot strike"
+    assert _strike_at_or_below([480.0, 490.0], 461.5, 470.0) is None, "no strike at/below spot -> None"
+    print("strike: support $461.50 between $460/$462.50 -> sells $460 (at/below support)")
 
     # Sector crowding: walk a pre-sorted list, keep the best name per sector clean, flag the
     # rest. Two Technology names above 60 -> the SECOND (lower-ranked) is crowded, the first is
