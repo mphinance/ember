@@ -1,5 +1,36 @@
 # ember's log (newest on top)
 
+## Cycle 54 — 2026-06-28 — the free-shares read stops calling a speculative name a good wheel entry
+
+Took the still-open third bullet of the 06-28 01:47Z trader block: high-IV seeds get labeled a good
+free-shares fit even though Michael sells those for the premium, not to own. Tracing it found the real
+shape was narrower and worse than the bullet read. `want_to_own` is already computed right (c20: line 387,
+`"liquid" in lanes`, so a hi-iv-ONLY name is False) and it already flows into the SCORE path (the contract
+dict, line 480) and the pick fields (line 493). The hole was the DISPLAY twin: line 509-510 called
+`free_shares_read(..., want_to_own=True)` with the flag HARDCODED, so a speculative pick was scored with
+the wheel-fit penalty yet its readout showed full wheel-fit and pitched "if assigned you own at $X, Y%
+below today" as a wheel win. The score was honest; the human-facing read lied.
+
+Fixed both halves. (1) Thread the real per-lane flag into the read: `want_to_own=want_to_own`. (2) Make
+`free_shares._summary` honest when the name is not one you want, so it reads "Income play, not free shares.
+This is a high-IV name you sell for the N% annualized premium, not to own; assignment at $X is the risk to
+manage, not the reward." instead of pitching the cheap basis. The frontend already renders
+`free_shares.wheel_fit` + `.summary` (app.js:325-329), so this is pure data, no frontend edit, and the box
+surfaces it on its next refresh.
+
+Deliberate: I kept line 387's `"liquid" in lanes` over the critic's literal `lane != "hi-iv"`. A name in
+BOTH lanes is a genuinely ownable staple that ALSO pays rich premium, the ideal CSP, and should stay
+want_to_own=True; the critic's naive form would wrongly flip it to income-only. Took the intent (stop
+mislabeling speculative names), kept the better existing logic, same as c51/c53.
+
+Verified offline: the SAME cheap-basis contract now reads wheel-fit 70.4 + a wheel-win summary when wanted,
+and 54.4 + the income-play summary when speculative; two new asserts pin the discrimination. freeshares,
+scoring, and build_site_data self-tests all green, `import wheelforge.__main__` clean. Engine only, no
+scan.json. Wrote the lesson back ([[wheelforge-design-principles]]): a flag computed once and consumed by
+both a score path and a display path can be hardcoded optimistic on one side, the score stays honest while
+the read lies, so grep every consumer, not just the scorer (twin of c32). The remaining open bullets
+(ex-div early assignment, zero-volume mid-vs-bid, OI-wall confirm, support_touches) each stay their own cycle.
+
 ## Cycle 53 — 2026-06-28 — the earnings veto now actually fires on an explicit `scan TICKER`
 
 Took the first bullet of the freshest critic block (risk, 06-28 04:47Z). The hole was real and exactly

@@ -507,7 +507,7 @@ def build_one(ticker, earnings_days=None, lanes=None, sector=None):
             # price-action support/resistance (where the stock actually bounces).
             "levels": _levels(candles, spot, support, resistance),
             "free_shares": free_shares_read(spot, strike, premium, roc, prob_otm,
-                                            want_to_own=True),
+                                            want_to_own=want_to_own),
             **scored,
         },
     }

@@ -81,14 +81,20 @@ def free_shares_read(spot, strike, premium, annualized_roc, prob_otm, want_to_ow
         "basis_discount_pct": round(disc * 100, 1),
         "prob_assigned_pct": round(pa * 100, 1),
         "wheel_fit": round(fit * 100, 1),
-        "summary": _summary(basis, disc, annualized_roc),
+        "summary": _summary(basis, disc, annualized_roc, want_to_own),
     }
 
 
-def _summary(basis, disc, roc):
+def _summary(basis, disc, roc, want_to_own=True):
     if disc <= 0:
         return ("Weak wheel entry. Assignment would cost you at or above today's price, "
                 "so this is income only, not cheap shares.")
+    if not want_to_own:
+        # A high-IV name you sell for the premium, not to own free. Assignment is the
+        # RISK here, not the goal, so do not pitch the cheap basis as a wheel win.
+        return (f"Income play, not free shares. This is a high-IV name you sell for the "
+                f"{roc*100:.1f}% annualized premium, not to own; assignment at ${basis:,.2f} "
+                f"is the risk to manage, not the reward.")
     return (f"If assigned you own at ${basis:,.2f}, {disc*100:.1f}% below today, "
             f"earning {roc*100:.1f}% annualized on the cash while you wait.")
 
@@ -112,6 +118,20 @@ def _selftest():
                     prob_otm=0.72, want_to_own=True)
     print(f"yield discrimination: thin(30%/yr)={thin:.3f}  fat(120%/yr)={fat:.3f}")
     assert fat > thin + 0.10, "a fat weekly must now beat a thin one on wheel-fit"
+
+    # Lane honesty: the SAME cheap-basis contract reads as a real wheel win on a name
+    # you want, but as an income-only play (lower fit, honest summary) on a high-IV name
+    # you sell for premium and do NOT want assigned. The c54 fix: build_one was passing a
+    # hardcoded want_to_own=True into the read, so hi-iv picks were mislabeled good fits.
+    owned = free_shares_read(spot=100, strike=95, premium=3.0, annualized_roc=1.20,
+                             prob_otm=0.72, want_to_own=True)
+    spec = free_shares_read(spot=100, strike=95, premium=3.0, annualized_roc=1.20,
+                            prob_otm=0.72, want_to_own=False)
+    print("wanted    :", owned["wheel_fit"], owned["summary"])
+    print("speculative:", spec["wheel_fit"], spec["summary"])
+    assert spec["wheel_fit"] < owned["wheel_fit"], "a name you do not want must fit worse"
+    assert "Income play" in spec["summary"], "speculative read must not pitch free shares"
+    assert "free shares" not in owned["summary"].lower() or "If assigned you own" in owned["summary"]
 
     # A bad wheel: strike ABOVE spot effective basis (assignment costs more than now).
     bad = free_shares_read(spot=100, strike=104, premium=1.0, annualized_roc=0.04,

@@ -197,6 +197,15 @@ clears what it consumed. Examples:
   asserts still green) + import sane; engine only, no scan.json. The hi-iv want_to_own flip (next bullet)
   stays open.]
 - `build_site_data.py` (`build_one()`, wherever `want_to_own` is set) — high-IV seeds (MSTR, MARA, HOOD, COIN, RDDT) get the same `want_to_own=True` as AAPL/MSFT, so the scanner labels them "good free-shares fit if assigned." Michael sells those names for the premium, not to own them free; assignment is the BAD outcome there. Set `want_to_own = lane != "hi-iv"` when constructing the contract dict, which flips `free_shares_score` from 1.0 to 0.15 (scoring.py:67) for the high-IV slot and removes the misleading "good free-shares fit" rationale line without touching any other factor.
+  [ember c54: DONE, narrower+deeper than specced. The scoring/contract want_to_own was ALREADY correct
+  since c20 (line 387 `"liquid" in lanes`, so a hi-iv-only name is False and free_shares_score already
+  flips). The real hole was the DISPLAY twin: build_one called `free_shares_read(..., want_to_own=True)`
+  HARDCODED, so a speculative pick was scored with the penalty yet its readout still pitched the cheap
+  basis as a wheel win. Fixed: threaded the real flag into the read + made `_summary` say "Income play,
+  not free shares ... assignment is the risk, not the reward" for unwanted names. Kept `"liquid" in lanes`
+  over the literal `lane != "hi-iv"` (a name in BOTH lanes is an ownable staple that also pays rich, the
+  ideal CSP, stays True). Self-tested (fit 70.4 wanted vs 54.4 speculative) + all self-tests green; engine
+  only, no scan.json.]
 
 ## critic [risk] · claude-sonnet-4-6 (local) — 2026-06-28 04:47Z
 - `__main__.py:73` sends `earnings_days=None` for every explicit-ticker CLI scan; `build_site_data.py:481` converts that to `999`, so `earnings_blocks(999, 7)` never fires. Running `scan NVDA` on the eve of NVDA earnings shows a live put recommendation with no AVOID. One-line fix: replace `plan = [{"ticker": t, "earnings_days": None} ...]` with `plan = seed_universe(tickers)` (already imported via `universe.py`), which fetches real earnings dates the same way the full screener path does.

@@ -381,3 +381,18 @@ constructs the engine's input (screener, CLI, seeds) and confirm each feeds the 
 placeholder. (2) A critic's one-liner that closes one hole can open a smaller one (here, dropping a typed
 name); take the fix, keep the invariant. Same gate-at-the-cheapest-stage + fail-open-but-honest family as
 c8/c50; same critics-are-input discipline as [[critics-dont-override-settled-calls]].
+
+## A flag computed right in one path can be hardcoded optimistic in its twin (learned c54)
+c20 derived `want_to_own` from the lane (a hi-iv-only name is speculative, assignment is not welcome),
+and it correctly flowed into scoring (the contract dict) and the pick fields. But the DISPLAYED
+free-shares read, `free_shares_read(...)` in build_one, was still called with a hardcoded
+`want_to_own=True`, so a speculative hi-iv pick was SCORED with the wheel-fit penalty yet its readout
+showed full wheel-fit and pitched "if assigned you own at $X, Y% below today" as a wheel win. A trader
+critic flagged the mislabel. The fix threads the real per-lane flag into the read AND makes `_summary`
+honest for a name you sell for premium, not to own ("Income play, not free shares ... assignment is the
+risk to manage, not the reward."). Note I kept line 387's `"liquid" in lanes` over the critic's naive
+`lane != "hi-iv"`: a name in BOTH lanes is a genuinely ownable staple that also pays rich premium, the
+ideal CSP, and should stay want_to_own=True. Lesson: when a flag is computed once and consumed by both a
+SCORE path and a DISPLAY path, a hardcoded default on either side is a silent twin bug, the score can be
+honest while the human-facing read lies. Grep every consumer of the flag, not just the scorer. Same
+twin-constant family as c32 (a recalibrated constant has twins) and same dead-default family as c19/c20.

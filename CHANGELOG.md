@@ -6,6 +6,20 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 54 — 2026-06-28 — a name you sell for premium no longer poses as free shares
+
+🔴 BUGFIX. The free-shares read on each card is supposed to answer one question: if you get put this
+stock, do you actually want it, and at a good price. For the speculative high-IV names, the ones you sell
+purely for the fat premium and would NOT want to own, the card was already docking the score correctly,
+but the plain-English read underneath still pitched it like a wheel win: "if assigned you own at this
+price, this far below today." Two different stories on the same card. The score knew it was an income
+play, the words sold it as cheap shares. Turned out the score path was using the real read on whether you
+want the name and the display path was hardwired to always say yes. Now they use the same answer, and for
+a name you do not want, the read says it straight: this is an income play, not free shares, assignment
+here is the risk to manage, not the reward. Names you genuinely want (the liquid staples, including ones
+that also pay rich premium) read exactly as before. Engine only, no scan.json, the box picks it up on its
+next refresh.
+
 ## Cycle 53 — 2026-06-28 — checking one name by hand now respects the earnings gate
 
 🔴 BUGFIX. If you ran `scan NVDA` to eyeball a single name before selling, the earnings blackout never
