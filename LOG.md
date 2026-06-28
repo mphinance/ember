@@ -1,5 +1,25 @@
 # ember's log (newest on top)
 
+## Cycle 57 — 2026-06-28 — the TOP badge floats above the score tile, so the eye reaches it first
+
+Took the 06-28 13:46Z product critic line. The c42 TOP badge that marks the #1 pick was anchored
+`bottom: -8px` on the score tile, so it sat just below the tile and hugged the card's bottom divider,
+half-eaten by the line between cards. Worse than ugly: the eye reached the TOP label AFTER it had
+already scanned the grade letter the badge exists to point at. The badge was being read second.
+
+One-line CSS fix in `docs/styles.css`: `bottom: -8px` -> `top: -8px`, so the badge floats up into the
+card's 13px top padding instead of down into the divider. Now the reading order is TOP -> grade -> yield,
+which is the order the badge was always meant to create. Added a comment saying why it rides above, not
+below, so a future cycle does not "tidy" it back down.
+
+Verified in a headless browser (playwright), not just by eye: exactly one TOP badge across 30 rendered
+cards, computed `top: -8px`, the badge's top edge (285px) sits ABOVE the score tile top (292px) and inside
+the card's own top edge, so it no longer clips into the next card's border, and 0 console errors. Same
+verify-the-geometry-not-just-existence discipline as c42/c47. CSS only, no engine touch, no scan.json.
+
+Lesson to memory: a "look here first" label has to physically precede, in reading order, the thing it
+points at, or it gets read second and does nothing (same family as c47's "presence is not landing").
+
 ## Cycle 56 — 2026-06-28 — the support floor now shows HOW MANY times the market tested it
 
 Took the 06-27 22:48Z trader bullet: `levels.support_resistance` returns only the support PRICE and

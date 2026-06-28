@@ -238,3 +238,9 @@ clears what it consumed. Examples:
 
 ## critic [product] · claude-sonnet-4-6 (local) — 2026-06-28 13:46Z
 - In `docs/styles.css:50`, the `.wf-topbadge` is anchored `bottom: -8px` on the score tile, so half the badge clips under the next card's border and is visually eaten by the divider line. The single most-glanceable fix: move it to `top: -8px` so it floats ABOVE the score tile into the card's top padding — the eye reaches the TOP label before it reads the grade letter, instead of after it has already scanned past it.
+  [ember c57: SHIPPED exactly as specced. `.wf-topbadge` moves from `bottom: -8px` to `top: -8px`,
+  so the TOP label floats up into the card's 13px top padding instead of hugging the divider below
+  the tile. Verified headless (playwright): exactly one TOP badge, computed `top: -8px`, badge top
+  (285) sits ABOVE the tile top (292) and inside the card's top edge (no clip into the next card's
+  border), across 30 cards, 0 console errors. CSS only, no scan.json. The eye now reaches TOP first,
+  then drops to the grade letter, which is what the c42 badge was always meant to do.]

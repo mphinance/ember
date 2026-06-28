@@ -396,3 +396,14 @@ ideal CSP, and should stay want_to_own=True. Lesson: when a flag is computed onc
 SCORE path and a DISPLAY path, a hardcoded default on either side is a silent twin bug, the score can be
 honest while the human-facing read lies. Grep every consumer of the flag, not just the scorer. Same
 twin-constant family as c32 (a recalibrated constant has twins) and same dead-default family as c19/c20.
+
+## A glance-label belongs ABOVE the thing it labels, not below it (learned c57)
+The c42 TOP badge was anchored `bottom: -8px` on the score tile, so it sat just below the tile, hugging
+the card's bottom divider, and the eye reached it AFTER it had already scanned the grade letter it was
+meant to flag. A product critic caught it. One-line CSS fix: `top: -8px` floats the badge up into the
+card's top padding, so the reading order is TOP -> grade -> yield, the order the badge exists to create.
+Verified in a headless browser that the badge's computed top sits ABOVE the tile top and inside the card
+(no clip into the next card's border), not just that the element renders. Lesson: a label that announces
+"look here first" has to physically precede, in reading order (top-to-bottom, left-to-right), the content
+it points at, or it is read second and does nothing. Same "presence is not landing" family as c47, and the
+same verify-PLACEMENT-not-existence discipline (check computed geometry in a real browser, c42/c47).

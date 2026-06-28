@@ -45,8 +45,11 @@ body { display: flex; flex-direction: column; min-height: 100vh; }
    the first thing the eye finds, before any score is read. Rides over is-sel when both. */
 .wf-card.is-top { background: #1a1200; box-shadow: inset 6px 0 0 var(--amber); }
 .wf-card.is-top:hover { background: #211700; }
+/* TOP rides ABOVE the score tile (into the card's top padding), not below it: at the old
+   bottom:-8px it hugged the card divider and read AFTER the grade. Up top the eye reaches
+   the TOP label first, then drops to the grade letter. */
 .wf-topbadge {
-  position: absolute; left: 50%; bottom: -8px; transform: translateX(-50%); z-index: 3;
+  position: absolute; left: 50%; top: -8px; transform: translateX(-50%); z-index: 3;
   font-family: var(--mono); font-weight: 800; font-size: 9px; letter-spacing: .1em;
   padding: 1px 5px; border-radius: 4px; color: #0a0e15; background: var(--amber);
   box-shadow: 0 0 10px rgba(255,176,0,.5);

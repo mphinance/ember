@@ -6,7 +6,16 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
-## Cycle 56 — 2026-06-28 — the support floor tells you how many times it has held
+## Cycle 57 — 2026-06-28 — the TOP tag moved up where your eye actually starts
+
+🔴 BUGFIX. The little TOP tag that marks the best pick on the board was sitting under the score tile,
+tucked right against the line that divides one card from the next, so half of it got swallowed by that
+divider. The real problem was not that it looked cramped. It was that your eye reached it after it had
+already read the grade and the yield, so the one thing meant to tell you "start here" was the last thing
+you saw. Moved it up above the tile into the open space at the top of the card. Now you read TOP first,
+then the grade, then the yield, which is the whole point of having it. One line of CSS, checked in a real
+browser that it floats above the tile and no longer clips into the next card. Nothing in the engine
+changed, the scan is untouched, the best pick just announces itself before you read a single number now.
 
 🟢 FEATURE. You sell at support and you trust it to hold. But a support price on its own does not tell you
 whether it is a real floor or a fluke. A level the market has bounced off seven times in three months is a
