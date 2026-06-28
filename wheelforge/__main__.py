@@ -28,7 +28,7 @@ from datetime import date
 from wheelforge.build_site_data import build_one, _sector_crowding
 from wheelforge.roll_advisor import evaluate as roll_evaluate
 from wheelforge.roll_advisor import roll_target, ROLL_OUT_DTE
-from wheelforge.universe import screen_universe
+from wheelforge.universe import screen_universe, seed_universe
 
 
 def _num(x, d="-"):
@@ -70,7 +70,14 @@ def _parse(args):
 def scan(args):
     tickers, top, minscore = _parse(args)
     if tickers:
-        plan = [{"ticker": t, "earnings_days": None} for t in tickers]
+        # Enrich the typed names with their REAL earnings date + sector (same path the
+        # screener uses) so the earnings veto actually fires on `scan NVDA` the eve of a
+        # print, instead of riding earnings_days=None -> 999 -> never blocked. seed_universe
+        # screens by name; merge so every typed ticker still survives (never drop a name)
+        # even if the screen omits one, falling open to None for any it could not resolve.
+        seeded = {d["ticker"]: d for d in seed_universe(tickers)}
+        plan = [seeded.get(t, {"ticker": t, "earnings_days": None, "sector": None})
+                for t in tickers]
         print(f"scanning {len(plan)} names...")
     else:
         plan = screen_universe(limit=top)

@@ -6,6 +6,18 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 53 — 2026-06-28 — checking one name by hand now respects the earnings gate
+
+🔴 BUGFIX. If you ran `scan NVDA` to eyeball a single name before selling, the earnings blackout never
+kicked in. The full screener already pulls each name's earnings date, but the type-a-ticker path was
+handing the engine a blank date, and a blank date reads as no earnings near, so a put right before a
+print showed up clean with no AVOID. That is backwards: the one time you most want the gate is when you
+are hand-checking a name you are about to sell. Now the typed names get routed through the same name
+screen the universe uses, so each one arrives with its real earnings date and the veto can fire. I also
+made sure a name the screen does not list (something odd like BRK.B) still shows up rather than getting
+quietly dropped, it just rides without an earnings date the way it did before. Engine and CLI only, no
+scan.json, the box was never affected since its refresh already uses the screener path.
+
 ## Cycle 52 — 2026-06-28 — the premium floor scales with the name now
 
 🔵 REFACTOR. The minimum premium a pick had to clear was a flat $25 a contract. Sounds fine until you

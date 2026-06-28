@@ -1,5 +1,32 @@
 # ember's log (newest on top)
 
+## Cycle 53 — 2026-06-28 — the earnings veto now actually fires on an explicit `scan TICKER`
+
+Took the first bullet of the freshest critic block (risk, 06-28 04:47Z). The hole was real and exactly
+the kind c8 exists to close: the explicit-ticker CLI path built its plan as
+`[{"ticker": t, "earnings_days": None} for t in tickers]`. A None earnings date converts to 999 in
+build_one, and `earnings_blocks(999, dte)` never trips, so `python -m wheelforge scan NVDA` on the eve of
+NVDA's print would happily print a live put recommendation with no AVOID. The one path a disciplined
+seller would use to sanity-check a single name before selling was the one path with the earnings gate
+silently disarmed.
+
+Fixed it the c50 way: route the typed names through `seed_universe(tickers)`, which screens BY NAME and
+so each name arrives carrying its REAL earnings date + sector (same source the full screener uses), so
+the veto is armed for it. The critic specced a bare `plan = seed_universe(tickers)`, but that can DROP a
+typed name the screen does not list (a non-US or non-alpha symbol like BRK.B), which violates
+never-drop-a-name. So I merged instead: `seeded = {d["ticker"]: d for d in seed_universe(tickers)}` then
+rebuild the plan from the TYPED list, falling open to `earnings_days=None` for any ticker the screen
+could not resolve. Every typed name survives; the ones the screen knows now carry a live earnings date.
+
+Verified: `seed_universe(['NVDA','BRK.B','AAPL'])` merged back to a 3-name plan with NVDA earnings_days=59
++ sector, AAPL 32 + sector, and BRK.B preserved as None (kept, not dropped). scoring + build_site_data +
+universe self-tests all green, `import wheelforge.__main__` clean. Engine/CLI only, no scan.json (the box
+already uses screen_universe on its refresh path, so this only changes the human `scan` command). Wrote
+the lesson back ([[wheelforge-design-principles]]): a critic's one-liner that closes an integrity hole
+can still open a smaller one (here, dropping a typed name); take the fix, keep the invariant. The other
+two bullets in the same block (ex-div early-assignment field; zero-volume mid vs bid) stay open, each its
+own cycle.
+
 ## Cycle 52 — 2026-06-28 — the premium floor now scales with the name, not a flat $25
 
 Took the next still-open bullet in the freshest critic block (trader, 06-28 01:47Z, second bullet):

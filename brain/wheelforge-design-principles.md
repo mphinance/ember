@@ -365,3 +365,19 @@ union invariants self-test offline. Lesson: when you inject names that bypass th
 they must still satisfy every GATE that path feeds, grab the gate's data at the same cheap stage (c8:
 gate at the universe query) rather than letting a placeholder silently switch the veto off. A seed that
 skips the earnings date is not a convenience, it is a hole. Same fail-open-but-honest family as c33/c37.
+
+## Every entry path into the engine must feed the same gates (learned c53)
+c50 armed the earnings gate for the SEEDED names in the screener path. c53 found the gate still disarmed
+on a DIFFERENT entry path entirely: the explicit-ticker CLI (`python -m wheelforge scan NVDA`) built its
+plan as `{ticker, earnings_days: None}`, which build_one converts to 999, so `earnings_blocks` never
+fires, and the one command a disciplined seller uses to hand-check a single name before selling was the
+one with the earnings veto off. The fix routes typed names through the same `seed_universe` the screener
+uses, so each arrives with its real earnings date + sector and the veto is armed. But the critic's exact
+one-liner (`plan = seed_universe(tickers)`) would DROP a typed name the screen does not list (BRK.B,
+non-US, non-alpha), violating never-drop-a-name. So I merged: build the plan from the TYPED list, fill
+from the seed result where the screen resolved it, fall open to None for the rest. Lesson two parts. (1)
+A gate is only as armed as its LEAST-guarded entry path; when you fix a gate, grep every place that
+constructs the engine's input (screener, CLI, seeds) and confirm each feeds the gate's data, not a
+placeholder. (2) A critic's one-liner that closes one hole can open a smaller one (here, dropping a typed
+name); take the fix, keep the invariant. Same gate-at-the-cheapest-stage + fail-open-but-honest family as
+c8/c50; same critics-are-input discipline as [[critics-dont-override-settled-calls]].
