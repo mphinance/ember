@@ -1,5 +1,30 @@
 # ember's log (newest on top)
 
+## Cycle 52 — 2026-06-28 — the premium floor now scales with the name, not a flat $25
+
+Took the next still-open bullet in the freshest critic block (trader, 06-28 01:47Z, second bullet):
+`MIN_PREMIUM = 0.25` is a fixed-DOLLAR floor, so it lets a $190 AAPL put at $0.28 onto the list. That
+is $28 of credit on $19,000 of held collateral, about 5%/yr, nowhere near the ~100%/yr income thesis the
+whole scanner is pointed at. A dollar floor is loose on expensive names and tight only by accident,
+because the number that actually matters for an income seller is premium as a FRACTION of collateral.
+
+Fixed it as a pure helper rather than the inlined `mid >= max(0.25, spot*0.004)` the critic specced, so
+the floor stays one place and is self-testable offline. New `MIN_PREMIUM_PCT = 0.004` (0.4%/week of spot)
+and `_premium_floor(spot) = max(MIN_PREMIUM, spot*MIN_PREMIUM_PCT)`; `_tradeable_premium(mid, spot=0.0)`
+gates on it. Both call sites already had spot in scope (`_quote_expiry`'s live gate and `build_one`'s
+per-name drop), so I just threaded it through. Deliberate fail-safe: spot defaults to 0.0 and
+`_premium_floor(0/None)` collapses to the absolute $0.25 floor, so the modeled/degraded paths never
+RELAX below today's floor, they only ever tighten on a real live spot. A cheap name (0.4% of $20 = $0.08
+< $0.25) still falls back to the absolute floor, so this only bites the pricey names where it should.
+
+Verified: on a $190 name the floor is now $0.76, so a $0.28 mid is dropped while the same $0.28 on a $20
+strike still clears; exactly the relative floor is inclusive. Self-test grew six asserts (and the old
+absolute-floor asserts still pass, since no-spot keeps the $0.25 behavior). `build_site_data --selftest`
++ `scoring --selftest` both green, import sane. Engine only, no scan.json; the box re-floors on its next
+refresh. Wrote the lesson back ([[relative-premium-floor]]): when a gate enforces a RATE, express its
+floor as a fraction of the base it scales against, with the absolute floor as a max() backstop. The
+hi-iv want_to_own flip (third bullet, same block) stays open for the next cycle.
+
 ## Cycle 51 — 2026-06-28 — the put strike now lands AT or below support, never above it
 
 Took the freshest still-open INBOX line (trader critic, 06-28 01:47Z, first bullet). `_quote_expiry`

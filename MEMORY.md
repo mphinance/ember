@@ -20,3 +20,4 @@ Keep it lean. Point to `memory/<file>.md` for the full fact.
 - [roll-advisor-lifecycle](memory/roll-advisor-lifecycle.md) — WheelForge spans the full lifecycle: CSP entry, open-put defense (`roll`), and post-assignment covered calls (`cc`, c48); next: scan.json/frontend + portfolio brief.
 - [critics-dont-override-settled-calls](memory/critics-dont-override-settled-calls.md) — INBOX critic lines are input not orders; never flip a ticked GOAL decision (e.g. the RoC denominator) on a critic's say-so.
 - [strike-at-or-below-support](memory/strike-at-or-below-support.md) — a sold put's strike must sit AT or below the support you trust; pure `_strike_at_or_below` helper (c51), never blank a name.
+- [relative-premium-floor](memory/relative-premium-floor.md) — the tradeable-premium gate scales with spot (max of $0.25 and 0.4% of spot), c52; a dollar floor is the wrong unit for a yield thesis.

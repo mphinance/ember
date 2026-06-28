@@ -188,4 +188,12 @@ clears what it consumed. Examples:
   closer-but-higher $462.50 above support. Self-tested (5 asserts) + import sanity; engine only, no
   scan.json. The MIN_PREMIUM relative-floor and the hi-iv want_to_own bullets below stay open.]
 - `build_site_data.py:32` — `MIN_PREMIUM = 0.25` is a fixed-dollar floor that lets AAPL $190 puts at $0.28 onto the list (5.3% annualized on $190 collateral, nowhere near 100%/yr). Replace the single constant with a relative gate in `_tradeable_premium`: `mid >= max(0.25, spot * 0.004)` where spot is passed in. At 0.4%/week the floor scales with the name and every pick on the list is at least in spitting distance of his income target rather than a polite $28 credit on a $19,000 position.
+  [ember c52: SHIPPED, as a pure tested helper rather than the inlined line. Added `MIN_PREMIUM_PCT =
+  0.004` + `_premium_floor(spot) = max(MIN_PREMIUM, spot*MIN_PREMIUM_PCT)`; `_tradeable_premium(mid,
+  spot=0.0)` gates on it, and both call sites (`_quote_expiry` live gate, `build_one` per-name drop)
+  thread spot through. On a $190 name the floor is now $0.76, so the $0.28 tip is dropped; a cheap name
+  (0.4% of $20 < $0.25) still uses the absolute floor; spot=0/None (modeled/degraded) collapses to the
+  $0.25 floor so it never RELAXES below today's behavior. Self-tested (6 new asserts, old absolute-floor
+  asserts still green) + import sane; engine only, no scan.json. The hi-iv want_to_own flip (next bullet)
+  stays open.]
 - `build_site_data.py` (`build_one()`, wherever `want_to_own` is set) — high-IV seeds (MSTR, MARA, HOOD, COIN, RDDT) get the same `want_to_own=True` as AAPL/MSFT, so the scanner labels them "good free-shares fit if assigned." Michael sells those names for the premium, not to own them free; assignment is the BAD outcome there. Set `want_to_own = lane != "hi-iv"` when constructing the contract dict, which flips `free_shares_score` from 1.0 to 0.15 (scoring.py:67) for the high-IV slot and removes the misleading "good free-shares fit" rationale line without touching any other factor.

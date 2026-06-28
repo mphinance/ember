@@ -6,6 +6,18 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 52 — 2026-06-28 — the premium floor scales with the name now
+
+🔵 REFACTOR. The minimum premium a pick had to clear was a flat $25 a contract. Sounds fine until you
+see what it lets through: a $190 AAPL put paying $0.28 is $28 of credit against $19,000 you have to set
+aside, about 5 percent a year. That is not the income machine, that is a tip. The trouble is a dollar
+floor is the wrong unit. What matters to a premium seller is the credit as a slice of the cash tied up,
+which is what actually annualizes toward the target. So the floor is now the greater of $0.25 and 0.4
+percent of the share price. On a $190 name that is $0.76, and the $0.28 tip gets dropped. On a genuinely
+cheap name nothing changes, the old $0.25 still governs. Modeled and degraded scans never relax below
+the old floor either, they only tighten when a real live price says they should. Engine only, no
+scan.json, the box re-floors on its next refresh.
+
 ## Cycle 51 — 2026-06-28 — the strike now lands AT support, never just above it
 
 🔴 BUGFIX. When the scanner struck a put to a support level, it grabbed the listed strike closest to

@@ -32,7 +32,13 @@ DTE = 7    # target the nearest WEEKLY — how Michael actually sells (e.g. NVDA
 MIN_PREMIUM = 0.25  # dollars of mid per share (= $25 a contract). Below this a "pick" is
                     # noise: a 15% OTM support strike can quote a $0.06 mid, score well on
                     # richness + structure, and sit near the top of the list — but it is $6
-                    # a contract, not a trade. One floor kills that whole class. Tunable.
+                    # a contract, not a trade. The absolute floor (cheap names). Tunable.
+MIN_PREMIUM_PCT = 0.004  # ...and a RELATIVE floor: 0.4%/week of spot. A flat $25/contract
+                    # floor lets a $190 AAPL put at $0.28 onto the list — $28 of credit on
+                    # $19,000 of collateral, ~5%/yr, nowhere near his ~100%/yr income target.
+                    # Pinning the floor to 0.4% of spot scales it with the name, so the gate
+                    # is max(MIN_PREMIUM, spot*MIN_PREMIUM_PCT) and every pick clears at least
+                    # a real fraction of the target instead of a polite credit on a big position.
 R = 0.045  # risk-free
 SHORT_RV_FLOOR = 0.70  # the live-weekly VRP denominator is a 5-day realized vol (~5 returns), so
                        # its sampling error is large: one unusually quiet week can drop it to ~0.4x
@@ -127,10 +133,19 @@ def _iv_rank(closes, window=252):
     return 50.0 if hi == lo else round(100.0 * (cur - lo) / (hi - lo), 1)
 
 
-def _tradeable_premium(mid):
-    """A mid below MIN_PREMIUM ($25 a contract) is not a trade, however well it would
+def _premium_floor(spot):
+    """The minimum tradeable mid for a name trading at `spot`: the GREATER of the absolute
+    $0.25/share noise floor and 0.4% of spot. A flat floor treats a $190 name and a $20 name
+    the same; the relative term scales the floor with collateral so a $0.28 mid on a $190
+    strike (~5%/yr) is dropped while the same $0.28 on a $20 strike still clears. spot=0/None
+    falls back to the absolute floor alone (modeled/degraded paths never relax below it)."""
+    return max(MIN_PREMIUM, (spot or 0.0) * MIN_PREMIUM_PCT)
+
+
+def _tradeable_premium(mid, spot=0.0):
+    """A mid below the premium floor for this name is not a trade, however well it would
     score. Shared by the live-quote gate and the per-name drop so the floor is one place."""
-    return mid is not None and mid >= MIN_PREMIUM
+    return mid is not None and mid >= _premium_floor(spot)
 
 
 def _pct_otm(spot, strike):
@@ -261,8 +276,8 @@ def _quote_expiry(tk, exp, dte, spot, rv, support):
     bid = float(row.get("bid") or 0); ask = float(row.get("ask") or 0)
     mid = (bid + ask) / 2.0 if (bid > 0 and ask > 0) else float(row.get("lastPrice") or 0)
     iv = float(row.get("impliedVolatility") or 0)
-    if not _tradeable_premium(mid) or iv <= 0:
-        return None   # sub-$25/contract mid (or dead IV): noise, not a tenor worth ranking
+    if not _tradeable_premium(mid, spot) or iv <= 0:
+        return None   # mid under the per-name floor (or dead IV): not a tenor worth ranking
     return {
         "strike": float(row["strike"]), "dte": int(dte), "exp": exp, "premium": mid,
         "iv": iv, "bid": bid, "ask": ask, "at_support": at_support,
@@ -426,7 +441,7 @@ def build_one(ticker, earnings_days=None, lanes=None, sector=None):
     # /contract pick is noise no matter how it scores, so drop the name entirely rather than
     # rank a $6 contract near the top. The "never blank" guard in main() still protects the
     # site if a whole run somehow falls below the floor.
-    if not _tradeable_premium(premium):
+    if not _tradeable_premium(premium, spot):
         return None
     # His edge gate: rich premium = IV over HV (the VRP). A flag he reads at a glance.
     # Judged against vrp_rv (5-day for a live weekly, 20-day for the modeled monthly).
@@ -622,6 +637,7 @@ def _selftest():
 
     # MIN_PREMIUM floor: a $0.06 mid (= $6 a contract) is noise, not a trade, no matter how
     # richly it would score. A $0.30 mid (= $30 a contract) clears. The boundary is inclusive.
+    # With no spot (modeled/degraded path) the gate is the absolute floor alone.
     assert MIN_PREMIUM > 0, "the tradeable floor must be a positive dollar amount"
     assert not _tradeable_premium(0.06), "a $6/contract mid must be dropped as noise"
     assert not _tradeable_premium(MIN_PREMIUM - 1e-6), "just under the floor is not tradeable"
@@ -629,6 +645,18 @@ def _selftest():
     assert _tradeable_premium(MIN_PREMIUM), "exactly the floor is tradeable (inclusive)"
     assert _tradeable_premium(0.30), "a $30/contract mid clears the floor"
     print(f"floor: ${MIN_PREMIUM:.2f}/share min -> $0.06 mid dropped, $0.30 kept")
+
+    # RELATIVE floor: 0.4% of spot. On a $190 name the floor is $0.76, so a $0.28 mid (the
+    # ~5%/yr credit the absolute floor used to wave through) is now dropped, while the SAME
+    # $0.28 on a $20 name still clears because there the absolute floor governs.
+    assert _premium_floor(190.0) == 190.0 * MIN_PREMIUM_PCT, "relative floor binds on a pricey name"
+    assert _premium_floor(190.0) > MIN_PREMIUM, "the relative term must dominate above ~$62 spot"
+    assert _premium_floor(20.0) == MIN_PREMIUM, "absolute floor governs a cheap name (0.4%<$0.25)"
+    assert _premium_floor(0.0) == MIN_PREMIUM and _premium_floor(None) == MIN_PREMIUM, "no spot -> absolute floor"
+    assert not _tradeable_premium(0.28, 190.0), "$28 credit on a $190 strike (~5%/yr) is now dropped"
+    assert _tradeable_premium(0.28, 20.0), "$28 credit on a $20 strike still clears (cheap name)"
+    assert _tradeable_premium(190.0 * MIN_PREMIUM_PCT, 190.0), "exactly the relative floor clears (inclusive)"
+    print(f"relative floor: spot $190 -> ${_premium_floor(190.0):.2f}/share min, $0.28 mid dropped")
 
     # short-RV floor: a quiet 5-day window cannot drop the VRP denominator below 70% of the
     # 20-day rv (a 5-obs window is too noisy to be trusted with the richness ceiling), but a
