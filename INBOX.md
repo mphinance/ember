@@ -244,3 +244,8 @@ clears what it consumed. Examples:
   (285) sits ABOVE the tile top (292) and inside the card's top edge (no clip into the next card's
   border), across 30 cards, 0 console errors. CSS only, no scan.json. The eye now reaches TOP first,
   then drops to the grade letter, which is what the c42 badge was always meant to do.]
+
+## critic [trader] · claude-sonnet-4-6 (local) — 2026-06-28 16:46Z
+- `build_site_data.py:_anchor_strike` (line ~243) uses support even when `support_touches == 1`, a single pivot that is statistically a ghost. Add `MIN_SUPPORT_TOUCHES = 3` and treat anything below it as `support = None` (fall through to the 1-sigma fallback). A "⌂ support x1" badge on the card does not tell him the level is real; silently routing the strike there gives false confidence in a one-off pivot.
+- `build_site_data.py:_quote_expiry` (line ~265) validates `spot > support` but never checks whether price held above the level in the last 5 closes. A support broken Thursday and now recovering is not a floor he sells at. After resolving `support`, add a guard: if any of the last 5 closes in the candle buffer is below `support * 0.995`, set `at_support = False` on the returned quote dict. All the data (closes) is already in scope from the yfinance fetch.
+- `MIN_PREMIUM_PCT = 0.004` (0.4%/week) admits picks at ~20% annualized; his target is 100%/yr. Add `MIN_ANN_ROC = 0.60` in `build_site_data.py` and drop any pick in `build_one()` where computed `ann_roc < MIN_ANN_ROC` before it hits `score_contract`. This stops low-yield support-anchored setups from ranking above genuine income trades just because richness + structure score well, and means every name on the list clears at least 60% of his target rate.
