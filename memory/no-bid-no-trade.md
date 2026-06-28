@@ -1,6 +1,6 @@
 ---
 name: no-bid-no-trade
-description: a put with no market-maker bid cannot be sold; never quote a premium off lastPrice (c60)
+description: price off the side you trade (sell->bid); no-bid puts dropped (c60), yield shown on the bid too (c61)
 metadata:
   type: project
 ---
@@ -20,5 +20,12 @@ to pay is the same dishonesty as faking a roll credit (c46) or trusting a one-to
 ([[support-touch-count]]).
 
 **How to apply:** when pricing any option leg off a chain, anchor on the side you trade (sell -> bid,
-buy -> ask); the mid is a convenience, not a fillable promise, and `lastPrice` is never a quote. Still
-open: `bid_ann_roc` so the YIELD reads off the bid not the mid (next risk bullet). See [[relative-premium-floor]].
+buy -> ask); the mid is a convenience, not a fillable promise, and `lastPrice` is never a quote. See
+[[relative-premium-floor]].
+
+c61 (done): the YIELD now reads off the bid too. The headline `annualized_roc` is still priced on the
+mid, but every pick also carries `bid_ann_roc = _annualized_roc(bid, strike, dte)` — what actually hits
+the account when you sell-to-open into the bid. The readout shows `(NN% on the bid)` whenever it trails
+the mid. Deliberately a VISIBLE field, NOT a silent rescore (same judgment as c43/c44/c59): the mid yield
+ranks the board, the bid yield tells him what he collects. Open risk bullet that remains: the universe.py
+fallback-earnings lookup (a screener-failure name with `earnings_days=None` bypasses the earnings veto).

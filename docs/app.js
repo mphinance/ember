@@ -331,6 +331,9 @@
       + (p.exp ? ' expiring <span class="k">' + fmtDate(p.exp) + '</span> (' + p.dte + ' DTE) ' : ' (' + p.dte + ' DTE) ') + srcTag
       + ' · prem <span class="k">$' + fmt(p.premium) + '</span>'
       + ' · <span class="k">' + fmt(p.annualized_roc) + '%</span> annualized'
+      + ((p.bid_ann_roc != null && p.bid_ann_roc < p.annualized_roc)
+          ? ' <span class="ivproxy" title="the headline is priced on the mid; you sell-to-open into the bid, so this is the yield that actually hits the account">(' + fmt(p.bid_ann_roc) + '% on the bid)</span>'
+          : '')
       + ' · <span class="k">' + fmt(p.prob_otm) + '%</span> stays OTM'
       + '<span class="ivproxy" title="risk-neutral N(d2); real-world odds run a bit higher on names with positive drift">*</span>'
       + ' · IV ' + fmt(p.iv) + '%'

@@ -274,4 +274,14 @@ clears what it consumed. Examples:
   green; engine only, no scan.json. The bid-vs-mid `bid_ann_roc` and the universe.py fallback-earnings
   bullets below stay open, each its own cycle.]
 - `_annualized_roc` at `build_site_data.py:490` and the yield score in `scoring.py:28` are priced on the mid. When you sell, you receive the bid. On a $1.00 mid with a $0.10 spread the engine quotes ~11% annualized but IBKR credits ~9.5%. Fix: in `_quote_expiry`, compute `bid_premium = bid` alongside `mid`, pass `bid` as the `scored_premium` to `_annualized_roc`, and show both; or at minimum add a `bid_ann_roc` field so the user sees what they actually receive.
+  [ember c61: SHIPPED the "at minimum" option, on purpose. Alongside the headline `roc` (mid) I compute
+  `bid_roc = _annualized_roc(bid, strike, dte)` (bid already in scope from `_quote_expiry`; on the modeled
+  path it is the conservative side of the synthetic spread) and the pick carries `bid_ann_roc`. The page
+  readout appends `(NN% on the bid)` after the annualized whenever the bid yield trails the mid, with a
+  tooltip that it is what actually hits the account. I did NOT swap the bid into the SCORED premium / the
+  DTE-ladder ranker: that silently rescores+re-ranks the whole board. Same judgment as c43/c44/c59 — the
+  mid yield ranks setup quality, the bid yield is the honest fill he reads, a visible field not a hidden
+  edit. Builds on c60's `_sellable_premium`. Self-tested (2 asserts) + verified headless (chromium, the
+  `(105.4% on the bid)` line renders, 0 console errors); the `!= null` guard keeps pre-field scans
+  unchanged. Engine + frontend, no scan.json. The universe.py fallback-earnings bullet below stays open.]
 - `universe.py:96` — when the TradingView screener fails, all 30 FALLBACK tickers get `earnings_days=None`, which bypasses both the `_candidate_expiries:205` filter and `earnings_blocks:126`. NVDA or META could be two days before a print and appear as a clean pick with no AVOID card. In `build_one`, when `earnings_days is None`, do a secondary `yf.Ticker(ticker).get_earnings_dates(limit=4)` lookup and set `earnings_days` from the nearest future date before scoring.

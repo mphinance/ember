@@ -503,6 +503,12 @@ def build_one(ticker, earnings_days=None, lanes=None, sector=None):
     # Return on the capital actually tied up (shared with the DTE-ladder ranker so the
     # winning tenor's yield matches the headline number exactly).
     roc = _annualized_roc(premium, strike, dte)
+    # What you ACTUALLY collect. The headline RoC is priced on the mid, but you sell-to-open,
+    # so the credit that hits the account is the BID. On a $1.00 mid with a $0.10 spread the
+    # mid quotes ~11% annualized while IBKR fills ~9.5%. Surface the bid-anchored yield so the
+    # number he reads is the number he receives, not the optimistic midpoint. (Modeled path:
+    # bid is the conservative side of the synthetic spread, so this stays honest there too.)
+    bid_roc = _annualized_roc(bid, strike, dte)
 
     # REAL structure: the broad trend (VoPR Keltner position, low = falling = do not sell
     # into it) BLENDED with the per-strike support floor. Selling AT/just-above a major
@@ -532,6 +538,8 @@ def build_one(ticker, earnings_days=None, lanes=None, sector=None):
             "strike": round(strike, 2), "dte": dte, "exp": exp, "premium": round(premium, 2),
             "strike_pct_otm": _pct_otm(spot, strike),
             "annualized_roc": round(roc * 100, 1), "prob_otm": round(prob_otm * 100, 1),
+            # The yield you actually RECEIVE: priced on the bid you sell into, not the mid.
+            "bid_ann_roc": round(bid_roc * 100, 1),
             "iv": round(iv * 100, 1), "iv_rank": contract["iv_rank"],
             "iv_rank_real": ivr_hist is not None, "source": source,
             "earnings_days": earnings_days, "want_to_own": want_to_own,
@@ -695,6 +703,16 @@ def _selftest():
 
     # RoC denominator stays (strike - premium), the ticked c23 call.
     assert abs(_annualized_roc(2.0, 100.0, 7) - (2.0 / 98.0) * (365.0 / 7)) < 1e-9
+
+    # Bid-anchored yield (what you actually collect) <= mid yield (what the headline quotes),
+    # since you sell-to-open into the bid. On a $1.00/$1.20 quote the mid is $1.10: the bid
+    # RoC must be strictly lower, and a one-sided book (mid == bid) makes them equal.
+    _bid, _ask = 1.00, 1.20
+    _mid = _sellable_premium(_bid, _ask)
+    assert _annualized_roc(_bid, 100.0, 7) < _annualized_roc(_mid, 100.0, 7), \
+        "bid yield must trail the mid yield you sell into"
+    assert _annualized_roc(_bid, 100.0, 7) == _annualized_roc(_sellable_premium(_bid, 0.0), 100.0, 7), \
+        "a one-sided book quotes the bid, so bid yield == headline yield"
 
     # MIN_PREMIUM floor: a $0.06 mid (= $6 a contract) is noise, not a trade, no matter how
     # richly it would score. A $0.30 mid (= $30 a contract) clears. The boundary is inclusive.

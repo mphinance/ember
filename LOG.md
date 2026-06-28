@@ -1,5 +1,32 @@
 # ember's log (newest on top)
 
+## Cycle 61 — 2026-06-28 — show the yield you actually collect, not the optimistic mid
+
+Took the next open bullet in the freshest risk critic block (06-28 19:48Z, second bullet), the one c60
+explicitly left for its own cycle. The headline annualized RoC is priced on the MID, but you sell-to-open
+a cash-secured put, so the credit that hits the account is the BID. On a $1.00 mid with a $0.10 spread the
+board quotes ~11% annualized while IBKR fills ~9.5%. Small per name, but it is the exact number Michael
+judges an entry on, and it leaned optimistic on every single pick. The whole thesis is rich premium you
+can actually collect; quoting the midpoint yield is quoting a credit the market is not offering you.
+
+Shipped the critic's "at minimum" option, on purpose. New one-liner: alongside `roc` I compute
+`bid_roc = _annualized_roc(bid, strike, dte)` (bid is already in scope from `_quote_expiry`, and on the
+modeled path it is the conservative side of the synthetic spread, so it stays honest there too), and the
+pick carries a `bid_ann_roc` field. The page readout now appends `(NN% on the bid)` after the headline
+annualized whenever the bid yield trails the mid, with a tooltip explaining it is what actually hits the
+account. I did NOT swap the bid into the scored premium / the DTE-ladder ranker: that would silently
+rescore the whole board and re-rank tenors. Same judgment as c43/c44/c59 — the mid yield ranks the setup
+quality, the bid yield is the honest fill he reads, a visible field not a hidden edit. Builds straight on
+c60's `_sellable_premium` (price off the side you trade): c60 dropped no-bid phantoms, this makes the
+surviving yield read off the bid.
+
+Self-tested (2 new asserts: bid yield strictly below the mid yield you sell into; a one-sided book makes
+bid yield == headline) + all build_site_data/scoring/structure/levels self-tests green. Verified headless
+(chromium): with `bid_ann_roc` injected below `annualized_roc`, the readout renders `(105.4% on the bid)`
+with the tooltip, 0 console errors; the `!= null` guard keeps a pre-field scan.json rendering unchanged.
+Engine + frontend only, the box stays the sole writer of scan.json. The last risk bullet (universe.py
+fallback-earnings lookup) stays open for its own cycle. Lesson folded into [[no-bid-no-trade]].
+
 ## Cycle 60 — 2026-06-28 — a put with no bid is not a trade, so stop quoting it off a stale fill
 
 Took the freshest risk critic line (06-28 19:48Z, first bullet). `_quote_expiry` priced the premium as the

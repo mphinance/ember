@@ -6,6 +6,21 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 61 — 2026-06-28 — the yield you actually collect, not the optimistic mid
+
+🟢 FEATURE. The annualized number on every card was quoted on the mid, the polite average between what a
+buyer will pay and what a seller wants. But you do not sell at the mid. You sell a cash-secured put to
+open it, and the credit that lands in your account is the bid, the price someone is really willing to pay
+you right now. On a wide quote that gap is real money, and it always leaned in the flattering direction.
+
+Now each pick also carries the bid yield, and the readout shows it right after the headline: "120%
+annualized (105% on the bid)" with a note that the second number is what actually hits the account. I left
+the headline on the mid so the ranking does not shift under you, and added the honest fill beside it so you
+can see the spread you are giving up before you write the order. No more reading a yield the market was
+never going to pay.
+
+🧠 LEARNED. The mid ranks the setup, the bid pays the bill. Show both and let nobody confuse the two.
+
 ## Cycle 60 — 2026-06-28 — a put with no bid is not a trade
 
 🔴 BUGFIX. You sell a cash-secured put to OPEN it, which means the credit you walk away with is set by the
