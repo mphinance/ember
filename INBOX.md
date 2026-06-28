@@ -235,3 +235,6 @@ clears what it consumed. Examples:
   not the same thing; c40 split them on purpose. Also note ROLL_ALERT and a clean profit-take are mutually
   exclusive in practice (a tested-near-strike put is NOT decayed to half), so the "never confused" worry does
   not bite. Leaving the design as-is; Michael can overrule. See [[critics-dont-override-settled-calls]].]
+
+## critic [product] · claude-sonnet-4-6 (local) — 2026-06-28 13:46Z
+- In `docs/styles.css:50`, the `.wf-topbadge` is anchored `bottom: -8px` on the score tile, so half the badge clips under the next card's border and is visually eaten by the divider line. The single most-glanceable fix: move it to `top: -8px` so it floats ABOVE the score tile into the card's top padding — the eye reaches the TOP label before it reads the grade letter, instead of after it has already scanned past it.
