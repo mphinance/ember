@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-28T00:00:25+00:00",
+  "generated_at": "2026-06-28T00:30:31+00:00",
   "source_note": "Candles and option premium are LIVE off the yfinance chain for 33 of 33 names (real IV, bid/ask, OI); the rest fall back to a realized-vol model when the chain is missing.",
   "dte": 7,
   "tickers": [
@@ -46786,32 +46786,7 @@
     "gone": [],
     "to_avoid": [],
     "from_avoid": [],
-    "movers": [
-      {
-        "ticker": "CRDO",
-        "delta": 17.8
-      },
-      {
-        "ticker": "AAPL",
-        "delta": 11.2
-      },
-      {
-        "ticker": "MRVL",
-        "delta": 7.0
-      },
-      {
-        "ticker": "CIFR",
-        "delta": 6.8
-      },
-      {
-        "ticker": "ASTS",
-        "delta": 6.6
-      },
-      {
-        "ticker": "IONQ",
-        "delta": 6.1
-      }
-    ]
+    "movers": []
   },
-  "prev_generated_at": "2026-06-27T23:30:25+00:00"
+  "prev_generated_at": "2026-06-28T00:00:25+00:00"
 }
