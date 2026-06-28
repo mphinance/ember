@@ -34,6 +34,11 @@ MIN_PREMIUM = 0.25  # dollars of mid per share (= $25 a contract). Below this a 
                     # noise: a 15% OTM support strike can quote a $0.06 mid, score well on
                     # richness + structure, and sit near the top of the list — but it is $6
                     # a contract, not a trade. The absolute floor (cheap names). Tunable.
+MIN_SUPPORT_TOUCHES = 3  # how many times the market must have TESTED a level before we will
+                    # anchor a real strike (and a ⌂ support badge) to it. One or two touches is
+                    # a single/double pivot — statistically a ghost, not a floor — so we demote
+                    # anything below this to "no clean support" and let the strike fall through
+                    # to the ~1 sigma OTM fallback rather than give false confidence in a one-off.
 MIN_PREMIUM_PCT = 0.004  # ...and a RELATIVE floor: 0.4%/week of spot. A flat $25/contract
                     # floor lets a $190 AAPL put at $0.28 onto the list — $28 of credit on
                     # $19,000 of collateral, ~5%/yr, nowhere near his ~100%/yr income target.
@@ -236,6 +241,18 @@ def _nearest_expiry(exps, target_dte, lo=3, hi=21):
     return (pick[0], int(pick[1])) if pick else (None, None)
 
 
+def _real_support(support, touches):
+    """Gate a support level by how many times the market has actually TESTED it. Michael
+    sells AT support and trusts it to hold; a level tagged once or twice is a single/double
+    pivot — a statistical ghost — so we return None and let the strike fall through to the
+    ~1 sigma OTM fallback rather than anchor a real trade (and a ⌂ support badge) to a floor
+    that held one time. A genuinely tested level (>= MIN_SUPPORT_TOUCHES) passes through
+    unchanged. None support / None touches is already not real."""
+    if support is None or touches is None or touches < MIN_SUPPORT_TOUCHES:
+        return None
+    return support
+
+
 def _anchor_strike(spot, rv, dte, support):
     """Where to sell the put. Michael's method: sell AT support and trust it (he does not
     trade off delta). So if there is a real support level in a sane band below spot, that
@@ -406,6 +423,12 @@ def build_one(ticker, earnings_days=None, lanes=None, sector=None):
     support = sup_d["level"] if sup_d else None
     resistance = res_d["level"] if res_d else None
     support_touches = sup_d["touches"] if sup_d else None
+    # A floor the market tested only once or twice is a ghost. Demote it to "no clean
+    # support" so the strike falls through to 1-sigma and no ⌂ support x1 badge (nor a
+    # chart floor line) claims a level that held a single time. Resistance is untouched.
+    support = _real_support(support, support_touches)
+    if support is None:
+        support_touches = None
     live = _live_put(ticker, spot, rv, support=support, earnings_days=earnings_days)
     dte_ladder = None
     vrp_rv = rv                                # VRP denominator; live weekly swaps to 5-day below
@@ -715,6 +738,21 @@ def _selftest():
     assert _strike_at_or_below(chain, 100.0, 470.0) == 450.0, "deep target falls back to nearest sub-spot strike"
     assert _strike_at_or_below([480.0, 490.0], 461.5, 470.0) is None, "no strike at/below spot -> None"
     print("strike: support $461.50 between $460/$462.50 -> sells $460 (at/below support)")
+
+    # Real-support gate: a level the market tagged once or twice is a ghost, not a floor,
+    # so it is demoted to None and the strike falls through to the 1-sigma fallback. A level
+    # tested >= MIN_SUPPORT_TOUCHES passes through unchanged. None support/touches stays None.
+    assert MIN_SUPPORT_TOUCHES >= 2, "a floor needs at least a couple of tests to be real"
+    assert _real_support(100.0, MIN_SUPPORT_TOUCHES) == 100.0, "a well-tested level is a real floor"
+    assert _real_support(100.0, MIN_SUPPORT_TOUCHES + 4) == 100.0, "a heavily-tested level passes through"
+    assert _real_support(100.0, 1) is None, "a one-touch pivot is a ghost -> no clean support"
+    assert _real_support(100.0, MIN_SUPPORT_TOUCHES - 1) is None, "just under the floor is demoted"
+    assert _real_support(None, 9) is None, "no level is never a real floor"
+    assert _real_support(100.0, None) is None, "unknown touch count is not a trusted floor"
+    # The 1-sigma fallback fires once support is demoted (at_support False, strike below spot).
+    _, at_sup = _anchor_strike(100.0, 0.40, 7, _real_support(95.0, 1))
+    assert at_sup is False, "a demoted one-touch support must not read as at_support"
+    print(f"support gate: a 1-touch level -> ghost (1-sigma fallback); >= {MIN_SUPPORT_TOUCHES} touches holds")
 
     # Sector crowding: walk a pre-sorted list, keep the best name per sector clean, flag the
     # rest. Two Technology names above 60 -> the SECOND (lower-ranked) is crowded, the first is

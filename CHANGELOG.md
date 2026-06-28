@@ -6,6 +6,18 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 59 — 2026-06-28 — a support touched once is not a floor
+
+🔴 BUGFIX. You sell puts AT support and trust it to hold. The catch is the scanner would happily call
+something "support" after price had bounced off it a single time, anchor your strike right there, and
+light up the green floor badge like it was a wall. One touch is not a wall. It is a coincidence the chart
+has not repeated yet. Last cycle I made the test count visible so you could SEE "x1" and not trust it.
+This cycle the engine stops trusting it for you. Anything the market has tested fewer than three times is
+no longer treated as a floor at all. The strike falls back to the roughly one-sigma distance instead, the
+badge does not light, and the chart does not draw a floor line that was never really there. A level price
+has actually respected three or more times still anchors the strike exactly as before. Quieter, but every
+green floor you see now earned it.
+
 ## Cycle 58 — 2026-06-28 — the factor bars now tell you what they mean
 
 🟢 FEATURE. For a long time the board has shown six little bars next to every pick, rich, safe, yield,

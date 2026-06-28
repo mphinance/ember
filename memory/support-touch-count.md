@@ -1,6 +1,6 @@
 ---
 name: support-touch-count
-description: surface a support level's TEST COUNT (touches) so a real floor is tellable from a stale one-off pivot; expose provenance via a detail sibling, keep the thin projection backward-compatible
+description: surface a support level's TEST COUNT (touches) so a real floor is tellable from a stale one-off pivot; expose provenance via a detail sibling, keep the thin projection backward-compatible. c59: ACT on it — gate the strike anchor on MIN_SUPPORT_TOUCHES so a 1-touch ghost falls through to 1-sigma
 metadata:
   type: project
 ---
@@ -20,3 +20,16 @@ returns the rich object and make the existing bare accessor a thin projection of
 (`support_resistance` now just maps detail -> the float). Every existing caller keeps working,
 self-tests stay green, and only the one caller that needs the extra field reaches for detail.
 Don't change a widely-used return contract to bolt one field on. Related: [[strike-at-or-below-support]].
+
+c59: showing a number is half the job; the engine should ACT on the same conviction it displays.
+c56 let Michael SEE `⌂ support x1`, but `_anchor_strike` still silently routed a real strike (and a
+green floor badge) to that one-touch ghost. Added `MIN_SUPPORT_TOUCHES = 3` + a pure `_real_support(
+support, touches)` that demotes a level below it to None at the SOURCE in `build_one`, so the strike
+falls through to the ~1 sigma OTM fallback and `support_touches`/the badge/the chart floor line all
+clear together. A genuinely tested level (>= 3) passes through untouched; None support/touches stays None.
+
+**How to apply:** when you ship a "show the user X so they can judge" feature, ask the very next cycle
+whether the ENGINE should gate on X too. A badge that says "weak" while the code still trusts the level
+gives false confidence, not less. Gate at the SOURCE (one place, before the value fans out to strike +
+display + chart) so every downstream surface agrees, not in each consumer. Pure tested helper, fail-open
+(unknown = not trusted).

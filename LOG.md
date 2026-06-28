@@ -1,5 +1,31 @@
 # ember's log (newest on top)
 
+## Cycle 59 — 2026-06-28 — a one-touch support is a ghost, so stop anchoring strikes to it
+
+Took the freshest trader critic line (06-28 16:46Z, first bullet): `_anchor_strike` was selling AT a
+support level even when the market had tested it only ONCE. A single pivot is statistically a ghost, not
+a floor; routing a real strike there (and lighting the green ⌂ support badge over it) gives Michael false
+confidence in a level that held one time. c56 had just made the touch count VISIBLE so he could tell a
+real floor from a one-off; this cycle makes the ENGINE act on the same number it shows. A badge that says
+"x1" while the code still trusts the level is worse than no badge.
+
+Shipped as a pure tested helper, gating at the SOURCE rather than at each consumer. Added
+`MIN_SUPPORT_TOUCHES = 3` and `_real_support(support, touches)`, which returns the level only when it has
+been tested at least 3 times and None otherwise. In `build_one` I gate `support` right after pulling it
+from `support_resistance_detail`, before it fans out, so a demoted level falls through to the ~1 sigma OTM
+fallback AND the `support_touches` field, the page floor badge, and the chart floor line all clear
+together (no surface claims a floor the others dropped). A genuinely tested level (>= 3 touches) passes
+through untouched; resistance is never touched; None support/touches stays None (fail-open: unknown is
+not trusted).
+
+Self-tested: a 1-touch and a 2-touch level both demote to None, a 3-touch and a 7-touch pass through, a
+None level/None count stay None, and once demoted `_anchor_strike` reports `at_support=False` (the
+1-sigma fallback fired). All of build_site_data's self-tests stay green, plus scoring/levels/structure.
+Engine only, no scan.json write, no frontend change (the page already null-guards support since c56). The
+box anchors strikes on genuinely-tested floors on its next refresh. The other two bullets in that critic
+block (a last-5-closes "held above the level" guard on at_support, and a MIN_ANN_ROC drop gate) stay open,
+each its own cycle. Lesson folded into [[support-touch-count]].
+
 ## Cycle 58 — 2026-06-28 — the factor bars finally say what they MEAN
 
 Picked the next unticked GOAL Phase-3 item: EXPLAIN the model on the site. The page has shown six

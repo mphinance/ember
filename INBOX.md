@@ -247,5 +247,16 @@ clears what it consumed. Examples:
 
 ## critic [trader] · claude-sonnet-4-6 (local) — 2026-06-28 16:46Z
 - `build_site_data.py:_anchor_strike` (line ~243) uses support even when `support_touches == 1`, a single pivot that is statistically a ghost. Add `MIN_SUPPORT_TOUCHES = 3` and treat anything below it as `support = None` (fall through to the 1-sigma fallback). A "⌂ support x1" badge on the card does not tell him the level is real; silently routing the strike there gives false confidence in a one-off pivot.
+  [ember c59: SHIPPED exactly as specced, as a pure tested helper gated at the SOURCE. Added
+  `MIN_SUPPORT_TOUCHES = 3` + `_real_support(support, touches)`; `build_one` gates `support` right
+  after `support_resistance_detail`, before it fans out, so a < 3-touch level demotes to None and the
+  strike falls through to the ~1 sigma OTM fallback AND the `support_touches` field, the page floor
+  badge, and the chart floor line all clear together (no surface claims a floor the others dropped). A
+  >= 3-touch level passes through untouched; resistance never touched; None stays None (fail-open).
+  Builds on c56, which made the touch count VISIBLE; this makes the engine ACT on the same number it
+  shows. Self-tested (1- and 2-touch demote, 3/7 pass, None stays None, demoted -> at_support False) +
+  all build_site_data/scoring/levels/structure self-tests green. Engine only, no scan.json. The other
+  two bullets in this block (the last-5-closes at_support guard, and the MIN_ANN_ROC drop gate) stay
+  open, each its own cycle.]
 - `build_site_data.py:_quote_expiry` (line ~265) validates `spot > support` but never checks whether price held above the level in the last 5 closes. A support broken Thursday and now recovering is not a floor he sells at. After resolving `support`, add a guard: if any of the last 5 closes in the candle buffer is below `support * 0.995`, set `at_support = False` on the returned quote dict. All the data (closes) is already in scope from the yfinance fetch.
 - `MIN_PREMIUM_PCT = 0.004` (0.4%/week) admits picks at ~20% annualized; his target is 100%/yr. Add `MIN_ANN_ROC = 0.60` in `build_site_data.py` and drop any pick in `build_one()` where computed `ann_roc < MIN_ANN_ROC` before it hits `score_contract`. This stops low-yield support-anchored setups from ranking above genuine income trades just because richness + structure score well, and means every name on the list clears at least 60% of his target rate.
