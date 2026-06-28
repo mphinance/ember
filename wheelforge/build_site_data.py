@@ -279,6 +279,19 @@ def _strike_at_or_below(strikes, target, spot):
     return min(pool, key=lambda s: abs(s - target))
 
 
+def _sellable_premium(bid, ask):
+    """The credit you can actually SELL this put for, or None if you cannot sell it.
+    You sell-to-open, so the premium you receive is anchored on the BID. A put with no
+    market-maker bid (bid <= 0) cannot be sold at all: `lastPrice` is a stale historical
+    fill, not a live fillable quote, so such a strike is DROPPED rather than quoted off a
+    ghost price that scores 60-80 and lands on the board as a trade that cannot fill.
+    With a real bid and ask, the mid (bid+ask)/2 is the fair quote; with a bid but no ask,
+    the bid itself is the conservative, honest premium (never invent the offer side)."""
+    if bid <= 0:
+        return None
+    return (bid + ask) / 2.0 if ask > 0 else bid
+
+
 def _quote_expiry(tk, exp, dte, spot, rv, support):
     """Quote the support-anchored (else ~1 sigma OTM) cash-secured put for a SINGLE expiry
     off the live chain. Returns the quote dict or None (no chain / no OTM strike / dead
@@ -292,7 +305,9 @@ def _quote_expiry(tk, exp, dte, spot, rv, support):
         return None
     row = puts[puts["strike"] == strike].iloc[0]
     bid = float(row.get("bid") or 0); ask = float(row.get("ask") or 0)
-    mid = (bid + ask) / 2.0 if (bid > 0 and ask > 0) else float(row.get("lastPrice") or 0)
+    mid = _sellable_premium(bid, ask)
+    if mid is None:
+        return None   # no market-maker bid: the put cannot be SOLD (see _sellable_premium)
     iv = float(row.get("impliedVolatility") or 0)
     if not _tradeable_premium(mid, spot) or iv <= 0:
         return None   # mid under the per-name floor (or dead IV): not a tenor worth ranking
@@ -738,6 +753,15 @@ def _selftest():
     assert _strike_at_or_below(chain, 100.0, 470.0) == 450.0, "deep target falls back to nearest sub-spot strike"
     assert _strike_at_or_below([480.0, 490.0], 461.5, 470.0) is None, "no strike at/below spot -> None"
     print("strike: support $461.50 between $460/$462.50 -> sells $460 (at/below support)")
+
+    # Sellable premium: you sell-to-open, so the credit is anchored on the BID. A put with no
+    # bid cannot be sold, so it is dropped rather than quoted off a stale lastPrice; a bid with
+    # a real ask quotes the mid; a bid with no ask quotes the bid (never invent the offer).
+    assert _sellable_premium(0.0, 1.20) is None, "no bid -> the put cannot be sold (drop it)"
+    assert _sellable_premium(-1.0, 1.20) is None, "a negative/absent bid is not a tradeable quote"
+    assert _sellable_premium(1.00, 1.20) == 1.10, "a two-sided quote prices at the mid"
+    assert _sellable_premium(1.00, 0.0) == 1.00, "a bid with no ask quotes the conservative bid"
+    print("sellable: a no-bid put is dropped (stale lastPrice never becomes a quoted credit)")
 
     # Real-support gate: a level the market tagged once or twice is a ghost, not a floor,
     # so it is demoted to None and the strike falls through to the 1-sigma fallback. A level

@@ -6,6 +6,23 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 60 — 2026-06-28 — a put with no bid is not a trade
+
+🔴 BUGFIX. You sell a cash-secured put to OPEN it, which means the credit you walk away with is set by the
+bid, the price someone is actually willing to pay you. The scanner had a blind spot. When a strike had no
+live bid, it would reach for the last price the contract ever traded at and quote that instead. That stale
+number then cleared the tradeable floor, scored in the 60s and 70s, and showed up on the board like a real
+income trade. It was not. A put with no bid cannot be sold at any price. You would sit there with an order
+nobody fills, watching a yield the market never offered you.
+
+Now there is one honest rule: no bid, no quote. A new helper prices the credit off the bid. Two real sides
+gets you the mid. A bid with no offer gets you the bid itself, which is the worst case you would actually
+receive, never an invented number. And no bid at all drops the strike entirely instead of dressing up a
+stale fill as a tradeable yield. Every name still on the list is now a put you can really sell.
+
+🧠 LEARNED. The mid is a convenience, not a promise. When the book is one-sided, the only honest premium is
+the side you are on, and when your side is empty there is no trade to show.
+
 ## Cycle 59 — 2026-06-28 — a support touched once is not a floor
 
 🔴 BUGFIX. You sell puts AT support and trust it to hold. The catch is the scanner would happily call

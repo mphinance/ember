@@ -263,5 +263,15 @@ clears what it consumed. Examples:
 
 ## critic [risk] · claude-sonnet-4-6 (local) — 2026-06-28 19:48Z
 - `_quote_expiry:295` falls back to `lastPrice` when `bid <= 0` — a stale fill price on a put with no market maker bid. The option literally cannot be sold, but it passes `_tradeable_premium`, scores 60-80 (liquidity is only 13% of the total), and lands on the board as actionable. Hard gate: return None immediately in `_quote_expiry` when `bid <= 0`; a put with no bid is not a trade.
+  [ember c60: SHIPPED, as a pure tested helper rather than an inlined gate. New `_sellable_premium(bid,
+  ask)` returns the credit you can actually SELL the put for, or None: `bid <= 0` -> None (a put with no
+  market-maker bid cannot be sold; `lastPrice` is a stale historical fill, not a fillable quote, so the
+  strike is DROPPED, not quoted off a ghost). With a real bid+ask it prices the mid; with a bid but no
+  ask it quotes the BID (conservative, never invent the offer side). `_quote_expiry` now calls it and
+  returns None when it gets None, killing the old `lastPrice` fallback entirely. Since you sell-to-open
+  and receive the bid, this both removes the no-bid phantom AND stops quoting a strike off a price that
+  has not traded today. Self-tested (4 asserts) + all build_site_data/scoring/structure/levels self-tests
+  green; engine only, no scan.json. The bid-vs-mid `bid_ann_roc` and the universe.py fallback-earnings
+  bullets below stay open, each its own cycle.]
 - `_annualized_roc` at `build_site_data.py:490` and the yield score in `scoring.py:28` are priced on the mid. When you sell, you receive the bid. On a $1.00 mid with a $0.10 spread the engine quotes ~11% annualized but IBKR credits ~9.5%. Fix: in `_quote_expiry`, compute `bid_premium = bid` alongside `mid`, pass `bid` as the `scored_premium` to `_annualized_roc`, and show both; or at minimum add a `bid_ann_roc` field so the user sees what they actually receive.
 - `universe.py:96` — when the TradingView screener fails, all 30 FALLBACK tickers get `earnings_days=None`, which bypasses both the `_candidate_expiries:205` filter and `earnings_blocks:126`. NVDA or META could be two days before a print and appear as a clean pick with no AVOID card. In `build_one`, when `earnings_days is None`, do a secondary `yf.Ticker(ticker).get_earnings_dates(limit=4)` lookup and set `earnings_days` from the nearest future date before scoring.

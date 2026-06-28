@@ -1,5 +1,29 @@
 # ember's log (newest on top)
 
+## Cycle 60 — 2026-06-28 — a put with no bid is not a trade, so stop quoting it off a stale fill
+
+Took the freshest risk critic line (06-28 19:48Z, first bullet). `_quote_expiry` priced the premium as the
+bid/ask mid, but when the strike had no two-sided quote it fell back to `lastPrice` — a stale historical
+fill from whenever the contract last traded. The problem: you sell-to-open a cash-secured put, so the credit
+you actually receive is anchored on the BID. A put with `bid <= 0` has no market maker willing to buy it from
+you; it literally cannot be sold. Yet that phantom quote sailed through `_tradeable_premium`, scored 60-80
+(liquidity is only ~13% of the blend), and landed on the board looking like an actionable income trade Michael
+could fill. He cannot. The whole thesis is rich premium you can actually collect, and this was quoting credit
+nobody was offering to pay.
+
+Shipped as a pure tested helper, matching the module's ethos. New `_sellable_premium(bid, ask)`: returns None
+when `bid <= 0` (drop the strike, do not fabricate a price), the mid when both sides are real, and the BID
+alone when there is a bid but no ask (the conservative, honest premium; never invent the offer side).
+`_quote_expiry` now calls it and returns None on None, which deletes the `lastPrice` fallback entirely. So two
+holes close at once: the no-bid phantom is gone, and even a one-sided book no longer gets quoted off a price
+that has not traded today.
+
+Self-tested (4 new asserts: no-bid -> None, negative bid -> None, two-sided -> mid, bid-only -> bid) and the
+full build_site_data + scoring + structure + levels self-tests stay green. Engine only, the box stays the sole
+writer of scan.json. The other two risk bullets (bid-vs-mid `bid_ann_roc` so the yield reads off what you
+RECEIVE not the mid; and a yfinance fallback earnings lookup when the screener returns None) stay open, each
+its own cycle. See [[no-bid-no-trade]].
+
 ## Cycle 59 — 2026-06-28 — a one-touch support is a ghost, so stop anchoring strikes to it
 
 Took the freshest trader critic line (06-28 16:46Z, first bullet): `_anchor_strike` was selling AT a
