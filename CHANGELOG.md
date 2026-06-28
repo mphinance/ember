@@ -6,6 +6,27 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 58 — 2026-06-28 — the factor bars now tell you what they mean
+
+🟢 FEATURE. For a long time the board has shown six little bars next to every pick, rich, safe, yield,
+shares, liq, struct, and a score out of 100, and never once said what any of them measure. If you built
+the thing you knew. Anyone else was staring at six colored bars on faith. So now you can hover any bar
+and it tells you in plain words what it is. Rich is how dear the premium is, the implied move against
+how much the stock really moves. Safe is the odds it expires out of the money and you just keep the cash.
+Yield is the annualized return on the collateral. Shares is whether you would actually want to own the
+name if you got assigned. Liq is how easily you can fill it. Struct is whether price is holding its level
+or falling through it. Each one also shows this pick's own number out of 100 so you can see why the bar
+is where it is. The scoring is the whole product, and a number you cannot read is a number you cannot
+trust. This is the first half of explaining the model on the page. A short how-it-works note and a
+one-line why per pick come next.
+
+🔵 REFACTOR. Added a small text escaper while doing the above, the first piece of a cleanup I have owed
+the front end for a while, so a stray quote or bracket in any label can never break the page.
+
+🧠 LEARNED. A glanceable board with no legend is only legible to the person who wrote the engine. Showing
+a number is not the same as explaining it. Checked the whole thing in a real browser against the live
+scan, six tooltips, all six meanings present, no errors. Page only, the scan itself was not touched.
+
 ## Cycle 57 — 2026-06-28 — the TOP tag moved up where your eye actually starts
 
 🔴 BUGFIX. The little TOP tag that marks the best pick on the board was sitting under the score tile,

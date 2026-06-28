@@ -159,6 +159,13 @@
   }
 
   function fmt(n) { return (n == null) ? '-' : Number(n).toLocaleString(undefined, { maximumFractionDigits: 2 }); }
+  // Escape text bound into HTML (attributes/innerHTML). Modest first step on the open
+  // robustness item; used here so the factor tooltips never break a title attribute.
+  function esc(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
   function fmtDate(iso) {
     if (!iso) return '';
     try { return new Date(iso + 'T00:00:00').toLocaleDateString(undefined, { month: 'short', day: 'numeric' }); }
@@ -168,6 +175,17 @@
   // The score is a blend; show the bar-by-bar why behind it. Order matches the
   // thesis: rich + safe + yield lead (sell dear, stay disciplined, hit the number).
   var FAC = { richness: 'rich', safety: 'safe', yield: 'yield', free_shares: 'shares', liquidity: 'liq', structure: 'struct' };
+  // What each bar actually MEANS. The page showed six bars and a 0-100 with no legend;
+  // these are the plain-English tooltips so anyone (incl. Michael at a glance) can read
+  // WHY a pick scores, not just that it does. Wording tracks GOAL's factor definitions.
+  var FAC_HELP = {
+    richness: 'rich: how dear the premium is. Implied vol vs the stock\'s realized vol (VRP). Higher = you are paid more than the name actually moves. This is the edge.',
+    safety: 'safe: probability the put expires out of the money (you keep the premium, no assignment). Higher = more disciplined, less likely to be put the shares.',
+    yield: 'yield: annualized return on the cash collateral if it expires worthless. Higher = closer to the ~100%/yr income target.',
+    free_shares: 'shares: wheel-fit. If you ARE assigned, do you end up owning a name you want at a basis you like. Low on a name you only sold for premium.',
+    liquidity: 'liq: how tradeable it is. Bid/ask spread tightness and open interest. Higher = an edge you can actually fill, not a paper quote.',
+    structure: 'struct: where price sits vs its Keltner channel and support. Higher = holding structure, not selling puts into a falling knife.'
+  };
   // Same ramp the engine uses for the yield factor (8% floor, ~100% maxes it), so
   // the bar reads live off annualized_roc even before the box rebuilds the factors.
   function yieldFrac(p) {
@@ -186,7 +204,9 @@
       var lab = FAC[k] + (assumed
         ? '<span class="ivproxy" title="no live option chain: IV assumed at 1.15x realized vol, so this richness is modeled, not measured">~</span>'
         : '');
-      html += '<span class="fac' + (assumed ? ' fac-assumed' : '') + '"><span class="faclab">' + lab + '</span>'
+      // Hovering the factor (label or bar) explains what it means and shows this pick's value.
+      var help = esc((FAC_HELP[k] || FAC[k]) + '  (' + v + '/100)');
+      html += '<span class="fac' + (assumed ? ' fac-assumed' : '') + '" title="' + help + '"><span class="faclab">' + lab + '</span>'
         + '<span class="facbar"><span class="facfill" style="width:' + v + '%;background:'
         + heatColor(v) + '"></span></span></span>';
     });

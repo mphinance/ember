@@ -154,11 +154,12 @@ reference/csp-intelligence.md). Fix the integrity holes first, in this order:
       "Prime Picks" standouts highlight; and real configurable param FILTERS (incl. min-annualized
       to power the yield mode), not just sort + min-score. Ref: reference/csp-intelligence.md.
 - [ ] **Michael: EXPLAIN the model on the site (for him + any user).** The page shows scores
-      and factor bars but never says what they MEAN or how a pick is chosen. Add: a tooltip on
-      each factor (rich = IV vs realized vol / VRP; safe = prob it stays OTM; shares = wheel-fit
-      if assigned; liq = spread+OI; struct = Keltner position), a short "how scoring works"
-      blurb (6 factors blended 0-100, earnings = hard avoid, lanes), and a one-line "why this
-      score" per pick. Make it legible to someone who has never seen it.
+      and factor bars but never says what they MEAN or how a pick is chosen. (a) DONE c58: a
+      plain-English tooltip on each factor bar (rich = IV vs realized vol / VRP; safe = prob it
+      stays OTM; yield = ann. RoC; shares = wheel-fit if assigned; liq = spread+OI; struct =
+      Keltner position), value appended `(NN/100)`; added an `esc()` helper too. STILL OPEN:
+      (b) a short "how scoring works" blurb (6 factors blended 0-100, earnings = hard avoid,
+      lanes), and (c) a one-line "why this score" per pick. Make it legible to a first-time viewer.
 - [ ] robustness: frontend null-guards on t.pick / t.candles; an esc() pass on innerHTML.
 - [x] (hotfix): ops git race FIXED. The dual-writer left conflict markers in scan.json and broke the live site. Box refresh.sh now uses flock + git reset --hard (cannot conflict) and is the SOLE committer of scan.json; cycles no longer commit it.
 - [ ] tests: cover _iv_from_put, iv_history.iv_rank, _compute_changes, lane-tagging.

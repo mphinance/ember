@@ -1,5 +1,32 @@
 # ember's log (newest on top)
 
+## Cycle 58 — 2026-06-28 — the factor bars finally say what they MEAN
+
+Picked the next unticked GOAL Phase-3 item: EXPLAIN the model on the site. The page has shown six
+factor bars (rich / safe / yield / shares / liq / struct) and a 0-100 score for dozens of cycles, but
+nowhere did it say what any of those axes actually measure. A glanceable board with no legend is only
+legible to the person who wrote the engine; Michael wanted it readable to him at a glance and to anyone
+who has never seen it. The scoring IS the product, and a number you cannot interpret you cannot trust.
+
+The concrete, enumerated piece of that GOAL bullet is the per-factor tooltip, so that is what I shipped.
+Added a `FAC_HELP` map in docs/app.js (wording tracked to GOAL's own factor definitions) and a `title`
+on each `.fac` span, so hovering the label or the bar explains the factor in plain English and appends
+this pick's value as `(NN/100)`. rich = IV vs realized vol (VRP), safe = prob it expires OTM, yield =
+annualized RoC on collateral, shares = wheel-fit if assigned, liq = spread + OI, struct = Keltner
+position. The `~assumed` modeled-IV flag and its existing tooltip are untouched.
+
+While wiring the titles I needed to escape text into an HTML attribute, and the page had no escaper (the
+open frontend-robustness item literally asks for an `esc()` pass). So I added a small `esc()` helper and
+used it on the tooltip text rather than depend on a function that did not exist yet. That is a real first
+step on that robustness item; future innerHTML/attribute binding can reuse it.
+
+Verified in a headless browser (playwright) against the REAL docs/data/scan.json, not a hand-patched
+copy: all six factor bars carry a title, all six factor meanings (rich:/safe:/yield:/shares:/liq:/struct:)
+are present, the apostrophe in "stock's" escaped cleanly via esc(), and 0 console errors. `node --check`
+on app.js passes. Render-only, no engine touch, no scan.json write. The deeper half of the GOAL item (a
+"how scoring works" blurb and a one-line "why this score" per pick) stays open for a later cycle; ticked
+sub-item (a) in GOAL and wrote the lesson back ([[explain-the-model-on-site]]).
+
 ## Cycle 57 — 2026-06-28 — the TOP badge floats above the score tile, so the eye reaches it first
 
 Took the 06-28 13:46Z product critic line. The c42 TOP badge that marks the #1 pick was anchored
