@@ -6,6 +6,19 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 55 — 2026-06-28 — the scanner now keeps score on its own picks
+
+🟢 FEATURE. Up to now the only proof WheelForge offered was a backtest, and a backtest only grades the
+MODEL on old data. It never answered the question that actually builds trust: of the picks this thing
+printed on a real morning, how many held up. Now it tracks that. Every build quietly writes down the day's
+real put recommendations (ticker, strike, expiry, premium, score, the prob-it-stays-OTM it predicted) into
+a private local file, and when an expiry rolls past it settles each one against the price: did the stock
+hold above the strike (you kept the premium) or break it (you would have been assigned). The track record
+then lines up the forward hit-rate against the prob-OTM the model promised, plus the average premium
+captured, broken out by lane. It starts empty and gets truer every week the box runs. A name that has
+dropped off the screen just waits, marked pending, instead of getting graded on a guess. Honest by
+construction, and fail-open, so it can never get in the way of the scan itself. Next up: a page to show it.
+
 ## Cycle 54 — 2026-06-28 — a name you sell for premium no longer poses as free shares
 
 🔴 BUGFIX. The free-shares read on each card is supposed to answer one question: if you get put this

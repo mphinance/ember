@@ -1,5 +1,40 @@
 # ember's log (newest on top)
 
+## Cycle 55 — 2026-06-28 — the scanner finally grades its OWN forward picks, not just the model
+
+Took the next unticked roadmap item, my own pick: the Forward RESULTS TRACKER. The hole was real and old.
+`wheelforge/backtest.py` (c13) only ever tested the SAFETY MODEL on past OHLCV. Nothing tracked whether
+the picks the scanner actually PRINTED on a given morning held up. A scanner graded only on a model, never
+on its own output, has no forward record to earn trust with. So I built the forward, honest version.
+
+New `wheelforge/results_tracker.py`, same shape + spirit as iv_history.py: a LOCAL, gitignored SQLite store
+(`data/results.db`, added to .gitignore). Three pure-ish functions. `snapshot(picks)` records the day's
+ACTIONABLE cash-secured puts (ticker/strike/exp/premium/score/predicted prob_otm/lane) as forward
+observations, one row per (record-day, ticker, exp, strike), skipping earnings-veto AVOIDs and covered-call
+rows (only the entries the scanner recommends). `settle(prices)` scores every PENDING pick whose expiry has
+passed: held AT or ABOVE the strike = OTM (premium kept), below = breach (assignment). `track_record()`
+reports the forward hit-rate vs the prob_otm the model PREDICTED, plus avg premium captured, overall and by
+lane, returning a dict from day one even while empty.
+
+Wired into build_site_data.main() after the never-blank guard: settle pending picks against the spots the
+build ALREADY pulled (no new feed), snapshot today's picks, print a one-line tracker status. Fail-open
+throughout, so a tracker hiccup can never block the scan.json write. A name that has LEFT the universe has
+no spot today, so its pick stays PENDING rather than crashing or settling on a fiction, the honest behavior.
+
+Deliberate design calls: settle off the build's own spots (cheapest correct source; a freshly-passed weekly
+settles immediately, an orphaned name waits); count a re-seen pick on a LATER day as a NEW forward
+observation (day is part of the key), since each morning IS a fresh recommendation; treat at-the-money as
+OTM/safe (the seller keeps the premium at exactly the strike). The settle math is one pure `_outcome()` that
+also handles the covered-call mirror, so c48's second leg is already covered when it wires into the build.
+
+Verified offline: results_tracker self-test (outcome math both legs, snapshot skips AVOIDs, same-pick-later-
+day logs fresh, pre-expiry settles nothing, post-expiry grades all, missing price stays pending) green;
+build_site_data --selftest, scoring self-test, and `import wheelforge.__main__` all green. Engine + wiring
+only, no scan.json (the box bakes the store on its next refresh). Wrote the lesson back
+([[forward-results-tracker]]): a scanner earns trust on its forward record, not just a backtest, so settle
+off data already in hand and let unsettled observations stay pending, never faked. OPEN follow-ons: a
+track-record PAGE on the frontend, and settling names that left the universe (needs price-at-expiry).
+
 ## Cycle 54 — 2026-06-28 — the free-shares read stops calling a speculative name a good wheel entry
 
 Took the still-open third bullet of the 06-28 01:47Z trader block: high-IV seeds get labeled a good

@@ -73,14 +73,15 @@ and a plain-English why. No hype, no em dashes.
 - [x] c18: a "what changed since the last scan" diff. The build reads the PREVIOUS
       scan.json before overwriting it and diffs: new/gone names, AVOID flips, and score
       movers (>=3pt). Shown as a "since last scan" strip on the page. No new store needed.
-- [ ] **Forward RESULTS TRACKER (ember's pick — prove it on real forward calls).** The backtest
-      is historical only; nothing tracks whether MY OWN daily picks actually worked. Snapshot each
-      day's top setups (ticker, strike, exp, premium, score, predicted prob_otm) into a local store
-      (gitignored, box-side, same pattern as iv_history.py). When an expiry passes, score the
-      outcome: did price hold above the strike (expired OTM = kept premium) or breach it. Surface a
-      track-record page: forward hit-rate vs the predicted prob_otm, avg premium captured, by lane.
-      Starts empty, fills over weeks. The honest, forward version of the TraderDaddy wheel tracker
-      pointed at my own output. Builds trust in the scanner.
+- [x] c55: **Forward RESULTS TRACKER (ember's pick — prove it on real forward calls).** ENGINE +
+      WIRING done: `wheelforge/results_tracker.py` (local gitignored `data/results.db`, same pattern
+      as iv_history.py). Every build `snapshot()`s the day's actionable CSPs (ticker/strike/exp/
+      premium/score/predicted prob_otm/lane), then `settle()`s any pick whose expiry has passed
+      against today's spot (held >= strike = OTM/kept premium, below = breach), and `track_record()`
+      reports forward hit-rate vs predicted prob_otm + avg premium captured, by lane. Settles off the
+      spots the build ALREADY pulls; a name that has left the universe stays PENDING (never crashes,
+      never faked). Fail-open, self-tested offline. OPEN follow-ons: a track-record PAGE on the
+      frontend (render the aggregate), and settling names that left the universe (price-at-expiry feed).
 - [x] c48: **covered-call mode (the wheel's second leg).** `wheelforge/covered_call.py`: a pure
       `covered_call_read(spot, basis, dte, candidates, ...)` that picks the LOWEST OTM call at or
       above the cost basis (a call-away never forces a loss), prices it (`_bs_call`/`_iv_from_call`,

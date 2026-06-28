@@ -20,6 +20,7 @@ from datetime import datetime, timezone
 from wheelforge.scoring import score_contract
 from wheelforge.freeshares import free_shares_read
 from wheelforge.iv_history import record as _iv_record, iv_rank as _iv_rank_hist
+from wheelforge import results_tracker as _rt
 from wheelforge.structure import (keltner_position, keltner_bands,
                                   support_floor_score, structure_with_floor)
 from wheelforge.levels import support_resistance
@@ -581,6 +582,19 @@ def main():
         # last good scan.json in place, not overwrite it with an empty list.
         print("scan produced 0 names; keeping the last good scan.json")
         return
+
+    # Forward results tracker (LOCAL, gitignored): settle any picks whose expiry has now
+    # passed against today's spot, then snapshot today's actionable CSPs as fresh forward
+    # observations. Fail-open: a tracker hiccup must never block the scan.json write.
+    try:
+        spots = {t["ticker"].upper(): t.get("spot") for t in tickers if t.get("spot")}
+        n_settled = _rt.settle(spots)
+        n_snap = _rt.snapshot(tickers)
+        tr = _rt.track_record()
+        print(f"results tracker: +{n_snap} snapshot, {n_settled} settled, "
+              f"{tr['settled']} graded / {tr['pending']} pending")
+    except Exception as exc:
+        print(f"results tracker: skipped ({exc})")
 
     out = {
         "generated_at": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),

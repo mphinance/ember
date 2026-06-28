@@ -9,6 +9,7 @@ data/commits.db
 data/commits.md
 memory/michael-commits.md
 data/iv_history.db
+data/results.db
 
 # critic model keys (OpenRouter) stay LOCAL — secrets never enter git.
 ops/.critic.env
