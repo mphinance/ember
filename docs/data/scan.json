@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-28T08:00:26+00:00",
+  "generated_at": "2026-06-28T08:30:23+00:00",
   "source_note": "Candles and option premium are LIVE off the yfinance chain for 30 of 30 names (real IV, bid/ask, OI); the rest fall back to a realized-vol model when the chain is missing.",
   "dte": 7,
   "tickers": [
@@ -2824,8 +2824,8 @@
           "assignment_basis": 196.5,
           "basis_discount_pct": 18.2,
           "prob_assigned_pct": 18.7,
-          "wheel_fit": 93.2,
-          "summary": "If assigned you own at $196.50, 18.2% below today, earning 162.5% annualized on the cash while you wait."
+          "wheel_fit": 77.2,
+          "summary": "Income play, not free shares. This is a high-IV name you sell for the 162.5% annualized premium, not to own; assignment at $196.50 is the risk to manage, not the reward."
         },
         "score": 67.4,
         "grade": "B",
@@ -7087,8 +7087,8 @@
           "assignment_basis": 238.15,
           "basis_discount_pct": 10.7,
           "prob_assigned_pct": 25.0,
-          "wheel_fit": 89.2,
-          "summary": "If assigned you own at $238.15, 10.7% below today, earning 166.7% annualized on the cash while you wait."
+          "wheel_fit": 73.2,
+          "summary": "Income play, not free shares. This is a high-IV name you sell for the 166.7% annualized premium, not to own; assignment at $238.15 is the risk to manage, not the reward."
         },
         "score": 61.5,
         "grade": "C",
@@ -9915,8 +9915,8 @@
           "assignment_basis": 73.05,
           "basis_discount_pct": 11.3,
           "prob_assigned_pct": 29.5,
-          "wheel_fit": 97.2,
-          "summary": "If assigned you own at $73.05, 11.3% below today, earning 243.6% annualized on the cash while you wait."
+          "wheel_fit": 81.2,
+          "summary": "Income play, not free shares. This is a high-IV name you sell for the 243.6% annualized premium, not to own; assignment at $73.05 is the risk to manage, not the reward."
         },
         "score": 59.1,
         "grade": "C",
@@ -14180,8 +14180,8 @@
           "assignment_basis": 89.29,
           "basis_discount_pct": 9.5,
           "prob_assigned_pct": 16.9,
-          "wheel_fit": 67.5,
-          "summary": "If assigned you own at $89.29, 9.5% below today, earning 72.6% annualized on the cash while you wait."
+          "wheel_fit": 51.5,
+          "summary": "Income play, not free shares. This is a high-IV name you sell for the 72.6% annualized premium, not to own; assignment at $89.29 is the risk to manage, not the reward."
         },
         "score": 56.5,
         "grade": "C",
@@ -15601,8 +15601,8 @@
           "assignment_basis": 198.05,
           "basis_discount_pct": 16.8,
           "prob_assigned_pct": 13.8,
-          "wheel_fit": 79.9,
-          "summary": "If assigned you own at $198.05, 16.8% below today, earning 89.8% annualized on the cash while you wait."
+          "wheel_fit": 63.9,
+          "summary": "Income play, not free shares. This is a high-IV name you sell for the 89.8% annualized premium, not to own; assignment at $198.05 is the risk to manage, not the reward."
         },
         "score": 54.9,
         "grade": "C",
@@ -17022,8 +17022,8 @@
           "assignment_basis": 290.77,
           "basis_discount_pct": 13.0,
           "prob_assigned_pct": 20.0,
-          "wheel_fit": 87.7,
-          "summary": "If assigned you own at $290.77, 13.0% below today, earning 132.6% annualized on the cash while you wait."
+          "wheel_fit": 71.7,
+          "summary": "Income play, not free shares. This is a high-IV name you sell for the 132.6% annualized premium, not to own; assignment at $290.77 is the risk to manage, not the reward."
         },
         "score": 54.8,
         "grade": "C",
@@ -18443,8 +18443,8 @@
           "assignment_basis": 59.34,
           "basis_discount_pct": 4.8,
           "prob_assigned_pct": 42.5,
-          "wheel_fit": 73.1,
-          "summary": "If assigned you own at $59.34, 4.8% below today, earning 254.5% annualized on the cash while you wait."
+          "wheel_fit": 57.1,
+          "summary": "Income play, not free shares. This is a high-IV name you sell for the 254.5% annualized premium, not to own; assignment at $59.34 is the risk to manage, not the reward."
         },
         "score": 54.6,
         "grade": "C",
@@ -19864,8 +19864,8 @@
           "assignment_basis": 22.59,
           "basis_discount_pct": 12.9,
           "prob_assigned_pct": 22.8,
-          "wheel_fit": 94.1,
-          "summary": "If assigned you own at $22.59, 12.9% below today, earning 167.7% annualized on the cash while you wait."
+          "wheel_fit": 78.1,
+          "summary": "Income play, not free shares. This is a high-IV name you sell for the 167.7% annualized premium, not to own; assignment at $22.59 is the risk to manage, not the reward."
         },
         "score": 48.3,
         "grade": "D",
@@ -21285,8 +21285,8 @@
           "assignment_basis": 141.5,
           "basis_discount_pct": 5.1,
           "prob_assigned_pct": 39.8,
-          "wheel_fit": 74.0,
-          "summary": "If assigned you own at $141.50, 5.1% below today, earning 225.7% annualized on the cash while you wait."
+          "wheel_fit": 58.0,
+          "summary": "Income play, not free shares. This is a high-IV name you sell for the 225.7% annualized premium, not to own; assignment at $141.50 is the risk to manage, not the reward."
         },
         "score": 45.4,
         "grade": "D",
@@ -22706,8 +22706,8 @@
           "assignment_basis": 73.34,
           "basis_discount_pct": 7.7,
           "prob_assigned_pct": 20.3,
-          "wheel_fit": 62.4,
-          "summary": "If assigned you own at $73.34, 7.7% below today, earning 81.5% annualized on the cash while you wait."
+          "wheel_fit": 46.4,
+          "summary": "Income play, not free shares. This is a high-IV name you sell for the 81.5% annualized premium, not to own; assignment at $73.34 is the risk to manage, not the reward."
         },
         "score": 45.3,
         "grade": "D",
@@ -25541,8 +25541,8 @@
           "assignment_basis": 123.95,
           "basis_discount_pct": 8.7,
           "prob_assigned_pct": 42.8,
-          "wheel_fit": 87.4,
-          "summary": "If assigned you own at $123.95, 8.7% below today, earning 445.4% annualized on the cash while you wait."
+          "wheel_fit": 71.4,
+          "summary": "Income play, not free shares. This is a high-IV name you sell for the 445.4% annualized premium, not to own; assignment at $123.95 is the risk to manage, not the reward."
         },
         "score": 44.7,
         "grade": "D",
@@ -26948,8 +26948,8 @@
           "assignment_basis": 39.05,
           "basis_discount_pct": 30.7,
           "prob_assigned_pct": 16.8,
-          "wheel_fit": 72.1,
-          "summary": "If assigned you own at $39.05, 30.7% below today, earning 46.7% annualized on the cash while you wait."
+          "wheel_fit": 56.1,
+          "summary": "Income play, not free shares. This is a high-IV name you sell for the 46.7% annualized premium, not to own; assignment at $39.05 is the risk to manage, not the reward."
         },
         "score": 44.7,
         "grade": "D",
@@ -29783,8 +29783,8 @@
           "assignment_basis": 155.22,
           "basis_discount_pct": 7.0,
           "prob_assigned_pct": 27.5,
-          "wheel_fit": 69.4,
-          "summary": "If assigned you own at $155.22, 7.0% below today, earning 134.3% annualized on the cash while you wait."
+          "wheel_fit": 53.4,
+          "summary": "Income play, not free shares. This is a high-IV name you sell for the 134.3% annualized premium, not to own; assignment at $155.22 is the risk to manage, not the reward."
         },
         "score": 43.1,
         "grade": "D",
@@ -32618,8 +32618,8 @@
           "assignment_basis": 44.3,
           "basis_discount_pct": 10.2,
           "prob_assigned_pct": 23.9,
-          "wheel_fit": 83.2,
-          "summary": "If assigned you own at $44.30, 10.2% below today, earning 145.2% annualized on the cash while you wait."
+          "wheel_fit": 67.2,
+          "summary": "Income play, not free shares. This is a high-IV name you sell for the 145.2% annualized premium, not to own; assignment at $44.30 is the risk to manage, not the reward."
         },
         "score": 41.4,
         "grade": "D",
@@ -34039,8 +34039,8 @@
           "assignment_basis": 58.08,
           "basis_discount_pct": 18.7,
           "prob_assigned_pct": 26.1,
-          "wheel_fit": 75.1,
-          "summary": "If assigned you own at $58.08, 18.7% below today, earning 63.5% annualized on the cash while you wait."
+          "wheel_fit": 59.1,
+          "summary": "Income play, not free shares. This is a high-IV name you sell for the 63.5% annualized premium, not to own; assignment at $58.08 is the risk to manage, not the reward."
         },
         "score": 40.6,
         "grade": "D",
@@ -35460,8 +35460,8 @@
           "assignment_basis": 25.27,
           "basis_discount_pct": 6.6,
           "prob_assigned_pct": 38.1,
-          "wheel_fit": 79.9,
-          "summary": "If assigned you own at $25.27, 6.6% below today, earning 261.7% annualized on the cash while you wait."
+          "wheel_fit": 63.9,
+          "summary": "Income play, not free shares. This is a high-IV name you sell for the 261.7% annualized premium, not to own; assignment at $25.27 is the risk to manage, not the reward."
         },
         "score": 40.0,
         "grade": "D",
@@ -38274,8 +38274,8 @@
           "assignment_basis": 68.58,
           "basis_discount_pct": 29.0,
           "prob_assigned_pct": 15.8,
-          "wheel_fit": 70.8,
-          "summary": "If assigned you own at $68.58, 29.0% below today, earning 39.9% annualized on the cash while you wait."
+          "wheel_fit": 54.8,
+          "summary": "Income play, not free shares. This is a high-IV name you sell for the 39.9% annualized premium, not to own; assignment at $68.58 is the risk to manage, not the reward."
         },
         "score": 31.5,
         "grade": "F",
@@ -39695,8 +39695,8 @@
           "assignment_basis": 440.7,
           "basis_discount_pct": 7.6,
           "prob_assigned_pct": 21.4,
-          "wheel_fit": 63.4,
-          "summary": "If assigned you own at $440.70, 7.6% below today, earning 89.0% annualized on the cash while you wait."
+          "wheel_fit": 47.4,
+          "summary": "Income play, not free shares. This is a high-IV name you sell for the 89.0% annualized premium, not to own; assignment at $440.70 is the risk to manage, not the reward."
         },
         "score": 30.5,
         "grade": "F",
@@ -41109,8 +41109,8 @@
           "assignment_basis": 22.39,
           "basis_discount_pct": 21.6,
           "prob_assigned_pct": 21.9,
-          "wheel_fit": 73.1,
-          "summary": "If assigned you own at $22.39, 21.6% below today, earning 52.3% annualized on the cash while you wait."
+          "wheel_fit": 57.1,
+          "summary": "Income play, not free shares. This is a high-IV name you sell for the 52.3% annualized premium, not to own; assignment at $22.39 is the risk to manage, not the reward."
         },
         "score": 29.6,
         "grade": "F",
@@ -42516,8 +42516,8 @@
           "assignment_basis": 14.66,
           "basis_discount_pct": 20.1,
           "prob_assigned_pct": 20.6,
-          "wheel_fit": 71.5,
-          "summary": "If assigned you own at $14.66, 20.1% below today, earning 43.9% annualized on the cash while you wait."
+          "wheel_fit": 55.5,
+          "summary": "Income play, not free shares. This is a high-IV name you sell for the 43.9% annualized premium, not to own; assignment at $14.66 is the risk to manage, not the reward."
         },
         "score": 27.6,
         "grade": "F",
@@ -42545,5 +42545,5 @@
     "from_avoid": [],
     "movers": []
   },
-  "prev_generated_at": "2026-06-28T07:30:23+00:00"
+  "prev_generated_at": "2026-06-28T08:00:26+00:00"
 }
