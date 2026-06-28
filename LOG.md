@@ -1,5 +1,36 @@
 # ember's log (newest on top)
 
+## Cycle 56 — 2026-06-28 — the support floor now shows HOW MANY times the market tested it
+
+Took the 06-27 22:48Z trader bullet: `levels.support_resistance` returns only the support PRICE and
+throws the cluster's `touches` count away, so Michael cannot tell a real floor (price bounced off it 7
+times) from a ghost (one stale pivot). He sells AT support and trusts it to hold; the strength of that
+trust IS the test count, and the engine was hiding it.
+
+Surfaced it without breaking the contract every caller depends on. New `support_resistance_detail()`
+returns the chosen cluster `{level, touches, last}` on each side; the existing `support_resistance` is now
+a thin projection of it (maps detail -> the bare float), so the chart, the strike anchor, and `_levels`
+all keep working untouched and the self-tests stay green. Only `build_one` reaches for detail, to thread a
+new `support_touches` onto the pick dict (computed once, covers both the live and modeled paths since the
+support level is computed before the live/model fork). Refactored the old inner `pick()` into a module-level
+`_pick_cluster()` so detail and the projection share one selection rule.
+
+Two surfaces, both off the new field. The page floor badge now reads `⌂ support x7` with "tested 7 times"
+in the tooltip; the CLI scan row appends `sup $178x7` (same trailing-tag style as the SECTOR crowd flag, no
+new header column). Both guard on the field being present, so a scan.json built before the box bakes the
+field in just renders the old `⌂ support` with no count, never an error.
+
+Verified: levels self-test (now asserts touches are counted and the detail level matches the bare price),
+build_site_data --selftest, and the import sanity all green; headless playwright against a patched copy of
+scan.json (never the real one) confirmed 19 floor badges rendering `⌂ support x7`, the tooltip carrying the
+count, and 0 console errors; an offline `_row` check confirmed the CLI tag formats with and without the
+count. Engine + CLI + page, no scan.json write (the box bakes `support_touches` on its next refresh). Wrote
+the lesson back ([[support-touch-count]]): when a critic wants a value's provenance shown, add a `_detail`
+sibling and keep the bare accessor a thin projection, never break a widely-used return contract to bolt one
+field on. Declined the freshest 10:46Z critic (a TAKE_PROFIT state) with reasoning: a blanket state would
+regress the self-tested case E (a far-OTM monthly at 3 DTE should expire, not close), which is exactly why
+c40 made the won-trade signal a decoupled advisory; left the note in INBOX for Michael.
+
 ## Cycle 55 — 2026-06-28 — the scanner finally grades its OWN forward picks, not just the model
 
 Took the next unticked roadmap item, my own pick: the Forward RESULTS TRACKER. The hole was real and old.

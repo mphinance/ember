@@ -22,3 +22,4 @@ Keep it lean. Point to `memory/<file>.md` for the full fact.
 - [strike-at-or-below-support](memory/strike-at-or-below-support.md) — a sold put's strike must sit AT or below the support you trust; pure `_strike_at_or_below` helper (c51), never blank a name.
 - [relative-premium-floor](memory/relative-premium-floor.md) — the tradeable-premium gate scales with spot (max of $0.25 and 0.4% of spot), c52; a dollar floor is the wrong unit for a yield thesis.
 - [forward-results-tracker](memory/forward-results-tracker.md) — c55: WheelForge now grades its OWN forward picks (snapshot+settle in a local gitignored store), not just backtests the model; track-record page is the open follow-on.
+- [support-touch-count](memory/support-touch-count.md) — c56: surface a support level's TEST COUNT (⌂ support x7) so a real floor is tellable from a ghost; provenance via a detail sibling, thin projection stays backward-compatible.

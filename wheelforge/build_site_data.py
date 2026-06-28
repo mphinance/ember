@@ -23,7 +23,7 @@ from wheelforge.iv_history import record as _iv_record, iv_rank as _iv_rank_hist
 from wheelforge import results_tracker as _rt
 from wheelforge.structure import (keltner_position, keltner_bands,
                                   support_floor_score, structure_with_floor)
-from wheelforge.levels import support_resistance
+from wheelforge.levels import support_resistance, support_resistance_detail
 from wheelforge.vol_models import composite_realized_vol
 
 WATCHLIST = ["AAPL", "MSFT", "NVDA", "AMD", "GOOGL", "AMZN", "META", "COST"]
@@ -400,7 +400,12 @@ def build_one(ticker, earnings_days=None, lanes=None, sector=None):
 
     from datetime import date, timedelta
     # Major price-action support: the level he sells AT (computed once, reused for the chart).
-    support, resistance = support_resistance(candles, spot)
+    # Pull the chosen cluster (level + touches) so the pick can show HOW MANY times the
+    # market has tested the floor: a level respected 7 times is real, a one-off is a ghost.
+    sup_d, res_d = support_resistance_detail(candles, spot)
+    support = sup_d["level"] if sup_d else None
+    resistance = res_d["level"] if res_d else None
+    support_touches = sup_d["touches"] if sup_d else None
     live = _live_put(ticker, spot, rv, support=support, earnings_days=earnings_days)
     dte_ladder = None
     vrp_rv = rv                                # VRP denominator; live weekly swaps to 5-day below
@@ -499,6 +504,10 @@ def build_one(ticker, earnings_days=None, lanes=None, sector=None):
             # His method, surfaced: struck AT support (or 1-sigma fallback), and the
             # IV-over-HV edge gate (rich premium = VRP > 1).
             "at_support": at_support, "support": (round(support, 2) if support else None),
+            # How many times the market has TESTED that floor (None if no clean level):
+            # a real floor (many touches) vs a stale one-off pivot. He reads it before
+            # trusting the strike to hold.
+            "support_touches": support_touches,
             "support_floor": (round(floor, 3) if floor is not None else None),
             "iv_gt_hv": iv_gt_hv, "vrp": vrp, "vrp_assumed": vrp_assumed,
             # The yield ladder: this tenor won on annualized RoC vs the other candidate

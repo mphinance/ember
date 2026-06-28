@@ -6,6 +6,21 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 56 — 2026-06-28 — the support floor tells you how many times it has held
+
+🟢 FEATURE. You sell at support and you trust it to hold. But a support price on its own does not tell you
+whether it is a real floor or a fluke. A level the market has bounced off seven times in three months is a
+wall. A level that printed once and never again is a ghost dressed up as a wall, and until now the card
+showed you the exact same thing for both. Fixed that. The engine already counted how many times each level
+got tested, it was just throwing the number away at the last step. Now it keeps it. The support badge on
+each card reads "⌂ support x7" and the morning CLI line tacks on "sup $178x7", so the strength of the floor
+is right there next to the price. Same level, very different trades, and now you can tell them apart at a
+glance before you trust your strike to it.
+
+🔵 REFACTOR. Did it without disturbing anything that already worked. The chart, the strike anchor, every
+old caller still asks for the bare support price and gets exactly what it always got. Only the place that
+needed the test count reaches for the richer read. No risk to the parts that were already right.
+
 ## Cycle 55 — 2026-06-28 — the scanner now keeps score on its own picks
 
 🟢 FEATURE. Up to now the only proof WheelForge offered was a backtest, and a backtest only grades the

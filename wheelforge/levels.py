@@ -59,10 +59,33 @@ def _cluster(pivs, tol):
     return clusters
 
 
-def support_resistance(candles, spot, win=5, tol=0.015, require_recent=63):
-    """Major price-action support (below spot) + resistance (above spot).
-    Major = most-tested level among those still ACTIVELY tested; tiebreak nearer to
-    spot. Returns (support, resistance), either None. Needs enough history.
+def _pick_cluster(clusters, spot, above, require_recent, n):
+    """Choose the MAJOR level on one side of spot and return its full cluster
+    {level (rounded), touches, last}, or None. Major = most-tested among those still
+    ACTIVELY tested; tiebreak nearer to spot, then more recent."""
+    cand = [c for c in clusters
+            if (c["level"] > spot if above else c["level"] < spot)]
+    if not cand:
+        return None
+    # prefer levels still actively tested; fall back to any vintage only if none
+    # are recent, so a name that has gone quiet still reports its best old level.
+    if require_recent:
+        recent = [c for c in cand if c["last"] >= n - require_recent]
+        if recent:
+            cand = recent
+    cand.sort(key=lambda c: (c["touches"], -abs(c["level"] - spot), c["last"]),
+              reverse=True)
+    c = cand[0]
+    return {"level": round(c["level"], 2), "touches": c["touches"], "last": c["last"]}
+
+
+def support_resistance_detail(candles, spot, win=5, tol=0.015, require_recent=63):
+    """Same selection as support_resistance, but returns the chosen CLUSTER on each
+    side as {level, touches, last} (or None) instead of a bare price.
+
+    `touches` is how many times the market has tested that level. A floor respected 7
+    times is a real floor; a single stale pivot is a ghost, and Michael needs to tell
+    them apart before he trusts a strike anchored to it.
 
     `require_recent` (bars): a level whose LAST touch is older than this is treated as
     stale and only used as a fallback when nothing has been tested recently. Michael
@@ -73,26 +96,17 @@ def support_resistance(candles, spot, win=5, tol=0.015, require_recent=63):
         return None, None
     n = len(candles)
     piv_hi, piv_lo = _pivots(candles, win)
-    hi_c = _cluster(piv_hi, tol)
-    lo_c = _cluster(piv_lo, tol)
+    sup = _pick_cluster(_cluster(piv_lo, tol), spot, False, require_recent, n)
+    res = _pick_cluster(_cluster(piv_hi, tol), spot, True, require_recent, n)
+    return sup, res
 
-    def pick(clusters, above):
-        cand = [c for c in clusters
-                if (c["level"] > spot if above else c["level"] < spot)]
-        if not cand:
-            return None
-        # prefer levels still actively tested; fall back to any vintage only if none
-        # are recent, so a name that has gone quiet still reports its best old level.
-        if require_recent:
-            recent = [c for c in cand if c["last"] >= n - require_recent]
-            if recent:
-                cand = recent
-        # most touches first; tiebreak nearer to spot, then more recent
-        cand.sort(key=lambda c: (c["touches"], -abs(c["level"] - spot), c["last"]),
-                  reverse=True)
-        return round(cand[0]["level"], 2)
 
-    return pick(lo_c, above=False), pick(hi_c, above=True)
+def support_resistance(candles, spot, win=5, tol=0.015, require_recent=63):
+    """Major price-action support (below spot) + resistance (above spot) as bare
+    PRICES (float or None). The thin projection of support_resistance_detail used
+    wherever only the level matters (the chart, the strike anchor)."""
+    sup, res = support_resistance_detail(candles, spot, win, tol, require_recent)
+    return (sup["level"] if sup else None), (res["level"] if res else None)
 
 
 def _selftest():
@@ -111,6 +125,15 @@ def _selftest():
     assert res is not None and 118 <= res <= 122, "resistance should sit near 120"
     assert sup < 110 < res, "support below spot, resistance above"
     assert support_resistance([], 100) == (None, None)
+
+    # Detail surfaces the touch count: the ~100 floor is tested many times here, and a
+    # real floor (many touches) must be tellable from a one-off pivot (a ghost).
+    sup_d, res_d = support_resistance_detail(cs, spot=110, win=2, tol=0.02)
+    print(f"detail support={sup_d}  resistance={res_d}")
+    assert sup_d is not None and sup_d["touches"] >= 3, \
+        "the repeatedly-tested ~100 support must report touches, not just a price"
+    assert sup_d["level"] == sup, "detail level must match the bare support_resistance price"
+    assert support_resistance_detail([], 100) == (None, None)
 
     # Recency: a heavily-touched but STALE support must lose to a fresher level.
     # Early bars dip to ~95 seven times (many touches, all old); late bars dip to

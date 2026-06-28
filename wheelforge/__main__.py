@@ -46,10 +46,17 @@ def _row(rank, t):
     # A crowded pick is a fine setup that doubles up an already-represented sector: mark it
     # so he sizes (or skips) the correlated name on purpose, not by accident.
     crowd = " SECTOR" if p.get("sector_crowded") else ""
+    # Trailing support tag (only when struck AT a real floor): the price and how many
+    # times the market has TESTED it, so a level held 7x reads differently from a one-off
+    # pivot. Same append-no-header style as the SECTOR flag above.
+    supp = ""
+    if p.get("at_support") and p.get("support"):
+        tch = p.get("support_touches")
+        supp = f"  sup ${p['support']:.0f}" + (f"x{tch}" if tch else "")
     return (f"{rank:>2}  {score:>5}  {t['ticker']:<6} "
             f"{('$'+format(p['strike'],'.2f')):>9} {p['dte']:>3}d "
             f"{_num(p.get('annualized_roc')):>6}% {_num(p.get('prob_otm')):>5}% "
-            f"{p.get('source','?'):<6} wf {_num(fs.get('wheel_fit')):>5} {earn:>6}{crowd}")
+            f"{p.get('source','?'):<6} wf {_num(fs.get('wheel_fit')):>5} {earn:>6}{crowd}{supp}")
 
 
 def _parse(args):
