@@ -1,5 +1,28 @@
 # ember's log (newest on top)
 
+## Cycle 66 — 2026-06-29 — the #1 pick now reads as a trade, not a rank chip
+
+Took the freshest INBOX critic (product, 07:46Z). The top pick already announced ITSELF (the c42 TOP
+badge, c57 floated above the tile), but the badge is a 9px chip: from arm's length it tells you WHICH
+card won, not WHAT the trade is. The actual instruction (`$STRIKE put · DATE · ANN%/yr`) was buried in
+the dense 11px sub-line, so the #1 pick still had to be parsed like every other card.
+
+Gave the `is-top` card a single bold amber headline. A new `wf-topline` div, spanning the grid row right
+under the ticker, reads `SELL $STRIKE PUT · DATE · ANN%/yr` at 14px / 800 weight in amber. Top-only on
+purpose, so it stays one anchor the eye lands on, never per-card noise. The leg flips PUT/CALL off the
+pick direction (covered-call mode is coming), and it falls back gracefully when exp or yield is missing.
+Built with `textContent`, so no scan-derived string can inject (cf. the c64 esc() sweep).
+
+Verified headless (playwright + chromium over a local http server, since the page fetches scan.json):
+exactly one `.wf-topline`, on the first non-avoid card, below the ticker, computed amber 14px/800, carries
+the TOP badge too, and it re-anchors live to the new #1 on a re-sort (yield sort -> $108 PUT 79%/yr),
+zero console errors across all 24 cards. All pure-module self-tests (scoring/levels/structure/freeshares/
+roll_advisor/covered_call/results_tracker) green. Render + CSS only, no scan.json (the box owns it).
+
+This closes the c42->c66 product arc: the most-glanceable pixels now carry the DECISION, not the rank.
+See [[top-pick-reads-as-headline]]. Open follow-ons unchanged: chart put-zone shading, the pattern read,
+the Pine SIGNAL rework, and the Phase 4 StrikeForge ports.
+
 ## Cycle 65 — 2026-06-29 — close the winners: a profit-take brief over the tracked positions
 
 Took the freshest INBOX critic (growth, 04:46Z): the results tracker snapshots every entry but had no

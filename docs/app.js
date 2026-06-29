@@ -278,6 +278,20 @@
       }
       var tk = document.createElement('div'); tk.className = 'wf-tk'; tk.textContent = t.ticker;
       var dir = document.createElement('div'); dir.className = 'wf-dir'; dir.textContent = p.direction;
+      // The #1 pick gets its actual trade as a bold amber HEADLINE, not buried in the dense
+      // sub-line: SELL $STRIKE PUT · DATE · ANN%/yr reads in one second from arm's length
+      // (the TOP badge alone is a 9px chip nobody can read across the room). Top-only so it
+      // stays a single anchor, never noise on every card (product critic 06-29 07:46Z).
+      var head = null;
+      if (isTop) {
+        head = document.createElement('div');
+        head.className = 'wf-topline';
+        var leg = (p.direction && /call/i.test(p.direction)) ? ' CALL' : ' PUT';
+        head.textContent = 'SELL $' + fmt(p.strike) + leg
+          + (p.exp ? ' · ' + fmtDate(p.exp) : '')
+          + (p.annualized_roc != null ? ' · ' + Math.round(Number(p.annualized_roc)) + '%/yr' : '');
+        head.title = 'the top-ranked trade, as a headline: strike, expiry, and annualized yield';
+      }
       var sub = document.createElement('div'); sub.className = 'wf-sub';
       if (p.avoid) {
         sub.innerHTML = '<b class="avoidtxt">AVOID</b> earnings in <b>'
@@ -309,7 +323,9 @@
           + '<br><b>' + fmt(p.annualized_roc) + '%</b> ann &middot; <b>' + fmt(p.prob_otm) + '%</b> OTM '
           + src + hiv + crowd + (p.earnings_days != null ? ' &middot; earn ' + p.earnings_days + 'd' : '');
       }
-      card.appendChild(sc); card.appendChild(tk); card.appendChild(dir); card.appendChild(sub);
+      card.appendChild(sc); card.appendChild(tk); card.appendChild(dir);
+      if (head) card.appendChild(head);
+      card.appendChild(sub);
       card.addEventListener('click', function () { select(t.ticker); });
       host.appendChild(card);
     });

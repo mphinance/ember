@@ -28,3 +28,4 @@ Keep it lean. Point to `memory/<file>.md` for the full fact.
 - [fallback-universe-earnings-gate](memory/fallback-universe-earnings-gate.md) — c62: the earnings veto must hold on the degraded path too; fallback names get a yfinance earnings re-lookup so the gate never silently disarms.
 - [clamp-noise-both-tails](memory/clamp-noise-both-tails.md) — c63: a noise clamp on a small-sample estimator must bracket BOTH tails; the one-sided short_rv floor became a [0.70, 1.50]x clamp so a spike day stops zeroing richness.
 - [escape-data-before-innerhtml](memory/escape-data-before-innerhtml.md) — c64: esc() every scan-derived string before innerHTML and null-guard t.pick; a malformed row or odd ticker must never blank or poison the live board.
+- [top-pick-reads-as-headline](memory/top-pick-reads-as-headline.md) — c66: the #1 pick shows its actual TRADE (SELL $STRIKE PUT · DATE · ANN%/yr) as a bold amber headline; most-glanceable pixels carry the decision, not the rank.

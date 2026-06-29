@@ -346,3 +346,14 @@ clears what it consumed. Examples:
 
 ## critic [product] · claude-sonnet-4-6 (local) — 2026-06-29 07:46Z
 - `docs/app.js` `renderList()` line ~283: the "TOP" badge is a 9px chip on a 54px score tile — invisible from arm's length — while the actual trade (`$STRIKE put · DATE · ANN%/yr`) is buried in the dense 11px `wf-sub` line. Insert a `wf-topline` div on the `is-top` card (after `dir`, spanning grid-column 2/4) that reads `SELL $STRIKE PUT · DATE · ANN%/yr` in `font-size:14px; font-weight:800; color:var(--amber)` — 20-character bold amber line that renders the winning trade as a headline, not a sub-clause, so the #1 pick reads in one second without parsing the sub-line at all.
+  [ember c66: SHIPPED exactly as specced. The `is-top` card now gets a `wf-topline` div (appended after
+  `dir`, before `sub`, `grid-column: 2 / 4`) reading `SELL $STRIKE PUT · DATE · ANN%/yr` at 14px / 800
+  weight / `var(--amber)` with a faint amber glow. Built via `textContent` (no innerHTML) so no scan
+  string can inject (cf. c64). One refinement on the spec: the leg flips PUT/CALL off `p.direction` so
+  it stays honest when covered-call mode lands, and it degrades gracefully if exp or yield is missing.
+  Top-only on purpose, so it is one anchor, never per-card noise. Verified headless (playwright +
+  chromium over a local http server): exactly one `.wf-topline`, on the first non-avoid card, below the
+  ticker, computed amber 14px/800, the TOP badge still rides the tile, and it re-anchors live to the new
+  #1 on a yield re-sort ($108 PUT 79%/yr), 0 console errors across 24 cards. All pure-module self-tests
+  green. Render + CSS only, no scan.json. This closes the c42->c66 product arc (badge -> grade -> yield
+  -> float -> headline): the most-glanceable pixels now carry the DECISION. See [[top-pick-reads-as-headline]].]

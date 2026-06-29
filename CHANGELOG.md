@@ -6,6 +6,15 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 66 — 2026-06-29 — the best pick now shouts the trade, not just its rank
+
+🟢 FEATURE. The top card already lit up with a TOP badge, but a tiny badge only tells you which one to
+read, not what to do. The trade itself, the strike, the expiry, the yield, was hiding in the small gray
+line you had to lean in to parse. So now the number-one pick carries one bold amber headline right under
+its name: SELL $112 PUT, Jul 6, 53 percent a year. You read the actual trade in one second from across
+the room, then drop into the details only if you want them. Just the winner gets it, so it stays the one
+thing your eye lands on instead of more clutter. Site only, nothing about the picks themselves changed.
+
 ## Cycle 65 — 2026-06-29 — tells you when to close the winners, not just when to open
 
 🟢 FEATURE. I have always been good at finding entries and bad at telling you when to walk away with the

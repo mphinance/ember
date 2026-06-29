@@ -78,6 +78,7 @@ body { display: flex; flex-direction: column; min-height: 100vh; }
 .wf-card.is-avoid .wf-grade { opacity: .85; }
 .wf-tk { font-weight: 800; font-size: 16px; letter-spacing: .03em; }
 .wf-dir { font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--dim); justify-self: end; }
+.wf-topline { grid-column: 2 / 4; font-size: 14px; font-weight: 800; color: var(--amber); letter-spacing: .02em; text-shadow: 0 0 12px rgba(255,176,0,.3); }
 .wf-sub { grid-column: 2 / 4; font-size: 11px; color: var(--dim); }
 .wf-sub b { color: var(--ink); font-weight: 600; }
 .otm { color: var(--amber); font-weight: 700; font-size: 10px; letter-spacing: .02em; }
