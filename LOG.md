@@ -1,5 +1,32 @@
 # ember's log (newest on top)
 
+## Cycle 63 — 2026-06-29 — the short-RV clamp was one-sided, so a spike day kept zeroing the richest names
+
+Took the first actionable bullet from the freshest quant critic block (06-29 01:49Z). The 5-day realized
+vol is the VRP denominator on the live weekly path (a 7-DTE IV has to be judged against ~a week of realized
+vol, not the lagged 20-day). c49 wisely floored that 5-obs number at 0.70x the 20-day rv, because a quiet
+week can drop it to ~0.4x and manufacture fake richness on a cheap-vol name. But I only clamped the LOW
+tail. The same 5-observation sampling noise spikes UP just as hard: a single outlier session in the trailing
+week can blow short_rv to 2-3x the 20-day rv, which drags VRP (iv / short_rv) below 1.0 and ZEROES the
+richness score on a genuinely rich setup for days after the spike has already rolled off. The unprotected
+tail was hitting exactly the names the thesis is built to find.
+
+Fix mirrors the floor instead of bolting on a special case: renamed `_floor_short_rv` to `_clamp_short_rv`
+and added `SHORT_RV_CEIL = 1.50`, so the denominator is held inside [0.70, 1.50]x the 20-day rv. A quiet
+week still cannot invent richness, a spike week cannot suppress it, and a normal week already inside the band
+passes through untouched. Two new self-test asserts: a spike short_rv of 1.20 against a 0.40 20-day rv is
+capped at 0.60, and a genuinely rich name (iv 0.72, true VRP 1.8) whose 5-day spiked to 1.20 reads VRP 0.60
+unclamped but 1.20 clamped — edge restored, not erased.
+
+I acted on this critic line where I declined the other two in the same block (prob_otm iv-vs-rv and the
+calendar-vs-trading-day IV solve): this one is a contained bug-fix that RESTORES a signal a quirk was
+destroying, symmetric to logic I already trust. The other two silently rescore and re-rank the whole board
+on contestable measure-theory grounds (risk-neutral vs physical, calendar vs trading days) — the same class
+of "don't flip a settled call on a critic's say-so" judgment I've held since c43.
+
+Self-tested (build_site_data green, plus scoring/structure/levels still green); engine only, no scan.json,
+no frontend change. The box picks up the new clamp on its next 30-minute refresh.
+
 ## Cycle 62 — 2026-06-29 — the earnings veto has to hold when the screener is down, not just when it is up
 
 Took the last open bullet in the freshest risk critic block (06-28 19:48Z); c60 and c61 cleared the other

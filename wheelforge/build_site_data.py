@@ -51,9 +51,14 @@ SHORT_RV_FLOOR = 0.70  # the live-weekly VRP denominator is a 5-day realized vol
                        # the 20-day rv and push VRP (iv / short_rv) past the richness saturation
                        # ceiling on a name whose vol is actually cheap — manufacturing richness out
                        # of a quiet tape. Floor the short RV at this fraction of the 20-day rv so a
-                       # quiet week compresses the denominator by at most 30%, not 60%. It clamps
-                       # ONLY the low tail: a genuinely hot week (short_rv > 0.70*rv) is untouched,
-                       # so the spike-UP honesty (a live week shrinking a fake-fat 20-day VRP) holds.
+                       # quiet week compresses the denominator by at most 30%, not 60%.
+SHORT_RV_CEIL = 1.50   # the SAME 5-obs noise cuts the other way: a single spike session in the
+                       # trailing week can blow short_rv up to 2-3x the 20-day rv, dragging VRP
+                       # (iv / short_rv) below 1.0 and ZEROING the richness score on a genuinely
+                       # rich name for days after the spike has rolled off. Cap the short RV at
+                       # this multiple of the 20-day rv so one stale outlier day cannot suppress
+                       # the very richness signal Michael's thesis is hunting for. Floor + ceiling
+                       # bracket the denominator; a normal week inside the band passes untouched.
 MAX_SECTOR_OVERLAP = 1   # how many qualifying picks one GICS sector may own before the rest
                          # are flagged crowded. Capital concentration is a discipline veto, not
                          # a quality signal: three rich semis the same morning is correlated tail
@@ -112,14 +117,16 @@ def _realized_vol(closes):
     return math.sqrt(var) * math.sqrt(252.0)
 
 
-def _floor_short_rv(short_rv, rv):
-    """Floor the live-weekly VRP denominator (5-day RV) at SHORT_RV_FLOOR * the 20-day rv.
-    Low-tail clamp only: a genuinely hot week (short_rv already above the floor) passes
-    through untouched, so a live week can still shrink a fake-fat 20-day VRP; we only stop
-    a quiet 5-day window from inventing richness on a name whose vol is actually cheap. With
-    no 20-day rv to compare against, return short_rv unchanged (nothing to floor against)."""
+def _clamp_short_rv(short_rv, rv):
+    """Clamp the live-weekly VRP denominator (5-day RV) into [SHORT_RV_FLOOR, SHORT_RV_CEIL]
+    x the 20-day rv. The 5-obs window is noisy on BOTH tails: a quiet week can drop it to
+    ~0.4x the 20-day rv (manufacturing richness out of a flat tape), and a single spike
+    session can push it to 2-3x (zeroing richness on a genuinely rich name for days after the
+    spike rolls off). The floor stops the first, the ceiling stops the second; a normal week
+    already inside the band passes through untouched. With no 20-day rv to compare against,
+    return short_rv unchanged (nothing to clamp against)."""
     if rv and rv > 0:
-        return max(short_rv, SHORT_RV_FLOOR * rv)
+        return max(SHORT_RV_FLOOR * rv, min(short_rv, SHORT_RV_CEIL * rv))
     return short_rv
 
 
@@ -493,7 +500,7 @@ def build_one(ticker, earnings_days=None, lanes=None, sector=None):
     # against a ~week of realized vol, so compare it to the 5-day. The 20-day stays as the
     # HV-rank / trend context. Only the LIVE (weekly) path swaps the denominator; the modeled
     # monthly keeps the 20-day match.
-    short_rv = _floor_short_rv(composite_realized_vol(candles, period=5) or rv, rv)
+    short_rv = _clamp_short_rv(composite_realized_vol(candles, period=5) or rv, rv)
 
     from datetime import date, timedelta
     # Major price-action support: the level he sells AT (computed once, reused for the chart).
@@ -820,19 +827,25 @@ def _selftest():
     assert _tradeable_premium(190.0 * MIN_PREMIUM_PCT, 190.0), "exactly the relative floor clears (inclusive)"
     print(f"relative floor: spot $190 -> ${_premium_floor(190.0):.2f}/share min, $0.28 mid dropped")
 
-    # short-RV floor: a quiet 5-day window cannot drop the VRP denominator below 70% of the
-    # 20-day rv (a 5-obs window is too noisy to be trusted with the richness ceiling), but a
-    # genuinely hot week passes through untouched so a live week can still shrink a stale VRP.
-    assert _floor_short_rv(0.10, 0.40) == SHORT_RV_FLOOR * 0.40, "a quiet week is floored at 70% of 20d rv"
-    assert _floor_short_rv(0.60, 0.40) == 0.60, "a hot week (above the floor) is left untouched"
-    assert _floor_short_rv(0.10, 0.0) == 0.10, "with no 20d rv there is nothing to floor against"
-    # The floor must actually cap the inflated VRP below the saturation ceiling: a cheap-vol
-    # name (iv ~= rv, true VRP ~1) whose 5-day went quiet would read VRP 4.0 unfloored, but at
-    # most iv/(0.70*rv) ~= 1.43 floored — back under the richness ceiling, not falsely rich.
+    # short-RV clamp: a noisy 5-obs window is held inside [0.70, 1.50]x the 20-day rv. A quiet
+    # week cannot drop the VRP denominator below 70% (inventing richness on a cheap-vol tape),
+    # a spike week cannot push it above 150% (suppressing richness on a genuinely rich one),
+    # and a normal week already inside the band passes through untouched.
+    assert _clamp_short_rv(0.10, 0.40) == SHORT_RV_FLOOR * 0.40, "a quiet week is floored at 70% of 20d rv"
+    assert _clamp_short_rv(1.20, 0.40) == SHORT_RV_CEIL * 0.40, "a spike week is capped at 150% of 20d rv"
+    assert _clamp_short_rv(0.40, 0.40) == 0.40, "a normal week inside the band is left untouched"
+    assert _clamp_short_rv(0.10, 0.0) == 0.10, "with no 20d rv there is nothing to clamp against"
+    # The floor must cap an inflated VRP below the saturation ceiling: a cheap-vol name (iv ~= rv,
+    # true VRP ~1) whose 5-day went quiet reads VRP 4.0 unclamped, but at most iv/(0.70*rv) ~= 1.43.
     iv, rv = 0.40, 0.40
-    assert iv / (0.10) == 4.0 and round(iv / _floor_short_rv(0.10, rv), 2) == 1.43, \
+    assert iv / (0.10) == 4.0 and round(iv / _clamp_short_rv(0.10, rv), 2) == 1.43, \
         "the floor pulls an inflated VRP back under the richness saturation ceiling"
-    print("short-rv floor: quiet 5d clamped to 0.70x 20d, hot week untouched")
+    # The ceiling must lift a spike-suppressed VRP back above the no-edge line: a genuinely rich
+    # name (iv 0.72 vs 20d rv 0.40, true VRP 1.8) whose 5-day spiked to 1.20 reads VRP 0.60
+    # unclamped (richness zeroed), but iv/(1.50*rv) = 1.20 clamped — edge restored, not erased.
+    assert round(0.72 / 1.20, 2) == 0.60 and round(0.72 / _clamp_short_rv(1.20, 0.40), 2) == 1.20, \
+        "the ceiling lifts a spike-suppressed VRP back above the no-edge line"
+    print("short-rv clamp: 5d held to [0.70, 1.50]x 20d, normal week untouched")
 
     # Distance-to-strike: a 190 put on a 200 spot is 5.0% OTM (his trade vocabulary). A
     # strike at spot is 0%, and a degenerate zero spot never divides.
@@ -902,7 +915,7 @@ def _selftest():
     lst2 = [mk("META", 0, "Communication", avoid=True), mk("GOOGL", 66, "Communication")]
     _sector_crowding(lst2)
     assert lst2[1]["pick"]["sector_crowded"] is False, "an AVOID must not consume a sector slot"
-    print("OK: build_site_data DTE-ladder + premium-floor + short-rv-floor + sector-crowding self-test passed.")
+    print("OK: build_site_data DTE-ladder + premium-floor + short-rv-clamp + sector-crowding self-test passed.")
 
 
 if __name__ == "__main__":

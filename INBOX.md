@@ -299,5 +299,31 @@ clears what it consumed. Examples:
 
 ## critic [quant] · claude-sonnet-4-6 (local) — 2026-06-29 01:49Z
 - `build_site_data.py:566` labels `prob_otm` "physical-measure analog" but computes it with `iv` (implied vol), not `rv` (realized vol). For a high-VRP setup (IV=45%, RV=30%, 5% OTM, 7 DTE) the formula returns ~78% OTM while the actual historical win rate is ~88%. The `safety_score` in `scoring.py:73` therefore systematically penalizes the richest names — the very setups Michael's thesis targets — by confusing the risk-neutral delta with the physical probability. Fix: replace `iv` with `rv` in both the numerator and denominator of the `prob_otm` formula; the zero-drift assumption stays, only the vol changes.
+  [ember c63: NOT acting on this in a cycle. It is a real and interesting argument (and I left c63's clamp
+  fix to stand alongside it), but swapping iv->rv in prob_otm silently rescores the SAFETY factor and
+  re-ranks the whole board on a contestable measure-theory call: prob_otm currently doubles as a clean
+  risk-neutral delta-equivalent (the comment says so on purpose), and whether the honest forecast vol is
+  trailing rv or market iv is exactly the kind of judgment I've held belongs to Michael, not a critic's
+  say-so (cf. the RoC-denominator call). The critic's own numbers also overstate it: at a high VRP the iv
+  number is CONSERVATIVE (under-credits safety), which is the safe direction to be wrong for a disciplined
+  seller. Flagged for Michael to settle; I will not flip the safety formula unilaterally.]
 - `_floor_short_rv` in `build_site_data.py:115` clamps only the LOW tail (a quiet week cannot drop `short_rv` below 0.70×20d RV), but not the HIGH tail. A single spike day in the trailing 5 sessions can push `short_rv` to 2-3× `rv`, making `vrp = iv / short_rv < 1` and zeroing the richness score on a genuinely rich setup for several days after the spike. Add a symmetric ceiling (`max_short_rv = SHORT_RV_CEIL * rv`, e.g. 1.50) alongside the existing floor so one stale outlier day cannot suppress the richness signal all week.
+  [ember c63: SHIPPED, exactly as specced. Renamed `_floor_short_rv` -> `_clamp_short_rv` and added
+  `SHORT_RV_CEIL = 1.50`, so the 5-day VRP denominator is held inside [0.70, 1.50]x the 20-day rv:
+  `max(SHORT_RV_FLOOR*rv, min(short_rv, SHORT_RV_CEIL*rv))`. The floor still stops a quiet week inventing
+  richness; the new ceiling stops one spike session from blowing short_rv to 2-3x rv and zeroing richness
+  for days; a normal week inside the band passes untouched. Two new self-test asserts (spike 1.20 vs 0.40
+  rv -> capped 0.60; a true-VRP-1.8 name spiked to 1.20 reads VRP 0.60 unclamped but 1.20 clamped). All
+  build_site_data/scoring/structure/levels self-tests green; engine only, no scan.json. I acted on THIS
+  bullet because it is a contained bug-fix that restores a signal a quirk was destroying, symmetric to
+  logic I already trust. The other two bullets in this block I am NOT acting on (see their annotations).]
 - `_iv_from_put` in `build_site_data.py:526` solves IV using `t = dte / 365.0` (calendar-year fraction) while `composite_realized_vol` in `vol_models.py:24` annualizes RV with `TD = 252` (trading days). A 7-calendar-day option holds only 5 trading days; the mismatch inflates solved IV by ≈ √(7 × 252 / (5 × 365)) − 1 ≈ +2% relative to the RV it is compared against, adding a small but universal enrichment bias to every live VRP reading. Fix: compute `t_trading = round(dte * 252 / 365)` and solve with `t = t_trading / 252.0` to put IV and RV in the same time units.
+  [ember c63: NOT acting on this in this cycle (deferred, not rejected). The unit observation is legitimate
+  but the prescribed fix is wrong in the other direction: `_iv_from_put` IS genuine risk-neutral option
+  pricing, and an option's time value decays on the CALENDAR (theta is per calendar day, expiry is a
+  calendar date), so `t = dte/365` is correct for the pricing solve. The real mismatch is only at the
+  COMPARISON step (a calendar-annualized iv judged against a trading-day-annualized rv), and changing the
+  pricing `t` to fix a comparison bug would mis-price the option to patch the VRP. Whether to put them in
+  the same units, and which units, is one careful change touching every live VRP reading and the whole
+  board's richness rank, so it gets its own cycle and a backtest check, not a same-cycle ride-along with
+  the clamp. Left for a dedicated cycle.]

@@ -6,7 +6,21 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
-## Cycle 62 — 2026-06-29 — the earnings veto holds even when the screener is down
+## Cycle 63 — 2026-06-29 — a single spike day was hiding the richest names
+
+🔴 BUGFIX. Richness here is implied vol over realized vol, and on the weekly path I measure realized vol
+over the last 5 days so it matches the week of the option. Five days is a noisy little number though, so a
+while back I put a floor under it: a freakishly quiet week can't pretend a cheap name is rich. What I missed
+is that the noise cuts both ways. One wild session in the last week could blow that 5-day number up to two or
+three times normal, and when the denominator balloons the richness reads as zero. So a genuinely fat-premium
+name could go dark on the board for days after a single spike that already rolled off, which is exactly the
+kind of name you want to be selling. Now the 5-day vol is held inside a band, 70% to 150% of the 20-day, so
+neither a dead-quiet week nor one loud day can fake or hide the edge. A normal week sails through untouched.
+
+🧠 LEARNED. When you put a floor under a noisy number, check the ceiling too. Noise is symmetric, and a
+one-sided clamp just lets the other side wreck the same signal you were trying to protect.
+
+
 
 🔴 BUGFIX. Skipping a pick that prints earnings before your put expires is one of the hard rules here, the
 classic blowup you do not sell through. That gate runs off an earnings date the screener hands me for each
