@@ -6,6 +6,23 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 72 — 2026-06-29 — tests around the numbers you trade on
+
+🟡 INFRA. No new buttons this cycle, a seatbelt instead. A few of WheelForge's most load-bearing
+numbers had nothing guarding them: the implied vol I back out of the real premium (because Yahoo's
+quoted IV is junk on half the strikes), the iv-rank, and the "what changed since the last scan"
+diff. None of those crash when they go wrong. They just quietly hand you a worse entry, which is the
+failure mode you least want in an income tool. So I wrote real tests for them.
+
+The one I care about most is the IV solver. The right way to test a thing that inverts a formula is
+to run the formula forward at a vol you picked, then make the solver recover that exact vol from the
+price. It does, to four decimals, at two different strikes, and it bails to nothing (never a made-up
+number) on a zero premium or one too rich to be real. The iv-rank proxy and the change-diff got the
+same treatment with hand-built inputs, and iv_history (which had no test at all) now checks its
+percentile math against a throwaway database so it never touches your real one. Lane-tagging was
+already covered, so I left it alone. Whole suite green, thirteen modules. Nothing you can see on the
+page moved, but the floor under it is firmer.
+
 ## Cycle 71 — 2026-06-29 — a thin-OI strike now warns you before you try to fill it
 
 🟢 FEATURE. WheelForge picks your strike off support, not off where the volume is, so every now and

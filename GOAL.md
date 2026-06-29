@@ -181,7 +181,12 @@ reference/csp-intelligence.md). Fix the integrity holes first, in this order:
       innerHTML. Verified headless via a Node DOM stub (no jsdom/chromium on the box) with a poisoned
       why + null rows. OPEN: docs/live.js (the "watch her build" page) not yet swept.
 - [x] (hotfix): ops git race FIXED. The dual-writer left conflict markers in scan.json and broke the live site. Box refresh.sh now uses flock + git reset --hard (cannot conflict) and is the SOLE committer of scan.json; cycles no longer commit it.
-- [ ] tests: cover _iv_from_put, iv_history.iv_rank, _compute_changes, lane-tagging.
+- [x] c72: tests: cover _iv_from_put, iv_history.iv_rank, _compute_changes, lane-tagging. The IV
+      solver gets a ROUND-TRIP test (price a put at a known vol via `_bs_put`, solve it back, assert
+      recovery <1e-3) plus bail cases; the `_iv_rank` proxy and `_compute_changes` diff got real
+      synthetic-input asserts in build_site_data._selftest; iv_history gained its first `_selftest`
+      (iv_rank percentile against a TEMP db, never the gitignored real one). Lane-tagging was already
+      covered in universe._selftest, so I only added the three genuinely-uncovered paths. No scan.json.
 - [ ] chart polish (Michael): SHADE the put-sell zone as a filled translucent band (not just
       lines), tinted by score; keep the Keltner walls. When covered-call mode lands, draw the
       call-sell zone above price too. Use the keltner_bands math already emitted.

@@ -77,3 +77,72 @@ def sample_count(ticker, window_days=365):
         return n
     except Exception:
         return 0
+
+
+def _selftest():
+    """Offline invariants for the IV-rank percentile. Points the store at a throwaway temp
+    DB (never the real gitignored data/iv_history.db) and seeds known IVs by hand so the
+    percentile math is checked, not the network. The whole honesty of the iv-rank surface
+    rests on this: thin history must read None (caller falls back to the rv proxy), and a
+    thick history must place today's IV correctly inside its own range."""
+    import tempfile
+    global DB
+    real_db = DB
+    tmp = tempfile.NamedTemporaryFile(suffix=".db", delete=False)
+    tmp.close()
+    DB = tmp.name
+    try:
+        # Thin history: fewer than _MIN_SAMPLES days -> None, so the caller falls back to the
+        # realized-vol proxy rather than ranking against a handful of points.
+        con = _con()
+        base = date(2026, 1, 1)
+        for i in range(_MIN_SAMPLES - 1):
+            con.execute("INSERT INTO iv_hist (ticker, day, iv) VALUES (?,?,?)",
+                        ("THIN", (base + timedelta(days=i)).isoformat(), 0.40))
+        con.commit()
+        con.close()
+        assert iv_rank("THIN", 0.40) is None, "below _MIN_SAMPLES days must read None (fall back)"
+        assert sample_count("THIN") == _MIN_SAMPLES - 1, "sample_count tracks the stored days"
+
+        # Thick history spanning IV 0.20 .. 0.58 (20 evenly-spaced days). Today at the LOW
+        # is rank 0, at the HIGH is 100, dead-centre is ~50, and a value beyond the range
+        # clamps to the edges by construction (it falls outside [lo, hi]).
+        con = _con()
+        ivs = [0.20 + 0.02 * i for i in range(_MIN_SAMPLES)]  # 0.20 .. 0.58
+        for i, iv in enumerate(ivs):
+            con.execute("INSERT INTO iv_hist (ticker, day, iv) VALUES (?,?,?)",
+                        ("RICH", (base + timedelta(days=i)).isoformat(), iv))
+        con.commit()
+        con.close()
+        lo, hi = min(ivs), max(ivs)
+        assert iv_rank("RICH", lo) == 0.0, "today's IV at the 1y low ranks 0"
+        assert iv_rank("RICH", hi) == 100.0, "today's IV at the 1y high ranks 100"
+        mid = (lo + hi) / 2.0
+        assert iv_rank("RICH", mid) == 50.0, "today's IV dead-centre ranks ~50"
+        print(f"iv-rank: {len(ivs)} days {lo:.2f}..{hi:.2f} -> {mid:.2f} ranks "
+              f"{iv_rank('RICH', mid)}")
+
+        # A flat history (every day the same IV) has no range, so any current IV ranks 50
+        # rather than dividing by zero.
+        con = _con()
+        for i in range(_MIN_SAMPLES):
+            con.execute("INSERT INTO iv_hist (ticker, day, iv) VALUES (?,?,?)",
+                        ("FLAT", (base + timedelta(days=i)).isoformat(), 0.33))
+        con.commit()
+        con.close()
+        assert iv_rank("FLAT", 0.33) == 50.0, "a flat history (hi==lo) ranks 50, never divides by zero"
+
+        # Fail-open: junk ticker / missing current IV never raise, they read None.
+        assert iv_rank("", 0.40) is None and iv_rank("RICH", None) is None, \
+            "empty ticker or missing current IV fails open to None"
+        print("OK: iv_history iv-rank self-test passed.")
+    finally:
+        DB = real_db
+        try:
+            os.unlink(tmp.name)
+        except OSError:
+            pass
+
+
+if __name__ == "__main__":
+    _selftest()

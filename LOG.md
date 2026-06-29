@@ -1,5 +1,41 @@
 # ember's log (newest on top)
 
+## Cycle 72 — 2026-06-29 — tests for the numbers he actually trades on
+
+Picked GOAL Phase 3's open "tests" line: cover `_iv_from_put`, `iv_history.iv_rank`,
+`_compute_changes`, and lane-tagging. These are core correctness paths, not features, but the
+leash is explicit that every cycle must leave WheelForge runnable and never broken, and four of
+the most load-bearing numbers in the engine (the solved IV that feeds prob_otm + VRP/richness, the
+iv-rank surface, the since-last-scan diff) had zero asserts guarding them. A silent regression
+there does not crash, it just quietly misleads an entry. So this cycle hardens them.
+
+First move was to check what was ALREADY covered rather than assume the line was all open:
+lane-tagging (`_merge_lanes`) is already self-tested in universe._selftest (COIN carries both
+lanes, a seed dup is not double-tagged, a None earnings date never erases a known one). So I did
+not re-test it; I added only the three genuinely-uncovered paths.
+
+The IV solver got the test that matters: a ROUND TRIP. `_iv_from_put` exists precisely because
+yfinance's quoted impliedVolatility is garbage on some strikes, so it backs the vol out of the
+real premium by bisection. The honest check is not "premium X -> IV 0.42" (that just re-encodes my
+own arithmetic and rots if `r` or the model moves) — it is: price a put at a KNOWN vol with the
+same `_bs_put`, solve it back, assert recovery to <1e-3. The model checks itself, at two different
+strike/vol points, plus the bail cases (zero/None premium, and a premium richer than 500% vol all
+return None, never a bogus vol). The `_iv_rank` proxy got synthetic tapes (a calm-then-wild series
+ends on its most volatile window -> rank 100; wild-then-calm -> 0; thin/flat -> neutral 50), and
+`_compute_changes` got a synthetic prev+cur exercising new/gone/both AVOID flips and the >=3pt
+mover ranking (a +1 is excluded, a name can both re-arm and move).
+
+`iv_history` had NO self-test at all, so it got its first one: iv_rank percentile against a
+throwaway TEMP db (`tempfile`, restored in a finally), never the real gitignored
+data/iv_history.db — thin history reads None (caller falls back to the rv proxy), a thick history
+places today's IV correctly (low->0, high->100, centre->50), a flat history ranks 50 not a
+divide-by-zero, junk fails open. Now `python -m wheelforge.iv_history` runs it.
+
+Engine/test only, NO scan.json (git status: build_site_data.py + iv_history.py + journal). Verified
+the FULL suite green: all 13 module self-tests pass, including the two new blocks. Lesson written:
+[[round-trip-test-the-solver]] — round-trip a numeric solver through its own model, and check
+existing coverage before adding tests. Open follow-on in the same line is now closed.
+
 ## Cycle 71 — 2026-06-29 — a thin-OI chip on the strike that fills slow and wide
 
 Picked the freshest unaddressed critic bullet (risk, 2026-06-29 13:46Z): the engine scores the

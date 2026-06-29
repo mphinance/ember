@@ -988,7 +988,61 @@ def _selftest():
     lst2 = [mk("META", 0, "Communication", avoid=True), mk("GOOGL", 66, "Communication")]
     _sector_crowding(lst2)
     assert lst2[1]["pick"]["sector_crowded"] is False, "an AVOID must not consume a sector slot"
-    print("OK: build_site_data DTE-ladder + premium-floor + short-rv-clamp + sector-crowding self-test passed.")
+
+    # IV solver: the whole reason this exists is that yfinance's quoted impliedVolatility is
+    # garbage on some strikes, so we back the vol out of the REAL premium. The honest check is
+    # a ROUND TRIP: price a put at a known vol with the same Black-Scholes, then solve it back
+    # and confirm we recover the vol (a wrong IV poisons both prob_otm and the VRP/richness).
+    _S, _K, _t, _r, _sig = 100.0, 95.0, 7.0 / 365.0, 0.0, 0.45
+    _prem = _bs_put(_S, _K, _t, _r, _sig)
+    _solved = _iv_from_put(_prem, _S, _K, _t, _r)
+    print(f"iv solve: a ${_prem:.3f} 95p (7 DTE, 100 spot) -> IV {_solved:.4f} (priced at {_sig})")
+    assert _solved is not None and abs(_solved - _sig) < 1e-3, "the solver must recover the vol it was priced at"
+    # A deeper-OTM strike at a different vol also round-trips (the bisection is not tuned to one point).
+    _p2 = _bs_put(200.0, 180.0, 14.0 / 365.0, 0.0, 0.80)
+    assert abs(_iv_from_put(_p2, 200.0, 180.0, 14.0 / 365.0, 0.0) - 0.80) < 1e-3, "round-trips at a second strike/vol"
+    # Bail cases: a non-positive / missing premium, and a premium richer than even 500% vol can
+    # produce, both return None rather than a bogus vol (fail-open, never poison the score).
+    assert _iv_from_put(0.0, _S, _K, _t, _r) is None, "a zero premium has no implied vol"
+    assert _iv_from_put(None, _S, _K, _t, _r) is None, "a missing premium fails open to None"
+    assert _iv_from_put(_K, _S, _K, _t, _r) is None, "a premium near the strike (richer than 500% vol) bails to None"
+
+    # IV-RANK proxy: where does the trailing 21d realized vol sit in its own 1y range? A thin
+    # series (< 60 closes) and a series with no usable vol both fall back to a neutral 50. A
+    # calm-then-WILD tape ends on its most volatile window -> the current rv is the range max ->
+    # rank 100; the reverse (wild-then-calm) ends on the quietest window -> rank 0.
+    assert _iv_rank([100.0] * 40) == 50.0, "a thin (<60) series falls back to neutral 50"
+    assert _iv_rank([100.0] * 120) == 50.0, "a flat tape (no realized vol) falls back to neutral 50"
+    calm = [100.0 + (0.1 if i % 2 else -0.1) for i in range(120)]
+    wild = [100.0 + (6.0 if i % 2 else -6.0) for i in range(40)]
+    assert _iv_rank(calm + wild) == 100.0, "ending on the most volatile window ranks 100 (rv at its 1y high)"
+    assert _iv_rank(wild + calm) == 0.0, "ending on the quietest window ranks 0 (rv at its 1y low)"
+    print("iv-rank proxy: calm->wild tape ranks 100, wild->calm ranks 0, thin/flat -> 50")
+
+    # "What changed since the last scan": new/gone names, AVOID flips both ways, and >=3pt score
+    # movers ranked by absolute move. A name that moved < 3pt is NOT a mover; an AVOID flip and a
+    # score move can coexist on the same name (CCC here re-arms AND jumps +5).
+    prev = {"AAA": {"score": 60, "avoid": False}, "BBB": {"score": 50, "avoid": False},
+            "CCC": {"score": 40, "avoid": True}, "DDD": {"score": 55, "avoid": False},
+            "EEE": {"score": 61, "avoid": False}}
+    cur = [{"ticker": "AAA", "pick": {"score": 64, "avoid": False}},   # +4 mover
+           {"ticker": "BBB", "pick": {"score": 50, "avoid": True}},    # to_avoid, no score move
+           {"ticker": "CCC", "pick": {"score": 45, "avoid": False}},   # from_avoid AND +5 mover
+           {"ticker": "EEE", "pick": {"score": 62, "avoid": False}},   # +1, NOT a mover
+           {"ticker": "FFF", "pick": {"score": 70, "avoid": False}}]   # new (not in prev)
+    ch = _compute_changes(prev, cur)
+    print(f"changes: new={ch['new']} gone={ch['gone']} to_avoid={ch['to_avoid']} "
+          f"from_avoid={ch['from_avoid']} movers={ch['movers']}")
+    assert ch["new"] == ["FFF"], "a name absent from prev is new"
+    assert ch["gone"] == ["DDD"], "a name in prev but gone from cur is gone"
+    assert ch["to_avoid"] == ["BBB"], "a clean->avoid flip is to_avoid"
+    assert ch["from_avoid"] == ["CCC"], "an avoid->clean flip is from_avoid"
+    mv = {m["ticker"]: m["delta"] for m in ch["movers"]}
+    assert mv == {"AAA": 4.0, "CCC": 5.0}, "only >=3pt moves count; EEE's +1 is excluded"
+    assert ch["movers"][0]["ticker"] == "CCC", "movers rank by absolute move, the +5 leads the +4"
+
+    print("OK: build_site_data DTE-ladder + premium-floor + short-rv-clamp + sector-crowding + "
+          "iv-solve + iv-rank + changes self-test passed.")
 
 
 if __name__ == "__main__":
