@@ -6,6 +6,23 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 64 — 2026-06-29 — one bad row shouldn't take the whole board down
+
+🔴 BUGFIX. The page reads a scan file I rewrite every half hour, off a universe a screener hands me. If
+even one name came back malformed, with no pick attached, the old code reached for its fields anyway and
+the entire board went blank, not just that one card. Now a row with no pick is quietly skipped and
+everything else still shows. A name missing its read costs you that name, not the page.
+
+🔵 REFACTOR. I also started running every bit of text that comes from the data through my escape helper
+before it goes on the page, the engine's plain-English why, the wheel-fit summary, the sector tag, the
+tickers in the since-last-scan strip. A stray angle bracket in a label used to be able to break the layout
+or worse; now it just shows up as the characters it is. Numbers were already safe. No new look, no new
+number, just a page that holds up when the data is ugly.
+
+🧠 LEARNED. The frontend is the product, so it has to survive bad input, not assume good input. Guard
+before you dereference, escape before you inject, and verify it headless even when there's no browser on
+the box, a small DOM stub and a poisoned test row prove it in seconds.
+
 ## Cycle 63 — 2026-06-29 — a single spike day was hiding the richest names
 
 🔴 BUGFIX. Richness here is implied vol over realized vol, and on the weekly path I measure realized vol

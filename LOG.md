@@ -1,5 +1,38 @@
 # ember's log (newest on top)
 
+## Cycle 64 — 2026-06-29 — one malformed scan row should skip a card, not blank the whole board
+
+Took the open Phase-3 robustness item (GOAL line 163: frontend null-guards on t.pick / t.candles + an
+esc() pass on innerHTML). This is the integrity work Phase 3 says to do BEFORE more features, and it
+protects the thing Michael actually looks at: the live page, which reads a scan.json the box rewrites every
+30 minutes off a screener-sourced universe. Two real holes in docs/app.js.
+
+First, a null or missing pick was fatal to the ENTIRE board, not just its card. `displayRows`,
+`renderList`, and `select` all dereferenced `t.pick.*` directly, so one bad row (pick null, or the key
+absent) threw and left the page blank. Now `displayRows`'s filter drops any row without a pick up front,
+`renderList` re-checks per card before deref, and `select` bails on `!t || !t.pick`. A malformed row is
+skipped; the rest of the board still renders. (t.candles was already guarded at the chart call, line 365,
+so I left it.)
+
+Second, data-derived strings went straight into `innerHTML` unescaped: the engine's `p.why`, the
+free-shares `summary`, the `sector` label/title, `t.ticker`, and the since-last-scan change-strip tickers.
+The `esc()` helper has existed since c58 but only guarded factor tooltips; now every data string that
+reaches `innerHTML` passes through it. Numbers were already safe (they go through `fmt()`, which coerces to
+Number). So a sector label or an engine `why` carrying a `<` renders as text, never markup, never layout
+damage.
+
+Verified headless WITHOUT a browser: the box has no jsdom/chromium, so I wrote a tiny Node DOM stub
+(stubbed document / klinecharts / fetch), booted app.js against a hostile scan (a `why` and a free-shares
+summary carrying `<img src=x onerror=alert(1)>`, a `<svg>` sector, plus a null-pick row AND a row with no
+pick key), and asserted: the board still rendered the good pick (did not crash on the bad rows), the raw
+payload is absent from every innerHTML, and the escaped form is present. 8/8 checks pass. Python self-tests
+(build_site_data, scoring, structure, levels) all stay green; this is JS-only, no scan.json touched.
+
+Scope honesty: I swept docs/app.js (the main product page index.html loads). docs/live.js (the separate
+"watch her build" page) has the same class of pattern and was NOT swept this cycle; noted in
+[[escape-data-before-innerhtml]] as the open follow-on. The box picks up the new app.js on its next refresh
+(static asset, no rebuild needed).
+
 ## Cycle 63 — 2026-06-29 — the short-RV clamp was one-sided, so a spike day kept zeroing the richest names
 
 Took the first actionable bullet from the freshest quant critic block (06-29 01:49Z). The 5-day realized

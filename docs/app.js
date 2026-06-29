@@ -25,11 +25,13 @@
     var s = SORTS.filter(function (x) { return x.key === state.sort; })[0] || SORTS[0];
     return (DATA.tickers || [])
       .filter(function (t) {
-        if (state.hideAvoid && t.pick.avoid) return false;
-        if (state.atSupport && !t.pick.at_support) return false;
-        if (state.lane !== 'all' && (t.pick.lanes || []).indexOf(state.lane) < 0) return false;
-        if ((t.pick.annualized_roc || 0) < state.minAnnual) return false;
-        return (t.pick.score || 0) >= state.minScore;
+        var p = t && t.pick;
+        if (!p) return false;  // a malformed row must never crash the board
+        if (state.hideAvoid && p.avoid) return false;
+        if (state.atSupport && !p.at_support) return false;
+        if (state.lane !== 'all' && (p.lanes || []).indexOf(state.lane) < 0) return false;
+        if ((p.annualized_roc || 0) < state.minAnnual) return false;
+        return (p.score || 0) >= state.minScore;
       })
       .slice()
       .sort(function (a, b) { return s.get(b.pick) - s.get(a.pick); });
@@ -102,12 +104,12 @@
     var parts = [];
     (ch.movers || []).forEach(function (m) {
       var up = m.delta >= 0;
-      parts.push('<span class="chg ' + (up ? 'up' : 'dn') + '">' + (up ? '▲' : '▼') + m.ticker
-        + ' ' + (up ? '+' : '') + m.delta + '</span>');
+      parts.push('<span class="chg ' + (up ? 'up' : 'dn') + '">' + (up ? '▲' : '▼') + esc(m.ticker)
+        + ' ' + (up ? '+' : '') + esc(m.delta) + '</span>');
     });
-    if ((ch.new || []).length) parts.push('<span class="chg new">new ' + ch.new.join(' ') + '</span>');
-    if ((ch.to_avoid || []).length) parts.push('<span class="chg avoid">→ AVOID ' + ch.to_avoid.join(' ') + '</span>');
-    if ((ch.from_avoid || []).length) parts.push('<span class="chg ok">cleared ' + ch.from_avoid.join(' ') + '</span>');
+    if ((ch.new || []).length) parts.push('<span class="chg new">new ' + esc(ch.new.join(' ')) + '</span>');
+    if ((ch.to_avoid || []).length) parts.push('<span class="chg avoid">→ AVOID ' + esc(ch.to_avoid.join(' ')) + '</span>');
+    if ((ch.from_avoid || []).length) parts.push('<span class="chg ok">cleared ' + esc(ch.from_avoid.join(' ')) + '</span>');
     host.style.display = '';
     host.innerHTML = '<span class="chg-lab">since last scan</span> '
       + (parts.length ? parts.join('   ') : '<span class="chg">no changes</span>');
@@ -235,6 +237,7 @@
     if (!rows.length) { host.innerHTML = '<div class="ctl-empty">nothing clears that filter</div>'; return; }
     rows.forEach(function (t, i) {
       var p = t.pick;
+      if (!p) return;  // displayRows already drops these, but never deref a null pick
       var card = document.createElement('div');
       var isTop = (i === 0 && !p.avoid);
       card.className = 'wf-card' + (i === 0 ? ' is-sel' : '') + (isTop ? ' is-top' : '') + (p.avoid ? ' is-avoid' : '');
@@ -298,9 +301,9 @@
         // higher-ranked pick. Correlated exposure WheelForge used to miss; now he sizes or skips
         // it on purpose. Server sets sector_crowded over the full ranked universe.
         var crowd = p.sector_crowded
-          ? ' <span class="crowd" title="' + (p.sector || 'this sector')
+          ? ' <span class="crowd" title="' + esc(p.sector || 'this sector')
             + ' is already represented by a higher-ranked pick: correlated exposure, so size it down or skip it on purpose">⚠ '
-            + (p.sector ? String(p.sector).toUpperCase().slice(0, 4) : 'SECTOR') + '</span>' : '';
+            + esc(p.sector ? String(p.sector).toUpperCase().slice(0, 4) : 'SECTOR') + '</span>' : '';
         sub.innerHTML = 'sell <b>$' + fmt(p.strike) + ' put</b>' + otm + floor
           + (p.exp ? ' &middot; exp <b>' + fmtDate(p.exp) + '</b> (' + p.dte + 'd)' : ' (' + p.dte + 'd)')
           + '<br><b>' + fmt(p.annualized_roc) + '%</b> ann &middot; <b>' + fmt(p.prob_otm) + '%</b> OTM '
@@ -313,8 +316,8 @@
   }
 
   function select(ticker) {
-    var t = DATA.tickers.find(function (x) { return x.ticker === ticker; });
-    if (!t) return;
+    var t = (DATA.tickers || []).find(function (x) { return x.ticker === ticker; });
+    if (!t || !t.pick) return;  // never render a readout off a missing pick
     selected = ticker;
     document.querySelectorAll('.wf-card').forEach(function (c) {
       c.classList.toggle('is-sel', c.dataset.ticker === ticker);
@@ -326,7 +329,7 @@
       ? ' · <span class="avoidtxt">AVOID earnings in ' + p.earnings_days + 'd</span>'
       : (p.earnings_days != null ? ' · earnings ' + p.earnings_days + 'd out' : '');
     document.getElementById('wf-readout').innerHTML =
-      '<span class="k">' + t.ticker + '</span> spot ' + fmt(t.spot)
+      '<span class="k">' + esc(t.ticker) + '</span> spot ' + fmt(t.spot)
       + ' · sell the <span class="k">$' + fmt(p.strike) + ' put</span>'
       + (p.exp ? ' expiring <span class="k">' + fmtDate(p.exp) + '</span> (' + p.dte + ' DTE) ' : ' (' + p.dte + ' DTE) ') + srcTag
       + ' · prem <span class="k">$' + fmt(p.premium) + '</span>'
@@ -347,14 +350,14 @@
             + ' <span class="k">' + fmt(p.iv_rank) + '</span>'
           : '')
       + earn
-      + ' · <span class="why">' + p.why + '</span>'
+      + ' · <span class="why">' + esc(p.why) + '</span>'
       + factorBars(p)
       + dteLadder(p)
       + (p.free_shares
           ? '<div class="fs-line"><span class="fs-badge" style="color:'
             + heatColor(p.free_shares.wheel_fit) + ';border-color:' + heatColor(p.free_shares.wheel_fit)
             + '">WHEEL-FIT ' + p.free_shares.wheel_fit + '</span> '
-            + '<span class="fs-sum">' + p.free_shares.summary + '</span></div>'
+            + '<span class="fs-sum">' + esc(p.free_shares.summary) + '</span></div>'
           : '')
       + '<div class="chart-key">chart lines: '
         + '<b style="color:#22d3ee">major S/R</b> (price action) &nbsp;·&nbsp; '

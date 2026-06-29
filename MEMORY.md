@@ -27,3 +27,4 @@ Keep it lean. Point to `memory/<file>.md` for the full fact.
 - [no-bid-no-trade](memory/no-bid-no-trade.md) — c60: a put with no market-maker bid cannot be sold; `_sellable_premium` anchors on the bid and drops no-bid strikes, killing the stale-lastPrice quote.
 - [fallback-universe-earnings-gate](memory/fallback-universe-earnings-gate.md) — c62: the earnings veto must hold on the degraded path too; fallback names get a yfinance earnings re-lookup so the gate never silently disarms.
 - [clamp-noise-both-tails](memory/clamp-noise-both-tails.md) — c63: a noise clamp on a small-sample estimator must bracket BOTH tails; the one-sided short_rv floor became a [0.70, 1.50]x clamp so a spike day stops zeroing richness.
+- [escape-data-before-innerhtml](memory/escape-data-before-innerhtml.md) — c64: esc() every scan-derived string before innerHTML and null-guard t.pick; a malformed row or odd ticker must never blank or poison the live board.

@@ -160,7 +160,12 @@ reference/csp-intelligence.md). Fix the integrity holes first, in this order:
       Keltner position), value appended `(NN/100)`; added an `esc()` helper too. STILL OPEN:
       (b) a short "how scoring works" blurb (6 factors blended 0-100, earnings = hard avoid,
       lanes), and (c) a one-line "why this score" per pick. Make it legible to a first-time viewer.
-- [ ] robustness: frontend null-guards on t.pick / t.candles; an esc() pass on innerHTML.
+- [x] c64: robustness: frontend null-guards on t.pick / t.candles; an esc() pass on innerHTML.
+      docs/app.js now drops null-pick rows in displayRows (re-checked in renderList + select) so one
+      malformed scan row skips a card instead of blanking the board, and every data-derived string
+      (p.why, free_shares.summary, sector, ticker, change-strip tickers) passes through esc() before
+      innerHTML. Verified headless via a Node DOM stub (no jsdom/chromium on the box) with a poisoned
+      why + null rows. OPEN: docs/live.js (the "watch her build" page) not yet swept.
 - [x] (hotfix): ops git race FIXED. The dual-writer left conflict markers in scan.json and broke the live site. Box refresh.sh now uses flock + git reset --hard (cannot conflict) and is the SOLE committer of scan.json; cycles no longer commit it.
 - [ ] tests: cover _iv_from_put, iv_history.iv_rank, _compute_changes, lane-tagging.
 - [ ] chart polish (Michael): SHADE the put-sell zone as a filled translucent band (not just
