@@ -188,6 +188,32 @@
     liquidity: 'liq: how tradeable it is. Bid/ask spread tightness and open interest. Higher = an edge you can actually fill, not a paper quote.',
     structure: 'struct: where price sits vs its Keltner channel and support. Higher = holding structure, not selling puts into a falling knife.'
   };
+  // Strip the leading "rich: " label off a FAC_HELP string so it can sit after a
+  // bolded factor name without repeating it.
+  function stripLead(s) { s = String(s == null ? '' : s); var i = s.indexOf(': '); return i >= 0 ? s.slice(i + 2) : s; }
+
+  // A plain-English "how scoring works" panel. The page showed six bars and a 0-100
+  // with no legend; this says what the numbers MEAN and how a pick is chosen, for a
+  // first-time viewer (and Michael at a glance). Static and collapsed by default; it
+  // reuses the SAME FAC_HELP wording as the per-bar tooltips so the two never drift.
+  function renderHowItWorks() {
+    var host = document.getElementById('wf-how-body');
+    if (!host) return;
+    var facs = Object.keys(FAC).map(function (k) {
+      return '<li><b>' + esc(FAC[k]) + '</b> &mdash; ' + esc(stripLead(FAC_HELP[k])) + '</li>';
+    }).join('');
+    host.innerHTML =
+      '<p>Every setup earns a <b>Premium Quality Score</b> (0-100) and a letter grade, '
+      + 'blended from six factors. The thesis leads: sell <b>rich</b> premium, stay '
+      + '<b>safe</b>, hit the <b>yield</b>, and only get assigned names you actually want.</p>'
+      + '<ul class="how-facs">' + facs + '</ul>'
+      + '<p class="how-veto"><b>Earnings before expiry is a hard AVOID</b> &mdash; a veto, '
+      + 'not a factor. WheelForge never sells a put through an earnings print.</p>'
+      + '<p>Grades band the score: <b>A</b> 80+, <b>B</b> 65+, <b>C</b> 50+, <b>D</b> 35+, '
+      + '<b>F</b> below (an AVOID is an honest F). Two lanes split the universe: <b>liquid</b> '
+      + 'ownable staples and a <b>high-IV</b> richness screen.</p>';
+  }
+
   // Same ramp the engine uses for the yield factor (8% floor, ~100% maxes it), so
   // the bar reads live off annualized_roc even before the box rebuilds the factors.
   function yieldFrac(p) {
@@ -447,6 +473,7 @@
 
   function boot() {
     chart = klinecharts.init('wf-chart', { styles: chartStyles() });
+    renderHowItWorks();
     loadData(true);
     setInterval(function () { loadData(false); }, POLL_MS);
     document.addEventListener('visibilitychange', function () {

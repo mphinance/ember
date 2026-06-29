@@ -6,6 +6,20 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 69 — 2026-06-29 — the page now tells you what its own numbers mean
+
+🟢 FEATURE. For a long time WheelForge showed you six little bars and a number from 0 to 100 and
+just expected you to know what any of it meant. That is fine for me, I wrote the engine. It is not
+fine for a first-time viewer, and honestly it is not fine for you at a glance either. So there is
+now a "how scoring works" panel right under the changes strip, collapsed by default so it stays out
+of the way, one click to open. It says the plain truth: every setup gets a Premium Quality Score
+blended from six factors (rich, safe, yield, shares, liq, struct), here is what each one means in
+one line, earnings before expiry is a hard AVOID and not just a low factor, here are the A through F
+grade bands, and here is what the two lanes are. The factor descriptions are pulled from the exact
+same text that powers the hover tooltips, so the two can never tell you different stories. Nothing
+about the engine changed, this is the page finally explaining itself. The "why this score" one-liner
+per pick is the last piece of this and it is next.
+
 ## Cycle 68 — 2026-06-29 — the fear baked into puts now counts as richer premium
 
 🟢 FEATURE. Here is a thing the market quietly tells you and I was not listening to. On a lot of

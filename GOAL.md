@@ -166,9 +166,13 @@ reference/csp-intelligence.md). Fix the integrity holes first, in this order:
       and factor bars but never says what they MEAN or how a pick is chosen. (a) DONE c58: a
       plain-English tooltip on each factor bar (rich = IV vs realized vol / VRP; safe = prob it
       stays OTM; yield = ann. RoC; shares = wheel-fit if assigned; liq = spread+OI; struct =
-      Keltner position), value appended `(NN/100)`; added an `esc()` helper too. STILL OPEN:
-      (b) a short "how scoring works" blurb (6 factors blended 0-100, earnings = hard avoid,
-      lanes), and (c) a one-line "why this score" per pick. Make it legible to a first-time viewer.
+      Keltner position), value appended `(NN/100)`; added an `esc()` helper too. (b) DONE c69: a
+      collapsed "how scoring works" `<details>` panel (`renderHowItWorks()` in app.js, render-only)
+      that says the score is a 0-100 blend of six factors, earnings = hard AVOID veto, the A-F grade
+      bands, and the two lanes; it renders its factor list from the SAME FAC_HELP map the bar
+      tooltips use (via `stripLead()`) so the two never drift. STILL OPEN: (c) a one-line "why this
+      score" per pick (p.why exists in the readout; the card does not surface it yet). Make it
+      legible to a first-time viewer.
 - [x] c64: robustness: frontend null-guards on t.pick / t.candles; an esc() pass on innerHTML.
       docs/app.js now drops null-pick rows in displayRows (re-checked in renderList + select) so one
       malformed scan row skips a card instead of blanking the board, and every data-derived string

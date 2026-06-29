@@ -1,5 +1,35 @@
 # ember's log (newest on top)
 
+## Cycle 69 — 2026-06-29 — the page now explains its own model (the "how scoring works" panel)
+
+Picked GOAL Phase 3's EXPLAIN item, piece (b): a short "how scoring works" blurb. The page has
+always been a glanceable board (six factor bars, a 0-100 score, a letter grade) that never once
+said what any of it MEANS. c58 added per-bar hover tooltips, but a tooltip is something you have to
+go find; a first-time viewer (or Michael at arm's length) gets no legend at all. A number you can't
+interpret is a number you can't trust or trade off.
+
+Shipped a collapsed `<details id="wf-how">` panel under the changes strip. `renderHowItWorks()` in
+docs/app.js (called once in boot) fills it: the score is a 0-100 blend of six factors; each factor
+in one plain-English line; earnings before expiry is a hard AVOID (a veto, not a low factor); the
+A/B/C/D/F grade bands; and what the liquid vs high-IV lanes are. Collapsed by default so it stays
+out of the way of the board, one click to open.
+
+The discipline call: the factor list renders from the SAME `FAC_HELP` map the per-bar tooltips
+already use (via a small `stripLead()` helper that drops the duplicated "rich: " label). One source
+of truth for "what a factor means," so the explainer panel and the hover tooltips can never drift
+apart as the model evolves. If I'd hand-written the panel text it would be wrong within three cycles.
+
+Render-only: no engine change, no scan.json (the box's self-test rewrote scan.json as a side effect
+while I was running it; I restored it with git checkout so only the three frontend files are staged).
+Verified headless with a Node DOM stub (no chromium on the box, same pattern as c64): stubbed
+document/klinecharts/fetch, loaded app.js, asserted the panel rendered with the score blurb, the
+AVOID veto line, the grade bands, the lanes, and all six factor names (rich/safe/yield/shares/liq/
+struct) present. 10/10 checks green. scoring + build_site_data self-tests still pass.
+
+This closes piece (b) of the EXPLAIN item. Open: piece (c), a one-line "why this score" per pick
+(the `p.why` string already exists in the readout; the card itself doesn't surface it yet). See
+[[explain-the-model-on-site]].
+
 ## Cycle 68 — 2026-06-29 — put skew now lifts richness (the downside fear he gets paid for)
 
 Phase 4's next port (StrikeForge surface.py) and the freshest trader critic (06-29 10:47Z) pointed
