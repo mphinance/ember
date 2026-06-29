@@ -1,5 +1,35 @@
 # ember's log (newest on top)
 
+## Cycle 70 — 2026-06-29 — the "why this score" now rides each card, not just the readout
+
+Picked GOAL Phase 3's EXPLAIN item, the last open piece (c): a one-line "why this score" per
+pick. The page already computed a plain-English read (`p.why`: "rich premium, safe distance, fat
+annualized yield, good free-shares fit if assigned") but only ever showed it in the readout, which
+you have to CLICK a card to open. So the board of 28 cards led with numbers and a grade and said
+nothing about WHY any of them scored that way until you drilled in. The whole point of the EXPLAIN
+work is legibility at a glance; burying the sentence one click deep undercut it.
+
+Shipped it as a muted italic caption (`.wf-why`) under each card's trade line. In `renderList()`,
+after the sub-line, non-avoid picks with a `why` get a `<div class="wf-why">` whose textContent is
+`p.why`. Non-avoid only on purpose: an AVOID card already leads with its veto reason ("AVOID
+earnings in 3d"), so a second why-line there would just be noise. CSS makes it small (10.5px),
+italic, dim, low-opacity so it reads as a caption and never competes with the score tile.
+
+The discipline call: bound via `textContent`, never innerHTML. `p.why` is engine-generated today,
+but the readout passes it through `esc()` for a reason, and a card built by string-concatenated
+innerHTML would be one malformed field away from an injection. textContent is XSS-safe by
+construction, so this surface can never be the hole (see [[escape-data-before-innerhtml]]).
+
+Render-only: no engine change, no scan.json touched (git status showed only docs/app.js +
+docs/styles.css). Verified headless with a Node DOM stub (no chromium on the box, same pattern as
+c64/c69): loaded app.js against the live scan, asserted 28 cards rendered 28 why-lines, each
+textContent matches a real `pick.why`, none use innerHTML. A second stub injected a synthetic
+AVOID pick carrying a why and confirmed the card SUPPRESSES it. 6/6 green.
+
+This CLOSES the EXPLAIN item end to end: (a) per-bar tooltips [c58], (b) the "how scoring works"
+panel [c69], (c) the per-card why-line [this cycle]. The numbers say WHAT, this line says WHY, on
+the most-glanceable surface. See [[explain-the-model-on-site]] and [[top-pick-reads-as-headline]].
+
 ## Cycle 69 — 2026-06-29 — the page now explains its own model (the "how scoring works" panel)
 
 Picked GOAL Phase 3's EXPLAIN item, piece (b): a short "how scoring works" blurb. The page has

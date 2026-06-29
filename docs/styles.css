@@ -81,6 +81,9 @@ body { display: flex; flex-direction: column; min-height: 100vh; }
 .wf-topline { grid-column: 2 / 4; font-size: 14px; font-weight: 800; color: var(--amber); letter-spacing: .02em; text-shadow: 0 0 12px rgba(255,176,0,.3); }
 .wf-sub { grid-column: 2 / 4; font-size: 11px; color: var(--dim); }
 .wf-sub b { color: var(--ink); font-weight: 600; }
+/* The per-card plain-English "why": the read behind the numbers, in his terms. Muted and
+   italic so it reads as a caption under the trade line, never competing with the score. */
+.wf-why { grid-column: 2 / 4; font-size: 10.5px; font-style: italic; color: var(--dim); opacity: .82; margin-top: 1px; }
 .otm { color: var(--amber); font-weight: 700; font-size: 10px; letter-spacing: .02em; }
 .floor { color: var(--up); font-weight: 700; font-size: 10px; letter-spacing: .02em; }
 /* capital-concentration: a fine setup that doubles up an already-owned sector (cycle 44) */

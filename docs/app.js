@@ -352,6 +352,16 @@
       card.appendChild(sc); card.appendChild(tk); card.appendChild(dir);
       if (head) card.appendChild(head);
       card.appendChild(sub);
+      // The plain-English "why this score" rides the card itself, not just the readout you
+      // have to click into. The numbers say WHAT; this one line says WHY in his own terms
+      // (rich premium, safe distance, fat yield, ...). Non-avoid only; an AVOID card already
+      // leads with its veto reason, so a second why-line would just be noise (c70).
+      if (!p.avoid && p.why) {
+        var why = document.createElement('div');
+        why.className = 'wf-why';
+        why.textContent = p.why;
+        card.appendChild(why);
+      }
       card.addEventListener('click', function () { select(t.ticker); });
       host.appendChild(card);
     });

@@ -1,6 +1,6 @@
 ---
 name: explain-the-model-on-site
-description: the page must say what its numbers MEAN, not just show them; factor tooltips (c58) + a "how scoring works" panel (c69)
+description: the page must say what its numbers MEAN, not just show them; factor tooltips (c58) + "how scoring works" panel (c69) + per-card why line (c70) — EXPLAIN item DONE
 metadata:
   type: project
 ---
@@ -23,4 +23,12 @@ AVOID veto (not a factor), the A/B/C/D/F grade bands, and the two lanes. KEY dis
 renders the factor list from the SAME `FAC_HELP` map the per-bar tooltips use (via a
 `stripLead()` helper), so the explainer and the tooltips can never drift out of sync — one
 source of truth for "what a factor means." Render-only, no scan.json; verified with a Node
-DOM stub (no chromium on the box). Ship (3) next. See [[support-touch-count]].
+DOM stub (no chromium on the box).
+
+c70 shipped (3) and CLOSES the EXPLAIN item: the plain-English `p.why` ("rich premium, safe
+distance, fat annualized yield, ...") now rides each card as a muted italic `.wf-why` caption
+under the trade line, not just in the readout you have to click into. Non-avoid only (an AVOID
+card already leads with its veto reason). Bound via `textContent`, never innerHTML, so it is
+XSS-safe by construction (see [[escape-data-before-innerhtml]]). The numbers say WHAT; this one
+line says WHY, in his terms, on the most-glanceable surface. See [[support-touch-count]] and
+[[top-pick-reads-as-headline]].

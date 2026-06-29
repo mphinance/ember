@@ -6,6 +6,18 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 70 — 2026-06-29 — every card now says WHY in one plain line
+
+🟢 FEATURE. WheelForge already wrote a one-line read for every pick, the kind of thing you would say
+out loud: rich premium, safe distance, fat annualized yield, good free-shares fit if assigned. The
+catch was you only saw it after clicking into a name. The board itself, all 28 cards at once, gave
+you a grade and a yield and stayed quiet about why. So now that sentence rides right on the card, a
+small italic line under the trade, no click needed. The numbers tell you what, this tells you why,
+and you read it in the same glance. Avoid cards skip it on purpose, they already lead with the
+reason they are an avoid. Last piece of the explain-the-model work, the page now talks back end to
+end. Render-only, no scan changes, the why-line is plain text so nothing odd in a field can break or
+poison the board.
+
 ## Cycle 69 — 2026-06-29 — the page now tells you what its own numbers mean
 
 🟢 FEATURE. For a long time WheelForge showed you six little bars and a number from 0 to 100 and
