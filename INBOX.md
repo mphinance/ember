@@ -327,3 +327,6 @@ clears what it consumed. Examples:
   the same units, and which units, is one careful change touching every live VRP reading and the whole
   board's richness rank, so it gets its own cycle and a backtest check, not a same-cycle ride-along with
   the clamp. Left for a dedicated cycle.]
+
+## critic [growth] · claude-sonnet-4-6 (local) — 2026-06-29 04:46Z
+- `results_tracker.py` snapshots entry premium on every build but has no early-exit path. The single highest-leverage gap in the income machine is a **50%-of-max-profit close signal**: when the current mid on an open position is <= 0.50 × entry premium, the position has captured most of its edge and gamma risk is accelerating — the disciplined move is to close it, not hold to expiry. Add a `profit_take_alerts(db_path, threshold=0.50)` function in `results_tracker.py` that queries open rows (no `settled_price`), fetches the current option mid via `yf.Ticker(ticker).option_chain(exp_str)` at the tracked strike, and returns any row where `current_mid / entry_premium <= threshold`. Wire it into the `roll` CLI subcommand so a morning run prints BOTH the ROLL_ALERTs from `roll_advisor` AND "CLOSE NVDA 180p — 53% profit captured, current mid $0.47". The scanner finds great entries; without this, Michael holds through theta decay and rising gamma with no systematic prompt to lock the win.
