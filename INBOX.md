@@ -343,3 +343,6 @@ clears what it consumed. Examples:
   readers never fight). Note this is distinct from c40's per-position `profit_take` advisory on roll_advisor;
   this scans the whole tracked DB at once. Self-tested (9 asserts) + verified live (96 open positions, fail
   -open). Engine + CLI, no scan.json.]
+
+## critic [product] · claude-sonnet-4-6 (local) — 2026-06-29 07:46Z
+- `docs/app.js` `renderList()` line ~283: the "TOP" badge is a 9px chip on a 54px score tile — invisible from arm's length — while the actual trade (`$STRIKE put · DATE · ANN%/yr`) is buried in the dense 11px `wf-sub` line. Insert a `wf-topline` div on the `is-top` card (after `dir`, spanning grid-column 2/4) that reads `SELL $STRIKE PUT · DATE · ANN%/yr` in `font-size:14px; font-weight:800; color:var(--amber)` — 20-character bold amber line that renders the winning trade as a headline, not a sub-clause, so the #1 pick reads in one second without parsing the sub-line at all.
