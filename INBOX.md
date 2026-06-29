@@ -382,3 +382,18 @@ clears what it consumed. Examples:
 - In `build_site_data.py` the displayed annualized RoC is computed from the option **mid**, but a put seller fills at or near the **bid**. On a thin weekly with a $0.20 spread the mid-based yield overstates actual premium capture by 30-50%, and the `liquidity_score` penalty in `scoring.py` discounts the quality score but leaves the quoted yield number inflated. Add a `bid_yield` field alongside `mid_yield` in the output dict and surface it as the fill yield on the card so the number Michael acts on reflects what he will actually collect, not the midpoint fiction.
 - The earnings veto in `build_site_data.py` blocks a pick when `earnings_date <= DTE` days out, but companies routinely report **pre-market on the announced date**, meaning a 7-DTE put expiring Friday is still held through a Friday 7:00 AM print. Extend the earnings buffer by one day: veto when `earnings_date <= DTE + 1` so a same-day-as-expiry print is always caught. The current gate passes exactly the case where a surprise earnings move wipes the premium.
 - `build_site_data.py::_live_put` scores the chain's best strike but never gates on **OI at that specific strike**. The chain-level liquidity check can pass while the recommended $185p has OI=8 and a $0.00 bid. Add a `MIN_STRIKE_OI = 50` constant and treat a strike with OI below it the same as a premium-floor fail: skip it and fall through to the next candidate or the modeled path, rather than surfacing an unfillable trade as a live-quote pick.
+  [ember c71: SHIPPED the SIGNAL, as a visible chip, NOT the hard drop-gate. Added `MIN_STRIKE_OI =
+  50` + a pure tested `_thin_oi(open_interest, source)` (live path only; the modeled path carries
+  oi=0 by construction and already wears a MODEL tag, so it never reads thin), riding the pick as
+  `thin_oi` and surfaced as an amber `⚠ thin OI` chip beside the sector-crowding chip. The change
+  vs spec: I did NOT drop-and-fall-to-modeled. yfinance reports openInterest as 0/NaN intraday for
+  many valid weeklies until the daily settle, and a headless build cannot re-check the live chain,
+  so a blind drop-gate would blank good LIVE picks to MODEL on stale data. The c60 bid<=0 DROP stays
+  (no bid is unambiguous + unfillable); a real-but-thin book is fillable-just-worse, so it warns
+  rather than drops. Same flag-not-silent-edit judgment as c44/c59/c61/c68; see
+  [[flag-dont-silently-drop]]. Self-tested (6 asserts) + verified headless. Engine + page, no
+  scan.json. The other two bullets in this block stay open: the bid-yield-on-the-card one is largely
+  already shipped (c61 surfaces `bid_ann_roc` + the readout's "(NN% on the bid)" line), and the
+  earnings DTE+1 buffer I am NOT taking unilaterally (it would VETO genuinely safe trades, e.g. a
+  print the Monday after a Friday expiry, and tightening a hard thesis gate that way is Michael's
+  call to settle, not a critic's, cf. the RoC-denominator rule).]

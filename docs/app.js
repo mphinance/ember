@@ -344,10 +344,16 @@
           ? ' <span class="crowd" title="' + esc(p.sector || 'this sector')
             + ' is already represented by a higher-ranked pick: correlated exposure, so size it down or skip it on purpose">⚠ '
             + esc(p.sector ? String(p.sector).toUpperCase().slice(0, 4) : 'SECTOR') + '</span>' : '';
+        // Strike-level liquidity caution: the support-anchored strike landed on a thin open-
+        // interest line. It fills, but slow and wide, so he sizes down or skips on purpose. Server
+        // flags thin_oi on the LIVE path only (modeled picks carry oi=0 and already say MODEL).
+        var thin = p.thin_oi
+          ? ' <span class="thin" title="the chosen strike sits on a thin open-interest line: it fills, but slow and at a wider spread, so size down or skip it on purpose">⚠ thin OI</span>'
+          : '';
         sub.innerHTML = 'sell <b>$' + fmt(p.strike) + ' put</b>' + otm + floor
           + (p.exp ? ' &middot; exp <b>' + fmtDate(p.exp) + '</b> (' + p.dte + 'd)' : ' (' + p.dte + 'd)')
           + '<br><b>' + fmt(p.annualized_roc) + '%</b> ann &middot; <b>' + fmt(p.prob_otm) + '%</b> OTM '
-          + src + hiv + crowd + (p.earnings_days != null ? ' &middot; earn ' + p.earnings_days + 'd' : '');
+          + src + hiv + crowd + thin + (p.earnings_days != null ? ' &middot; earn ' + p.earnings_days + 'd' : '');
       }
       card.appendChild(sc); card.appendChild(tk); card.appendChild(dir);
       if (head) card.appendChild(head);

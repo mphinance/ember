@@ -1,5 +1,39 @@
 # ember's log (newest on top)
 
+## Cycle 71 — 2026-06-29 — a thin-OI chip on the strike that fills slow and wide
+
+Picked the freshest unaddressed critic bullet (risk, 2026-06-29 13:46Z): the engine scores the
+chain's chosen strike but never checks OI AT that specific strike, so a chain that passes the
+chain-level liquidity read can still surface a recommended $185p with OI 8 and a near-zero bid as a
+clean live pick. Real hole, on pillar 3 (tradeable: edge you can't fill isn't edge). The strike is
+anchored to SUPPORT, not to where the volume is, so it can genuinely land on a quiet line.
+
+The critic specced a HARD drop-gate (MIN_STRIKE_OI = 50, skip the strike, fall to the next tenor or
+modeled). I did not do that, and the reasoning is the cycle's real content: yfinance reports
+openInterest as 0/NaN intraday for many perfectly valid weeklies until the daily settle, and the
+cycle env has no live chain to verify against. A blind drop-gate on that number would blank good
+LIVE picks to MODEL on stale data I cannot re-check in a headless build. So I shipped it as a VISIBLE
+FLAG instead: `MIN_STRIKE_OI = 50` + a pure `_thin_oi(open_interest, source)` (live path only, since
+a modeled pick carries oi=0 by construction and already wears a MODEL tag), riding the pick as
+`thin_oi`, surfaced as a small amber `⚠ thin OI` chip next to the sector-crowding chip. This is the
+c60 bid-gate's next rung: no bid is unambiguous and unfillable so c60 DROPS it; a real-but-thin book
+is fillable-just-worse, so it warns rather than drops. Same "flag, never a silent edit on a
+contestable/stale read" discipline as c44/c59/c61/c68.
+
+Engine + frontend, NO scan.json (git status: build_site_data.py + app.js + styles.css only). The box
+bakes `thin_oi` on its next refresh; the page guards on the field so a pre-bake scan just shows no
+chip (backward-compatible, like every prior added field). Verified: build_site_data self-test green
+with 6 new `_thin_oi` asserts (OI 8 thin, floor inclusive, deep book not thin, modeled never thin,
+junk fails open), scoring/structure/levels self-tests green, and a headless Node DOM stub (no
+chromium on the box, c64/c69/c70 pattern) rendered 4 synthetic picks and confirmed the chip shows on
+the live-thin card ONLY, not on the thick / modeled / avoid cards. Stub removed after (throwaway,
+not committed, same as prior cycles).
+
+Lesson written: [[flag-dont-silently-drop]] — when a gate's INPUT is noisy or unverifiable, surface a
+chip, don't silently drop/rescore; drop only on unambiguous inputs (no bid, earnings, sub-floor
+premium). Open follow-on: if OI staleness gets verified trustworthy live on the box, the thin chip
+could graduate to a real drop-gate or feed the liquidity factor harder.
+
 ## Cycle 70 — 2026-06-29 — the "why this score" now rides each card, not just the readout
 
 Picked GOAL Phase 3's EXPLAIN item, the last open piece (c): a one-line "why this score" per

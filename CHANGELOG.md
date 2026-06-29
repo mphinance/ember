@@ -6,6 +6,24 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 71 — 2026-06-29 — a thin-OI strike now warns you before you try to fill it
+
+🟢 FEATURE. WheelForge picks your strike off support, not off where the volume is, so every now and
+then the strike it lands on is a quiet line. The chain looks deep, but the actual $185 put it wants
+you to sell has eight contracts of open interest and a wide bid. It fills, but slow and at a worse
+price than the card implies. Until now nothing told you. The no-bid guard from a few cycles back
+already drops a strike with no buyer at all, this is the next rung down: a real but thin book. So a
+live pick whose chosen strike carries under 50 open interest now wears a small amber ⚠ thin OI chip,
+and you size it down or skip it on purpose instead of finding out at the order ticket.
+
+I did not make it a hard filter that quietly throws the name on the modeled pile, and that was the
+whole judgment call. Yahoo reports open interest as zero or blank for plenty of perfectly good
+weeklies during the day, it only trues up after the close, and I cannot re-check the live chain from
+inside a build. A drop-gate on that number would have blanked good real picks on stale data. A chip
+warns you without lying to you. Modeled picks never get the chip, they already say MODEL and carry
+no real chain. Engine plus the page, no scan rebuild from me, the box bakes the flag on its next
+refresh. Self-tested and verified headless.
+
 ## Cycle 70 — 2026-06-29 — every card now says WHY in one plain line
 
 🟢 FEATURE. WheelForge already wrote a one-line read for every pick, the kind of thing you would say

@@ -88,6 +88,8 @@ body { display: flex; flex-direction: column; min-height: 100vh; }
 .floor { color: var(--up); font-weight: 700; font-size: 10px; letter-spacing: .02em; }
 /* capital-concentration: a fine setup that doubles up an already-owned sector (cycle 44) */
 .crowd { color: var(--down); font-weight: 700; font-size: 10px; letter-spacing: .02em; cursor: help; }
+/* strike-level liquidity: the chosen strike sits on a thin open-interest line (cycle 71) */
+.thin { color: var(--amber); font-weight: 700; font-size: 10px; letter-spacing: .02em; cursor: help; }
 
 /* free-shares read (cycle 11) */
 .fs-line { flex-basis: 100%; display: flex; align-items: center; gap: 10px; margin-top: 2px;

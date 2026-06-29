@@ -69,6 +69,16 @@ MAX_SECTOR_OVERLAP = 1   # how many qualifying picks one GICS sector may own bef
 SECTOR_CROWD_SCORE = 60.0  # only names that actually score a setup (>= this) count toward / get
                            # flagged for crowding. A 40-scoring also-ran in the same sector is not
                            # competing for capital, so it neither fills the slot nor gets marked.
+MIN_STRIKE_OI = 50  # open interest, at the CHOSEN strike, below which the line is THIN. The strike
+                    # is anchored to support, not to liquidity, so it can land on a barely-traded
+                    # line: the chain may be deep overall while the recommended $185p carries OI 8.
+                    # The c60 bid gate already drops a strike with NO bid; this is the next rung —
+                    # a strike with a real-but-thin book fills slow and wide. We do NOT silently
+                    # drop it (yfinance reports OI=0/NaN intraday for many valid weeklies until the
+                    # daily settle, so a hard gate would blank good live picks to MODEL on stale
+                    # data we cannot re-check in a headless build). Instead it wears a visible
+                    # ⚠ thin-OI chip on the LIVE path only, so he sizes or skips it on purpose —
+                    # same "flag, never a silent edit" discipline as the sector-crowding chip.
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(HERE, "docs", "data", "scan.json")
 
@@ -359,6 +369,21 @@ def _sellable_premium(bid, ask):
     return (bid + ask) / 2.0 if ask > 0 else bid
 
 
+def _thin_oi(open_interest, source):
+    """True when the CHOSEN strike's open interest is thin enough to caution on. Only the
+    LIVE path can be thin: a modeled pick carries oi=0 by construction (c39) and already
+    wears a MODEL tag, so flagging it would be double noise and not even a real chain read.
+    On the live path a strike that cleared the bid gate (c60, so it HAS a market-maker bid)
+    but reports OI below MIN_STRIKE_OI is a real-but-thin book — fillable, but slow and wide,
+    so he sizes down or skips it on purpose. Pure; a non-live source is never thin."""
+    if source != "live":
+        return False
+    try:
+        return float(open_interest) < MIN_STRIKE_OI
+    except (TypeError, ValueError):
+        return False
+
+
 def _quote_expiry(tk, exp, dte, spot, rv, support):
     """Quote the support-anchored (else ~1 sigma OTM) cash-secured put for a SINGLE expiry
     off the live chain. Returns the quote dict or None (no chain / no OTM strike / dead
@@ -644,6 +669,11 @@ def build_one(ticker, earnings_days=None, lanes=None, sector=None):
             # post-sort _sector_crowding pass. sector_crowded starts False here and is filled
             # once the whole ranked list is known; None sector simply never gets flagged.
             "sector": sector, "sector_crowded": False,
+            # Strike-level liquidity caution: the support-anchored strike landed on a thin
+            # open-interest line (live path only). It fills, but slow and wide, so he sizes
+            # or skips on purpose. A visible chip, never a silent drop (yfinance OI is stale
+            # intraday; a hard gate would blank good live picks to MODEL on bad data).
+            "thin_oi": _thin_oi(oi, source),
             # His method, surfaced: struck AT support (or 1-sigma fallback), and the
             # IV-over-HV edge gate (rich premium = VRP > 1).
             "at_support": at_support, "support": (round(support, 2) if support else None),
@@ -834,6 +864,18 @@ def _selftest():
         "bid yield must trail the mid yield you sell into"
     assert _annualized_roc(_bid, 100.0, 7) == _annualized_roc(_sellable_premium(_bid, 0.0), 100.0, 7), \
         "a one-sided book quotes the bid, so bid yield == headline yield"
+
+    # Thin-OI caution: a LIVE strike whose open interest is below MIN_STRIKE_OI fills slow and
+    # wide, so it wears a chip; a thick line does not. The MODELED path carries oi=0 by
+    # construction and already wears a MODEL tag, so it must NEVER read thin (no double noise),
+    # and junk OI fails open to not-thin rather than crashing the build.
+    assert _thin_oi(8, "live"), "a live strike with OI 8 is thin"
+    assert _thin_oi(MIN_STRIKE_OI - 1, "live"), "just under the floor is thin"
+    assert not _thin_oi(MIN_STRIKE_OI, "live"), "exactly the floor is not thin (inclusive of clear)"
+    assert not _thin_oi(500, "live"), "a deep live book is not thin"
+    assert not _thin_oi(0, "modeled"), "the modeled path (oi=0) is never thin (it wears MODEL already)"
+    assert not _thin_oi(None, "live") and not _thin_oi("x", "live"), "junk OI fails open to not-thin"
+    print(f"thin-oi: live OI < {MIN_STRIKE_OI} flagged, modeled never flagged")
 
     # MIN_PREMIUM floor: a $0.06 mid (= $6 a contract) is noise, not a trade, no matter how
     # richly it would score. A $0.30 mid (= $30 a contract) clears. The boundary is inclusive.
