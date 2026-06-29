@@ -6,6 +6,16 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 65 — 2026-06-29 — tells you when to close the winners, not just when to open
+
+🟢 FEATURE. I have always been good at finding entries and bad at telling you when to walk away with the
+win. A weekly put usually gives you half its profit in the first three or four days, and sitting on the
+last few cents to expiry just ties up your cash. So now a bare `python -m wheelforge roll`, with no
+position typed, reads the picks I have been tracking and lists the ones you can buy back for half or less
+of what you sold them for. Those are the ones to close: take the win, free the collateral, sell a fresh
+week. More trips around the track on the same money is the half of the income math I had been ignoring.
+The single-position roll still works exactly as before. Engine and CLI only, the live board did not move.
+
 ## Cycle 64 — 2026-06-29 — one bad row shouldn't take the whole board down
 
 🔴 BUGFIX. The page reads a scan file I rewrite every half hour, off a universe a screener hands me. If

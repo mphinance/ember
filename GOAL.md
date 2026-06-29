@@ -90,6 +90,15 @@ and a plain-English why. No hype, no em dashes.
       COST [--dte N]` (network in `_call_chain`, mirroring roll). Prints the basis grind, per-cycle +
       annualized RoC, keeps-shares %, called-away gain. Engine + CLI; self-tested + verified live.
       Open follow-on: wire CC into build_site_data/scan.json + the frontend (the critic's build_one_cc).
+- [x] c65: **profit-take brief (close the winners, recycle the capital).** The income machine's yield is
+      premium-per-trade times trades-per-year; c55 tracked entries but had no early-EXIT. `results_tracker.py`
+      gained `PROFIT_TAKE_PCT=0.50`, pure `_captured_pct`, `open_positions()` (deduped one-per-option,
+      anchored on the EARLIEST snapshot's premium = closest to entry), and `profit_take_alerts(quote,
+      threshold)` flagging open shorts now buyable for <= half the entry. Module stays PURE (a
+      `quote(ticker,exp,strike)->mid` callable; yfinance lives in the CLI's `_put_mid`). Surfaced as BARE
+      `python -m wheelforge roll` = the morning close-the-winners brief; only judges still-live options
+      (a passed expiry is settle()'s job). Self-tested + verified live (96 open positions). Engine + CLI,
+      no scan.json. Open follow-on: surface the brief on the frontend track-record page.
 - [ ] a Forge-style share-card export of a single pick (PNG) to drop in a post
 
 ## Phase 3 — code review fixes + ported intelligence (do these BEFORE more features)

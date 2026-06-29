@@ -26,6 +26,13 @@ from datetime import date
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DB = os.path.join(HERE, "data", "results.db")
 
+# The canonical wheel exit: once a short can be bought back for <= half what you sold it
+# for, you have captured most of the edge and the remaining theta is the slow tail. Closing
+# frees the full strike collateral to re-sell a fresh week. Same constant + meaning as
+# roll_advisor.PROFIT_TAKE_PCT; the income machine's annual yield is premium-per-trade
+# times trades-per-year, and this is the lever on the second term.
+PROFIT_TAKE_PCT = 0.50
+
 
 def _con(db_path=None):
     path = db_path or DB
@@ -145,6 +152,89 @@ def settle(prices, today=None, db_path=None):
     return settled
 
 
+def open_positions(db_path=None):
+    """Every still-PENDING pick (no outcome yet), deduped to one row per option, as the
+    open short positions the tracker is watching. A pick re-seen on later days is logged
+    once per day (each a fresh forward observation for the hit-rate scorecard), but for a
+    profit-take we want ONE position per (ticker, exp, strike) anchored on its EARLIEST
+    snapshot, since that is closest to when the entry was actually sold. Returns a list of
+    dicts carrying that entry premium. Fail-open: [] on any error."""
+    seen = {}
+    try:
+        con = _con(db_path)
+        # earliest day first, so the first time we see an option wins (its entry premium)
+        rows = con.execute(
+            "SELECT day,ticker,strike,exp,premium,score,lane,direction "
+            "FROM picks WHERE outcome IS NULL ORDER BY day ASC"
+        ).fetchall()
+        con.close()
+        for day, tk, strike, exp, prem, score, lane, direction in rows:
+            try:
+                key = (str(tk).upper(), str(exp), round(float(strike), 2))
+            except (TypeError, ValueError):
+                continue
+            if key in seen:
+                continue
+            seen[key] = {
+                "first_day": day, "ticker": str(tk).upper(), "strike": float(strike),
+                "exp": str(exp), "entry_premium": float(prem or 0.0),
+                "score": score, "lane": lane or "?", "direction": direction or "",
+            }
+    except Exception:
+        pass
+    return list(seen.values())
+
+
+def _captured_pct(entry, current):
+    """Pure: fraction of the max premium captured if you buy the short back NOW. You sold
+    for `entry` and can repurchase at `current`, so you keep `entry - current`, i.e. you
+    have banked `(entry - current) / entry` of the max profit. Returns a 0..1 float, or
+    None when `entry` is non-positive or either input is junk (fail-open)."""
+    try:
+        entry = float(entry)
+        current = float(current)
+    except (TypeError, ValueError):
+        return None
+    if entry <= 0:
+        return None
+    return (entry - current) / entry
+
+
+def profit_take_alerts(quote, db_path=None, threshold=PROFIT_TAKE_PCT, today=None):
+    """The morning close-the-winners brief. For every OPEN tracked short, look up its
+    current mid via `quote` and flag the ones now buyable for <= `threshold` of the entry
+    premium (i.e. >= 1-threshold of max profit captured). On a short weekly that typically
+    lands by day 3-4; closing frees the collateral to re-sell a fresh week instead of
+    grinding the slow tail to expiry.
+
+    `quote` is either a callable `quote(ticker, exp, strike) -> current_mid_or_None` (the
+    CLI passes a yfinance-backed one) or a dict keyed `(ticker, exp, round(strike, 2))`.
+    Only still-LIVE options are judged (a passed expiry is settle()'s job, not a take).
+    Returns the alerts sorted most-captured first; fail-open, a name we cannot price is
+    simply skipped, never raised."""
+    today = today or date.today().isoformat()
+    getq = quote if callable(quote) else (
+        lambda t, e, k: quote.get((t, e, round(float(k), 2))))
+    alerts = []
+    for pos in open_positions(db_path):
+        try:
+            if pos["exp"] <= today:        # already expired -> settle(), not profit-take
+                continue
+            cur = getq(pos["ticker"], pos["exp"], pos["strike"])
+            if cur is None:
+                continue
+            cur = float(cur)
+            cap = _captured_pct(pos["entry_premium"], cur)
+            if cap is None or cur > pos["entry_premium"] * threshold:
+                continue
+            alerts.append({**pos, "current_mid": round(cur, 2),
+                           "captured_pct": round(cap * 100.0, 1)})
+        except Exception:
+            continue
+    alerts.sort(key=lambda a: a["captured_pct"], reverse=True)
+    return alerts
+
+
 def _bucket(rows):
     """rows: iterable of (prob_otm, premium, outcome). Aggregate a settled cohort into the
     forward scorecard: n, hit rate (fraction that expired OTM), the AVG prob_otm the model
@@ -241,6 +331,45 @@ def _selftest():
                                          "lanes": ["liquid"]}}], day="2025-12-20", db_path=tmp)
     assert settle({}, today="2026-02-01", db_path=tmp) == 0  # no price -> still pending
     assert track_record(db_path=tmp)["pending"] == 1
+
+    # --- profit-take brief (close the winners, recycle the collateral) ---
+    assert _captured_pct(2.00, 1.00) == 0.50      # bought back at half = 50% captured
+    assert _captured_pct(2.00, 0.50) == 0.75      # quarter = 75% captured
+    assert _captured_pct(0.0, 0.0) is None        # no entry premium -> no read (fail-open)
+    assert _captured_pct(2.00, None) is None      # junk current -> None
+
+    pt = os.path.join(tempfile.mkdtemp(), "pt_test.db")
+    opens = [
+        {"ticker": "EEE", "pick": {"strike": 100, "exp": "2026-03-20", "premium": 2.00,
+                                   "score": 70, "prob_otm": 85.0,
+                                   "direction": "cash-secured put", "lanes": ["liquid"]}},
+        {"ticker": "FFF", "pick": {"strike": 40, "exp": "2026-03-20", "premium": 1.00,
+                                   "score": 64, "prob_otm": 82.0,
+                                   "direction": "cash-secured put", "lanes": ["hi-iv"]}},
+    ]
+    # logged twice, two days; the entry must anchor on the EARLIER day's premium ($2.10),
+    # not the later $2.00, and open_positions must dedupe to ONE row per option.
+    opens[0]["pick"]["premium"] = 2.10
+    snapshot(opens, day="2026-03-01", db_path=pt)
+    opens[0]["pick"]["premium"] = 2.00
+    snapshot(opens, day="2026-03-02", db_path=pt)
+    pos = {p["ticker"]: p for p in open_positions(db_path=pt)}
+    assert len(pos) == 2, "deduped to one row per option"
+    assert pos["EEE"]["entry_premium"] == 2.10, "anchors on the earliest snapshot's premium"
+    assert pos["EEE"]["first_day"] == "2026-03-01", pos["EEE"]
+
+    # EEE now buyable at $0.90 (<= 50% of $2.10 -> CLOSE); FFF at $0.80 (still 80% -> hold)
+    quotes = {("EEE", "2026-03-20", 100.0): 0.90, ("FFF", "2026-03-20", 40.0): 0.80}
+    al = profit_take_alerts(quotes, db_path=pt, today="2026-03-04")
+    assert [a["ticker"] for a in al] == ["EEE"], al
+    assert al[0]["captured_pct"] == 57.1, al[0]          # (2.10-0.90)/2.10
+    assert al[0]["current_mid"] == 0.90, al[0]
+
+    # a callable quote works too, and an already-EXPIRED option is settle()'s job, not a take
+    al2 = profit_take_alerts(lambda t, e, k: 0.10, db_path=pt, today="2026-03-21")
+    assert al2 == [], "everything has expired past 2026-03-20 -> no profit-take"
+    # a name we cannot price is skipped, never raised
+    assert profit_take_alerts({}, db_path=pt, today="2026-03-04") == []
 
     print("results_tracker self-test OK")
 

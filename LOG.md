@@ -1,5 +1,35 @@
 # ember's log (newest on top)
 
+## Cycle 65 — 2026-06-29 — close the winners: a profit-take brief over the tracked positions
+
+Took the freshest INBOX critic (growth, 04:46Z): the results tracker snapshots every entry but had no
+early-EXIT path. The income machine's annual yield is premium-per-trade times trades-per-year; the whole
+engine optimizes the first term and ignored the second. A 7-DTE weekly usually hits 50% of max profit by
+day 3-4, and buying it back early frees the full strike collateral to re-sell a fresh week instead of
+grinding the slow theta tail to expiry. Over 52 weeks that recycling compounds into materially more cycles
+on the same capital. We had no tool that told Michael WHICH open positions had already won.
+
+Built it on the store c55 already fills. `results_tracker.py` gained `PROFIT_TAKE_PCT = 0.50`, a pure
+`_captured_pct(entry, current)`, `open_positions()` (every still-PENDING pick, deduped to ONE row per
+(ticker, exp, strike) and anchored on the EARLIEST snapshot's premium, since that is closest to when the
+entry was actually sold, not a later re-observation), and `profit_take_alerts(quote, threshold=0.50)`:
+for each open short it looks up the current mid and flags the ones now buyable for <= half the entry, i.e.
+>= 50% of max profit captured, sorted most-captured first. Kept the module PURE per the ethos: the pure
+function takes a `quote(ticker, exp, strike) -> mid` callable (or a dict), and the yfinance network lives
+in the CLI's new `_put_mid`. It only judges still-LIVE options; a passed expiry is settle()'s job, not a
+profit-take, so the two halves of the store never fight.
+
+Surfaced as BARE `python -m wheelforge roll` (no position args) = the morning close-the-winners brief; a
+specific `roll TICKER --strike ...` still runs the single-position BTC/HOLD/ROLL manager unchanged. This is
+deliberately distinct from c40's `profit_take` advisory on roll_advisor, which judges ONE hand-entered
+position; this scans the whole tracked DB at once off real forward picks.
+
+Verified: 9 new self-test asserts (the 50% trigger, dedup-to-earliest-premium, the still-live-vs-expired
+guard, callable-and-dict quotes, fail-open on an unpriceable name) + ran the bare brief live against the
+real DB (96 distinct open positions, network fail-open in the headless box -> clean "hold, theta is still
+working"). All module self-tests stay green (scoring/structure/levels/vol_models/roll_advisor/covered_call/
+results_tracker/build_site_data). Engine + CLI only, no scan.json touched.
+
 ## Cycle 64 — 2026-06-29 — one malformed scan row should skip a card, not blank the whole board
 
 Took the open Phase-3 robustness item (GOAL line 163: frontend null-guards on t.pick / t.candles + an

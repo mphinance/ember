@@ -7,6 +7,8 @@ WheelForge CLI — run the scanner from a terminal, not just the website.
 
   python -m wheelforge roll NVDA --strike 180 --exp 2026-07-03 --entry 2.00 --qty 2
                                                 manage an OPEN put: BTC / HOLD / ROLL
+  python -m wheelforge roll                     morning brief: tracked picks now buyable
+                                                for <= 50% of entry (close + recycle)
 
   python -m wheelforge cc NVDA --basis 175 [--dte 30] [--shares 100]
                                                 got assigned? sell a call to grind the basis
@@ -14,7 +16,9 @@ WheelForge CLI — run the scanner from a terminal, not just the website.
 Scan prints a ranked table of the best cash-secured puts. Roll closes the OTHER half
 of the trade: feed it a put you already sold and it prices the live mid, computes how
 much premium you have captured and how close spot sits to your strike, and tells you to
-take the win (BTC_NOW), sit tight (HOLD), or defend it (ROLL_ALERT). cc runs the wheel's
+take the win (BTC_NOW), sit tight (HOLD), or defend it (ROLL_ALERT). Bare `roll` (no
+position) scans the tracked results DB and lists every open pick already decayed to <=
+50% of entry, the winners to buy back and recycle the capital into a fresh week. cc runs the wheel's
 SECOND leg: feed it shares you hold and their cost basis and it finds the lowest OTM call
 at or above that basis, prices it live, and tells you how much it grinds the basis down.
 Same engine the site runs. No em dashes (Michael's rule).
@@ -188,11 +192,51 @@ def _roll_parse(args):
     return o
 
 
+def _put_mid(ticker, exp, strike):
+    """Live current mid for one open short put, for the profit-take brief. Reuses
+    _live_quote (mid, spot, iv) and hands back just the mid. Fail-open -> None."""
+    mid, _spot, _iv = _live_quote(ticker, strike, exp)
+    return mid
+
+
+def _winners_brief():
+    """Bare `roll` (no position given): the morning close-the-winners brief over the
+    tracked results DB. Flags every OPEN scanner pick now buyable for <= 50% of its entry
+    premium, i.e. winners to BUY BACK and recycle the collateral into a fresh week. The
+    box snapshots actionable CSPs every build, so this reads off real forward picks."""
+    from wheelforge.results_tracker import (
+        profit_take_alerts, open_positions, PROFIT_TAKE_PCT)
+    n_open = len(open_positions())
+    if n_open == 0:
+        print("\n  no open tracked positions yet. The box snapshots actionable CSPs every "
+              "build; once a few are logged, this flags the winners to close.\n")
+        return 0
+    print(f"\n  scanning {n_open} open tracked position(s) for "
+          f"{int((1 - PROFIT_TAKE_PCT) * 100)}%-profit closes...")
+    alerts = profit_take_alerts(_put_mid)
+    if not alerts:
+        print(f"\n  -- nothing at the {int((1 - PROFIT_TAKE_PCT) * 100)}% profit-take line "
+              f"yet. Hold; theta is still working.\n")
+        return 0
+    print(f"\n  $$ CLOSE THESE ({len(alerts)}):\n")
+    for a in alerts:
+        print(f"  CLOSE {a['ticker']:<6} ${a['strike']:.2f}p exp {a['exp']}  "
+              f"sold ~${a['entry_premium']:.2f}  now ${a['current_mid']:.2f}  "
+              f"{a['captured_pct']}% captured  [{a['lane']}]")
+    print("\n  Buying these back frees the collateral to re-sell a fresh week (more "
+          "trades/year is the other half of the income machine).\n")
+    return 0
+
+
 def roll(args):
     o = _roll_parse(args)
+    # Bare `roll` (no position given) = the morning profit-take brief over the tracked DB.
+    # A specific position runs the single-position BTC/HOLD/ROLL manager below.
+    if not any(o[k] is not None for k in ("ticker", "strike", "exp", "entry")):
+        return _winners_brief()
     if not (o["ticker"] and o["strike"] and o["exp"] and o["entry"] is not None):
         print("usage: python -m wheelforge roll TICKER --strike X --exp YYYY-MM-DD "
-              "--entry PREMIUM [--qty N]")
+              "--entry PREMIUM [--qty N]   (or bare `roll` for the profit-take brief)")
         return 1
     try:
         dte_remaining = (date.fromisoformat(o["exp"]) - date.today()).days

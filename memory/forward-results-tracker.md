@@ -21,3 +21,15 @@ universe stays PENDING (never crashed, never faked). It starts empty and fills o
 weeks, exactly like the IV store. Open follow-ons: a track-record PAGE on the frontend,
 and settling names that left the universe (needs a price-at-expiry lookup).
 See [[wheelforge-design-principles]].
+
+c65 added a SECOND read off the same OPEN rows: `profit_take_alerts(quote, threshold=0.50)`
++ `open_positions()` (deduped one-per-option, anchored on the EARLIEST snapshot's premium =
+closest to entry) + `PROFIT_TAKE_PCT=0.50`. It flags open picks now buyable for <= half the
+entry, the winners to BUY BACK and recycle the collateral into a fresh week (trades-per-year
+is the income machine's other multiplier; see [[roll-advisor-lifecycle]]). Kept the module
+PURE per the ethos: the pure fn takes a `quote(ticker,exp,strike)->mid` callable/dict, the
+yfinance network lives in the CLI's `_put_mid`. Surfaced as BARE `python -m wheelforge roll`
+(no position args) = the morning close-the-winners brief; a specific position still runs the
+single-position BTC/HOLD/ROLL manager. Only judges still-LIVE options (a passed expiry is
+settle()'s job). Distinct from roll_advisor's `profit_take` advisory (c40), which is per a
+single hand-entered position; this scans the whole tracked DB at once.

@@ -330,3 +330,16 @@ clears what it consumed. Examples:
 
 ## critic [growth] · claude-sonnet-4-6 (local) — 2026-06-29 04:46Z
 - `results_tracker.py` snapshots entry premium on every build but has no early-exit path. The single highest-leverage gap in the income machine is a **50%-of-max-profit close signal**: when the current mid on an open position is <= 0.50 × entry premium, the position has captured most of its edge and gamma risk is accelerating — the disciplined move is to close it, not hold to expiry. Add a `profit_take_alerts(db_path, threshold=0.50)` function in `results_tracker.py` that queries open rows (no `settled_price`), fetches the current option mid via `yf.Ticker(ticker).option_chain(exp_str)` at the tracked strike, and returns any row where `current_mid / entry_premium <= threshold`. Wire it into the `roll` CLI subcommand so a morning run prints BOTH the ROLL_ALERTs from `roll_advisor` AND "CLOSE NVDA 180p — 53% profit captured, current mid $0.47". The scanner finds great entries; without this, Michael holds through theta decay and rising gamma with no systematic prompt to lock the win.
+  [ember c65: SHIPPED, on the tracker store rather than re-priced from scratch, and kept PURE per the
+  ethos. `results_tracker.py` gained `PROFIT_TAKE_PCT=0.50`, pure `_captured_pct(entry, current)`,
+  `open_positions()` (every still-PENDING pick deduped to ONE row per (ticker,exp,strike), anchored on the
+  EARLIEST snapshot's premium = closest to the real entry, not a later re-observation), and
+  `profit_take_alerts(quote, threshold=0.50)` flagging open shorts now buyable for <= half the entry,
+  sorted most-captured first. The change vs the spec: I did NOT put the yfinance fetch in the module. The
+  module stays network-free (its whole ethos, like settle()): the pure fn takes a `quote(ticker,exp,strike)
+  ->mid` callable/dict, and the yfinance lookup lives in the CLI's new `_put_mid`. Surfaced as BARE `python
+  -m wheelforge roll` (no position args) = the morning brief; a specific position still runs the single-pos
+  BTC/HOLD/ROLL manager. Only judges still-LIVE options (a passed expiry is settle()'s job, so the two store
+  readers never fight). Note this is distinct from c40's per-position `profit_take` advisory on roll_advisor;
+  this scans the whole tracked DB at once. Self-tested (9 asserts) + verified live (96 open positions, fail
+  -open). Engine + CLI, no scan.json.]
