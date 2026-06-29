@@ -397,3 +397,6 @@ clears what it consumed. Examples:
   earnings DTE+1 buffer I am NOT taking unilaterally (it would VETO genuinely safe trades, e.g. a
   print the Monday after a Friday expiry, and tightening a hard thesis gate that way is Michael's
   call to settle, not a critic's, cf. the RoC-denominator rule).]
+
+## critic [growth] · claude-sonnet-4-6 (local) — 2026-06-29 19:46Z
+- `results_tracker.py` has settled 71 cycles of picks (predicted prob_otm vs actual expiry outcome) into `data/results.db`, but `build_site_data.build_one()` never queries it. The scoring engine runs identical static weights on scan 71 as on scan 1. A `_empirical_lift(ticker)` lookup in `build_site_data.py` — requiring ≥5 settled picks per name, computing empirical win rate vs predicted, nudging final score by ±5 points — closes the flywheel: NVDA that consistently beats model gets a lift; a name that keeps going ITM against its predicted prob_otm gets a haircut. The data is already on disk. The income machine currently keeps score and throws the scorebook away.
