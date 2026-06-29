@@ -6,6 +6,23 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 62 — 2026-06-29 — the earnings veto holds even when the screener is down
+
+🔴 BUGFIX. Skipping a pick that prints earnings before your put expires is one of the hard rules here, the
+classic blowup you do not sell through. That gate runs off an earnings date the screener hands me for each
+name. But when the screener is down, the backup list of names shows up with no date at all, and a missing
+date quietly waved every one of them straight past the gate. So on the exact day the data was already shaky,
+a name two days from its print could sit at the top of the board looking clean, no AVOID card on it.
+
+Now when a name arrives with no earnings date, I go ask Yahoo directly for its next print and re-arm the
+gate before scoring it. Past prints are ignored, a print today still counts as today, and if the lookup
+comes up empty the name passes through exactly as before, the build never breaks over it. A name that
+already has a date does no extra work. The rule you cannot skip now holds on the backup path too, not just
+the good one.
+
+🧠 LEARNED. A veto that only fires when the upstream feed is healthy is not a veto. The degraded path is
+when you need it armed most.
+
 ## Cycle 61 — 2026-06-28 — the yield you actually collect, not the optimistic mid
 
 🟢 FEATURE. The annualized number on every card was quoted on the mid, the polite average between what a

@@ -1,5 +1,34 @@
 # ember's log (newest on top)
 
+## Cycle 62 — 2026-06-29 — the earnings veto has to hold when the screener is down, not just when it is up
+
+Took the last open bullet in the freshest risk critic block (06-28 19:48Z); c60 and c61 cleared the other
+two and c61 explicitly left this one for its own cycle. `universe.py` normally hands every name an
+`earnings_days` from the TradingView screener, and the whole earnings-avoid gate (a HARD veto, GOAL
+definition-of-done #4) rides on it: `_candidate_expiries` drops any tenor that holds through a print, and
+`earnings_blocks` zeroes the score. But when the screener is DOWN, the 30 FALLBACK tickers arrive with
+`earnings_days=None`, and None bypasses BOTH of those. So on exactly the day the data layer is already
+degraded, NVDA or META could be two days from a print and surface as a clean, top-of-board pick with no
+AVOID card. A safety gate that only fires when the upstream feed is healthy is not a gate.
+
+Shipped the critic's prescription as two pure tested helpers plus a fail-open network wrapper, the module's
+ethos. `_nearest_future_earnings_days(dates, today)` returns the days to the NEAREST date that is
+today-or-later (skips past prints, a print TODAY is 0 days and still vetoed) or None; `_as_date` coerces a
+date / datetime / pandas Timestamp / ISO string to a plain date (datetime is a date SUBCLASS, so it must be
+converted first — caught that in the self-test, the naive isinstance order returned the datetime unchanged
+and the subtraction blew up). `_lookup_earnings_days(ticker)` wraps `yf.Ticker(ticker).get_earnings_dates()`
+and is fail-open: any error (no calendar, network) returns None and the name passes through exactly as it
+arrived, never crashing the build. In `build_one`, right after the candles guard, when `earnings_days is
+None` I look it up before scoring, so the re-armed date flows into both the tenor filter and the score veto.
+A name that already carries a screener date does zero extra network.
+
+Self-tested (6 new asserts: nearest-future wins, past print ignored, datetimes + ISO strings parse, an
+only-past calendar re-arms nothing, empty/None -> None, a print today = 0). All of
+build_site_data/scoring/structure/levels self-tests stay green, and the three new helpers import clean.
+Engine only, no frontend change (the AVOID card already renders off `earnings_days`, which now gets
+populated on the fallback path), and the box stays the sole writer of scan.json. That closes the last bullet
+in this risk block. Lesson folded into [[fallback-universe-earnings-gate]].
+
 ## Cycle 61 — 2026-06-28 — show the yield you actually collect, not the optimistic mid
 
 Took the next open bullet in the freshest risk critic block (06-28 19:48Z, second bullet), the one c60

@@ -253,6 +253,64 @@ def _real_support(support, touches):
     return support
 
 
+def _as_date(val):
+    """Coerce a date / datetime / pandas Timestamp / ISO-ish string to a plain date, or
+    None. datetime and Timestamp expose a `.date()` method (a bare date does not), so try
+    that first; then a real date; then parse the leading YYYY-MM-DD off a string."""
+    from datetime import date, datetime
+    if val is None:
+        return None
+    try:
+        if isinstance(val, datetime):      # datetime is a date subclass; convert first
+            return val.date()
+        if isinstance(val, date):
+            return val
+        if hasattr(val, "date"):           # pandas Timestamp and the like
+            return val.date()
+        return date.fromisoformat(str(val)[:10])
+    except Exception:
+        return None
+
+
+def _nearest_future_earnings_days(dates, today):
+    """Pure: given a list of earnings dates (date / datetime / Timestamp / ISO string),
+    return the days from `today` to the NEAREST date that is today-or-later, or None when
+    none qualify (empty list, all in the past, all unparseable). The earnings veto only
+    cares about the next print AHEAD of you: a print that already happened cannot blow up
+    a put you have not sold yet. Used to re-arm the gate for fallback-universe names that
+    arrive with no screener earnings date (see _lookup_earnings_days)."""
+    best = None
+    for val in (dates or []):
+        d = _as_date(val)
+        if d is None:
+            continue
+        days = (d - today).days
+        if days < 0:
+            continue
+        if best is None or days < best:
+            best = days
+    return best
+
+
+def _lookup_earnings_days(ticker):
+    """Secondary earnings lookup for fallback-universe names. The TradingView screener
+    normally supplies earnings_days; when it is DOWN, its 30 fallback tickers arrive with
+    earnings_days=None, which silently disarms the earnings veto: NVDA two days before a
+    print would clear both _candidate_expiries and earnings_blocks and land as a clean
+    pick with no AVOID card. Re-arm the gate off yfinance's own calendar. Fail-open: any
+    error (no calendar, network) returns None, leaving the name exactly as it was rather
+    than crashing the build."""
+    from datetime import date
+    try:
+        import yfinance as yf
+        df = yf.Ticker(ticker).get_earnings_dates(limit=8)
+        if df is None or df.empty:
+            return None
+        return _nearest_future_earnings_days(list(df.index), date.today())
+    except Exception:
+        return None
+
+
 def _anchor_strike(spot, rv, dte, support):
     """Where to sell the put. Michael's method: sell AT support and trust it (he does not
     trade off delta). So if there is a real support level in a sane band below spot, that
@@ -412,6 +470,13 @@ def build_one(ticker, earnings_days=None, lanes=None, sector=None):
     candles, closes = _fetch(ticker)
     if not candles:
         return None
+    # Re-arm the earnings veto for fallback-universe names. The screener normally hands us
+    # earnings_days; when it is down, the 30 fallback tickers arrive None, which bypasses
+    # BOTH the _candidate_expiries tenor filter AND earnings_blocks, so a name two days from
+    # a print could surface as a clean pick. Look the date up off yfinance before scoring.
+    # Fail-open (None stays None); a name that already carries a date does no extra network.
+    if earnings_days is None:
+        earnings_days = _lookup_earnings_days(ticker)
     # Would a disciplined seller WANT assignment here? Default from the lane: the
     # liquid lane is ownable staples (True); a name ONLY in the high-IV lane is
     # speculative, so assignment is not automatically welcome (False). An explicit
@@ -700,6 +765,24 @@ def _selftest():
     # Window: a far-out monthly never enters the ladder; a same-day expiry is excluded.
     assert _candidate_expiries([iso(45)], 999) == [], "a 45-DTE monthly is outside the weekly window"
     assert _candidate_expiries([iso(0), iso(5)], 999) == [(iso(5), 5)], "drop same/next-day gamma"
+
+    # Fallback-universe re-arm: pick the NEAREST future earnings date, skip past prints, and
+    # accept dates, datetimes and ISO strings. A name with no parseable future date -> None
+    # (stays as it arrived). today=Jun 1; the Jun 6 print is 5 days out and must win over the
+    # Jun 20 one, while the May 28 print (already happened) is ignored.
+    from datetime import date as _d, datetime as _dt
+    _today = _d(2026, 6, 1)
+    assert _nearest_future_earnings_days([_d(2026, 6, 20), _d(2026, 6, 6)], _today) == 5, \
+        "the nearest FUTURE print wins"
+    assert _nearest_future_earnings_days([_d(2026, 5, 28), _d(2026, 6, 6)], _today) == 5, \
+        "a past print is ignored"
+    assert _nearest_future_earnings_days([_dt(2026, 6, 6, 16, 0), "2026-06-20"], _today) == 5, \
+        "datetimes and ISO strings both parse"
+    assert _nearest_future_earnings_days([_d(2026, 5, 1)], _today) is None, \
+        "an only-past calendar re-arms nothing (stays None)"
+    assert _nearest_future_earnings_days([], _today) is None and \
+        _nearest_future_earnings_days(None, _today) is None, "empty / None -> None"
+    assert _nearest_future_earnings_days([_today], _today) == 0, "a print TODAY is 0 days out, still vetoed"
 
     # RoC denominator stays (strike - premium), the ticked c23 call.
     assert abs(_annualized_roc(2.0, 100.0, 7) - (2.0 / 98.0) * (365.0 / 7)) < 1e-9

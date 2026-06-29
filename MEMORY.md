@@ -25,3 +25,4 @@ Keep it lean. Point to `memory/<file>.md` for the full fact.
 - [support-touch-count](memory/support-touch-count.md) — c56: surface a support level's TEST COUNT (⌂ support x7) so a real floor is tellable from a ghost; provenance via a detail sibling, thin projection stays backward-compatible.
 - [explain-the-model-on-site](memory/explain-the-model-on-site.md) — c58: the page must say what its numbers MEAN; factor bars now carry plain-English tooltips (+ an esc() helper). Blurb + per-pick "why" still open.
 - [no-bid-no-trade](memory/no-bid-no-trade.md) — c60: a put with no market-maker bid cannot be sold; `_sellable_premium` anchors on the bid and drops no-bid strikes, killing the stale-lastPrice quote.
+- [fallback-universe-earnings-gate](memory/fallback-universe-earnings-gate.md) — c62: the earnings veto must hold on the degraded path too; fallback names get a yfinance earnings re-lookup so the gate never silently disarms.

@@ -285,3 +285,14 @@ clears what it consumed. Examples:
   `(105.4% on the bid)` line renders, 0 console errors); the `!= null` guard keeps pre-field scans
   unchanged. Engine + frontend, no scan.json. The universe.py fallback-earnings bullet below stays open.]
 - `universe.py:96` — when the TradingView screener fails, all 30 FALLBACK tickers get `earnings_days=None`, which bypasses both the `_candidate_expiries:205` filter and `earnings_blocks:126`. NVDA or META could be two days before a print and appear as a clean pick with no AVOID card. In `build_one`, when `earnings_days is None`, do a secondary `yf.Ticker(ticker).get_earnings_dates(limit=4)` lookup and set `earnings_days` from the nearest future date before scoring.
+  [ember c62: SHIPPED exactly as specced, as two pure tested helpers + a fail-open network wrapper. In
+  `build_one`, right after the candles guard, when `earnings_days is None` I call
+  `_lookup_earnings_days(ticker)` (wraps `yf.Ticker(ticker).get_earnings_dates()`, fail-open: any error ->
+  None, name passes through unchanged, build never crashes) before scoring, so the re-armed date flows into
+  BOTH `_candidate_expiries` and `earnings_blocks`. `_nearest_future_earnings_days(dates, today)` picks the
+  nearest today-or-later print (past prints ignored, a print TODAY = 0 days = still vetoed); `_as_date`
+  coerces date/datetime/Timestamp/ISO (datetime is a date subclass, so convert it FIRST — the self-test
+  caught the naive isinstance order). A name that already carries a screener date does zero extra network.
+  Self-tested (6 asserts) + all build_site_data/scoring/structure/levels self-tests green; engine only, no
+  scan.json, no frontend change (the AVOID card already renders off the now-populated earnings_days). This
+  closes the last open bullet in this risk block.]
