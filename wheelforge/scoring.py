@@ -69,10 +69,25 @@ def richness_score(iv, rv, iv_rank):
     return clamp01(0.6 * vrp_s + 0.4 * rank_s)
 
 
-def safety_score(prob_otm):
+# A chronic gapper loses up to this fraction of its prob-OTM safety credit. Bounded so a
+# gap read never zeroes a genuinely far-OTM strike; it just docks the name that the smooth
+# lognormal prob_otm flatters. (gap_risk itself is computed in tail_risk.py off the OHLCV.)
+GAP_HAIRCUT_MAX = 0.35
+
+
+def gap_haircut(gap_risk):
+    """Multiplier in [1 - GAP_HAIRCUT_MAX, 1.0] from a 0..1 gap-risk read. A name that gaps
+    hard overnight can jump a far-OTM strike no matter how good its prob_otm looks, so it is
+    genuinely LESS safe at the same distance. Junk / missing -> 1.0 (no haircut, fail-open)."""
+    return 1.0 - GAP_HAIRCUT_MAX * clamp01(gap_risk)
+
+
+def safety_score(prob_otm, gap_risk=0.0):
     """Disciplined sellers want a high chance the short stays OTM. ~0.70 prob is
-    the floor of 'income not lottery'; 0.85+ is the sweet spot."""
-    return _ramp(prob_otm, 0.55, 0.88)
+    the floor of 'income not lottery'; 0.85+ is the sweet spot. The prob_otm is a
+    THIN-tailed lognormal estimate, so a chronic overnight gapper gets a haircut: same
+    distance, less safe (see tail_risk.gap_risk). gap_risk defaults to 0 = no haircut."""
+    return clamp01(_ramp(prob_otm, 0.55, 0.88) * gap_haircut(gap_risk))
 
 
 def liquidity_score(bid, ask, open_interest, volume):
@@ -162,7 +177,7 @@ def score_contract(c):
 
     factors = {
         "richness": richness_score(c.get("iv"), c.get("rv"), c.get("iv_rank")),
-        "safety": safety_score(c.get("prob_otm")),
+        "safety": safety_score(c.get("prob_otm"), c.get("gap_risk")),
         "yield": yield_score(c.get("annualized_roc")),
         "liquidity": liquidity_score(c.get("bid"), c.get("ask"),
                                      c.get("open_interest"), c.get("volume")),
@@ -209,6 +224,8 @@ def _rationale(c, f, avoid, is_put):
         bits.append("but illiquid, hard to fill")
     if is_put and f["free_shares"] >= 0.6:
         bits.append("good free-shares fit if assigned")
+    if clamp01(c.get("gap_risk")) >= 0.5:
+        bits.append("watch overnight gap risk")
     return ", ".join(bits) + "."
 
 
@@ -267,6 +284,19 @@ def _selftest():
     assert y["factors"]["yield"] > o["factors"]["yield"], "a 2x weekly must out-yield a 1x"
     assert y["score"] > g["score"], "fat yield must out-score the same setup at thin yield"
     assert "fat annualized yield" in y["why"], "a fat-yield pick should say so plainly"
+
+    # GAP-RISK haircut: the same far-OTM CSP is LESS safe on a chronic overnight gapper.
+    gappy = dict(great_csp); gappy["gap_risk"] = 1.0
+    gp = score_contract(gappy)
+    print("gappy CSP   :", gp["score"], "| safety", gp["factors"]["safety"],
+          "vs calm", g["factors"]["safety"], "|", gp["why"])
+    assert gp["factors"]["safety"] < g["factors"]["safety"], "a hard gapper must score less safe"
+    assert gp["score"] < g["score"], "the gap haircut must drag the composite, same distance"
+    assert "watch overnight gap risk" in gp["why"], "a serious gapper should say so plainly"
+    # fail-open: a missing gap_risk leaves safety untouched (no silent penalty).
+    assert safety_score(0.84) == safety_score(0.84, None), "missing gap_risk -> no haircut"
+    assert 0.0 <= gap_haircut(0.5) <= 1.0 and gap_haircut(1.0) < gap_haircut(0.0), \
+        "the haircut is a bounded multiplier that bites harder with more gap risk"
 
     # The letter grade reads the score at a glance (and an avoid is an honest F).
     print("grades      :", "great", g["grade"], "| 2x", y["grade"], "| cheap",

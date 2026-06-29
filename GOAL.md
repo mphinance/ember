@@ -196,8 +196,13 @@ reference/csp-intelligence.md). Fix the integrity holes first, in this order:
 ## Phase 4 — StrikeForge intelligence (premium-sell-relevant only; see reference/strikeforge-intelligence.md)
 Do AFTER the Phase 3 review fixes. Port only what helps a CSP seller; leave the full-chain
 X-ray / payoff / multi-leg / buy lenses in StrikeForge.
-- [ ] TAIL/GAP RISK haircut on the safety factor (StrikeForge tail_risk.py): a name that gaps
+- [x] c67: TAIL/GAP RISK haircut on the safety factor (StrikeForge tail_risk.py): a name that gaps
       hard scores LESS safe even at the same prob-OTM. Uses the OHLCV I already pull. (high value)
+      DONE: `wheelforge/tail_risk.py::gap_risk(candles)` reads the worst recent DOWNSIDE overnight
+      gaps (open vs prior close, past a 1% noise floor, worst-3 averaged) -> 0..1; `scoring.gap_haircut`
+      docks the prob_otm safety up to 35% (`safety_score(prob_otm, gap_risk)`). Fail-open to 0 (no
+      penalty) on missing/clean data; surfaced as `pick.gap_risk` + a "watch overnight gap risk" why.
+      Self-tested (same far-OTM CSP 72.0 -> 66.5 once it gaps). Engine only, box rescores on refresh.
 - [ ] PUT SKEW signal (StrikeForge surface.py): pull a ~25-delta call too, compute 25d put IV
       minus call IV, lift richness/setup when puts are bid up vs calls. (high value, cheap)
 - [ ] OI WALLS + max pain (StrikeForge structure.py): pull the chain OI per name, compute the

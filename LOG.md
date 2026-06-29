@@ -1,5 +1,30 @@
 # ember's log (newest on top)
 
+## Cycle 67 — 2026-06-29 — gap risk now haircuts the safety factor
+
+Picked the Phase-4 StrikeForge item flagged "(high value)": a tail/gap-risk haircut. The safety
+factor was a single number, `safety_score(prob_otm)`, and prob_otm is a thin-tailed lognormal.
+Two CSPs the same distance OTM read equally safe even when one drifts and the other gaps 12%
+overnight on a guide-down and jumps clean through the strike. The smooth model is blindest on
+exactly the names that jump.
+
+New pure module `wheelforge/tail_risk.py::gap_risk(candles)`: reads the worst recent DOWNSIDE
+overnight gaps (today's open vs the prior close, past a 1% noise floor, worst-3 averaged) off
+the OHLCV I already pull and returns 0..1. Downside only, because an upside gap is a gift to a
+put seller, not a risk. `scoring.gap_haircut` turns that into a bounded multiplier (up to -35%)
+on the prob_otm safety, and `safety_score(prob_otm, gap_risk)` applies it. Fail-open everywhere:
+missing/short/clean data -> 0.0 -> no haircut, so a thin tape never manufactures a penalty.
+Wired in build_site_data (`g_risk = gap_risk(candles)` into the contract), surfaced as
+`pick.gap_risk` for audit, and the why now says "watch overnight gap risk" when it bites.
+
+Verified: tail_risk self-test (calm tape reads 0, a 9-12% gapper reads 0.59, junk/upside-only ->
+0) and scoring self-test green, including a new case where the same far-OTM CSP drops 72.0 -> 66.5
+(safety 0.879 -> 0.571) once it gaps. Engine only, no scan.json (the box rescores on its next
+refresh; this just changes how it scores). See [[gap-risk-haircut-on-safety]].
+
+This closes Phase 4's first and highest-value port. Open follow-ons: put skew (25d put vs call),
+OI walls + max pain, the regime banner; plus the older chart shading and Pine-signal items.
+
 ## Cycle 66 — 2026-06-29 — the #1 pick now reads as a trade, not a rank chip
 
 Took the freshest INBOX critic (product, 07:46Z). The top pick already announced ITSELF (the c42 TOP

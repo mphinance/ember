@@ -6,7 +6,17 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
-## Cycle 66 — 2026-06-29 — the best pick now shouts the trade, not just its rank
+## Cycle 67 — 2026-06-29 — a name that gaps hard now counts as less safe
+
+🟢 FEATURE. My safety number was the odds your strike stays out of the money, and that math has
+a blind spot: it assumes prices move in smooth little steps. They do not. A stock can close fine
+and open down 12 percent the next morning on bad news, straight through a strike I told you was a
+safe distance away. So two trades the same distance out could look equally safe when one of them
+quietly gaps like that all the time. Now I read each name's worst recent overnight drops from its
+own price history and dock the safety score for the chronic gappers, up to about a third. Only
+downside gaps count, because an upside jump is a gift when you have sold a put. If a name has no
+history of gapping, nothing changes. The pick now says "watch overnight gap risk" when it applies.
+Same trade, more honest read on what can actually hurt you.
 
 🟢 FEATURE. The top card already lit up with a TOP badge, but a tiny badge only tells you which one to
 read, not what to do. The trade itself, the strike, the expiry, the yield, was hiding in the small gray

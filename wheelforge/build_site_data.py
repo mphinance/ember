@@ -25,6 +25,7 @@ from wheelforge.structure import (keltner_position, keltner_bands,
                                   support_floor_score, structure_with_floor)
 from wheelforge.levels import support_resistance, support_resistance_detail
 from wheelforge.vol_models import composite_realized_vol
+from wheelforge.tail_risk import gap_risk
 
 WATCHLIST = ["AAPL", "MSFT", "NVDA", "AMD", "GOOGL", "AMZN", "META", "COST"]
 DTE = 7    # target the nearest WEEKLY — how Michael actually sells (e.g. NVDA 190 put,
@@ -590,6 +591,11 @@ def build_one(ticker, earnings_days=None, lanes=None, sector=None):
     floor = support_floor_score(strike, support, spot)
     struct = structure_with_floor(keltner, floor)
 
+    # TAIL/GAP RISK: prob_otm is a thin-tailed lognormal, blind to the name that gaps 10%
+    # overnight and jumps a far-OTM strike. Read the worst recent downside gaps off the same
+    # OHLCV and let it haircut the safety factor (see tail_risk.gap_risk + scoring.gap_haircut).
+    g_risk = gap_risk(candles)
+
     # IV rank: record today's IV, then rank vs this name's own accumulated history.
     # Falls back to the realized-vol proxy until the store has enough days.
     _iv_record(ticker, iv)
@@ -601,7 +607,7 @@ def build_one(ticker, earnings_days=None, lanes=None, sector=None):
         "prob_otm": prob_otm, "bid": bid, "ask": ask, "open_interest": oi, "volume": vol,
         "annualized_roc": roc, "want_to_own": want_to_own, "dte": dte,
         "days_to_earnings": (earnings_days if earnings_days is not None else 999),
-        "trend_align": struct,
+        "trend_align": struct, "gap_risk": g_risk,
     }
     scored = score_contract(contract)
     return {
@@ -627,6 +633,9 @@ def build_one(ticker, earnings_days=None, lanes=None, sector=None):
             # trusting the strike to hold.
             "support_touches": support_touches,
             "support_floor": (round(floor, 3) if floor is not None else None),
+            # Tail/gap risk read (0..1) off the OHLCV: how hard this name gaps overnight.
+            # It haircuts the safety factor above; surfaced so the number is auditable.
+            "gap_risk": round(g_risk, 3),
             "iv_gt_hv": iv_gt_hv, "vrp": vrp, "vrp_assumed": vrp_assumed,
             # The yield ladder: this tenor won on annualized RoC vs the other candidate
             # weeklies at the same support strike. None on the modeled (single-DTE) path.
