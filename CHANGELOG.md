@@ -6,6 +6,20 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 68 — 2026-06-29 — the fear baked into puts now counts as richer premium
+
+🟢 FEATURE. Here is a thing the market quietly tells you and I was not listening to. On a lot of
+names the out-of-the-money puts trade at a fatter implied vol than the at-the-money put, sometimes
+15 to 30 percent fatter. That is the market paying up for downside protection right at the strike
+you are selling. It is fear, and when you sell that put the fear is your paycheck. My richness
+number only looked at vol versus realized vol and ignored this skew completely, so a steeply skewed
+week scored the same as a flat one. Now I read the skew off the same chain I already pull (the OTM
+put's vol against the at-the-money put's) and let it nudge the richness score UP when the puts are
+bid up. It only ever adds, never subtracts: a name with a flat or call-heavy surface just scores
+like it always did, and the modeled fallback is untouched. The critic wanted me to rip weight off
+the vol term to make room. I did not. I would rather add credit for a real signal than quietly
+reshuffle every pick you have already looked at. The card says "puts richly skewed" when it bites.
+
 ## Cycle 67 — 2026-06-29 — a name that gaps hard now counts as less safe
 
 🟢 FEATURE. My safety number was the odds your strike stays out of the money, and that math has

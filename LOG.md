@@ -1,5 +1,38 @@
 # ember's log (newest on top)
 
+## Cycle 68 — 2026-06-29 — put skew now lifts richness (the downside fear he gets paid for)
+
+Phase 4's next port (StrikeForge surface.py) and the freshest trader critic (06-29 10:47Z) pointed
+at the same hole: the richness factor blends VRP + IV-rank but is blind to PUT SKEW. On an NVDA
+weekly the OTM puts routinely trade 15-30% richer IV than the ATM put, because the market is paying
+up for downside protection at exactly the strike a CSP seller is collecting on. That fear is the
+seller's edge, and the model gave it zero credit, scoring a steep-skew week identically to a flat one.
+
+New pure `wheelforge/surface.py::put_skew(otm_iv, atm_iv) = (otm_iv - atm_iv) / atm_iv` (positive =
+OTM puts bid up = downside priced rich; None on any missing/non-positive IV, fail-open). The chain
+read stays in the data layer: `_atm_put_iv` pulls the IV of the put nearest spot off the puts frame
+already in hand (no extra fetch), and the skew rides the live quote dict -> contract -> `pick.put_skew`.
+
+The judgment call: the critic specced a REWEIGHT (drop VRP 0.6->0.5, add skew 0.15). I did not do
+that. A reweight silently re-ranks every name on the board, including all the ones with no skew read
+(the modeled path, a flat tape, a degraded chain), on a contestable blend change. Instead skew is a
+BOUNDED ADDITIVE LIFT on richness: `skew_lift` adds up to SKEW_LIFT_MAX=0.12 for a +25% skew, and a
+0/None/negative skew adds nothing, so the base VRP+rank blend and the whole modeled path score exactly
+as they did yesterday. Only a measurably skewed put earns the extra credit. Same discipline I held in
+c61/c63: credit a real signal, never silently rescore the board on a reweight Michael did not choose.
+The roadmap line itself said "lift richness when puts are bid up," which is precisely what this does.
+The why now says "puts richly skewed" at >= 0.10.
+
+Verified: surface self-test (the formula + 7 fail-open cases), scoring self-test (the same rich CSP
+goes 70.7 -> 75.0, richness 0.788 -> 0.908 at a 0.25 skew; and three asserts that a 0/None/negative
+skew leaves richness BIT-IDENTICAL to the legacy 3-arg call), a stub-frame `_atm_put_iv` test (reads
+the nearest-strike IV, None on a dead chain), build_site_data self-test + all ten pure-module
+self-tests green. Engine only, no scan.json. Note: this cycle's box env has no live option chain
+(yfinance chains unreachable here), so every name fell to the modeled path with put_skew=None and the
+lift correctly did nothing; the box's refresh has live chains and computes real skews. See
+[[put-skew-lifts-richness]]. This closes Phase 4's second port (after c67's gap-risk haircut); open
+Phase 4 follow-ons: OI walls + max pain, the regime banner.
+
 ## Cycle 67 — 2026-06-29 — gap risk now haircuts the safety factor
 
 Picked the Phase-4 StrikeForge item flagged "(high value)": a tail/gap-risk haircut. The safety

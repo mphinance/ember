@@ -203,8 +203,18 @@ X-ray / payoff / multi-leg / buy lenses in StrikeForge.
       docks the prob_otm safety up to 35% (`safety_score(prob_otm, gap_risk)`). Fail-open to 0 (no
       penalty) on missing/clean data; surfaced as `pick.gap_risk` + a "watch overnight gap risk" why.
       Self-tested (same far-OTM CSP 72.0 -> 66.5 once it gaps). Engine only, box rescores on refresh.
-- [ ] PUT SKEW signal (StrikeForge surface.py): pull a ~25-delta call too, compute 25d put IV
-      minus call IV, lift richness/setup when puts are bid up vs calls. (high value, cheap)
+- [x] c68: PUT SKEW signal (StrikeForge surface.py). New pure `wheelforge/surface.py::put_skew(
+      otm_iv, atm_iv)` = `(otm_iv - atm_iv)/atm_iv`: positive = OTM puts bid up vs ATM = downside
+      fear priced into the strike he sells. Folded into `richness_score` as a BOUNDED ADDITIVE LIFT
+      (`skew_lift`, up to SKEW_LIFT_MAX=0.12 for a +25% skew), NOT the critic's VRP reweight: a 0/
+      None/negative skew adds nothing, so the base VRP+rank blend and the modeled path are unchanged
+      and the signal never silently re-ranks the board (same discipline as c61/c63). Chain read
+      (`_atm_put_iv` = IV of the put nearest spot) lives in build_site_data; math stays pure. Rides
+      the live quote -> contract -> `pick.put_skew`; the why says "puts richly skewed" at >=0.10.
+      Used the cheaper put-only OTM-vs-ATM measure (same chain already fetched) over a 25d put-vs-call
+      pull. Self-tested (surface + scoring lift + a stub-frame _atm_put_iv) + all module self-tests
+      green; engine only, no scan.json (no live chain in the cycle env -> modeled fail-open; the box
+      computes real skews on refresh). (high value, cheap)
 - [ ] OI WALLS + max pain (StrikeForge structure.py): pull the chain OI per name, compute the
       put-wall support + max pain, DRAW them on the chart (the real "walls" Michael wanted) and
       prefer the strike just under the put-wall. (high payoff, most data work)

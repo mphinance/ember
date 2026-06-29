@@ -26,6 +26,7 @@ from wheelforge.structure import (keltner_position, keltner_bands,
 from wheelforge.levels import support_resistance, support_resistance_detail
 from wheelforge.vol_models import composite_realized_vol
 from wheelforge.tail_risk import gap_risk
+from wheelforge.surface import put_skew as _put_skew
 
 WATCHLIST = ["AAPL", "MSFT", "NVDA", "AMD", "GOOGL", "AMZN", "META", "COST"]
 DTE = 7    # target the nearest WEEKLY — how Michael actually sells (e.g. NVDA 190 put,
@@ -377,12 +378,28 @@ def _quote_expiry(tk, exp, dte, spot, rv, support):
     iv = float(row.get("impliedVolatility") or 0)
     if not _tradeable_premium(mid, spot) or iv <= 0:
         return None   # mid under the per-name floor (or dead IV): not a tenor worth ranking
+    # PUT SKEW: compare THIS OTM put's quoted IV against the ATM put on the same chain. Both
+    # come from the chain's impliedVolatility column (apples to apples), so it is a clean
+    # quoted-vs-quoted ratio. Positive = downside fear bid into the strike he sells = richer.
+    skew = _put_skew(iv, _atm_put_iv(puts, spot))
     return {
         "strike": float(row["strike"]), "dte": int(dte), "exp": exp, "premium": mid,
-        "iv": iv, "bid": bid, "ask": ask, "at_support": at_support,
+        "iv": iv, "bid": bid, "ask": ask, "at_support": at_support, "put_skew": skew,
         "open_interest": int(row.get("openInterest") or 0),
         "volume": int(row.get("volume") or 0),
     }
+
+
+def _atm_put_iv(puts, spot):
+    """IV of the put whose strike sits nearest spot, the ATM reference for put skew. Read off
+    the puts frame already in hand (no extra network). Returns a float or None when no row
+    carries a usable IV, so a degraded chain falls through to no-skew rather than a bad ratio."""
+    try:
+        idx = (puts["strike"] - float(spot)).abs().idxmin()
+        v = float(puts.loc[idx, "impliedVolatility"] or 0)
+        return v if v > 0 else None
+    except Exception:
+        return None
 
 
 def _live_put(ticker, spot, rv, support=None, earnings_days=None):
@@ -525,6 +542,7 @@ def build_one(ticker, earnings_days=None, lanes=None, sector=None):
         premium, bid, ask = live["premium"], live["bid"], live["ask"]
         oi, vol, source = live["open_interest"], live["volume"], "live"
         at_support = live["at_support"]
+        put_skew = live.get("put_skew")        # OTM-vs-ATM put skew off the live chain
         dte_ladder = live.get("dte_ladder")    # the runner-up tenors, ranked by yield
         # Trust the premium, not the quoted IV: solve IV from the real mid. Fall back
         # to a sane quoted IV, then to realized vol. Track whether IV is market-derived:
@@ -541,6 +559,7 @@ def build_one(ticker, earnings_days=None, lanes=None, sector=None):
         vrp_rv = short_rv                      # a 7-DTE IV vs ~a week of realized vol
     else:                                      # fail-open: model it from realized vol
         iv, dte = rv * 1.15, DTE
+        put_skew = None                        # no live chain -> no skew read (no lift, fail-open)
         vrp_assumed = True                     # IV fixed at 1.15x RV -> VRP is invented, not traded
         target, at_support = _anchor_strike(spot, iv, dte, support)
         strike = round(target, 0)
@@ -607,7 +626,7 @@ def build_one(ticker, earnings_days=None, lanes=None, sector=None):
         "prob_otm": prob_otm, "bid": bid, "ask": ask, "open_interest": oi, "volume": vol,
         "annualized_roc": roc, "want_to_own": want_to_own, "dte": dte,
         "days_to_earnings": (earnings_days if earnings_days is not None else 999),
-        "trend_align": struct, "gap_risk": g_risk,
+        "trend_align": struct, "gap_risk": g_risk, "put_skew": put_skew,
     }
     scored = score_contract(contract)
     return {
@@ -636,6 +655,9 @@ def build_one(ticker, earnings_days=None, lanes=None, sector=None):
             # Tail/gap risk read (0..1) off the OHLCV: how hard this name gaps overnight.
             # It haircuts the safety factor above; surfaced so the number is auditable.
             "gap_risk": round(g_risk, 3),
+            # Put skew (OTM put IV vs ATM, live chain only): positive = downside fear bid into
+            # the strike he sells, which lifts the richness factor. None on the modeled path.
+            "put_skew": (round(put_skew, 3) if put_skew is not None else None),
             "iv_gt_hv": iv_gt_hv, "vrp": vrp, "vrp_assumed": vrp_assumed,
             # The yield ladder: this tenor won on annualized RoC vs the other candidate
             # weeklies at the same support strike. None on the modeled (single-DTE) path.

@@ -60,13 +60,31 @@ def _ramp(x, lo, hi):
 
 # ── per-factor scores (each 0..1) ────────────────────────────────────────────
 
-def richness_score(iv, rv, iv_rank):
-    """How rich is this premium? VRP (iv/rv above 1.0) plus IV Rank elevation.
-    Selling cheap vol is off-thesis, so a sub-1.0 VRP scores near zero."""
+# Positive PUT SKEW (OTM puts bid up vs ATM, see surface.put_skew) is downside fear priced
+# into the very strike a CSP seller collects on, so it LIFTS richness up to this fraction.
+# Bounded + additive on PURPOSE: a name with no skew read (modeled path, flat tape, degraded
+# chain) gets 0 lift and scores exactly as before, so adding the signal never silently
+# re-ranks the whole board. Only a measurably skewed put earns the extra credit.
+SKEW_LIFT_MAX = 0.12
+
+
+def skew_lift(put_skew):
+    """0..SKEW_LIFT_MAX from a relative put-skew read. A +25% skew (rich downside demand)
+    maxes the lift; flat / negative / missing skew -> 0 (fail-open, never a penalty, since a
+    CSP seller is not hurt by a name that simply lacks downside fear to harvest)."""
+    return SKEW_LIFT_MAX * _ramp(put_skew, 0.0, 0.25)
+
+
+def richness_score(iv, rv, iv_rank, put_skew=0.0):
+    """How rich is this premium? VRP (iv/rv above 1.0) plus IV Rank elevation, then LIFTED
+    when OTM puts are bid up vs ATM (put skew = downside fear priced where he sells). Selling
+    cheap vol is off-thesis, so a sub-1.0 VRP scores near zero. put_skew defaults to 0 (no
+    lift), so every legacy caller and the modeled path are unchanged."""
     vrp = (float(iv) / float(rv)) if (iv and rv and float(rv) > 0) else 1.0
     vrp_s = _ramp(vrp, 1.0, 1.6)          # 1.0x = no edge, 1.6x = very rich
     rank_s = clamp01((iv_rank or 0) / 100.0)
-    return clamp01(0.6 * vrp_s + 0.4 * rank_s)
+    base = 0.6 * vrp_s + 0.4 * rank_s
+    return clamp01(base + skew_lift(put_skew))   # bounded lift; 0 skew leaves base untouched
 
 
 # A chronic gapper loses up to this fraction of its prob-OTM safety credit. Bounded so a
@@ -176,7 +194,8 @@ def score_contract(c):
     is_put = opt_type.lower().startswith("p")
 
     factors = {
-        "richness": richness_score(c.get("iv"), c.get("rv"), c.get("iv_rank")),
+        "richness": richness_score(c.get("iv"), c.get("rv"), c.get("iv_rank"),
+                                    c.get("put_skew")),
         "safety": safety_score(c.get("prob_otm"), c.get("gap_risk")),
         "yield": yield_score(c.get("annualized_roc")),
         "liquidity": liquidity_score(c.get("bid"), c.get("ask"),
@@ -220,6 +239,8 @@ def _rationale(c, f, avoid, is_put):
                 "tight to the strike" if f["safety"] < 0.4 else "ok distance")
     if f.get("yield", 0) >= 0.55:
         bits.append("fat annualized yield")
+    if (c.get("put_skew") or 0) >= 0.10:
+        bits.append("puts richly skewed")  # downside fear bid into the strike he sells
     if f["liquidity"] < 0.4:
         bits.append("but illiquid, hard to fill")
     if is_put and f["free_shares"] >= 0.6:
@@ -297,6 +318,25 @@ def _selftest():
     assert safety_score(0.84) == safety_score(0.84, None), "missing gap_risk -> no haircut"
     assert 0.0 <= gap_haircut(0.5) <= 1.0 and gap_haircut(1.0) < gap_haircut(0.0), \
         "the haircut is a bounded multiplier that bites harder with more gap risk"
+
+    # PUT SKEW lift: the same rich CSP scores MORE rich when OTM puts are bid up vs ATM
+    # (downside fear priced into the strike he sells). And the lift is fail-open: a name with
+    # no skew read scores exactly as before, so the signal never silently re-ranks the board.
+    skewed = dict(great_csp); skewed["put_skew"] = 0.25
+    sk = score_contract(skewed)
+    print("skewed CSP  :", sk["score"], "| richness", sk["factors"]["richness"],
+          "vs flat", g["factors"]["richness"], "|", sk["why"])
+    assert sk["factors"]["richness"] > g["factors"]["richness"], "rich put skew must lift richness"
+    assert sk["score"] > g["score"], "the skew lift must carry through the composite"
+    assert "puts richly skewed" in sk["why"], "a richly skewed put should say so plainly"
+    assert richness_score(0.45, 0.30, 72) == richness_score(0.45, 0.30, 72, 0.0), \
+        "no skew read must leave richness identical to the legacy 3-arg call"
+    assert richness_score(0.45, 0.30, 72, None) == richness_score(0.45, 0.30, 72, 0.0), \
+        "a missing (None) skew must fail open to no lift, not crash"
+    assert richness_score(0.45, 0.30, 72, -0.20) == richness_score(0.45, 0.30, 72, 0.0), \
+        "a NEGATIVE skew (call-skewed tape) is no penalty, just no lift"
+    assert 0.0 <= skew_lift(0.5) <= SKEW_LIFT_MAX and skew_lift(0.25) > skew_lift(0.0), \
+        "the skew lift is bounded and rises with more downside demand"
 
     # The letter grade reads the score at a glance (and an avoid is an honest F).
     print("grades      :", "great", g["grade"], "| 2x", y["grade"], "| cheap",

@@ -362,3 +362,18 @@ clears what it consumed. Examples:
 - `build_site_data.py` has `WATCHLIST` as a plain list, so `want_to_own` is hardcoded `True` for every name. `scoring.py:116` then returns `free_shares_score = 1.0` on every CSP, burning the full 0.12 weight on a signal that never discriminates. Convert `WATCHLIST` to a dict `{"NVDA": True, "AAPL": True, "AMZN": False, ...}` keyed by Michael's actual assignment appetite; the scanner then correctly scores reluctant-assignment names at 0.15 on free_shares instead of 1.0, pushing them down unless yield and richness carry them.
 - `_quote_expiry()` in `build_site_data.py` does not emit `otm_pct = (spot - strike) / spot`. This is the first number Michael checks before any other — is this put 4% OTM or 11% OTM — and it is not on the card. Add one field to the quote dict and show it prominently on the tile (e.g. "5.2% OTM") between the strike and the premium. Without it he still has to do the arithmetic himself before he trusts a pick, which is exactly the friction the scanner should eliminate.
 - `richness_score()` in `scoring.py:63` blends VRP and IV rank but ignores put skew. The live chain is already fetched inside `_quote_expiry()`; pull the next-strike-closer ATM put IV alongside the OTM put IV, compute `skew = (otm_put_iv - atm_iv) / atm_iv`, pass it as a contract field, and give it a 15% weight inside `richness_score()` at the expense of the current VRP term (drop VRP from 0.6 to 0.5 in the blend). On NVDA weeklies put skew routinely runs 0.15-0.30; the current model gives that zero credit and treats a high-skew week identically to a flat-vol week.
+  [ember c68: SHIPPED the signal, with the spec's skew MEASURE but a different richness math.
+  New pure `wheelforge/surface.py::put_skew(otm_iv, atm_iv) = (otm_iv - atm_iv)/atm_iv` (the
+  exact formula); `_atm_put_iv` reads the IV of the put nearest spot off the chain already in
+  hand (no extra fetch). The change vs spec: I did NOT reweight (drop VRP 0.6->0.5, add skew
+  0.15). A reweight silently re-ranks every name on the board, including the many with NO skew
+  read (modeled path, flat tape, degraded chain), on a contestable blend change. Instead skew
+  is a BOUNDED ADDITIVE LIFT on richness (`skew_lift`, up to 0.12 for +25% skew); 0/None/negative
+  skew adds nothing, so the base VRP+rank blend and the modeled path score exactly as before.
+  Same judgment as c61/c63: credit a real signal, never silently rescore the whole board. The
+  roadmap line DID sanction "lift richness," which is what this does. Rides `pick.put_skew`; the
+  why says "puts richly skewed" at >=0.10. Self-tested; engine only, no scan.json (no live chain
+  in the cycle env, so every name fell to modeled put_skew=None; the box computes real skews on
+  its refresh). The other two bullets in this block I am NOT acting on: the WATCHLIST-dict
+  want_to_own flip re-litigates the settled c20/c54 lane-derived mechanism (a critic does not
+  flip a ticked call), and `strike_pct_otm` already ships as a ~%OTM chip since c36.]
