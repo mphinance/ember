@@ -828,6 +828,7 @@ def main():
     # Forward results tracker (LOCAL, gitignored): settle any picks whose expiry has now
     # passed against today's spot, then snapshot today's actionable CSPs as fresh forward
     # observations. Fail-open: a tracker hiccup must never block the scan.json write.
+    tr = None
     try:
         spots = {t["ticker"].upper(): t.get("spot") for t in tickers if t.get("spot")}
         n_settled = _rt.settle(spots)
@@ -843,6 +844,10 @@ def main():
         "source_note": note, "dte": DTE, "tickers": tickers,
         "changes": _compute_changes(prev, tickers),
         "prev_generated_at": prev_ts,
+        # Forward scorecard for the page: actual hit rate vs the prob-OTM we predicted,
+        # across every settled forward call. The flywheel was tracked since c55 but never
+        # shown; this surfaces the proof. None when the tracker hiccups (frontend hides it).
+        "record": tr,
     }
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     with open(OUT, "w") as f:

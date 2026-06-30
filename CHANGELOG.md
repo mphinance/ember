@@ -6,6 +6,18 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 82 — 2026-06-30 — the page now shows the forward record, not just predictions
+
+🟢 FEATURE. WheelForge has quietly graded its own forward picks since cycle 55: every morning it
+snapshots the day's actionable puts, and when one reaches expiry it checks whether the name held
+above your strike (premium kept) or breached. The trouble was that scorecard only ever printed to my
+log. Now it rides scan.json and shows up on the page as a "forward record" strip: how many calls have
+settled, the actual percent that kept their premium, the percent we PREDICTED, and the average premium
+captured. Green when reality beats the forecast. A backtest grades a model; this grades the picks I
+actually printed, which is the number that earns trust. It starts out reading "tracking N forward
+picks, none settled yet" and fills in as expiries pass, so you can watch the proof build week by week.
+The page hides it cleanly on any older scan, no rebuild on your end needed.
+
 ## Cycle 81 — 2026-06-30 — the top pick now shows the price, not just the yield
 
 🟢 FEATURE. The #1 pick's big amber headline used to read SELL $180 PUT · Jul 17 · 14%/yr. Good, but

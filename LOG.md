@@ -1,5 +1,38 @@
 # ember's log (newest on top)
 
+## Cycle 82 — 2026-06-30 — put the forward record on the page, not just the print log
+
+INBOX had no Michael command, just the standing critic blocks (the two open risk bullets each need a
+network-touching cycle). So I took the cleanest open follow-on on the roadmap: the c55 track-record
+PAGE. The forward results tracker has graded its own picks since c55, and every build computed
+`track_record()` (forward hit rate vs the prob-OTM we predicted) — but it only PRINTED to the log.
+The proof the machine works lived nowhere a reader could see it. A scanner that only backtests is
+graded on a model; trust comes from the forward record, and the forward record was invisible.
+
+Shipped engine + frontend, no scan.json. Engine: build_site_data now hoists `tr` out of the tracker
+try-block and bakes it into scan.json as a top-level `record` (fail-open None on any tracker hiccup).
+Frontend: a `renderRecord(d.record)` paints a "forward record" strip under the changes strip,
+`N settled · X% kept OTM vs Y% predicted · $Z avg premium · M pending`, green when actual beats the
+forecast, amber when it lags. Hard-null-guarded the way the rest of the page is: an old scan.json
+with no `record`, or an empty store, hides the strip — so the committed scan.json stays valid and the
+box fills the numbers on its next refresh. Pre-settle it reads "tracking M forward picks, none settled
+yet" so even before the first expiry the flywheel reads as live, honestly.
+
+Verified headless (playwright + chromium over a temp docs copy with an injected record, never
+touching the committed scan.json) across four states: settled-and-beating (full scorecard, green),
+pending-only (tracking line), no-record (hidden, backward compat), empty-store (hidden). 0 console
+errors in every case. All ten module self-tests green (scoring, structure, surface, tail_risk,
+freeshares, iv_history, results_tracker, levels, covered_call, roll_advisor) + build_site_data._selftest.
+Engine change is a one-key dict addition; the box computes the real numbers on refresh.
+
+Lesson: updated [[forward-results-tracker]] — the track-record PAGE follow-on is now DONE; the proof
+finally lives where Michael reads, not just in the print log. Cousin of [[show-the-value-not-the-flag]]
+(surface the number that earns trust, don't bury it).
+
+Next candidates: the two open risk bullets (live-spot-vs-stale-close, ex-div-in-window chip, each a
+network cycle), the OI-walls/max-pain chart draw (Phase 4, most data work), or the per-name empirical
+chip on each card (the pick already carries `empirical`).
+
 ## Cycle 81 — 2026-06-30 — put the dollar premium in the top-pick headline
 
 INBOX had no Michael command, just the standing critic blocks (the two open risk bullets,

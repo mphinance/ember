@@ -176,6 +176,14 @@ body { display: flex; flex-direction: column; min-height: 100vh; }
 .chg.up { color: var(--up); } .chg.dn { color: var(--down); }
 .chg.new { color: var(--amber); } .chg.avoid { color: var(--down); } .chg.ok { color: var(--up); }
 
+/* forward results scorecard strip (cycle 82): actual hit rate vs predicted, the proof. */
+.wf-record { padding: 7px 16px; border-bottom: 1px solid var(--line); background: var(--panel-2);
+  font-size: 12px; color: var(--dim); display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
+.rec-lab { text-transform: uppercase; letter-spacing: .08em; font-size: 10px; color: var(--dim); }
+.rec { font-weight: 700; color: var(--ink); }
+.rec.beat { color: var(--up); } .rec.miss { color: var(--down); }
+.rec.dim { color: var(--dim); font-weight: 400; }
+
 /* "Prime Picks" standouts strip (cycle 75): a short best-of band above the full list,
    today's standouts (quality + yield + discipline, all at once). Hidden when none clear it. */
 .wf-prime { padding: 8px 16px; border-bottom: 1px solid var(--line); background: var(--panel-2);

@@ -166,6 +166,38 @@
       + (parts.length ? parts.join('   ') : '<span class="chg">no changes</span>');
   }
 
+  // The forward scorecard: actual hit rate vs the prob-OTM we predicted, across every
+  // settled forward call (results_tracker, baked into scan.json from cycle 82). This is the
+  // proof the machine works on real forward picks, not just today's predictions. Null-guarded
+  // hard: an old scan.json with no `record`, or an empty store, hides the strip entirely.
+  function renderRecord(rec) {
+    var host = document.getElementById('wf-record');
+    if (!host) return;
+    var ov = rec && rec.overall;
+    var pending = (rec && rec.pending) || 0;
+    if (!ov && !pending) { host.style.display = 'none'; return; }
+    var parts = [];
+    if (ov && ov.n) {
+      var beat = ov.predicted_otm == null || ov.hit_rate >= ov.predicted_otm;
+      parts.push('<span class="rec">' + esc(ov.n) + ' settled</span>');
+      parts.push('<span class="rec ' + (beat ? 'beat' : 'miss') + '">' + esc(ov.hit_rate)
+        + '% kept OTM</span>');
+      if (ov.predicted_otm != null) {
+        parts.push('<span class="rec dim">vs ' + esc(ov.predicted_otm) + '% predicted</span>');
+      }
+      if (ov.avg_premium != null) {
+        parts.push('<span class="rec dim">$' + esc(ov.avg_premium) + ' avg premium</span>');
+      }
+      if (pending) parts.push('<span class="rec dim">' + esc(pending) + ' pending</span>');
+    } else {
+      // Tracking, nothing settled yet: show the machine is live, honestly.
+      parts.push('<span class="rec dim">tracking ' + esc(pending)
+        + ' forward picks, none settled yet</span>');
+    }
+    host.style.display = '';
+    host.innerHTML = '<span class="rec-lab">forward record</span> ' + parts.join('   ');
+  }
+
   // The letter grade reads the board at a glance. Use the score the engine baked in
   // (p.grade) when present; fall back to the same bands client-side so the page still
   // grades correctly on a scan.json built before the engine carried the field.
@@ -642,6 +674,7 @@
     document.getElementById('wf-meta').textContent = 'updated ' + (d.generated_at || '') + ' UTC';
     document.getElementById('wf-foot').textContent = d.source_note || '';
     renderChanges(d.changes);
+    renderRecord(d.record);
     buildControls();
     renderList();
     var rows = displayRows();

@@ -18,9 +18,17 @@ rate vs the predicted prob_otm, by lane.
 trust comes from the forward record. **How to apply:** settle off prices the build
 ALREADY has in hand (`tickers` spots), so no new feed; a pick whose name left the
 universe stays PENDING (never crashed, never faked). It starts empty and fills over
-weeks, exactly like the IV store. Open follow-ons: a track-record PAGE on the frontend,
-and settling names that left the universe (needs a price-at-expiry lookup).
-See [[wheelforge-design-principles]].
+weeks, exactly like the IV store. Open follow-on: settling names that left the universe
+(needs a price-at-expiry lookup). See [[wheelforge-design-principles]].
+
+c82 SHIPPED the track-record PAGE follow-on. `track_record()` was computed every build since
+c55 but only PRINTED; now build_site_data bakes it into scan.json as top-level `record`, and
+the page paints a "forward record" strip under the changes strip: `N settled · X% kept OTM vs
+Y% predicted · $Z avg premium · M pending`, colored green when actual beats the forecast.
+Hard-null-guarded: an old scan.json with no `record` (or an empty store) HIDES the strip, so
+the committed scan.json stays valid and the box fills the numbers on its next refresh. Even
+pre-settle it shows "tracking M forward picks, none settled yet" so the flywheel reads as live.
+The proof the machine works finally lives on the page, not just the print log.
 
 c65 added a SECOND read off the same OPEN rows: `profit_take_alerts(quote, threshold=0.50)`
 + `open_positions()` (deduped one-per-option, anchored on the EARLIEST snapshot's premium =

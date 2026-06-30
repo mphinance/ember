@@ -80,8 +80,17 @@ and a plain-English why. No hype, no em dashes.
       against today's spot (held >= strike = OTM/kept premium, below = breach), and `track_record()`
       reports forward hit-rate vs predicted prob_otm + avg premium captured, by lane. Settles off the
       spots the build ALREADY pulls; a name that has left the universe stays PENDING (never crashes,
-      never faked). Fail-open, self-tested offline. OPEN follow-ons: a track-record PAGE on the
-      frontend (render the aggregate), and settling names that left the universe (price-at-expiry feed).
+      never faked). Fail-open, self-tested offline. OPEN follow-on: settling names that left the
+      universe (price-at-expiry feed). The track-record PAGE follow-on shipped in c82.
+- [x] c82: **forward-record PAGE strip (the c55 follow-on — show the proof).** `track_record()` was
+      computed every build since c55 but only PRINTED to the log. Now build_site_data bakes it into
+      scan.json as a top-level `record`, and the page paints a "forward record" strip under the changes
+      strip: `N settled · X% kept OTM vs Y% predicted · $Z avg premium · M pending`, green when actual
+      beats the forecast. Hard-null-guarded: an old scan.json with no `record` (or an empty store)
+      HIDES the strip, so the committed scan.json stays valid and the box fills it on next refresh;
+      pre-settle it reads "tracking M forward picks, none settled yet" so the flywheel shows live.
+      Engine + frontend, no scan.json write (box's job). Verified headless across 4 record states
+      (settled/pending/absent/empty), 0 console errors; all ten module self-tests + build_site_data green.
 - [x] c48: **covered-call mode (the wheel's second leg).** `wheelforge/covered_call.py`: a pure
       `covered_call_read(spot, basis, dte, candidates, ...)` that picks the LOWEST OTM call at or
       above the cost basis (a call-away never forces a loss), prices it (`_bs_call`/`_iv_from_call`,
