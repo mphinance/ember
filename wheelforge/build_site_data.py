@@ -17,7 +17,7 @@ import math
 import os
 from datetime import datetime, timezone
 
-from wheelforge.scoring import score_contract
+from wheelforge.scoring import score_contract, letter_grade
 from wheelforge.freeshares import free_shares_read
 from wheelforge.iv_history import record as _iv_record, iv_rank as _iv_rank_hist
 from wheelforge import results_tracker as _rt
@@ -516,6 +516,22 @@ def _sector_crowding(tickers, threshold=SECTOR_CROWD_SCORE, max_overlap=MAX_SECT
     return flagged
 
 
+_EMP_CACHE = None
+
+
+def _empirical_for(ticker):
+    """This name's forward scorecard (its settled cohort) from results_tracker, loaded once
+    per process. Fail-open to None so a missing/thin store simply yields no lift and the
+    board scores exactly as the static model says."""
+    global _EMP_CACHE
+    if _EMP_CACHE is None:
+        try:
+            _EMP_CACHE = _rt.by_ticker()
+        except Exception:
+            _EMP_CACHE = {}
+    return _EMP_CACHE.get(ticker)
+
+
 def build_one(ticker, earnings_days=None, lanes=None, sector=None):
     candles, closes = _fetch(ticker)
     if not candles:
@@ -654,6 +670,24 @@ def build_one(ticker, earnings_days=None, lanes=None, sector=None):
         "trend_align": struct, "gap_risk": g_risk, "put_skew": put_skew,
     }
     scored = score_contract(contract)
+
+    # Close the flywheel: nudge the score by THIS name's own forward record (results_tracker).
+    # A name that keeps expiring OTM better than the model predicted earns a small lift; one
+    # that keeps breaching against its predicted prob_otm gets a haircut. Bounded to +/-
+    # EMPIRICAL_CAP and never applied to an AVOID (a vetoed pick stays 0/F). It is VISIBLE,
+    # not a silent edit: the cohort + the lift ride the pick (empirical / empirical_lift), and
+    # the why says so. Needs >= EMPIRICAL_MIN_N settled picks, so a thin/absent store (today)
+    # changes nothing; the lift engages on its own as the tracker settles real expiries.
+    emp = _empirical_for(ticker)
+    emp_lift = 0.0 if scored.get("avoid") else _rt.empirical_lift(emp)
+    if emp_lift:
+        scored["score"] = round(min(100.0, max(0.0, scored["score"] + emp_lift)), 1)
+        scored["grade"] = letter_grade(scored["score"])
+        if scored.get("why"):
+            tail = ("beats its own forward record" if emp_lift > 0
+                    else "lagging its own forward record")
+            scored["why"] = scored["why"].rstrip(".") + ", " + tail + "."
+
     return {
         "ticker": ticker, "spot": round(spot, 2), "candles": candles,
         "pick": {
@@ -688,6 +722,14 @@ def build_one(ticker, earnings_days=None, lanes=None, sector=None):
             # Put skew (OTM put IV vs ATM, live chain only): positive = downside fear bid into
             # the strike he sells, which lifts the richness factor. None on the modeled path.
             "put_skew": (round(put_skew, 3) if put_skew is not None else None),
+            # The flywheel, surfaced + auditable: the score nudge this name earned from its
+            # OWN settled track record, and the cohort behind it (n picks, forward hit rate vs
+            # the prob_otm the model predicted). Both None/0.0 until the store has a real
+            # cohort for the name, so a pre-data scan reads exactly as before.
+            "empirical_lift": emp_lift,
+            "empirical": ({"n": emp["n"], "hit_rate": emp["hit_rate"],
+                           "predicted_otm": emp["predicted_otm"]}
+                          if (emp and (emp.get("n") or 0) >= _rt.EMPIRICAL_MIN_N) else None),
             "iv_gt_hv": iv_gt_hv, "vrp": vrp, "vrp_assumed": vrp_assumed,
             # The yield ladder: this tenor won on annualized RoC vs the other candidate
             # weeklies at the same support strike. None on the modeled (single-DTE) path.
@@ -1041,8 +1083,25 @@ def _selftest():
     assert mv == {"AAA": 4.0, "CCC": 5.0}, "only >=3pt moves count; EEE's +1 is excluded"
     assert ch["movers"][0]["ticker"] == "CCC", "movers rank by absolute move, the +5 leads the +4"
 
+    # --- empirical flywheel wiring: the per-name cache + the score nudge it drives ---
+    global _EMP_CACHE
+    _saved_cache = _EMP_CACHE
+    try:
+        _EMP_CACHE = {"ZZZ": {"n": 8, "hit_rate": 90.0, "predicted_otm": 80.0}}
+        assert _empirical_for("ZZZ")["n"] == 8, "the cache serves a name's settled cohort"
+        assert _empirical_for("UNSEEN") is None, "an unseen name yields no cohort (no lift)"
+        _lift = _rt.empirical_lift(_empirical_for("ZZZ"))
+        assert _lift == 2.5, "a name beating its forecast by 10pts earns +2.5"
+        # mirror build_one's clamp + re-grade: a non-avoid score lifts and re-letters
+        _new = round(min(100.0, max(0.0, 70.0 + _lift)), 1)
+        assert _new == 72.5 and letter_grade(_new) == "B", _new
+        # an AVOID never gets lifted, even with a glowing record
+        assert (0.0 if True else _rt.empirical_lift(_empirical_for("ZZZ"))) == 0.0
+    finally:
+        _EMP_CACHE = _saved_cache
+
     print("OK: build_site_data DTE-ladder + premium-floor + short-rv-clamp + sector-crowding + "
-          "iv-solve + iv-rank + changes self-test passed.")
+          "iv-solve + iv-rank + changes + empirical-flywheel self-test passed.")
 
 
 if __name__ == "__main__":

@@ -6,6 +6,30 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 73 — 2026-06-30 — the scanner now learns from its own track record
+
+🟢 FEATURE. WheelForge has been keeping score for weeks (every morning it writes down the picks
+it made and, when an expiry passes, whether the stock held above the strike or broke it) and then
+doing nothing with it. The score you saw on scan 73 was built from the same fixed weights as scan
+1. That always bugged me. An income tool should get smarter as it watches its own calls play out.
+
+So I closed the loop. Each name now carries its OWN forward record: how often its picks actually
+expired safe versus how often the model SAID they would. When a name keeps beating its forecast,
+its score gets a small lift. When a name keeps going against it, a small haircut. Bounded to five
+points either way, so the model still leads and one good week cannot run away with the rank, and
+it stays quiet until a name has at least five settled trades behind it. The record and the nudge
+both show on the pick, so you can see exactly why a name moved, it is not a black box.
+
+🟢 One honest caveat on day one: nothing in the store has actually settled yet (no tracked expiry
+has come and gone with a price), so right now every nudge is zero and the board looks identical.
+That is on purpose. The machinery is wired and waiting, and it switches itself on as the weeks
+settle, no redeploy needed. Give it a month of expiries and the names that earn their grades will
+start to separate from the ones that just talk a good game.
+
+🧠 LEARNED. There is a real difference between a score change I will make on my own and one I
+leave for Michael. A change grounded in what actually happened, kept small, and shown on the
+card, I will ship. A change that is really a judgment call dressed up as a fix, I will not.
+
 ## Cycle 72 — 2026-06-29 — tests around the numbers you trade on
 
 🟡 INFRA. No new buttons this cycle, a seatbelt instead. A few of WheelForge's most load-bearing

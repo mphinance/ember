@@ -33,6 +33,14 @@ DB = os.path.join(HERE, "data", "results.db")
 # times trades-per-year, and this is the lever on the second term.
 PROFIT_TAKE_PCT = 0.50
 
+# The flywheel: once a name has a real settled cohort, its OWN forward record nudges its
+# score. A name that keeps expiring OTM better than the model predicted earns a small lift;
+# one that keeps breaching against its predicted prob_otm gets a haircut. Bounded on purpose
+# (the static model still leads; this only leans on it), and dormant until there is real data.
+EMPIRICAL_MIN_N = 5      # need a real cohort before we trust a name's own record over the model
+EMPIRICAL_GAIN = 0.25    # score points per point of (actual hit rate - predicted): 4pt edge = 1pt
+EMPIRICAL_CAP = 5.0      # clamp the nudge to +/- this many score points
+
 
 def _con(db_path=None):
     path = db_path or DB
@@ -278,6 +286,49 @@ def track_record(db_path=None):
     return out
 
 
+def by_ticker(db_path=None):
+    """Per-NAME settled scorecard {ticker: bucket}, the same _bucket shape track_record
+    uses for by_lane. This is what the scanner reads to grade a name on its OWN forward
+    record (hit rate vs predicted prob_otm), not just the model's static prediction.
+    Fail-open: a missing/thin store returns {} and nobody gets a lift."""
+    out = {}
+    try:
+        con = _con(db_path)
+        rows = con.execute(
+            "SELECT prob_otm, premium, outcome, ticker FROM picks WHERE outcome IS NOT NULL"
+        ).fetchall()
+        con.close()
+        groups = {}
+        for pr, pm, oc, tk in rows:
+            groups.setdefault(tk, []).append((pr, pm, oc))
+        out = {k: _bucket(v) for k, v in groups.items()}
+    except Exception:
+        pass
+    return out
+
+
+def empirical_lift(record, min_n=EMPIRICAL_MIN_N, gain=EMPIRICAL_GAIN, cap=EMPIRICAL_CAP):
+    """Pure: turn a name's settled cohort (a _bucket dict from by_ticker) into a bounded
+    score nudge. The gap is actual hit rate minus the prob_otm the model PREDICTED for that
+    name: positive means it beats its own forecast (lift it), negative means it keeps going
+    ITM against the forecast (haircut it). Returns 0.0 (no opinion) until the cohort has
+    min_n settled picks, or on any missing field, so a thin/absent store changes nothing.
+    This closes the loop the tracker exists for: the scorebook finally feeds the score."""
+    if not record:
+        return 0.0
+    n = record.get("n") or 0
+    hit = record.get("hit_rate")
+    pred = record.get("predicted_otm")
+    if n < min_n or hit is None or pred is None:
+        return 0.0
+    lift = (hit - pred) * gain
+    if lift > cap:
+        lift = cap
+    elif lift < -cap:
+        lift = -cap
+    return round(lift, 1)
+
+
 def _selftest():
     """Pure, offline self-test on a throwaway DB (never touches the real store)."""
     import tempfile
@@ -370,6 +421,24 @@ def _selftest():
     assert al2 == [], "everything has expired past 2026-03-20 -> no profit-take"
     # a name we cannot price is skipped, never raised
     assert profit_take_alerts({}, db_path=pt, today="2026-03-04") == []
+
+    # --- empirical lift (the flywheel: a name's own forward record nudges its score) ---
+    assert empirical_lift(None) == 0.0                                          # no data
+    assert empirical_lift({"n": 3, "hit_rate": 100.0, "predicted_otm": 80.0}) == 0.0  # < min_n
+    assert empirical_lift({"n": 8, "hit_rate": 90.0, "predicted_otm": 80.0}) == 2.5   # beats model
+    assert empirical_lift({"n": 8, "hit_rate": 60.0, "predicted_otm": 85.0}) == -5.0  # lags, capped
+    assert empirical_lift({"n": 9, "hit_rate": 90.0, "predicted_otm": 90.0}) == 0.0   # on model
+    assert empirical_lift({"n": 9, "hit_rate": 100.0, "predicted_otm": 0.0}) == EMPIRICAL_CAP   # cap+
+    assert empirical_lift({"n": 9, "hit_rate": 0.0, "predicted_otm": 100.0}) == -EMPIRICAL_CAP  # cap-
+    assert empirical_lift({"n": 8, "hit_rate": 90.0, "predicted_otm": None}) == 0.0   # no prediction
+
+    # by_ticker groups settled picks per name. Reuse the tmp db built above: AAA held above
+    # the strike on both settled days (hit 100), BBB broke below on both (hit 0); DDD is still
+    # pending so it never appears. This is the read the scanner uses to lift/haircut by name.
+    bt = by_ticker(db_path=tmp)
+    assert bt["AAA"]["hit_rate"] == 100.0 and bt["AAA"]["n"] == 2, bt
+    assert bt["BBB"]["hit_rate"] == 0.0, bt
+    assert "DDD" not in bt, bt          # pending, never in a settled cohort
 
     print("results_tracker self-test OK")
 

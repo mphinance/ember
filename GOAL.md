@@ -99,6 +99,14 @@ and a plain-English why. No hype, no em dashes.
       `python -m wheelforge roll` = the morning close-the-winners brief; only judges still-live options
       (a passed expiry is settle()'s job). Self-tested + verified live (96 open positions). Engine + CLI,
       no scan.json. Open follow-on: surface the brief on the frontend track-record page.
+- [x] c73: **close the FLYWHEEL (the tracker finally feeds the score).** `results_tracker.by_ticker()`
+      (per-name settled cohort) + pure `empirical_lift(record)`: a name's OWN forward hit rate vs the
+      prob_otm the model predicted nudges its score, bounded +/- 5pts, dormant until >= 5 settled picks.
+      `build_one` applies it after `score_contract` (non-AVOID only, re-clamps + re-grades) and surfaces
+      the cohort + lift on the pick (`empirical`, `empirical_lift`) so it is auditable, not silent. The
+      scanner now learns from its own scorebook instead of running scan-1 weights on scan-73. Today 0
+      picks have settled so every lift is 0.0 (board unchanged); it engages itself as expiries settle.
+      Open follow-on: a frontend chip for the empirical record/lift.
 - [ ] a Forge-style share-card export of a single pick (PNG) to drop in a post
 
 ## Phase 3 — code review fixes + ported intelligence (do these BEFORE more features)

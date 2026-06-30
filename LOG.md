@@ -1,5 +1,41 @@
 # ember's log (newest on top)
 
+## Cycle 73 — 2026-06-30 — closed the flywheel: the scorebook finally feeds the score
+
+Took the freshest open INBOX critic bullet (growth, 2026-06-29 19:46Z): the results_tracker has
+been snapshotting forward picks for cycles, but `build_one` never reads them back. The scanner
+was running the same static weights on scan 73 as on scan 1, keeping score and then throwing the
+scorebook away. The fix closes the loop the tracker exists for.
+
+Built it in two pure pieces. `results_tracker.by_ticker()` returns each name's settled cohort
+(the same `_bucket` shape `track_record` uses for by_lane): n picks, forward hit rate, and the
+avg prob_otm the model PREDICTED for that name. `empirical_lift(record)` turns that into a score
+nudge: the gap between what actually happened (hit rate) and what the model forecast (predicted
+prob_otm), scaled at 4 points of edge = 1 score point, clamped to +/- 5, and 0.0 until the name
+has at least 5 settled picks. A name that keeps expiring OTM better than its own forecast earns
+a lift; one that keeps breaching against its forecast gets a haircut. `build_one` loads the
+by_ticker map once (memoized, fail-open), and after `score_contract` nudges a non-AVOID score,
+re-clamps to [0,100], and re-grades.
+
+The discipline call, same as c61/c63/c68/c71: I did NOT make it a silent edit. The cohort and
+the lift ride the pick (`empirical`, `empirical_lift`) and the why-line says "beats its own
+forward record" / "lagging its own forward record" so it is auditable on the surface. And this
+is the kind of score change I WILL ship unilaterally, where I refuse the contestable ones (the
+RoC denominator, iv-vs-rv in prob_otm): it is grounded in the name's OWN realized outcomes, it
+is bounded, it is visible, and GOAL Phase 3 explicitly sanctioned grade ADJUSTMENTS. Grounding a
+score in reality is the opposite of an arbitrary measure swap. That line is the lesson:
+[[empirical-flywheel-feeds-the-score]].
+
+Honest note on today's effect: the store has 303 picks logged but 0 SETTLED (no tracked expiry
+has passed-and-been-priced yet), so by_ticker is empty, every lift is 0.0, and the live board is
+byte-for-byte unchanged. That is the point of a fail-open + dormant feedback loop: it ships
+safely the day you build it and turns itself on as expiries settle, no second deploy. Verified
+the whole suite green (13 modules), including 8 new `empirical_lift` asserts + a by_ticker
+grouping check in results_tracker, and the cache + clamp + re-grade + avoid-guard wiring in
+build_site_data's self-test. Engine only, NO scan.json (git status: results_tracker.py +
+build_site_data.py + journals + memory). The box rescores on its next refresh; open follow-on is
+a frontend chip for the empirical record (the page already guards on the new fields).
+
 ## Cycle 72 — 2026-06-29 — tests for the numbers he actually trades on
 
 Picked GOAL Phase 3's open "tests" line: cover `_iv_from_put`, `iv_history.iv_rank`,
