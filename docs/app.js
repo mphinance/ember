@@ -19,7 +19,31 @@
     { key: 'ivrank', label: 'IV-rk', get: function (p) { return p.iv_rank || 0; } },
     { key: 'support', label: 'support', get: function (p) { return p.support_floor || 0; } },
   ];
-  var state = { sort: 'score', minScore: 0, minAnnual: 0, hideAvoid: false, lane: 'all', atSupport: false, maxCapital: 0 };
+  var state = { sort: 'score', minScore: 0, minAnnual: 0, hideAvoid: false, lane: 'all', atSupport: false, maxCapital: 0, primeOnly: false };
+
+  // ── "Prime Picks": today's standouts, the ones that compromise on NOTHING ───
+  // A pick earns PRIME only when it clears all three thesis pillars at once: real
+  // quality (score >= 50, a grade C or better, so the six-factor blend likes it),
+  // real yield (>= 25% annualized, toward the ~100%/yr book), and real discipline
+  // (>= 75% it stays OTM, so you actually keep the premium). This deliberately drops
+  // a top-SCORE name with a thin 12-19% yield (safe but not a premium standout) and
+  // a fat-yield speculative name the score already marked down. Relative-friendly: on
+  // a weak board (no A/B grades) the C+ floor still surfaces the best honest setups.
+  var PRIME = { minScore: 50, minAnnual: 25, minProbOtm: 75, max: 6 };
+  function isPrime(p) {
+    return !!p && !p.avoid
+      && (p.score || 0) >= PRIME.minScore
+      && (p.annualized_roc || 0) >= PRIME.minAnnual
+      && (p.prob_otm || 0) >= PRIME.minProbOtm;
+  }
+  // The standouts to show in the strip: prime picks among what is currently visible,
+  // best score first, capped so the band stays a short "today's standouts", not a list.
+  function primeRows(rows) {
+    return rows.filter(function (t) { return isPrime(t.pick); })
+      .slice()
+      .sort(function (a, b) { return (b.pick.score || 0) - (a.pick.score || 0); })
+      .slice(0, PRIME.max);
+  }
 
   function displayRows() {
     var s = SORTS.filter(function (x) { return x.key === state.sort; })[0] || SORTS[0];
@@ -28,6 +52,7 @@
         var p = t && t.pick;
         if (!p) return false;  // a malformed row must never crash the board
         if (state.hideAvoid && p.avoid) return false;
+        if (state.primeOnly && !isPrime(p)) return false;
         if (state.atSupport && !p.at_support) return false;
         if (state.lane !== 'all' && (p.lanes || []).indexOf(state.lane) < 0) return false;
         // Max-capital sizing: a CSP ties up strike*100 in cash collateral, so a seller with
@@ -86,6 +111,15 @@
     sup.textContent = state.atSupport ? '⌂ at support' : 'at support';
     sup.onclick = function () { state.atSupport = !state.atSupport; buildControls(); renderList(); };
     laneRow.appendChild(sup);
+    // Prime-only toggle: collapse the board to just today's standouts (the picks that
+    // clear quality, yield, and discipline all at once). The strip above always shows
+    // them; this lets him trade off only those.
+    var pr = document.createElement('button');
+    pr.className = 'ctl-pill ctl-prime' + (state.primeOnly ? ' on' : '');
+    pr.textContent = state.primeOnly ? '★ prime only' : 'prime only';
+    pr.title = 'show only Prime Picks: score 50+ (grade C+), 25%+ annualized, and 75%+ chance it stays OTM';
+    pr.onclick = function () { state.primeOnly = !state.primeOnly; buildControls(); renderList(); };
+    laneRow.appendChild(pr);
     host.appendChild(laneRow);
     // Yield mode: filter to the fat-premium setups that actually feed a ~100%/yr book.
     var yRow = document.createElement('div'); yRow.className = 'ctl-row';
@@ -273,17 +307,48 @@
     return '<div class="dte-ladder"><span class="dl-lab">yield ladder</span> ' + rungs + '</div>';
   }
 
+  // The "Prime Picks" strip: a short, highlighted best-of band ABOVE the full list,
+  // the page's "today's standouts". Render-only off fields already in the JSON; it
+  // mirrors the current filters (computed from the visible rows) so the strip never
+  // names a pick the board below isn't showing. Hidden entirely when nothing qualifies
+  // (an honest "no standouts today" rather than an empty box).
+  function renderPrime(rows) {
+    var host = document.getElementById('wf-prime');
+    if (!host) return;
+    var prime = primeRows(rows);
+    if (!prime.length) { host.style.display = 'none'; host.innerHTML = ''; return; }
+    host.style.display = '';
+    var chips = prime.map(function (t) {
+      var p = t.pick, g = gradeFor(p);
+      return '<button class="prime-chip" data-ticker="' + esc(t.ticker)
+        + '" title="' + esc(t.ticker + ': grade ' + g + ', ' + fmt(p.annualized_roc)
+          + '% annualized, ' + fmt(p.prob_otm) + '% stays OTM') + '">'
+        + '<span class="pc-grade grade-' + g + '">' + g + '</span> '
+        + '<b>' + esc(t.ticker) + '</b> '
+        + '<span class="pc-ann">' + Math.round(Number(p.annualized_roc)) + '%</span></button>';
+    }).join('');
+    host.innerHTML = '<span class="prime-lab" title="today\'s standouts: picks that clear quality '
+      + '(score 50+, grade C+), yield (25%+ annualized), and discipline (75%+ stays OTM) all at once">'
+      + '★ prime picks</span> ' + chips;
+    Array.prototype.forEach.call(host.querySelectorAll('.prime-chip'), function (b) {
+      b.onclick = function () { select(b.getAttribute('data-ticker')); };
+    });
+  }
+
   function renderList() {
     var host = document.getElementById('wf-cards');
     host.innerHTML = '';
     var rows = displayRows();
+    renderPrime(rows);
     if (!rows.length) { host.innerHTML = '<div class="ctl-empty">nothing clears that filter</div>'; return; }
     rows.forEach(function (t, i) {
       var p = t.pick;
       if (!p) return;  // displayRows already drops these, but never deref a null pick
       var card = document.createElement('div');
       var isTop = (i === 0 && !p.avoid);
-      card.className = 'wf-card' + (i === 0 ? ' is-sel' : '') + (isTop ? ' is-top' : '') + (p.avoid ? ' is-avoid' : '');
+      var prime = isPrime(p);
+      card.className = 'wf-card' + (i === 0 ? ' is-sel' : '') + (isTop ? ' is-top' : '')
+        + (prime ? ' is-prime' : '') + (p.avoid ? ' is-avoid' : '');
       card.dataset.ticker = t.ticker;
       var sc = document.createElement('div');
       sc.className = 'wf-score';
@@ -367,10 +432,16 @@
         var thin = p.thin_oi
           ? ' <span class="thin" title="the chosen strike sits on a thin open-interest line: it fills, but slow and at a wider spread, so size down or skip it on purpose">⚠ thin OI</span>'
           : '';
+        // Prime marker: this one card cleared all three thesis pillars (quality + yield +
+        // discipline). Same set the strip above names; flagged here too so it's identifiable
+        // when scrolling the full board.
+        var primeChip = prime
+          ? ' <span class="prime" title="prime pick: clears quality (grade C+), yield (25%+ annualized), and discipline (75%+ stays OTM) all at once">★ prime</span>'
+          : '';
         sub.innerHTML = 'sell <b>$' + fmt(p.strike) + ' put</b>' + otm + floor
           + (p.exp ? ' &middot; exp <b>' + fmtDate(p.exp) + '</b> (' + p.dte + 'd)' : ' (' + p.dte + 'd)')
           + '<br><b>' + fmt(p.annualized_roc) + '%</b> ann &middot; <b>' + fmt(p.prob_otm) + '%</b> OTM '
-          + src + hiv + crowd + thin + (p.earnings_days != null ? ' &middot; earn ' + p.earnings_days + 'd' : '');
+          + src + hiv + crowd + thin + primeChip + (p.earnings_days != null ? ' &middot; earn ' + p.earnings_days + 'd' : '');
       }
       card.appendChild(sc); card.appendChild(tk); card.appendChild(dir);
       if (head) card.appendChild(head);

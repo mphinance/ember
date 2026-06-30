@@ -170,6 +170,27 @@ body { display: flex; flex-direction: column; min-height: 100vh; }
 .chg.up { color: var(--up); } .chg.dn { color: var(--down); }
 .chg.new { color: var(--amber); } .chg.avoid { color: var(--down); } .chg.ok { color: var(--up); }
 
+/* "Prime Picks" standouts strip (cycle 75): a short best-of band above the full list,
+   today's standouts (quality + yield + discipline, all at once). Hidden when none clear it. */
+.wf-prime { padding: 8px 16px; border-bottom: 1px solid var(--line); background: var(--panel-2);
+  display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.prime-lab { text-transform: uppercase; letter-spacing: .08em; font-size: 10px; font-weight: 800;
+  color: var(--amber); cursor: help; }
+.prime-chip { appearance: none; cursor: pointer; background: #0a0e15; border: 1px solid var(--line);
+  color: var(--ink); border-radius: 6px; padding: 2px 8px; font-family: var(--mono); font-size: 11px;
+  font-weight: 700; display: inline-flex; align-items: center; gap: 5px; transition: border-color .12s; }
+.prime-chip:hover { border-color: var(--amber); box-shadow: 0 0 8px rgba(255,176,0,.35); }
+.pc-grade { font-family: var(--disp); font-weight: 800; font-size: 12px; }
+.pc-grade.grade-A { color: #7dffb0; } .pc-grade.grade-B { color: #ffd24a; }
+.pc-grade.grade-C { color: #ff9a3c; } .pc-grade.grade-D { color: #ff6b4a; }
+.pc-grade.grade-F { color: #ff5b6e; }
+.pc-ann { color: var(--amber); }
+/* per-card prime marker: a faint amber right-rail so a standout reads while scrolling the
+   full board, without fighting the is-top amber left-rail. */
+.wf-card.is-prime { box-shadow: inset -3px 0 0 rgba(255,176,0,.55); }
+.wf-card.is-prime.is-top { box-shadow: inset 6px 0 0 var(--amber), inset -3px 0 0 rgba(255,176,0,.55); }
+.prime { color: var(--amber); font-weight: 700; font-size: 10px; letter-spacing: .02em; cursor: help; }
+
 .chart-key { flex-basis: 100%; font-size: 11px; color: var(--dim); margin-top: 4px; }
 .chart-key b { font-weight: 700; }
 

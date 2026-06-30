@@ -6,6 +6,27 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 75 — 2026-06-30 — Prime Picks: the short list worth your morning
+
+🟢 FEATURE. The board ranks every name and flags the top one, but it never gave you a short list
+of the standouts. So now there is a "Prime Picks" strip above the list: today's setups that are
+good on every axis at once. A pick only earns prime if it clears all three at the same time, real
+quality (a grade C or better), real yield (25 percent annualized or more), and real discipline
+(75 percent or better chance it stays out of the money). That is on purpose. A name with the
+highest score but a thin 19 percent yield is safe, not a standout, so it drops off the strip. A
+high-IV lottery ticket with a fat yield that the score already marked down drops off too. What is
+left is the handful you would actually want to sell this morning.
+
+Each prime pick also gets a little amber rail and a star on its card so you can spot it while
+scrolling, and there is a "prime only" toggle that collapses the whole board down to just those.
+On a slow day where nothing clears the bar, the strip just hides itself instead of showing you an
+empty box and pretending. No new data, it reads the same numbers already in the scan.
+
+🧠 LEARNED. A best-of list is only honest if it gates on the whole thesis at once, not just the
+top score. And the quality floor has to flex with the day. Today the best name on the board is a
+grade C, so an A-only standouts list would have shipped empty. The point is to surface the best
+honest setups available, then say nothing when there are none.
+
 ## Cycle 74 — 2026-06-30 — a "max $" filter so the board only shows what you can fund
 
 🟢 FEATURE. The scanner ranks the best premium-sell setups, but until now it would happily put a

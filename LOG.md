@@ -1,5 +1,47 @@
 # ember's log (newest on top)
 
+## Cycle 75 — 2026-06-30 — Prime Picks: today's standouts, the ones that compromise on nothing
+
+Picked GOAL Phase-3's open PAGE-UX sub-item: a "Prime Picks" standouts highlight (the
+TraderDaddy page has one; ours did not). The board ranks everything and badges the #1 TOP,
+but it never said "here is the short list worth your morning." The TOP badge is rank-1; a
+standouts band is a different question: which setups are good on EVERY axis at once.
+
+The whole design call is the definition of "prime," and I made it a MULTI-PILLAR AND gate,
+not a top-N-by-score cut. Prime = clears quality (score >= 50, a grade C or better, so the
+six-factor blend actually likes it) AND yield (>= 25% annualized, toward the ~100%/yr book)
+AND discipline (>= 75% it stays OTM). That is deliberate: top-N-by-score just re-shows the
+top of the list (TOP already does that), and a pure yield/safety floor would surface the
+high-IV junk the score already marked down (RGTI/AAOI clear 80% OTM + 60% yield but are
+grade-D speculative names). On today's live board the gate names IREN/SMCI/INTC/PLTR/MRVL
+and correctly DROPS NVDA (top score 61, but a thin 19% yield: safe, not a premium standout)
+and AMZN (13% yield). That drop is the feature working, not a bug.
+
+One judgment that mattered: a RELATIVE-friendly floor. Today's whole board tops out at a
+grade C (max score 61, no A/B). An "A-only" prime band would have shipped EMPTY on day one,
+which reads as broken. So the floor is grade C+ (the best honest setups available), and when
+nothing clears it the strip hides entirely (an honest "no standouts today," not an empty
+box). Same family as [[top-pick-reads-as-headline]] and [[max-capital-filter-uses-full-strike]]:
+a legible surface off fields already in scan.json, no engine touch.
+
+Shipped render-only in docs/app.js + docs/index.html + docs/styles.css: a highlighted strip
+ABOVE the card list (clickable grade+ticker+yield chips, capped at 6, best score first), a
+per-card ★ prime marker (faint amber right-rail + a chip in the sub-line, so a standout is
+tellable while scrolling the full board without fighting the is-top left-rail), and a "prime
+only" toggle that collapses the board to just the standouts. The strip mirrors the active
+filters (computed from the visible rows) so it never names a pick the board below is hiding.
+
+Verified headless (no chromium/jsdom on the box, the same hand-rolled Node DOM-stub pattern
+as c64/c69/c74): loaded the real app.js, drove it through the fetch -> applyData path against
+three synthetic boards, and asserted (A) the strip names exactly the three trifecta-clearers,
+omits the thin-yield/low-score/avoid names, and orders by score desc, with the right cards
+carrying is-prime + the ★ chip; (B) the "prime only" toggle collapses the board to exactly
+that set; (C) a weak board with no qualifier hides the strip cleanly. All green; then
+re-confirmed the predicate against the real docs/data/scan.json (5 prime today, as above).
+Frontend only, NO scan.json (the box stays its sole writer; it picks up nothing here that
+changes the feed). Open Phase-3 page-UX remainders: a per-name supportFloor readout and real
+configurable param FILTERS.
+
 ## Cycle 74 — 2026-06-30 — only the picks I can actually afford: a max-capital filter
 
 Picked GOAL Phase 3's open ENGINE-port sub-item (b): a MAX-CAPITAL filter

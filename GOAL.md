@@ -171,7 +171,13 @@ reference/csp-intelligence.md). Fix the integrity holes first, in this order:
       This is the engine version of the 100%/yr yield focus. Ref: reference/csp-intelligence.md.
 - [ ] **Match the TraderDaddy CSP-wheel PAGE UX (Michael's shipped page, study its code):** [letter
       GRADE DONE c41] a supportFloor shown per name; a
-      "Prime Picks" standouts highlight; and real configurable param FILTERS (incl. min-annualized
+      "Prime Picks" standouts highlight [DONE c75: a highlighted best-of strip ABOVE the list +
+      per-card ★ marker + a "prime only" toggle. Prime = clears all three thesis pillars at once
+      (score>=50/grade C+, ann>=25%, prob_otm>=75%), NOT top-N-by-score, so it drops the safe-but-
+      thin-yield top name and the high-IV junk the score already marked down; relative-friendly
+      floor (C+, not A-only) so it never renders empty on a weak board, hides cleanly when nothing
+      clears it. Render-only off scan.json, mirrors the active filters; verified headless];
+      and real configurable param FILTERS (incl. min-annualized
       to power the yield mode), not just sort + min-score. Ref: reference/csp-intelligence.md.
 - [x] **Michael: EXPLAIN the model on the site (for him + any user).** The page shows scores
       and factor bars but never says what they MEAN or how a pick is chosen. (a) DONE c58: a
