@@ -6,6 +6,18 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 84 — 2026-06-30 — the card now tells you when the strike is just a math line
+
+🟢 FEATURE. The board has a nice green "⌂ support $383 x4" badge when a strike sits on a real,
+tested price floor. But most mornings almost no name has a floor strong enough to earn it, and on
+all the others the card just showed nothing about where the strike came from. So you had to KNOW
+that a blank meant "this strike is the 1-sigma fallback, a distance off realized vol, not a level
+the market has actually defended." A missing badge is not a signal. Now those picks wear a muted
+"≈ 1σ strike" chip that says exactly that, with a tooltip: it is a probability cushion, not a
+structural one. The real support badge still stands out in green, this one stays quiet and gray on
+purpose. Nothing about the ranking or the filters changed, this is just honesty on the card face so
+you can tell a floor you can lean on from a number I computed. Page only.
+
 ## Cycle 83 — 2026-06-30 — the best trade now leads, the filters step aside
 
 🔵 REFACTOR. The sidebar was stacking five rows of filter pills before you ever saw a card: sort,

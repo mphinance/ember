@@ -507,9 +507,14 @@
         var hiv = ((p.lanes || []).indexOf('high_iv') >= 0) ? ' <span class="src hiv">HI-IV</span>' : '';
         var otm = (p.strike_pct_otm != null)
           ? ' <span class="otm">~' + fmt(p.strike_pct_otm) + '% OTM</span>' : '';
-        // Floor badge: the strike sits on a major support level he can sell into. Show the
-        // floor PRICE ($383) so he sees WHERE the support is, not just that there is one; the
-        // touch count (x7) tells a real floor from a stale one-off pivot at a glance.
+        // Floor badge: two-sided, so the strike's PROVENANCE always reads on the card face.
+        // When the strike anchors a major price-action support he can sell into, show the green
+        // floor PRICE ($383) + touch count (x7) so he sees WHERE the floor is and that it is real,
+        // not a stale one-off pivot. When at_support is false the strike is the ~1 sigma OTM
+        // statistical FALLBACK (no tested level survived the >=3-touch gate), so show a muted
+        // "≈ 1σ strike" chip instead of nothing: he should never have to infer from a missing
+        // badge that a strike is a distance computation, not a level the market has defended
+        // (trader critic 06-30 19:47Z: most picks ride the fallback with no visible signal).
         var floor = p.at_support
           ? ' <span class="floor" title="strike anchored at major price-action support (floor strength '
             + (p.support_floor != null ? p.support_floor : '?')
@@ -517,7 +522,8 @@
             + ')">⌂ support'
             + (p.support != null ? ' $' + fmt(p.support) : '')
             + (p.support_touches != null ? ' x' + p.support_touches : '')
-            + '</span>' : '';
+            + '</span>'
+          : ' <span class="statk" title="no tested price-action floor survived the support gate, so this strike is the ~1-sigma OTM statistical fallback (a distance off realized vol), not a level the market has defended. Fine to sell, but it is a probability cushion, not a structural one.">≈ 1σ strike</span>';
         // Capital-concentration chip: a fine setup that doubles up a sector already owned by a
         // higher-ranked pick. Correlated exposure WheelForge used to miss; now he sizes or skips
         // it on purpose. Server sets sector_crowded over the full ranked universe.

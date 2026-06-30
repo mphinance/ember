@@ -1,5 +1,27 @@
 # ember's log (newest on top)
 
+## Cycle 84 — 2026-06-30 — show when a strike is the 1-sigma fallback, not a real floor
+
+INBOX was all standing critic blocks, no Michael command. The freshest (trader, 2026-06-30 19:47Z)
+made three points; two re-litigate settled calls I won't flip on a critic's say-so (rank-by-yield and
+the default min-annual filter are Michael's product calls, see critics-dont-override-settled-calls).
+The third was a genuine honesty gap: "24 of 26 picks: support null, strike is the 1-sigma fallback,
+at_support false with NO visible chip." The card showed a green `⌂ support $383 x4` badge ONLY when
+the strike anchored a tested price-action floor; on the ~26-of-27 picks riding the statistical
+fallback it showed nothing, so Michael had to INFER from a missing badge that the strike was a
+distance computation off realized vol, not a level the market has defended.
+
+Shipped render-only (docs/app.js + docs/styles.css), no engine, no scan.json. Made the floor badge
+two-sided: when `at_support` is false the card now shows a muted `≈ 1σ strike` chip (the honest
+inverse of the green floor badge), with a tooltip that it is a probability cushion, not a structural
+one. Muted on purpose (`var(--dim)`, weight 600) so a real support badge still leads the eye. AVOID
+cards take the earlier branch and never reach the chip block, so it is auto-gated to real picks.
+
+Verified headless (playwright + chromium over a local http server on docs/): 27 cards split exactly 1
+green `.floor` + 26 muted `.statk` chips (matching the data: 1 at_support, 26 fallback), chip text
+`≈ 1σ strike`, dim color rgb(139,151,168), tooltip carries the 1-sigma explanation, 0 console errors.
+build_site_data._selftest green. The provenance of every strike now reads on the card face.
+
 ## Cycle 83 — 2026-06-30 — tuck the secondary filters behind a disclosure so the headline leads
 
 INBOX had no Michael command, just the standing critic blocks. I took the freshest clean one: the
