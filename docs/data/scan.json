@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-30T21:00:25+00:00",
+  "generated_at": "2026-06-30T21:30:24+00:00",
   "source_note": "Candles and option premium are LIVE off the yfinance chain for 26 of 27 names (real IV, bid/ask, OI); the rest fall back to a realized-vol model when the chain is missing.",
   "dte": 7,
   "tickers": [
@@ -1313,7 +1313,7 @@
         },
         {
           "timestamp": 1782792000000,
-          "open": 197.24,
+          "open": 197.2,
           "high": 200.63,
           "low": 195.11,
           "close": 200.09,
@@ -1382,7 +1382,7 @@
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
-          "richness": 0.698,
+          "richness": 0.699,
           "safety": 0.769,
           "yield": 0.057,
           "liquidity": 0.97,
@@ -2705,7 +2705,7 @@
         },
         {
           "timestamp": 1782792000000,
-          "open": 131.99,
+          "open": 132.18,
           "high": 142.34,
           "low": 131.52,
           "close": 139.63,
@@ -2713,16 +2713,16 @@
         }
       ],
       "pick": {
-        "strike": 121.0,
+        "strike": 120.0,
         "dte": 10,
         "exp": "2026-07-10",
-        "premium": 1.64,
-        "strike_pct_otm": 13.3,
-        "annualized_roc": 50.0,
-        "prob_otm": 81.7,
-        "weekly_yield_pct": 0.96,
-        "bid_ann_roc": 48.3,
-        "iv": 88.7,
+        "premium": 1.49,
+        "strike_pct_otm": 14.1,
+        "annualized_roc": 45.9,
+        "prob_otm": 82.9,
+        "weekly_yield_pct": 0.88,
+        "bid_ann_roc": 44.3,
+        "iv": 89.3,
         "iv_rank": 76.4,
         "iv_rank_real": false,
         "source": "live",
@@ -2730,14 +2730,14 @@
         "want_to_own": true,
         "earnings_unknown": false,
         "sector": "Electronic Technology",
-        "sector_crowded": false,
+        "sector_crowded": true,
         "thin_oi": false,
         "at_support": false,
         "support": null,
         "support_touches": null,
         "support_floor": null,
         "gap_risk": 0.182,
-        "put_skew": 0.055,
+        "put_skew": 0.061,
         "empirical_lift": 0.0,
         "empirical": null,
         "iv_gt_hv": true,
@@ -2747,9 +2747,9 @@
           {
             "dte": 10,
             "exp": "2026-07-10",
-            "strike": 121.0,
-            "premium": 1.64,
-            "ann_roc": 50.0
+            "strike": 120.0,
+            "premium": 1.49,
+            "ann_roc": 45.9
           },
           {
             "dte": 17,
@@ -2770,21 +2770,21 @@
           "spot": 139.63
         },
         "free_shares": {
-          "assignment_basis": 119.36,
-          "basis_discount_pct": 14.5,
-          "prob_assigned_pct": 18.3,
-          "wheel_fit": 72.7,
-          "summary": "If assigned you own at $119.36, 14.5% below today, earning 50.0% annualized on the cash while you wait."
+          "assignment_basis": 118.51,
+          "basis_discount_pct": 15.1,
+          "prob_assigned_pct": 17.1,
+          "wheel_fit": 71.9,
+          "summary": "If assigned you own at $118.51, 15.1% below today, earning 45.9% annualized on the cash while you wait."
         },
-        "score": 58.4,
+        "score": 61.9,
         "grade": "C",
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
-          "richness": 0.381,
-          "safety": 0.756,
-          "yield": 0.219,
-          "liquidity": 0.635,
+          "richness": 0.389,
+          "safety": 0.793,
+          "yield": 0.197,
+          "liquidity": 0.869,
           "free_shares": 1.0,
           "structure": 0.79
         },
@@ -4104,7 +4104,7 @@
         },
         {
           "timestamp": 1782792000000,
-          "open": 237.35,
+          "open": 237.43,
           "high": 241.54,
           "low": 237.17,
           "close": 238.34,
@@ -5496,7 +5496,7 @@
         },
         {
           "timestamp": 1782792000000,
-          "open": 28.42,
+          "open": 28.41,
           "high": 29.91,
           "low": 28.17,
           "close": 29.33,
@@ -6896,7 +6896,7 @@
         },
         {
           "timestamp": 1782792000000,
-          "open": 27.54,
+          "open": 27.58,
           "high": 27.96,
           "low": 26.36,
           "close": 27.34,
@@ -9687,7 +9687,7 @@
         },
         {
           "timestamp": 1782792000000,
-          "open": 114.95,
+          "open": 114.91,
           "high": 118.7,
           "low": 114.57,
           "close": 116.67,
@@ -11087,7 +11087,7 @@
         },
         {
           "timestamp": 1782792000000,
-          "open": 278.75,
+          "open": 278.34,
           "high": 300.0,
           "low": 275.5,
           "close": 297.89,
@@ -11163,7 +11163,7 @@
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
-          "richness": 0.705,
+          "richness": 0.707,
           "safety": 0.826,
           "yield": 0.191,
           "liquidity": 0.169,
@@ -12486,7 +12486,7 @@
         },
         {
           "timestamp": 1782792000000,
-          "open": 45.7,
+          "open": 45.72,
           "high": 46.76,
           "low": 44.5,
           "close": 45.73,
@@ -16683,7 +16683,7 @@
         },
         {
           "timestamp": 1782792000000,
-          "open": 101.87,
+          "open": 101.97,
           "high": 103.04,
           "low": 99.66,
           "close": 100.28,
@@ -16759,7 +16759,7 @@
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
-          "richness": 0.537,
+          "richness": 0.538,
           "safety": 0.829,
           "yield": 0.123,
           "liquidity": 0.275,
@@ -22264,7 +22264,7 @@
         },
         {
           "timestamp": 1782792000000,
-          "open": 249.4,
+          "open": 249.49,
           "high": 275.43,
           "low": 244.06,
           "close": 271.95,
@@ -22340,7 +22340,7 @@
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
-          "richness": 0.445,
+          "richness": 0.444,
           "safety": 0.838,
           "yield": 0.217,
           "liquidity": 0.0,
@@ -27853,7 +27853,7 @@
         },
         {
           "timestamp": 1782792000000,
-          "open": 109.28,
+          "open": 108.75,
           "high": 128.3,
           "low": 103.5,
           "close": 128.03,
@@ -27889,7 +27889,7 @@
         "empirical_lift": 0.0,
         "empirical": null,
         "iv_gt_hv": false,
-        "vrp": 0.93,
+        "vrp": 0.94,
         "vrp_assumed": false,
         "dte_ladder": [
           {
@@ -30644,7 +30644,7 @@
         },
         {
           "timestamp": 1782792000000,
-          "open": 146.5,
+          "open": 146.35,
           "high": 152.23,
           "low": 144.18,
           "close": 148.16,
@@ -32043,7 +32043,7 @@
         },
         {
           "timestamp": 1782792000000,
-          "open": 148.18,
+          "open": 148.15,
           "high": 148.7,
           "low": 142.36,
           "close": 146.19,
@@ -34841,7 +34841,7 @@
         },
         {
           "timestamp": 1782792000000,
-          "open": 494.42,
+          "open": 493.75,
           "high": 519.46,
           "low": 492.84,
           "close": 515.23,
@@ -34912,12 +34912,12 @@
           "wheel_fit": 54.7,
           "summary": "Income play, not free shares. This is a high-IV name you sell for the 50.4% annualized premium, not to own; assignment at $456.20 is the risk to manage, not the reward."
         },
-        "score": 30.6,
+        "score": 30.7,
         "grade": "F",
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
-          "richness": 0.289,
+          "richness": 0.291,
           "safety": 0.729,
           "yield": 0.221,
           "liquidity": 0.0,
@@ -36240,7 +36240,7 @@
         },
         {
           "timestamp": 1782792000000,
-          "open": 86.21,
+          "open": 86.29,
           "high": 88.26,
           "low": 83.42,
           "close": 86.93,
@@ -36271,7 +36271,7 @@
         "support": null,
         "support_touches": null,
         "support_floor": null,
-        "gap_risk": 0.194,
+        "gap_risk": 0.191,
         "put_skew": 0.128,
         "empirical_lift": 0.0,
         "empirical": null,
@@ -36316,7 +36316,7 @@
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
-          "richness": 0.395,
+          "richness": 0.394,
           "safety": 0.627,
           "yield": 0.371,
           "liquidity": 0.0,
@@ -37736,12 +37736,12 @@
     "from_avoid": [],
     "movers": [
       {
-        "ticker": "HOOD",
-        "delta": -3.4
+        "ticker": "INTC",
+        "delta": 3.5
       }
     ]
   },
-  "prev_generated_at": "2026-06-30T20:30:25+00:00",
+  "prev_generated_at": "2026-06-30T21:00:25+00:00",
   "record": {
     "overall": null,
     "by_lane": {},
