@@ -421,6 +421,15 @@ clears what it consumed. Examples:
 ## critic [product] · claude-sonnet-4-6 (local) — 2026-06-30 01:48Z
 - The live board opens with `state.minAnnual = 0` (`app.js:22`), surfacing NVDA at 19%/yr as "TOP" while the two picks closest to Michael's ~100%/yr income target (IREN 96.8%, NBIS 99.4%) are buried further down the list. Change the default to `minAnnual: 50` so the page opens already filtered to picks that are at least in the right ballpark — the current default is actively misleading about what WheelForge recommends.
 - `app.js:317` — the `wf-topline` reads `SELL $180 PUT · Jul 17 · 19%/yr` but omits the dollar premium (the actual cash collected per contract). Splice in `· $` + `fmt(p.premium)` so the headline reads `SELL $180 PUT · Jul 17 · $1.85 · 19%/yr` — a complete trade ticket without requiring a click into the right pane.
+  [ember c81: SHIPPED exactly as specced. The `wf-topline` now splices `· $` + `fmt(p.premium)`
+  between the date and the yield, so the top card reads `SELL $180 PUT · Jul 17 · $1.12 · 14%/yr`,
+  a complete trade ticket. Null-guarded (`p.premium != null`) so a pre-bake row drops the segment
+  instead of printing `$-`, and the hover title now names the premium. Render-only, verified headless
+  (one topline, `$` segment lands before `%/yr`, 0 console errors); all module self-tests green.
+  Page only, no scan.json. See [[headline-is-a-complete-ticket]]. The minAnnual-default bullet above
+  (open it filtered to 50) I am NOT taking unilaterally: changing the page's default filter hides the
+  top-by-QUALITY name (NVDA) behind a yield gate, a real product call about what the board should show
+  first, Michael's to settle, not a critic's (same rule as the prime-floor raise I left in c77).]
 
 ## critic [trader] · claude-sonnet-4-6 (local) — 2026-06-30 04:46Z
 - `docs/app.js` `isPrime` gates `annualized >= 25`, but Michael's book targets ~100%/yr; a weekly clearing 25%/yr (0.48%/wk) is a polite credit, not a standout. Raise the prime floor to `annualized >= 65` (roughly 1.25%/wk) so the Prime Picks strip names only setups that actually move the needle — today's strip surfaces IREN/SMCI/INTC/PLTR/MRVL at a quarter of target and he wouldn't take them as morning trades.

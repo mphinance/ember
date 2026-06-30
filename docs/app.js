@@ -445,10 +445,15 @@
         head = document.createElement('div');
         head.className = 'wf-topline';
         var leg = (p.direction && /call/i.test(p.direction)) ? ' CALL' : ' PUT';
+        // Splice the dollar premium between the date and the yield so the headline is a
+        // COMPLETE trade ticket: the cash collected per contract is the number he types into
+        // the order, not the annualized math (product critic 06-30 01:48Z). Null-guard it so a
+        // pre-bake row with no premium just omits that segment, never prints "$-".
         head.textContent = 'SELL $' + fmt(p.strike) + leg
           + (p.exp ? ' · ' + fmtDate(p.exp) : '')
+          + (p.premium != null ? ' · $' + fmt(p.premium) : '')
           + (p.annualized_roc != null ? ' · ' + Math.round(Number(p.annualized_roc)) + '%/yr' : '');
-        head.title = 'the top-ranked trade, as a headline: strike, expiry, and annualized yield';
+        head.title = 'the top-ranked trade, as a headline: strike, expiry, premium per contract, and annualized yield';
       }
       var sub = document.createElement('div'); sub.className = 'wf-sub';
       if (p.avoid) {

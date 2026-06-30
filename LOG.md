@@ -1,5 +1,36 @@
 # ember's log (newest on top)
 
+## Cycle 81 — 2026-06-30 — put the dollar premium in the top-pick headline
+
+INBOX had no Michael command, just the standing critic blocks (the two open risk bullets,
+live-spot-vs-stale-close and ex-div-in-window, each need a network-touching cycle). So I took the
+cleanest open product-critic bullet (2026-06-30 01:48Z, second): the c66 `wf-topline` headline read
+`SELL $180 PUT · Jul 17 · 19%/yr` but omitted the dollar premium, the one number Michael actually
+types into the broker. The annualized %/yr judges the setup; the per-contract premium IS the order.
+A headline trade ticket missing its price is not a ticket.
+
+Shipped render-only: spliced `$1.12` between the date and the yield so the #1 card now reads
+`SELL $180 PUT · Jul 17 · $1.12 · 14%/yr`, a complete order ticket on the most-glanceable surface.
+Null-guarded the new segment (`p.premium != null`) so a pre-bake scan row drops it instead of
+printing `$-`, same backward-compat discipline as the rest of the topline, and updated the hover
+title to name the premium. The field has ridden scan.json since c7; this just promotes it from the
+dense sub-line to the headline, where the rest of the trade already lives.
+
+Verified headless (playwright + chromium over a local http server): exactly one `.wf-topline`, on
+the top card, text `SELL $180 PUT · Jul 17 · $1.12 · 14%/yr` with the `$` premium segment landing
+BEFORE the `%/yr`, 0 console errors. All ten module self-tests green (scoring, structure, surface,
+tail_risk, freeshares, iv_history, results_tracker, levels, covered_call, roll_advisor) plus
+build_site_data._selftest. Page only, no engine change, no scan.json (the box keeps its sole-writer
+role; the field is already baked, so the headline gains the price on the next page load).
+
+Lesson saved: [[headline-is-a-complete-ticket]] — a headline surface earns its pixels only if it
+lets him act without a click, so it must carry EVERY field of the order (strike, leg, date, premium,
+yield), each null-guarded. Closes the c42->c66->c81 product arc (badge -> grade -> yield -> float ->
+headline -> price). Cousin of [[top-pick-reads-as-headline]] and [[show-the-value-not-the-flag]].
+
+Next candidates: the two open risk bullets (live-spot-vs-stale-close, ex-div-in-window chip), the
+empirical-record frontend chip (open follow-on from c73), or the pattern-read structure tag.
+
 ## Cycle 80 — 2026-06-30 — shade the put-sell zone, not just draw lines
 
 INBOX had no Michael command, just the standing critic blocks (the two open risk bullets need a

@@ -6,6 +6,15 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 81 — 2026-06-30 — the top pick now shows the price, not just the yield
+
+🟢 FEATURE. The #1 pick's big amber headline used to read SELL $180 PUT · Jul 17 · 14%/yr. Good, but
+it left out the one number you actually type into the order: the premium. Now it reads SELL $180 PUT
+· Jul 17 · $1.12 · 14%/yr, a complete trade ticket you can act on without clicking in. The annualized
+yield tells you if the setup is worth reading; the $1.12 is the cash you collect per contract. A
+ticket without a price is not a ticket. Top card only, so it stays one clean anchor and never clutters
+every row. Page only, no rebuild needed, the price shows up on your next load.
+
 ## Cycle 80 — 2026-06-30 — the put-sell zone is now a band you can feel, not two lines
 
 🟢 FEATURE. Michael asked for this one: shade the put-sell zone instead of just drawing lines. The
