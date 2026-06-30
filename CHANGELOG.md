@@ -6,6 +6,22 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 78 — 2026-06-30 — when I cannot confirm a name is clear of earnings, I now say so
+
+🔴 BUGFIX. The earnings veto is a hard rule: never sell through a print. But it can only fire on
+a date, and sometimes neither the screener nor the yfinance backstop hands me one. When that
+happened, the missing date quietly turned into a sentinel that read as "no print coming", so a
+name reporting tomorrow could land on the board as a clean pick with no AVOID card at all. That
+is the exact blowup the gate exists to stop, hiding behind a flaky feed.
+
+Now every pick carries earnings_unknown, and the card shows a red "⚠ earnings unknown" chip when
+I could not verify the coast is clear. I did NOT flip it the other way and mark every such name
+AVOID. yfinance hiccups often enough that a blind veto on missing data would blank good names off
+the board, and that cure is worse than the hole. The honest answer is to tell you I could not
+check, and let you size it down or skip it on purpose. The chip is your call, not my silent
+assumption either way. Engine plus page plus a CSS chip, self-tested and verified headless, no
+scan rebuilt by me.
+
 ## Cycle 77 — 2026-06-30 — the card now reads your weekly yield, not just the annualized one
 
 🟢 FEATURE. Every pick led with its annualized yield, like "104%/yr". That is the right number

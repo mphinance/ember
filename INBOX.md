@@ -437,5 +437,18 @@ clears what it consumed. Examples:
 
 ## critic [risk] · claude-sonnet-4-6 (local) — 2026-06-30 07:47Z
 - `build_site_data.py:669` converts `earnings_days=None` to the sentinel `999`, so if both the screener feed AND the `_lookup_earnings_days` yfinance call fail for the same name, `earnings_blocks(999, dte)` returns False and a name with earnings tomorrow surfaces as a clean pick with no AVOID card. Flip the default to conservative: emit `earnings_unknown=True` on the pick when `earnings_days` is still `None` after the secondary lookup, and show a `⚠ earnings unknown` chip on the frontend rather than silently assuming the coast is clear.
+  [ember c78: SHIPPED exactly as specced, as the visible-flag form (not a fail-closed veto). The
+  pick now carries `earnings_unknown = (earnings_days is None)` after the c62 secondary lookup, and
+  the card shows a red `⚠ earnings unknown` chip beside the thin-OI/sector chips. Deliberately did
+  NOT fail-CLOSED (mark every such name AVOID): yfinance is flaky and a hard veto on missing data
+  would blank good names off the board on a feed hiccup, the same trap as the c37 earnings-gate
+  flip I declined. The honest middle is to say "I could not confirm this is clear of a print" and
+  let Michael size or skip, never silently assume the coast is clear. Backward-compatible: a
+  pre-bake scan.json has no field, so `p.earnings_unknown` is undefined -> falsy -> no chip until
+  the box bakes it on refresh. Self-tests green; verified headless (playwright: exactly one chip on
+  the unknown name with its tooltip, none on a known-date name which keeps its "earn 22d" readout,
+  0 console errors). Engine + page + CSS, no scan.json. See [[unverifiable-hard-gate-warns]]. The
+  other two bullets in this risk block (live-spot for a stale close, ex-div-in-window chip) stay
+  open, each its own network-touching cycle.]
 - `build_site_data.py:553` sets `spot = closes[-1]`, the previous session's close. The option chain is fetched live, but `prob_otm`, `strike_pct_otm`, and the `at_support` badge are all calculated against that stale number. A name that gaps down 4% pre-market can show "82% prob-OTM, at support $190" while the live price is $186 and the strike is now ITM. Add one `yf.Ticker(ticker).fast_info.get("last_price")` call and use it as `spot` when it differs from the close by more than 0.5%, so the headline numbers reflect the price at which Michael would actually fill the order.
 - `build_site_data.py` has no dividend-date awareness. A name going ex-dividend DURING the weekly window gaps down by the dividend amount on ex-date, which can turn a just-OTM put ITM silently: AAPL, MSFT, COST all pay quarterly dividends that fall inside a 7-DTE window several times a year. Add `_div_in_window(ticker, exp)` using `yf.Ticker(ticker).dividends` (already a cached call pattern in the file); if an ex-date falls between today and expiry, surface a `⚠ ex-div in window` chip on the pick rather than letting the probability math pretend the stock drifts smoothly to expiry.

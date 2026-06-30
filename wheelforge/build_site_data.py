@@ -703,6 +703,14 @@ def build_one(ticker, earnings_days=None, lanes=None, sector=None):
             "iv": round(iv * 100, 1), "iv_rank": contract["iv_rank"],
             "iv_rank_real": ivr_hist is not None, "source": source,
             "earnings_days": earnings_days, "want_to_own": want_to_own,
+            # The earnings veto is a HARD thesis gate, but it can only fire on a known date.
+            # When BOTH the screener feed AND the _lookup_earnings_days yfinance re-lookup come
+            # back empty, earnings_days stays None -> days_to_earnings collapses to the 999
+            # sentinel -> earnings_blocks(999, dte) is False, so a name printing tomorrow would
+            # surface as a CLEAN pick with no AVOID. We cannot fail-CLOSED (that would blank the
+            # board whenever yfinance is flaky), so surface the uncertainty: a visible chip that
+            # says "I could not confirm this name is clear of earnings", his call to size or skip.
+            "earnings_unknown": earnings_days is None,
             # GICS sector (from the screener) + the capital-concentration flag set by the
             # post-sort _sector_crowding pass. sector_crowded starts False here and is filled
             # once the whole ranked list is known; None sector simply never gets flagged.

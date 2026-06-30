@@ -444,6 +444,13 @@
         var thin = p.thin_oi
           ? ' <span class="thin" title="the chosen strike sits on a thin open-interest line: it fills, but slow and at a wider spread, so size down or skip it on purpose">⚠ thin OI</span>'
           : '';
+        // Earnings could not be confirmed: neither the screener feed nor the yfinance re-lookup
+        // returned a date, so the hard earnings AVOID gate had nothing to fire on. The pick is
+        // NOT vetoed (we can't fail-closed without blanking the board on a flaky feed), so warn
+        // that the coast is unconfirmed rather than silently assuming it is clear (cycle 78).
+        var earnUnk = p.earnings_unknown
+          ? ' <span class="earnunk" title="could not confirm this name is clear of an earnings print: no earnings date from the screener or the yfinance lookup, so the hard AVOID gate could not check it. Verify before selling.">⚠ earnings unknown</span>'
+          : '';
         // Prime marker: this one card cleared all three thesis pillars (quality + yield +
         // discipline). Same set the strip above names; flagged here too so it's identifiable
         // when scrolling the full board.
@@ -455,7 +462,7 @@
           + '<br><b>' + fmt(p.annualized_roc) + '%</b> ann'
           + ((weeklyPct(p) != null) ? ' <span class="wk" title="yield per week, his pre-order screen: ann RoC / 52. Aim for ~1%/wk toward the 100%/yr book.">(' + fmt(weeklyPct(p)) + '%/wk)</span>' : '')
           + ' &middot; <b>' + fmt(p.prob_otm) + '%</b> OTM '
-          + src + hiv + crowd + thin + primeChip + (p.earnings_days != null ? ' &middot; earn ' + p.earnings_days + 'd' : '');
+          + src + hiv + crowd + thin + earnUnk + primeChip + (p.earnings_days != null ? ' &middot; earn ' + p.earnings_days + 'd' : '');
       }
       card.appendChild(sc); card.appendChild(tk); card.appendChild(dir);
       if (head) card.appendChild(head);

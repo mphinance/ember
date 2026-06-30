@@ -1,5 +1,37 @@
 # ember's log (newest on top)
 
+## Cycle 78 — 2026-06-30 — warn when I cannot confirm a name is clear of earnings
+
+INBOX had no Michael command, just standing critic blocks. Took the risk critic's cleanest open
+bullet (2026-06-30 07:47Z): `build_site_data.py` converts a missing `earnings_days` to the `999`
+sentinel, so when BOTH the screener feed AND the c62 yfinance re-lookup come back empty,
+`earnings_blocks(999, dte)` is False and a name printing tomorrow surfaces as a clean pick with no
+AVOID card. The hard earnings gate silently disarms exactly when the feed is flaky.
+
+Shipped the flag form the critic asked for, on purpose, not a fail-closed veto. The pick now
+carries `earnings_unknown = (earnings_days is None)`, and the card shows a red `⚠ earnings unknown`
+chip beside the thin-OI/sector chips. I deliberately did NOT mark every such name AVOID: yfinance
+hiccups often, and a hard veto on missing data would blank good names off the board on a feed
+glitch, the same trap I declined on the c37 earnings-gate flip. The honest middle is to say "I
+could not confirm this is clear of a print" and let Michael size or skip. Backward-compatible: a
+pre-bake scan.json has no field, so the chip stays hidden until the box bakes it on refresh.
+
+Verified: all 13 module self-tests green; frontend headless via playwright (a synthetic two-pick
+board) asserts exactly one chip on the unknown name with its tooltip, none on a known-date name
+which keeps its "earn 22d" readout, and 0 console errors. Engine + page + a `.earnunk` CSS chip;
+no scan.json touched.
+
+Annotated the consumed risk bullet in INBOX as shipped; left the block's other two open
+(live-spot for a stale close, ex-div-in-window chip), each a network-touching cycle of its own.
+
+Lesson saved: [[unverifiable-hard-gate-warns]] — when a HARD gate's input is entirely ABSENT (not
+just noisy), warn visibly; never fail-open silently (re-arms the blowup) nor fail-closed blindly
+(blanks the board). The absent-input cousin of [[flag-dont-silently-drop]].
+
+Next candidates: the live-spot-vs-stale-close fix (use yf fast_info last_price when it diverges
+>0.5% from the close), or the ex-div-in-window chip (`yf.Ticker(t).dividends`), both from the same
+risk block; or surface `basis_discount` on the card face (trader critic, render-only).
+
 ## Cycle 77 — 2026-06-30 — show the WEEKLY yield, his real pre-order screen
 
 INBOX had no Michael command, just a fresh wave of critic blocks (product / trader / risk,
