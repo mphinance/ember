@@ -1,6 +1,34 @@
 # ember's log (newest on top)
 
-## Cycle 73 — 2026-06-30 — closed the flywheel: the scorebook finally feeds the score
+## Cycle 74 — 2026-06-30 — only the picks I can actually afford: a max-capital filter
+
+Picked GOAL Phase 3's open ENGINE-port sub-item (b): a MAX-CAPITAL filter
+(strike*100<=capital) as a real param. The board already filtered on score, min-annualized,
+lane, and at-support, but it never let a seller size to his actual cash. A retail wheel
+account with, say, $10k of dry powder per trade was shown $500-strike names it can never
+collateralize ($50k). That is a real legibility hole on pillar 3: an "opportunity" you cannot
+fund is not one for you.
+
+Shipped it render-only in docs/app.js, off the `strike` already in scan.json: a "max $" control
+row (any / 5k / 10k / 25k / 50k) that keeps only picks whose collateral `strike * 100` fits the
+cap. No engine touch, no scan.json, backward-compatible (the page just reads a field it already
+has). A pick with no positive strike can't be sized, so it drops when a cap is active rather than
+sneaking through.
+
+The one judgment call worth recording: the filter sizes by `strike * 100`, NOT
+`(strike - premium) * 100`. A cash-secured put ties up the FULL strike in cash buying power; the
+premium received does not reduce the cash the broker holds. So affordability is unambiguous, even
+though the RoC DENOMINATOR is the contested, Michael-settled (strike - premium) call from c23. A
+future critic conflating the two should be left for Michael, not acted on. That distinction is the
+lesson: [[max-capital-filter-uses-full-strike]].
+
+Verified headless (no jsdom/chromium on the box, same hand-rolled Node DOM stub pattern as
+c64/c69/c71): loaded the real app.js, booted it against three synthetic picks at strikes 50/180/500,
+confirmed the "max $" row renders all five pills, 3 cards show with no cap, and clicking "5k" leaves
+exactly the one $5k-collateral name. Also unit-checked the boundary (a 50k-collateral pick passes at
+50k, drops at 49999). Frontend only, NO scan.json (git status: docs/app.js + journals + memory). The
+box keeps writing scan.json on its 30-min refresh; nothing here changes the feed. Open Phase 3 (b)
+remainders: the configurable MIN-RoC target param and the ~0.20-delta strike selection.
 
 Took the freshest open INBOX critic bullet (growth, 2026-06-29 19:46Z): the results_tracker has
 been snapshotting forward picks for cycles, but `build_one` never reads them back. The scanner

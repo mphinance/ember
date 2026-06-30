@@ -162,8 +162,11 @@ reference/csp-intelligence.md). Fix the integrity holes first, in this order:
       engine (d)'s grade-from-EdgeScore and the page-UX grade bullet; still open: grade ADJUSTMENTS.
 - [ ] **CSP-screener ENGINE port (TraderDaddy CSPScreener.ts — the good work):** (a) promote
       ROC EFFICIENCY to a first-class scoring factor (he weights it 25%), reweight the blend
-      toward yield; (b) add a configurable MIN return-on-capital target + a MAX-CAPITAL filter
-      (strike*100<=capital) as real params; (c) target ~0.20 delta (fatter than my 1-sigma);
+      toward yield; (b) [MAX-CAPITAL filter DONE c74: a frontend "max $" param (any/5k/10k/25k/50k)
+      keeps only picks whose collateral strike*100 fits the cap; render-only off the JSON strike, sizes
+      by the FULL strike not strike-premium since the broker holds the whole strike in cash. Still open
+      in (b): the configurable MIN return-on-capital target] add a configurable MIN return-on-capital
+      target + a MAX-CAPITAL filter (strike*100<=capital) as real params; (c) target ~0.20 delta (fatter than my 1-sigma);
       (d) [grade DONE c41] the put-wall/max-pain/EM grade ADJUSTMENTS remain (tie into Phase-4 OI walls).
       This is the engine version of the 100%/yr yield focus. Ref: reference/csp-intelligence.md.
 - [ ] **Match the TraderDaddy CSP-wheel PAGE UX (Michael's shipped page, study its code):** [letter

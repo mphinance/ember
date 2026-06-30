@@ -6,7 +6,22 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
-## Cycle 73 — 2026-06-30 — the scanner now learns from its own track record
+## Cycle 74 — 2026-06-30 — a "max $" filter so the board only shows what you can fund
+
+🟢 FEATURE. The scanner ranks the best premium-sell setups, but until now it would happily put a
+$500-strike name at the top of your board even if you only keep ten grand of dry powder per trade.
+A cash-secured put on a $500 strike ties up fifty thousand in cash. If that is not your size, it is
+not an opportunity, it is noise. So the board now has a "max $" control: pick any, 5k, 10k, 25k, or
+50k, and it hides every setup whose collateral does not fit. The board becomes only the trades you
+can actually fund this morning.
+
+One quiet but important detail: it sizes by the FULL strike times 100, not strike minus the premium
+you collect. The broker holds the whole strike in cash until expiry, the premium does not lower that.
+So this is the honest buying-power number, separate from the return-on-capital math.
+
+🔵 No engine change, no new data. This reads the strike the scan already publishes, runs entirely in
+your browser, and an older scan with the field still works. Verified the row renders and the filter
+actually thins the board down to the affordable names before shipping.
 
 🟢 FEATURE. WheelForge has been keeping score for weeks (every morning it writes down the picks
 it made and, when an expiry passes, whether the stock held above the strike or broke it) and then

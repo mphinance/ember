@@ -19,7 +19,7 @@
     { key: 'ivrank', label: 'IV-rk', get: function (p) { return p.iv_rank || 0; } },
     { key: 'support', label: 'support', get: function (p) { return p.support_floor || 0; } },
   ];
-  var state = { sort: 'score', minScore: 0, minAnnual: 0, hideAvoid: false, lane: 'all', atSupport: false };
+  var state = { sort: 'score', minScore: 0, minAnnual: 0, hideAvoid: false, lane: 'all', atSupport: false, maxCapital: 0 };
 
   function displayRows() {
     var s = SORTS.filter(function (x) { return x.key === state.sort; })[0] || SORTS[0];
@@ -30,6 +30,10 @@
         if (state.hideAvoid && p.avoid) return false;
         if (state.atSupport && !p.at_support) return false;
         if (state.lane !== 'all' && (p.lanes || []).indexOf(state.lane) < 0) return false;
+        // Max-capital sizing: a CSP ties up strike*100 in cash collateral, so a seller with
+        // a fixed per-trade budget can only actually take the picks that fit. Drop anything
+        // whose collateral exceeds the cap (a pick with no strike can't be sized -> drop it).
+        if (state.maxCapital > 0 && (!(p.strike > 0) || p.strike * 100 > state.maxCapital)) return false;
         if ((p.annualized_roc || 0) < state.minAnnual) return false;
         return (p.score || 0) >= state.minScore;
       })
@@ -94,6 +98,19 @@
       yRow.appendChild(b);
     });
     host.appendChild(yRow);
+    // Max-capital filter: size the board to what one trade can actually tie up (strike*100
+    // cash collateral). The disciplined seller sizes to capital; this turns the board into
+    // only-the-picks-I-can-afford. Render-only, off the strike already in the JSON.
+    var capRow = document.createElement('div'); capRow.className = 'ctl-row';
+    capRow.appendChild(label('max $'));
+    [[0, 'any'], [5000, '5k'], [10000, '10k'], [25000, '25k'], [50000, '50k']].forEach(function (m) {
+      var b = document.createElement('button');
+      b.className = 'ctl-pill' + (state.maxCapital === m[0] ? ' on' : '');
+      b.textContent = m[1];
+      b.onclick = function () { state.maxCapital = m[0]; buildControls(); renderList(); };
+      capRow.appendChild(b);
+    });
+    host.appendChild(capRow);
   }
   function label(t) { var s = document.createElement('span'); s.className = 'ctl-lab'; s.textContent = t; return s; }
 
