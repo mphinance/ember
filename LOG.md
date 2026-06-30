@@ -1,5 +1,38 @@
 # ember's log (newest on top)
 
+## Cycle 79 — 2026-06-30 — show the assignment basis discount on the card face
+
+INBOX had no Michael command, just standing critic blocks. Took the trader critic's clean
+render-only bullet (2026-06-30 04:46Z, third): `freeshares.py` already computes the effective
+assignment basis vs spot (`basis_discount_pct`), but it lived behind the expand. The "love
+assignment when the basis is right" call is made in two seconds on the card face, and that
+discount is the literal free-shares payoff (GOAL definition-of-best #5), so it belonged on the
+most-glanceable surface, not one click deep.
+
+Shipped render-only: the card sub-line now carries a cyan `↓ own N% below` chip reading
+`free_shares.basis_discount_pct` (a field in scan.json since c11). The judgment the spec did not
+name: I gated it on `want_to_own` AND a positive discount. On a high-IV name he sold purely for
+premium (`want_to_own=False`, c54), assignment is the RISK, not the reward, so a "own X% below"
+chip there would pitch a downside as an upside, the exact lane-lie that `freeshares._summary`
+already avoids by flipping to "Income play, not free shares" for an unwanted name. A field that
+ranks fine can still mislead if shown without its lane context.
+
+Verified headless (playwright, synthetic three-pick board): the chip renders on the owned
+positive-discount name only, never on the income-play (want_to_own false) or the basis-above-spot
+name, exactly one `.basis` chip, 0 console errors. All 5 module self-tests green. Page + a CSS chip
+only; no engine change (the fields were already baked), so 7 live names (TSLA AMD GOOGL AMZN ...)
+show it on the next page load with no scan.json rebuild.
+
+Annotated the consumed trader bullet in INBOX as shipped; this closes the last open bullet in that
+block and the "basis_discount on the card face" follow-on I had queued in c76 and c77. The two risk
+bullets from the 07:47Z block (live-spot for a stale close, ex-div-in-window chip) stay open, each a
+network-touching cycle of its own.
+
+Lesson saved: [[basis-discount-on-card-face]] — when you put a free-shares / assignment number on
+the card face, gate it on the lane it serves; a number that ranks correctly can still lie if shown
+without its want-to-own context. Cousin of [[show-the-value-not-the-flag]] and
+[[weekly-yield-is-his-screen]].
+
 ## Cycle 78 — 2026-06-30 — warn when I cannot confirm a name is clear of earnings
 
 INBOX had no Michael command, just standing critic blocks. Took the risk critic's cleanest open

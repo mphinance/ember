@@ -444,6 +444,20 @@
         var thin = p.thin_oi
           ? ' <span class="thin" title="the chosen strike sits on a thin open-interest line: it fills, but slow and at a wider spread, so size down or skip it on purpose">⚠ thin OI</span>'
           : '';
+        // Free-shares fit on the card face: if this is a name he WANTS to own and assignment
+        // would land an effective cost basis (strike - premium) below today's price, that
+        // discount IS the thesis (own it cheap, not just rent the premium). It lived only
+        // behind the expand; surface "own N% below" where the buy/skip call is actually made.
+        // Gated on want_to_own AND a positive discount on purpose: on a high-IV name he sold
+        // purely for premium (want_to_own false, c54), assignment is the RISK not the reward,
+        // so pitching a cheap basis there would lie. The pre-bake guard keeps old scans clean.
+        var disc = (p.want_to_own && p.free_shares && p.free_shares.basis_discount_pct > 0)
+          ? p.free_shares.basis_discount_pct : null;
+        var basis = (disc != null)
+          ? ' <span class="basis" title="free-shares fit: if assigned, your effective cost basis (strike minus premium) is '
+            + fmt(disc) + '% below today’s price. On a name you want to own, that discount is the win, not a risk.">↓ own '
+            + fmt(disc) + '% below</span>'
+          : '';
         // Earnings could not be confirmed: neither the screener feed nor the yfinance re-lookup
         // returned a date, so the hard earnings AVOID gate had nothing to fire on. The pick is
         // NOT vetoed (we can't fail-closed without blanking the board on a flaky feed), so warn
@@ -457,7 +471,7 @@
         var primeChip = prime
           ? ' <span class="prime" title="prime pick: clears quality (grade C+), yield (25%+ annualized), and discipline (75%+ stays OTM) all at once">★ prime</span>'
           : '';
-        sub.innerHTML = 'sell <b>$' + fmt(p.strike) + ' put</b>' + otm + floor
+        sub.innerHTML = 'sell <b>$' + fmt(p.strike) + ' put</b>' + otm + floor + basis
           + (p.exp ? ' &middot; exp <b>' + fmtDate(p.exp) + '</b> (' + p.dte + 'd)' : ' (' + p.dte + 'd)')
           + '<br><b>' + fmt(p.annualized_roc) + '%</b> ann'
           + ((weeklyPct(p) != null) ? ' <span class="wk" title="yield per week, his pre-order screen: ann RoC / 52. Aim for ~1%/wk toward the 100%/yr book.">(' + fmt(weeklyPct(p)) + '%/wk)</span>' : '')

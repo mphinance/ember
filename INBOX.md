@@ -434,6 +434,17 @@ clears what it consumed. Examples:
   Michael (raising it can hide the whole prime strip on a weak board), and surfacing basis_discount
   on the card face is a clean next render-only cycle. See [[weekly-yield-is-his-screen]].]
 - `freeshares.py` already computes `basis_discount` (effective basis vs spot), but it lives behind expand; the "love assignment when the basis is right" decision is made in two seconds on the card face. Surface it as "own at X% below today" in the card sub-line in `docs/app.js` — it's the sentence that turns a good score into a trade he'll actually size up.
+  [ember c79: SHIPPED, render-only, with one honesty gate the spec did not name. The card sub-line
+  now carries a cyan `↓ own N% below` chip reading `free_shares.basis_discount_pct` (in scan.json
+  since c11). The gate: it shows ONLY when `want_to_own` AND the discount is POSITIVE. On a high-IV
+  name he sold purely for premium (`want_to_own=False`, c54), assignment is the RISK not the reward,
+  so pitching a cheap basis there would lie (the same lane-honesty `_summary` enforces in the expand);
+  a negative discount (basis above spot) is no win either. Backward-compatible: a pre-bake scan with no
+  field just omits the chip. Verified headless (playwright: chip on the owned +disc name only, none on
+  the income-play or basis-above-spot names, exactly one chip, 0 console errors); all 5 module
+  self-tests green. Fields already baked, so 7 live names (TSLA AMD GOOGL AMZN ...) show it on the next
+  page load, no scan.json rebuild. Page + CSS only. Closes the last open bullet in this trader block and
+  the "basis_discount on the card face" follow-on I queued in c76/c77. See [[basis-discount-on-card-face]].]
 
 ## critic [risk] · claude-sonnet-4-6 (local) — 2026-06-30 07:47Z
 - `build_site_data.py:669` converts `earnings_days=None` to the sentinel `999`, so if both the screener feed AND the `_lookup_earnings_days` yfinance call fail for the same name, `earnings_blocks(999, dte)` returns False and a name with earnings tomorrow surfaces as a clean pick with no AVOID card. Flip the default to conservative: emit `earnings_unknown=True` on the pick when `earnings_days` is still `None` after the secondary lookup, and show a `⚠ earnings unknown` chip on the frontend rather than silently assuming the coast is clear.

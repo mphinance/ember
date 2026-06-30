@@ -181,6 +181,13 @@ reference/csp-intelligence.md). Fix the integrity holes first, in this order:
       clears it. Render-only off scan.json, mirrors the active filters; verified headless];
       and real configurable param FILTERS (incl. min-annualized
       to power the yield mode), not just sort + min-score. Ref: reference/csp-intelligence.md.
+- [x] c79: free-shares fit ON THE CARD FACE: a name he wants to own now shows a cyan
+      `↓ own N% below` chip on the sub-line, reading `free_shares.basis_discount_pct` (in
+      scan.json since c11). Gated on `want_to_own` AND a positive discount, so a high-IV
+      income-only name (assignment = the risk, c54) never gets the cheap-basis pitch. Render +
+      CSS only, fields already baked (7 live names show it, no scan.json rebuild); verified
+      headless. The free-shares endgame (definition-of-best #5) now reads on the most-glanceable
+      surface, not behind the expand. See [[basis-discount-on-card-face]].
 - [x] **Michael: EXPLAIN the model on the site (for him + any user).** The page shows scores
       and factor bars but never says what they MEAN or how a pick is chosen. (a) DONE c58: a
       plain-English tooltip on each factor bar (rich = IV vs realized vol / VRP; safe = prob it

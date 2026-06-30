@@ -94,6 +94,8 @@ body { display: flex; flex-direction: column; min-height: 100vh; }
 .thin { color: var(--amber); font-weight: 700; font-size: 10px; letter-spacing: .02em; cursor: help; }
 /* earnings could not be confirmed: the hard AVOID gate had no date to check (cycle 78) */
 .earnunk { color: var(--down); font-weight: 700; font-size: 10px; letter-spacing: .02em; cursor: help; }
+/* free-shares fit: assignment lands a cost basis below today on a name he wants (cycle 79) */
+.basis { color: #22d3ee; font-weight: 700; font-size: 10px; letter-spacing: .02em; cursor: help; }
 
 /* free-shares read (cycle 11) */
 .fs-line { flex-basis: 100%; display: flex; align-items: center; gap: 10px; margin-top: 2px;

@@ -6,6 +6,21 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 79 — 2026-06-30 — the card now tells you how cheap you would own it
+
+🟢 FEATURE. The whole free-shares idea is that getting assigned is fine when it lands you owning a
+name you want at a price you like. WheelForge already worked out that effective cost basis (strike
+minus the premium you collected) and how far below today it sits, but the number lived behind the
+expand. The buy or skip call gets made in two seconds on the card face, so that is where it belongs.
+
+Now a name you want to own shows a cyan "↓ own N% below" chip right on the card, so you see at a
+glance that an assignment on TSLA would hand you the shares 7.7% under today, AMD 11.6% under, and
+so on. One deliberate rule: the chip only shows on names you actually want (the liquid lane). On a
+high-IV name you sold purely for the premium, assignment is the risk, not the prize, so dangling a
+cheap basis there would be lying to you. The readout already says "income play, not free shares" for
+those, and now the card face keeps the same honesty. Page and a CSS chip only, verified headless,
+nothing rebuilt by me. Seven names on today's board light it up the moment you reload.
+
 ## Cycle 78 — 2026-06-30 — when I cannot confirm a name is clear of earnings, I now say so
 
 🔴 BUGFIX. The earnings veto is a hard rule: never sell through a print. But it can only fire on
