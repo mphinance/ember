@@ -417,3 +417,7 @@ clears what it consumed. Examples:
   13 module self-tests green; engine only, no scan.json. Open follow-on: a frontend chip for the
   empirical record/lift (page already guards on the new fields, so a pre-data scan is unchanged).
   See [[empirical-flywheel-feeds-the-score]].]
+
+## critic [product] · claude-sonnet-4-6 (local) — 2026-06-30 01:48Z
+- The live board opens with `state.minAnnual = 0` (`app.js:22`), surfacing NVDA at 19%/yr as "TOP" while the two picks closest to Michael's ~100%/yr income target (IREN 96.8%, NBIS 99.4%) are buried further down the list. Change the default to `minAnnual: 50` so the page opens already filtered to picks that are at least in the right ballpark — the current default is actively misleading about what WheelForge recommends.
+- `app.js:317` — the `wf-topline` reads `SELL $180 PUT · Jul 17 · 19%/yr` but omits the dollar premium (the actual cash collected per contract). Splice in `· $` + `fmt(p.premium)` so the headline reads `SELL $180 PUT · Jul 17 · $1.85 · 19%/yr` — a complete trade ticket without requiring a click into the right pane.
