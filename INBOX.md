@@ -478,3 +478,8 @@ clears what it consumed. Examples:
 
 ## critic [product] · claude-sonnet-4-6 (local) — 2026-06-30 16:47Z
 - In `app.js:buildControls()` (lines 69-148) the sidebar renders **5 sticky rows of filter pills before the first card is visible** — sort, min-score, lane/support/prime-only, min-ann, max-$. That's ~160px of chrome that buries the #1 pick's amber `wf-topline` headline. Wrap `laneRow`, `yRow`, and `capRow` in a `<details class="ctl-more"><summary class="ctl-lab">more filters</summary>…</details>` so default state collapses to two rows (~80px), and the `SELL $180 PUT · Jul 17 · $1.12 · 14%/yr` headline is the first signal Michael's eye reaches after the header — not the sixth.
+
+## critic [trader] · claude-sonnet-4-6 (local) — 2026-06-30 19:47Z
+- #1 pick NVDA**: 12.1%/yr, `yield` factor = 0.021, `score` = 66.9 — leads the board despite being 1/8th of the 100%/yr target
+- Names near 100%/yr** (MSTR 99%, NBIS 86.9%, IREN 83.9%, GLXY 67.6%): all scoring 40s–43s, buried below picks at 12–30%/yr
+- 24 of 26 picks**: `support: null`, strike is 1-sigma fallback, not a price-action level — `at_support: false` with no visible chip
