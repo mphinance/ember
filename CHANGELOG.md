@@ -6,6 +6,22 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 77 — 2026-06-30 — the card now reads your weekly yield, not just the annualized one
+
+🟢 FEATURE. Every pick led with its annualized yield, like "104%/yr". That is the right number
+for ranking, but it is not the number in your head when you are about to type the order. Your
+real screen is per week: did I sell for at least 1% this week. So now the card carries a muted
+"(2%/wk)" right next to the annualized figure. Same number, the unit you actually use, no mental
+divide-by-52 at the moment you are sizing the trade.
+
+It is one field on each pick (weekly_yield_pct, the annualized RoC over 52) so it can never
+drift from the headline, and the page falls back to computing it itself until the box bakes the
+field in on its next refresh, so you see it immediately. Engine plus page, self-tested and
+verified headless, no scan rebuilt by me.
+
+🧠 LEARNED. When a number is the right unit for RANKING but the wrong unit for the DECISION,
+surface the decision unit too, derived from the same source so the two can never disagree.
+
 ## Cycle 76 — 2026-06-30 — the support badge now tells you WHERE the floor is
 
 🟢 FEATURE. When a pick's strike is anchored to a real price-action support, the card already

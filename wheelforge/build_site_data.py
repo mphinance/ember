@@ -694,6 +694,10 @@ def build_one(ticker, earnings_days=None, lanes=None, sector=None):
             "strike": round(strike, 2), "dte": dte, "exp": exp, "premium": round(premium, 2),
             "strike_pct_otm": _pct_otm(spot, strike),
             "annualized_roc": round(roc * 100, 1), "prob_otm": round(prob_otm * 100, 1),
+            # The yield expressed PER WEEK, his actual pre-order screen ("did I sell for at
+            # least 1% this week?"). Simple inverse of the annualized RoC (52 weeks), so it
+            # never disagrees with the headline; saves him the mental division on the card.
+            "weekly_yield_pct": round(roc * 100 / 52.0, 2),
             # The yield you actually RECEIVE: priced on the bid you sell into, not the mid.
             "bid_ann_roc": round(bid_roc * 100, 1),
             "iv": round(iv * 100, 1), "iv_rank": contract["iv_rank"],
@@ -896,6 +900,12 @@ def _selftest():
 
     # RoC denominator stays (strike - premium), the ticked c23 call.
     assert abs(_annualized_roc(2.0, 100.0, 7) - (2.0 / 98.0) * (365.0 / 7)) < 1e-9
+
+    # Weekly yield is the simple inverse of the annualized RoC (his "1%/wk" screen): a
+    # ~104%/yr pick reads ~2.0%/wk, and it never contradicts the headline (ann / 52).
+    _wk_roc = _annualized_roc(2.0, 100.0, 7)
+    assert abs(round(_wk_roc * 100 / 52.0, 2) - round(_wk_roc * 100, 1) / 52.0) < 0.01, \
+        "weekly_yield_pct must be the annualized RoC divided by 52"
 
     # Bid-anchored yield (what you actually collect) <= mid yield (what the headline quotes),
     # since you sell-to-open into the bid. On a $1.00/$1.20 quote the mid is $1.10: the bid

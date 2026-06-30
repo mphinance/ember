@@ -1,5 +1,38 @@
 # ember's log (newest on top)
 
+## Cycle 77 — 2026-06-30 — show the WEEKLY yield, his real pre-order screen
+
+INBOX had no Michael command, just a fresh wave of critic blocks (product / trader / risk,
+01:48-07:47Z). Picked the trader critic's cleanest on-thesis bullet: the card led with
+annualized RoC ("104%/yr") but never the per-WEEK number, which is the unit in his head before
+he types an order ("did I sell for at least 1% this week?"). The annualized figure is the right
+RANKING unit and the wrong DECISION unit.
+
+Shipped engine + page: `weekly_yield_pct = round(roc*100/52, 2)` now rides each pick in
+build_site_data, and the card sub-line shows a muted `(N%/wk)` next to the `N% ann` number.
+Frontend `weeklyPct(p)` prefers the baked field but falls back to `annualized_roc/52`, so the
+page reads right immediately, BEFORE the box rebuilds the field in on its next refresh (same
+client-fallback discipline as gradeFor in c41). Deriving weekly from the same annualized RoC
+means the two surfaces can never disagree.
+
+Verified: build_site_data self-test (added 1 assert, weekly == ann/52) plus all 11 module
+self-tests green; the frontend helper headless-tested via Node (5 helper cases + sub-line
+wiring). Engine + page + a `.wk` CSS chip; no scan.json touched (the box bakes the field on its
+next 30-min refresh; the page already shows the value via the fallback).
+
+Annotated the consumed trader bullet in INBOX as shipped. Left the block's other two open on
+purpose: raising the prime floor 25->65 is a contestable threshold (can blank the whole prime
+strip on a weak board, Michael's call), and the basis_discount-on-card is a clean next render
+cycle. Did NOT touch the risk critic's stale-spot / earnings-unknown / ex-div items (real, but
+each is a network-touching engine change worth its own cycle).
+
+Lesson saved: [[weekly-yield-is-his-screen]] — when a number ranks but doesn't decide, surface
+the decision unit too, derived from the same source so they can't drift.
+
+Next candidates: surface `basis_discount` ("own at X% below today") on the card face (trader
+critic, render-only); or take a risk-critic engine item (live-spot for stale-close, or
+earnings-unknown chip) as a full cycle.
+
 ## Cycle 76 — 2026-06-30 — show the floor PRICE, not just that a floor exists
 
 Picked the open page-UX sub-item under GOAL Phase 3's "Match the TraderDaddy PAGE UX":

@@ -212,6 +212,16 @@
   }
 
   function fmt(n) { return (n == null) ? '-' : Number(n).toLocaleString(undefined, { maximumFractionDigits: 2 }); }
+  // His pre-order screen is per-WEEK ("did I sell for at least 1% this week?"), not the
+  // annualized math. Prefer the baked weekly_yield_pct; until the box rebuilds, fall back to
+  // the simple inverse of the annualized RoC (ann / 52) so the card reads right immediately.
+  // Same client-fallback discipline as gradeFor(): the page never waits on a scan rebuild.
+  function weeklyPct(p) {
+    if (!p) return null;
+    if (p.weekly_yield_pct != null) return Number(p.weekly_yield_pct);
+    if (p.annualized_roc != null) return Math.round(Number(p.annualized_roc) / 52 * 100) / 100;
+    return null;
+  }
   // Escape text bound into HTML (attributes/innerHTML). Modest first step on the open
   // robustness item; used here so the factor tooltips never break a title attribute.
   function esc(s) {
@@ -442,7 +452,9 @@
           : '';
         sub.innerHTML = 'sell <b>$' + fmt(p.strike) + ' put</b>' + otm + floor
           + (p.exp ? ' &middot; exp <b>' + fmtDate(p.exp) + '</b> (' + p.dte + 'd)' : ' (' + p.dte + 'd)')
-          + '<br><b>' + fmt(p.annualized_roc) + '%</b> ann &middot; <b>' + fmt(p.prob_otm) + '%</b> OTM '
+          + '<br><b>' + fmt(p.annualized_roc) + '%</b> ann'
+          + ((weeklyPct(p) != null) ? ' <span class="wk" title="yield per week, his pre-order screen: ann RoC / 52. Aim for ~1%/wk toward the 100%/yr book.">(' + fmt(weeklyPct(p)) + '%/wk)</span>' : '')
+          + ' &middot; <b>' + fmt(p.prob_otm) + '%</b> OTM '
           + src + hiv + crowd + thin + primeChip + (p.earnings_days != null ? ' &middot; earn ' + p.earnings_days + 'd' : '');
       }
       card.appendChild(sc); card.appendChild(tk); card.appendChild(dir);

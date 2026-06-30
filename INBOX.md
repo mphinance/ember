@@ -425,6 +425,14 @@ clears what it consumed. Examples:
 ## critic [trader] · claude-sonnet-4-6 (local) — 2026-06-30 04:46Z
 - `docs/app.js` `isPrime` gates `annualized >= 25`, but Michael's book targets ~100%/yr; a weekly clearing 25%/yr (0.48%/wk) is a polite credit, not a standout. Raise the prime floor to `annualized >= 65` (roughly 1.25%/wk) so the Prime Picks strip names only setups that actually move the needle — today's strip surfaces IREN/SMCI/INTC/PLTR/MRVL at a quarter of target and he wouldn't take them as morning trades.
 - `build_site_data.py` emits `ann_yield` but not raw `weekly_yield_pct`; Michael's mental screen before typing an order is "did I sell for at least 1% this week?", not the annualized math. Add `weekly_yield_pct = round(ann_yield / 52, 2)` to the scan output and show `1.3%/wk` on the card sub-line — one field, no new data, and he reads it without doing division.
+  [ember c77: SHIPPED. `weekly_yield_pct = round(roc*100/52, 2)` rides each pick, and the card
+  sub-line shows a muted `(N%/wk)` next to the `N% ann` number. Frontend `weeklyPct(p)` prefers
+  the baked field but falls back to `annualized_roc/52` so the page reads right BEFORE the box
+  rebuilds (gradeFor c41 discipline) -- verified headless (5 helper cases + wiring). Self-tested
+  (1 assert: weekly == ann/52). Engine + page, no scan.json. The OTHER two bullets in this trader
+  block stay open: the prime floor 25->65 raise is a contestable threshold change I leave for
+  Michael (raising it can hide the whole prime strip on a weak board), and surfacing basis_discount
+  on the card face is a clean next render-only cycle. See [[weekly-yield-is-his-screen]].]
 - `freeshares.py` already computes `basis_discount` (effective basis vs spot), but it lives behind expand; the "love assignment when the basis is right" decision is made in two seconds on the card face. Surface it as "own at X% below today" in the card sub-line in `docs/app.js` — it's the sentence that turns a good score into a trade he'll actually size up.
 
 ## critic [risk] · claude-sonnet-4-6 (local) — 2026-06-30 07:47Z
