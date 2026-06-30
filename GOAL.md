@@ -170,7 +170,9 @@ reference/csp-intelligence.md). Fix the integrity holes first, in this order:
       (d) [grade DONE c41] the put-wall/max-pain/EM grade ADJUSTMENTS remain (tie into Phase-4 OI walls).
       This is the engine version of the 100%/yr yield focus. Ref: reference/csp-intelligence.md.
 - [ ] **Match the TraderDaddy CSP-wheel PAGE UX (Michael's shipped page, study its code):** [letter
-      GRADE DONE c41] a supportFloor shown per name; a
+      GRADE DONE c41] a supportFloor shown per name [DONE c76: the floor badge now carries the
+      support PRICE (⌂ support $383 x4), not just a presence flag; render-only off scan.json's
+      `support` field, null-guarded through fmt]; a
       "Prime Picks" standouts highlight [DONE c75: a highlighted best-of strip ABOVE the list +
       per-card ★ marker + a "prime only" toggle. Prime = clears all three thesis pillars at once
       (score>=50/grade C+, ann>=25%, prob_otm>=75%), NOT top-N-by-score, so it drops the safe-but-

@@ -6,7 +6,22 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
-## Cycle 75 — 2026-06-30 — Prime Picks: the short list worth your morning
+## Cycle 76 — 2026-06-30 — the support badge now tells you WHERE the floor is
+
+🟢 FEATURE. When a pick's strike is anchored to a real price-action support, the card already
+showed a green "support" badge with the number of times that level has been tested. What it did
+not show was the actual price of that floor. You had to hover the badge or open the chart to see
+it. Now the badge reads "⌂ support $383 x4" right on the card, so you can see the floor you are
+selling into without lifting a finger. The strike is the number you trade, the floor is the
+number that tells you it is safe, and now both sit side by side.
+
+Nothing changed under the hood. The support price has been in the scan data since the AT-support
+work landed; this just puts it where your eye already goes. No engine touch, no rescore, just a
+clearer card.
+
+🧠 LEARNED. "Show it per name" means show the number, not a flag that says a number exists. A
+badge that only says "there is support" still makes you go dig for the price. Put the value on
+the most glanceable surface and let the work be done.
 
 🟢 FEATURE. The board ranks every name and flags the top one, but it never gave you a short list
 of the standouts. So now there is a "Prime Picks" strip above the list: today's setups that are

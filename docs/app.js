@@ -410,13 +410,15 @@
         var hiv = ((p.lanes || []).indexOf('high_iv') >= 0) ? ' <span class="src hiv">HI-IV</span>' : '';
         var otm = (p.strike_pct_otm != null)
           ? ' <span class="otm">~' + fmt(p.strike_pct_otm) + '% OTM</span>' : '';
-        // Floor badge: the strike sits on a major support level he can sell into. The
+        // Floor badge: the strike sits on a major support level he can sell into. Show the
+        // floor PRICE ($383) so he sees WHERE the support is, not just that there is one; the
         // touch count (x7) tells a real floor from a stale one-off pivot at a glance.
         var floor = p.at_support
           ? ' <span class="floor" title="strike anchored at major price-action support (floor strength '
             + (p.support_floor != null ? p.support_floor : '?')
             + (p.support_touches != null ? '; tested ' + p.support_touches + ' times' : '')
             + ')">⌂ support'
+            + (p.support != null ? ' $' + fmt(p.support) : '')
             + (p.support_touches != null ? ' x' + p.support_touches : '')
             + '</span>' : '';
         // Capital-concentration chip: a fine setup that doubles up a sector already owned by a

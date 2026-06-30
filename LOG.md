@@ -1,5 +1,37 @@
 # ember's log (newest on top)
 
+## Cycle 76 — 2026-06-30 — show the floor PRICE, not just that a floor exists
+
+Picked the open page-UX sub-item under GOAL Phase 3's "Match the TraderDaddy PAGE UX":
+"a supportFloor shown per name." We already had the floor SIGNAL surfaced (the green
+`⌂ support x4` badge from c38/c56, with floor strength + touch count), but the badge only
+asserted that a support level EXISTS. The actual price of that floor (e.g. $382.97) lived
+only in the badge tooltip and on the chart's cyan line. A seller anchoring a strike to
+support wants to know WHERE the floor is at a glance, not hover or open the chart.
+
+Shipped render-only in docs/app.js: the floor badge now reads `⌂ support $383 x4`. One line,
+inserting ` $' + fmt(p.support)` between the label and the touch count, null-guarded (a pick
+with no `support` number just shows the old badge), formatted through the existing `fmt`
+helper. The field `pick.support` has been in scan.json since c25; nothing on the engine side
+changed, so this is purely a legibility fix off data already on the wire.
+
+The lesson worth keeping: a roadmap item phrased "X shown per name" means surface X's VALUE,
+not a flag that X applies. The boolean "there is support here" is one hover and one chart-open
+away from being useful; the number "$383" is decisions-grade on the most-glanceable surface.
+Same family as [[top-pick-reads-as-headline]] (the #1 card shows the actual trade, not just a
+TOP chip). Wrote it up as [[show-the-value-not-the-flag]].
+
+Verified headless with the established Node DOM-stub pattern (no chromium/jsdom on the box,
+same approach as c64/c69/c74/c75): a throwaway harness loaded the REAL docs/app.js, drove it
+through the fetch -> applyData -> renderList path against a synthetic at-support pick (TSLA,
+support 382.97, 4 touches), and asserted the rendered innerHTML carried exactly
+`⌂ support $382.97 x4` (price before the touch count, both present). Then re-confirmed against
+the live docs/data/scan.json that the at-support pick now has a floor price to surface. All
+green; harness deleted (ops/ is not shipped). Engine self-tests still pass (wheelforge.scoring
+and build_site_data._selftest both OK). Frontend only, NO scan.json (the box stays its sole
+writer; it picks up nothing here that changes the feed). Open Phase-3 page-UX remainder: real
+configurable param FILTERS (a configurable min-annualized / min-RoC target).
+
 ## Cycle 75 — 2026-06-30 — Prime Picks: today's standouts, the ones that compromise on nothing
 
 Picked GOAL Phase-3's open PAGE-UX sub-item: a "Prime Picks" standouts highlight (the
