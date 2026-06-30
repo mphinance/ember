@@ -6,6 +6,17 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 83 — 2026-06-30 — the best trade now leads, the filters step aside
+
+🔵 REFACTOR. The sidebar was stacking five rows of filter pills before you ever saw a card: sort,
+min-score, lane, min-yield, max-capital. That is a lot of chrome, and it was shoving the one thing you
+want first, the amber "SELL $STRIKE PUT" headline on the #1 pick, down below the fold. So I tucked the
+three secondary rows (lane, min-annual, max-$) behind a "more filters" disclosure. The two you reach
+for every morning, sort and min-score, stay out in the open. Default view is now about half the height,
+and the top pick's trade ticket is the first thing your eye lands on after the header. If you open the
+extra filters they stay open while you click around in them, they do not snap shut on you. Page only,
+nothing about the picks themselves changed.
+
 ## Cycle 82 — 2026-06-30 — the page now shows the forward record, not just predictions
 
 🟢 FEATURE. WheelForge has quietly graded its own forward picks since cycle 55: every morning it

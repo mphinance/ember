@@ -19,7 +19,7 @@
     { key: 'ivrank', label: 'IV-rk', get: function (p) { return p.iv_rank || 0; } },
     { key: 'support', label: 'support', get: function (p) { return p.support_floor || 0; } },
   ];
-  var state = { sort: 'score', minScore: 0, minAnnual: 0, hideAvoid: false, lane: 'all', atSupport: false, maxCapital: 0, primeOnly: false };
+  var state = { sort: 'score', minScore: 0, minAnnual: 0, hideAvoid: false, lane: 'all', atSupport: false, maxCapital: 0, primeOnly: false, moreOpen: false };
 
   // ── "Prime Picks": today's standouts, the ones that compromise on NOTHING ───
   // A pick earns PRIME only when it clears all three thesis pillars at once: real
@@ -95,6 +95,15 @@
     av.onclick = function () { state.hideAvoid = !state.hideAvoid; buildControls(); renderList(); };
     filtRow.appendChild(av);
     host.appendChild(filtRow);
+    // The lane/yield/capital rows are secondary screens. Tuck them behind a "more filters"
+    // disclosure so the default two rows stay ~80px tall and the #1 pick's amber headline is
+    // the first signal his eye reaches, not the sixth. open/closed persists across rebuilds.
+    var more = document.createElement('details'); more.className = 'ctl-more';
+    more.open = state.moreOpen;
+    more.addEventListener('toggle', function () { state.moreOpen = more.open; });
+    var moreSum = document.createElement('summary'); moreSum.className = 'ctl-lab ctl-more-sum';
+    moreSum.textContent = 'more filters';
+    more.appendChild(moreSum);
     var laneRow = document.createElement('div'); laneRow.className = 'ctl-row';
     laneRow.appendChild(label('lane'));
     [['all', 'all'], ['liquid', 'liquid'], ['high_iv', 'high-IV']].forEach(function (l) {
@@ -120,7 +129,7 @@
     pr.title = 'show only Prime Picks: score 50+ (grade C+), 25%+ annualized, and 75%+ chance it stays OTM';
     pr.onclick = function () { state.primeOnly = !state.primeOnly; buildControls(); renderList(); };
     laneRow.appendChild(pr);
-    host.appendChild(laneRow);
+    more.appendChild(laneRow);
     // Yield mode: filter to the fat-premium setups that actually feed a ~100%/yr book.
     var yRow = document.createElement('div'); yRow.className = 'ctl-row';
     yRow.appendChild(label('min ann'));
@@ -131,7 +140,7 @@
       b.onclick = function () { state.minAnnual = m[0]; buildControls(); renderList(); };
       yRow.appendChild(b);
     });
-    host.appendChild(yRow);
+    more.appendChild(yRow);
     // Max-capital filter: size the board to what one trade can actually tie up (strike*100
     // cash collateral). The disciplined seller sizes to capital; this turns the board into
     // only-the-picks-I-can-afford. Render-only, off the strike already in the JSON.
@@ -144,7 +153,8 @@
       b.onclick = function () { state.maxCapital = m[0]; buildControls(); renderList(); };
       capRow.appendChild(b);
     });
-    host.appendChild(capRow);
+    more.appendChild(capRow);
+    host.appendChild(more);
   }
   function label(t) { var s = document.createElement('span'); s.className = 'ctl-lab'; s.textContent = t; return s; }
 

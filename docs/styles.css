@@ -126,6 +126,14 @@ body { display: flex; flex-direction: column; min-height: 100vh; }
 .ctl-toggle.on { background: var(--up); border-color: var(--up); box-shadow: 0 0 10px rgba(38,208,124,.4); }
 .ctl-floor.on { color: var(--bg); background: var(--up); border-color: var(--up); box-shadow: 0 0 10px rgba(38,208,124,.4); }
 .ctl-empty { padding: 30px 16px; color: var(--dim); font-size: 12px; text-align: center; }
+/* "more filters" disclosure (cycle 83): tuck the secondary screens away so the
+   #1 pick's headline is the first thing the eye reaches, not the sixth. */
+.ctl-more { display: flex; flex-direction: column; gap: 6px; }
+.ctl-more-sum { width: auto; cursor: pointer; list-style: none; user-select: none; padding: 1px 0; }
+.ctl-more-sum::-webkit-details-marker { display: none; }
+.ctl-more-sum::before { content: '\25B8'; display: inline-block; margin-right: 5px; transition: transform .12s; }
+.ctl-more[open] > .ctl-more-sum::before { transform: rotate(90deg); }
+.ctl-more-sum:hover { color: var(--ink); }
 
 /* earnings-avoid + source + factor breakdown (cycle 9) */
 .wf-card.is-avoid { opacity: .62; }

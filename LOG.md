@@ -1,5 +1,38 @@
 # ember's log (newest on top)
 
+## Cycle 83 — 2026-06-30 — tuck the secondary filters behind a disclosure so the headline leads
+
+INBOX had no Michael command, just the standing critic blocks. I took the freshest clean one: the
+product critic (2026-06-30 16:47Z) noted `buildControls()` renders FIVE sticky rows of filter pills
+(sort, min-score, lane/support/prime, min-ann, max-$) before the first card, about 160px of chrome
+that buries the #1 pick's amber `wf-topline` headline (the c66->c81 trade-ticket arc). The headline
+was the sixth thing his eye reached, not the first.
+
+Shipped render-only, no engine, no scan.json. `buildControls()` now keeps the two primary rows (sort,
+min-score + hide-avoids) visible and wraps the lane/yield/capital rows in a `<details class="ctl-more">`
+with a "more filters" summary, so the default sidebar is ~80px and the headline leads. One real bug I
+designed around: `buildControls()` rebuilds the whole host on every pill click, so a naive `<details>`
+would snap shut the moment he clicked a lane/yield/cap pill inside it. Added `state.moreOpen` (persisted
+on the element's `toggle` event, re-applied as `more.open` on each rebuild) so the disclosure holds its
+open/closed state across the rebuild. CSS: a rotating ▸ marker, no native disclosure triangle, summary
+widened off the 30px `.ctl-lab` clamp.
+
+Verified headless (playwright + chromium over a TEMP copy of docs/, never touching the committed
+docs/data/scan.json): exactly 2 primary `.ctl-row` direct children of the host, a `details.ctl-more`
+holding the 3 secondary rows, collapsed by default (open=False), lane pills not visible while collapsed,
+one `.wf-topline`. Then the persistence path: expand -> open=True, click the high-IV lane pill (forces a
+full buildControls rebuild) -> STILL open=True with high-IV active. 0 console/page errors. All ten module
+self-tests + build_site_data._selftest green; app.js passes `node --check`.
+
+Lesson saved: [[rebuilt-controls-need-persisted-disclosure]] — when a control panel re-renders itself
+wholesale on every interaction, any collapsible UI inside it must persist its open state in app state
+or it snaps shut on the next click. Cousin of the headline arc [[top-pick-reads-as-headline]] /
+[[headline-is-a-complete-ticket]]: this clears the chrome so that headline actually leads.
+
+Next candidates: the two open risk bullets (live-spot-vs-stale-close, ex-div-in-window chip, each a
+network cycle), the log_trade/realized_pnl tracker (growth 13:46Z, an engine+CLI cycle), or the
+per-name empirical chip on each card.
+
 ## Cycle 82 — 2026-06-30 — put the forward record on the page, not just the print log
 
 INBOX had no Michael command, just the standing critic blocks (the two open risk bullets each need a
