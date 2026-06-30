@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-30T00:00:24+00:00",
+  "generated_at": "2026-06-30T00:30:23+00:00",
   "source_note": "Candles and option premium are LIVE off the yfinance chain for 29 of 29 names (real IV, bid/ask, OI); the rest fall back to a realized-vol model when the chain is missing.",
   "dte": 7,
   "tickers": [
@@ -1317,7 +1317,7 @@
           "high": 195.55,
           "low": 191.22,
           "close": 192.53,
-          "volume": 178906300
+          "volume": 179304100
         },
         {
           "timestamp": 1782705600000,
@@ -1352,6 +1352,8 @@
         "support_floor": null,
         "gap_risk": 0.0,
         "put_skew": 0.096,
+        "empirical_lift": 0.0,
+        "empirical": null,
         "iv_gt_hv": true,
         "vrp": 1.3,
         "vrp_assumed": false,
@@ -2748,6 +2750,8 @@
         "support_floor": null,
         "gap_risk": 0.283,
         "put_skew": 0.158,
+        "empirical_lift": 0.0,
+        "empirical": null,
         "iv_gt_hv": true,
         "vrp": 1.48,
         "vrp_assumed": false,
@@ -4116,7 +4120,7 @@
           "high": 31.71,
           "low": 30.28,
           "close": 30.63,
-          "volume": 48451100
+          "volume": 48554500
         },
         {
           "timestamp": 1782705600000,
@@ -4151,6 +4155,8 @@
         "support_floor": null,
         "gap_risk": 0.479,
         "put_skew": 0.155,
+        "empirical_lift": 0.0,
+        "empirical": null,
         "iv_gt_hv": true,
         "vrp": 1.63,
         "vrp_assumed": false,
@@ -5520,7 +5526,7 @@
           "high": 233.9,
           "low": 226.13,
           "close": 232.69,
-          "volume": 248291300
+          "volume": 248372100
         },
         {
           "timestamp": 1782705600000,
@@ -5555,6 +5561,8 @@
         "support_floor": null,
         "gap_risk": 0.0,
         "put_skew": 0.099,
+        "empirical_lift": 0.0,
+        "empirical": null,
         "iv_gt_hv": false,
         "vrp": 0.89,
         "vrp_assumed": false,
@@ -6916,7 +6924,7 @@
           "high": 131.23,
           "low": 125.5,
           "close": 128.32,
-          "volume": 99247000
+          "volume": 99475400
         },
         {
           "timestamp": 1782705600000,
@@ -6951,6 +6959,8 @@
         "support_floor": null,
         "gap_risk": 0.182,
         "put_skew": 0.058,
+        "empirical_lift": 0.0,
+        "empirical": null,
         "iv_gt_hv": true,
         "vrp": 1.1,
         "vrp_assumed": false,
@@ -8354,6 +8364,8 @@
         "support_floor": null,
         "gap_risk": 0.0,
         "put_skew": 0.046,
+        "empirical_lift": 0.0,
+        "empirical": null,
         "iv_gt_hv": true,
         "vrp": 1.12,
         "vrp_assumed": false,
@@ -9723,7 +9735,7 @@
           "high": 274.2,
           "low": 262.0,
           "close": 266.77,
-          "volume": 41916500
+          "volume": 41986200
         },
         {
           "timestamp": 1782705600000,
@@ -9758,6 +9770,8 @@
         "support_floor": null,
         "gap_risk": 0.307,
         "put_skew": 0.135,
+        "empirical_lift": 0.0,
+        "empirical": null,
         "iv_gt_hv": true,
         "vrp": 1.26,
         "vrp_assumed": false,
@@ -11126,7 +11140,7 @@
           "high": 387.8,
           "low": 368.6,
           "close": 379.71,
-          "volume": 53358900
+          "volume": 53434100
         },
         {
           "timestamp": 1782705600000,
@@ -11161,6 +11175,8 @@
         "support_floor": 0.15,
         "gap_risk": 0.0,
         "put_skew": 0.044,
+        "empirical_lift": 0.0,
+        "empirical": null,
         "iv_gt_hv": false,
         "vrp": 0.99,
         "vrp_assumed": false,
@@ -12557,6 +12573,8 @@
         "support_floor": null,
         "gap_risk": 0.0,
         "put_skew": 0.055,
+        "empirical_lift": 0.0,
+        "empirical": null,
         "iv_gt_hv": true,
         "vrp": 1.61,
         "vrp_assumed": false,
@@ -13925,7 +13943,7 @@
           "high": 75.2,
           "low": 71.53,
           "close": 73.81,
-          "volume": 74881700
+          "volume": 74990300
         },
         {
           "timestamp": 1782705600000,
@@ -13960,6 +13978,8 @@
         "support_floor": null,
         "gap_risk": 0.044,
         "put_skew": 0.032,
+        "empirical_lift": 0.0,
+        "empirical": null,
         "iv_gt_hv": true,
         "vrp": 1.07,
         "vrp_assumed": false,
@@ -15356,6 +15376,8 @@
         "support_floor": null,
         "gap_risk": 0.227,
         "put_skew": 0.148,
+        "empirical_lift": 0.0,
+        "empirical": null,
         "iv_gt_hv": true,
         "vrp": 1.25,
         "vrp_assumed": false,
@@ -16724,7 +16746,7 @@
           "high": 57.54,
           "low": 54.58,
           "close": 56.35,
-          "volume": 7053500
+          "volume": 7081000
         },
         {
           "timestamp": 1782705600000,
@@ -16759,6 +16781,8 @@
         "support_floor": null,
         "gap_risk": 0.252,
         "put_skew": 0.152,
+        "empirical_lift": 0.0,
+        "empirical": null,
         "iv_gt_hv": true,
         "vrp": 1.31,
         "vrp_assumed": false,
@@ -18155,6 +18179,8 @@
         "support_floor": null,
         "gap_risk": 0.263,
         "put_skew": 0.054,
+        "empirical_lift": 0.0,
+        "empirical": null,
         "iv_gt_hv": true,
         "vrp": 1.28,
         "vrp_assumed": false,
@@ -19558,6 +19584,8 @@
         "support_floor": null,
         "gap_risk": 0.014,
         "put_skew": 0.046,
+        "empirical_lift": 0.0,
+        "empirical": null,
         "iv_gt_hv": true,
         "vrp": 1.21,
         "vrp_assumed": false,
@@ -20926,7 +20954,7 @@
           "high": 87.67,
           "low": 81.81,
           "close": 82.31,
-          "volume": 45485400
+          "volume": 45680000
         },
         {
           "timestamp": 1782705600000,
@@ -20961,6 +20989,8 @@
         "support_floor": null,
         "gap_risk": 0.123,
         "put_skew": 0.103,
+        "empirical_lift": 0.0,
+        "empirical": null,
         "iv_gt_hv": true,
         "vrp": 1.13,
         "vrp_assumed": false,
@@ -22329,7 +22359,7 @@
           "high": 285.95,
           "low": 274.21,
           "close": 283.78,
-          "volume": 261693600
+          "volume": 261775500
         },
         {
           "timestamp": 1782705600000,
@@ -22364,6 +22394,8 @@
         "support_floor": 0.15,
         "gap_risk": 0.0,
         "put_skew": 0.155,
+        "empirical_lift": 0.0,
+        "empirical": null,
         "iv_gt_hv": false,
         "vrp": 0.84,
         "vrp_assumed": false,
@@ -23760,6 +23792,8 @@
         "support_floor": null,
         "gap_risk": 0.287,
         "put_skew": 0.029,
+        "empirical_lift": 0.0,
+        "empirical": null,
         "iv_gt_hv": true,
         "vrp": 1.19,
         "vrp_assumed": false,
@@ -25163,6 +25197,8 @@
         "support_floor": null,
         "gap_risk": 0.228,
         "put_skew": 0.03,
+        "empirical_lift": 0.0,
+        "empirical": null,
         "iv_gt_hv": true,
         "vrp": 1.18,
         "vrp_assumed": false,
@@ -26566,6 +26602,8 @@
         "support_floor": null,
         "gap_risk": 0.408,
         "put_skew": 0.134,
+        "empirical_lift": 0.0,
+        "empirical": null,
         "iv_gt_hv": true,
         "vrp": 1.21,
         "vrp_assumed": false,
@@ -27969,6 +28007,8 @@
         "support_floor": null,
         "gap_risk": 0.047,
         "put_skew": 0.104,
+        "empirical_lift": 0.0,
+        "empirical": null,
         "iv_gt_hv": true,
         "vrp": 1.26,
         "vrp_assumed": false,
@@ -29372,6 +29412,8 @@
         "support_floor": null,
         "gap_risk": 0.028,
         "put_skew": 0.092,
+        "empirical_lift": 0.0,
+        "empirical": null,
         "iv_gt_hv": true,
         "vrp": 1.26,
         "vrp_assumed": false,
@@ -30775,6 +30817,8 @@
         "support_floor": null,
         "gap_risk": 0.229,
         "put_skew": 0.069,
+        "empirical_lift": 0.0,
+        "empirical": null,
         "iv_gt_hv": true,
         "vrp": 1.27,
         "vrp_assumed": false,
@@ -32178,6 +32222,8 @@
         "support_floor": 0.0,
         "gap_risk": 0.0,
         "put_skew": 0.059,
+        "empirical_lift": 0.0,
+        "empirical": null,
         "iv_gt_hv": true,
         "vrp": 1.07,
         "vrp_assumed": false,
@@ -33581,6 +33627,8 @@
         "support_floor": null,
         "gap_risk": 0.823,
         "put_skew": -0.064,
+        "empirical_lift": 0.0,
+        "empirical": null,
         "iv_gt_hv": true,
         "vrp": 1.14,
         "vrp_assumed": false,
@@ -34984,6 +35032,8 @@
         "support_floor": null,
         "gap_risk": 0.047,
         "put_skew": 0.114,
+        "empirical_lift": 0.0,
+        "empirical": null,
         "iv_gt_hv": true,
         "vrp": 1.33,
         "vrp_assumed": false,
@@ -36352,7 +36402,7 @@
           "high": 97.0,
           "low": 87.13,
           "close": 96.6,
-          "volume": 8184900
+          "volume": 8189700
         },
         {
           "timestamp": 1782705600000,
@@ -36387,6 +36437,8 @@
         "support_floor": 0.0,
         "gap_risk": 0.338,
         "put_skew": 0.013,
+        "empirical_lift": 0.0,
+        "empirical": null,
         "iv_gt_hv": true,
         "vrp": 1.1,
         "vrp_assumed": false,
@@ -37783,6 +37835,8 @@
         "support_floor": null,
         "gap_risk": 0.15,
         "put_skew": -0.079,
+        "empirical_lift": 0.0,
+        "empirical": null,
         "iv_gt_hv": false,
         "vrp": 0.96,
         "vrp_assumed": false,
@@ -39186,6 +39240,8 @@
         "support_floor": null,
         "gap_risk": 0.078,
         "put_skew": 0.05,
+        "empirical_lift": 0.0,
+        "empirical": null,
         "iv_gt_hv": true,
         "vrp": 1.07,
         "vrp_assumed": false,
@@ -40589,6 +40645,8 @@
         "support_floor": 0.0,
         "gap_risk": 0.0,
         "put_skew": 0.047,
+        "empirical_lift": 0.0,
+        "empirical": null,
         "iv_gt_hv": true,
         "vrp": 1.18,
         "vrp_assumed": false,
@@ -40645,39 +40703,11 @@
     }
   ],
   "changes": {
-    "new": [
-      "NFLX",
-      "RGTI"
-    ],
+    "new": [],
     "gone": [],
     "to_avoid": [],
     "from_avoid": [],
-    "movers": [
-      {
-        "ticker": "HOOD",
-        "delta": -19.9
-      },
-      {
-        "ticker": "ASTS",
-        "delta": -17.2
-      },
-      {
-        "ticker": "INTC",
-        "delta": -15.6
-      },
-      {
-        "ticker": "CVNA",
-        "delta": -14.5
-      },
-      {
-        "ticker": "MRVL",
-        "delta": -12.6
-      },
-      {
-        "ticker": "RIOT",
-        "delta": -12.2
-      }
-    ]
+    "movers": []
   },
-  "prev_generated_at": "2026-06-29T23:30:26+00:00"
+  "prev_generated_at": "2026-06-30T00:00:24+00:00"
 }
