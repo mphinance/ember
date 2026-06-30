@@ -213,9 +213,13 @@ reference/csp-intelligence.md). Fix the integrity holes first, in this order:
       synthetic-input asserts in build_site_data._selftest; iv_history gained its first `_selftest`
       (iv_rank percentile against a TEMP db, never the gitignored real one). Lane-tagging was already
       covered in universe._selftest, so I only added the three genuinely-uncovered paths. No scan.json.
-- [ ] chart polish (Michael): SHADE the put-sell zone as a filled translucent band (not just
-      lines), tinted by score; keep the Keltner walls. When covered-call mode lands, draw the
-      call-sell zone above price too. Use the keltner_bands math already emitted.
+- [x] c80: chart polish (Michael): SHADE the put-sell zone as a filled translucent band (not
+      just lines), tinted by score; keep the Keltner walls. DONE: a one-time `registerOverlay
+      ('zoneBand')` polygon spans the chart full width between spot and the strike (the CSP
+      cushion below price), filled `rgba` at alpha 0.13 tinted by `heatColor(score)` so the
+      walls/candles still read through it. Color rides via `extendData` so one template serves
+      every pick (and the call-sell zone above price when CC mode lands). Guarded to a real
+      cushion (`spot > strike`). Verified headless; frontend only, no scan.json.
 - [ ] **pattern read (Michael idea):** detect the few patterns a PUT SELLER cares about from
       OHLCV, support test/bounce (price holding Keltner lower) = good, breakdown (slicing
       through support) = avoid, range/coiling = sell both sides, downtrend = penalize. Port

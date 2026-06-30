@@ -189,6 +189,46 @@
     return '#5c6b73';
   }
 
+  // A hex level color -> translucent rgba, so a filled zone reads UNDER the
+  // walls and candles instead of painting over them.
+  function hexToRgba(hex, a) {
+    var h = String(hex || '').replace('#', '');
+    if (h.length === 3) h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2];
+    if (h.length !== 6) return 'rgba(120,200,255,' + a + ')';
+    return 'rgba(' + parseInt(h.substr(0, 2), 16) + ',' + parseInt(h.substr(2, 2), 16)
+      + ',' + parseInt(h.substr(4, 2), 16) + ',' + a + ')';
+  }
+
+  // A full-width translucent band between two price levels. Michael's ask: SHADE
+  // the put-sell zone (not just lines) and tint it by score. One register, reused
+  // for every pick; the fill color rides in via extendData so a single overlay
+  // template serves all scores (and, later, the call-sell zone above price).
+  var zoneRegistered = false;
+  function registerZoneBand() {
+    if (zoneRegistered) return;
+    zoneRegistered = true;
+    klinecharts.registerOverlay({
+      name: 'zoneBand',
+      totalStep: 2,
+      needDefaultPointFigure: false,
+      needDefaultXAxisFigure: false,
+      needDefaultYAxisFigure: false,
+      createPointFigures: function (o) {
+        var cs = o.coordinates || [];
+        if (cs.length < 2 || cs[0].y == null || cs[1].y == null) return [];
+        var top = Math.min(cs[0].y, cs[1].y), bot = Math.max(cs[0].y, cs[1].y);
+        var w = (o.bounding && o.bounding.width) || 0;
+        var color = (o.overlay && o.overlay.extendData && o.overlay.extendData.color)
+          || 'rgba(120,200,255,0.10)';
+        return [{
+          type: 'polygon', ignoreEvent: true,
+          attrs: { coordinates: [ { x: 0, y: top }, { x: w, y: top }, { x: w, y: bot }, { x: 0, y: bot } ] },
+          styles: { style: 'fill', color: color }
+        }];
+      }
+    });
+  }
+
   function chartStyles() {
     return {
       grid: { horizontal: { color: '#161c27' }, vertical: { color: '#161c27' } },
@@ -541,6 +581,7 @@
             + '<span class="fs-sum">' + esc(p.free_shares.summary) + '</span></div>'
           : '')
       + '<div class="chart-key">chart lines: '
+        + '<b style="color:' + heatColor(p.score) + '">shaded put-sell zone</b> (spot to strike, by score) &nbsp;·&nbsp; '
         + '<b style="color:#22d3ee">major S/R</b> (price action) &nbsp;·&nbsp; '
         + '<b style="color:#26d07c">support</b>/<b style="color:#ff7a18">resistance</b> walls (volatility) &nbsp;·&nbsp; '
         + '<span style="color:#8b97a8">20d avg</span> &nbsp;·&nbsp; '
@@ -549,7 +590,7 @@
     if (!t.candles || !t.candles.length) return;
     chart.applyNewData(t.candles);
     chart.removeOverlay();
-    drawLevels(p);
+    drawLevels(p, t.spot);
   }
 
   // Draw the levels prominently: Keltner walls (resistance/support), the SMA
@@ -563,8 +604,20 @@
                 text: { color: '#07090e', backgroundColor: color } }
     });
   }
-  function drawLevels(p) {
+  function drawLevels(p, spot) {
     var lv = p.levels || {}, kc = lv.keltner || {};
+    // The PUT-SELL ZONE, shaded: the cushion from spot down to your strike. A
+    // filled translucent band tinted by score (greener-hot = a better setup,
+    // steel = thin), so the buffer reads at a glance, not just as two lines. Sits
+    // UNDER the walls (drawn next) and the candles. Guarded: only a real CSP
+    // cushion (spot strictly above the strike) gets a band.
+    if (spot != null && isFinite(spot) && p.strike != null && spot > p.strike) {
+      chart.createOverlay({
+        name: 'zoneBand', lock: true,
+        extendData: { color: hexToRgba(heatColor(p.score), 0.13) },
+        points: [{ value: spot }, { value: p.strike }]
+      });
+    }
     // Keltner VOLATILITY walls (thin).
     hline(kc.upper, '#ff7a18', false, 1);   // resistance wall (hot)
     hline(kc.sma, '#5c6b73', true, 1);      // 20d midline
@@ -611,6 +664,7 @@
   }
 
   function boot() {
+    registerZoneBand();
     chart = klinecharts.init('wf-chart', { styles: chartStyles() });
     renderHowItWorks();
     loadData(true);

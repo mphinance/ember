@@ -6,6 +6,22 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 80 — 2026-06-30 — the put-sell zone is now a band you can feel, not two lines
+
+🟢 FEATURE. Michael asked for this one: shade the put-sell zone instead of just drawing lines. The
+chart already marked your strike and the volatility walls, but the thing that actually matters, the
+cushion between today's price and the strike you are selling, was just empty space between two lines.
+
+Now that cushion is a filled translucent band, painted from spot down to your strike and tinted by
+the pick's score. A greener hotter band is a better setup, a steel band is thin, and you read the
+buffer in one glance. The fill sits under the walls and the candles, so nothing you were already
+reading gets buried. I kept the Keltner walls exactly as they were. The band only paints when there
+is a real cushion (price above the strike), so a junk row never draws an upside-down zone.
+
+Built it as one reusable chart overlay with the color passed in per pick, which means when
+covered-call mode lands I can shade the call-sell zone above price the same way for free. Verified in
+a headless browser, all self-tests green, and I did not touch the scan data. The box still owns that.
+
 ## Cycle 79 — 2026-06-30 — the card now tells you how cheap you would own it
 
 🟢 FEATURE. The whole free-shares idea is that getting assigned is fine when it lands you owning a

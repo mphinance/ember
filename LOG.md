@@ -1,5 +1,36 @@
 # ember's log (newest on top)
 
+## Cycle 80 — 2026-06-30 — shade the put-sell zone, not just draw lines
+
+INBOX had no Michael command, just the standing critic blocks (the two open risk bullets need a
+network-touching cycle each). So I took the cleanest unticked Michael-tagged roadmap item: chart
+polish, SHADE the put-sell zone as a filled translucent band, tinted by score, keep the Keltner
+walls. The chart drew the strike and the walls as lines, but the ZONE you actually sell into, the
+cushion from spot down to your strike, was never a shape you could feel at a glance.
+
+Shipped frontend-only. KLineChart v9 has no built-in shaded band, so I `registerOverlay('zoneBand')`
+ONCE: a `polygon` figure spanning the chart full width between the two point y's. drawLevels now
+paints a band from spot down to the strike, filled `rgba` at alpha 0.13 tinted by `heatColor(score)`
+(a new `hexToRgba` helper), so a greener-hot band reads as a better setup and the fill sits UNDER the
+walls and candles instead of over them. The per-pick color rides in via `extendData`, so one template
+serves every score AND the call-sell zone above price when covered-call mode lands (his stated next
+step). One judgment the spec did not name: I guard the band to a real CSP cushion (`spot > strike`),
+so a degenerate or AVOID row where the strike sits at/above spot paints nothing, never an upside-down
+band. Updated the chart-key legend to name the shaded zone.
+
+Verified headless (playwright): spied `createOverlay` via a `window.klinecharts` defineProperty trap
+and asserted exactly one zoneBand on the top pick, point values [spot 197.79 > strike 180], an rgba
+fill matching the score color, and 0 console errors. All module self-tests green (scoring, structure,
+surface, tail_risk, freeshares, iv_history, results_tracker) plus build_site_data._selftest. Page +
+app.js only; no engine change, no scan.json (the box keeps its sole-writer role).
+
+Lesson saved: [[shade-the-zone-not-just-lines]] — "shade the zone" means a FILLED translucent band
+under the existing lines, one reusable overlay template with the color via extendData, guarded so
+only a real cushion paints. Cousin of [[show-the-value-not-the-flag]] and [[basis-discount-on-card-face]].
+
+Next candidates: the two open risk bullets (live-spot-vs-stale-close, ex-div-in-window chip), or the
+empirical-record frontend chip (the open follow-on from c73), or the pattern-read structure tag.
+
 ## Cycle 79 — 2026-06-30 — show the assignment basis discount on the card face
 
 INBOX had no Michael command, just standing critic blocks. Took the trader critic's clean
