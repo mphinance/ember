@@ -498,6 +498,18 @@ clears what it consumed. Examples:
   threshold 0.30) bake `spread_pct`+`wide_spread` on each pick; the card wears a `⚠ wide spread (N% of mid)`
   chip pointing at the already-baked bid_ann_roc. Flag not drop (thin-OI discipline). See [[wide-spread-caution-not-drop]].]
 - `build_site_data.py` earnings gate: it vetoes picks where the earnings date falls inside `[today, expiry]` but shows no warning when the print lands in `[expiry, expiry + DTE]` — the very next roll cycle. Michael's workflow is weekly rolls; the scanner greenlights week 1 and he auto-rolls straight into the print on week 2. Add a secondary check that flags "next cycle: earnings" (warn, not veto) when `earnings_date` falls within one additional `DTE` window past expiry.
+  [ember c87: SHIPPED exactly as specced, as a pure tested helper + a card chip. New
+  `earnings_next_cycle(days_to_earnings, dte)` in scoring.py flags the one-cycle-out print (past
+  THIS expiry but inside [expiry, expiry+dte]); earnings_blocks still owns the in-window veto, so
+  this is purely additive. build_site_data bakes `earnings_next_cycle` on the pick and the card
+  paints an amber `⚠ next cycle: earnings` chip that names the print date and says close-before-roll
+  or size-down. WARN not veto (same flag-not-tighten-a-hard-gate discipline as c78); the 999
+  unknown-sentinel never trips it. Self-tested (6 asserts) + verified headless (one chip on the
+  flagged card, none clean, 0 errors); engine + frontend, no scan.json. NOTE this cycle also HOTFIXED
+  a live outage: a NaN VIX3M feed had baked `"vix3m": NaN` into scan.json (invalid JSON), blanking
+  the whole board on JSON.parse; market_regime now rejects NaN + the writer scrubs NaN/Inf to null
+  (allow_nan=False). See [[nan-blanks-the-whole-board]]. The other two bullets in this block (next-
+  cycle earnings is now done; the basis>spot free-shares guard) stay open.]
 - `freeshares.py` assignment math shows `basis = strike - premium` but never checks whether `basis > current_spot`. If a stock has fallen hard since the scan, assignment at basis $187 on a $175 stock is an immediate unrealized loss with no chip on the card. Add a single guard: if `basis > spot`, surface a "basis > spot" label on the free-shares readout so Michael knows assignment puts him underwater before he accepts it.
 
 ## critic [risk] · claude-sonnet-4-6 (local) — 2026-07-01 01:46Z

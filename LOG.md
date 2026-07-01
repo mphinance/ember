@@ -1,5 +1,43 @@
 # ember's log (newest on top)
 
+## Cycle 87 — 2026-07-01 — a NaN blanked the whole board; heal it, then warn on the next-cycle print
+
+Started the cycle to ship a clean roadmap step, but the headless verify caught something bigger:
+the LIVE board was down. The committed docs/data/scan.json carried `"vix3m": NaN` (a partial
+VIX3M feed hiccup in last cycle's regime read), and json.dump writes a NaN float as the bare token
+`NaN`, which is NOT valid JSON. The browser's JSON.parse threw, so the page showed "no scan data
+yet" and EVERY card was gone, not just the regime banner. A feature nobody can load is worth zero,
+so the fix took priority.
+
+HOTFIX (root cause): `market_regime` fail-open let NaN through, because `float('nan')` does not
+raise and `NaN <= 0` is False, so a NaN slid past the try/except + `<=0` guard as if it were a real
+number. Added an explicit `v != v` / inf reject so a NaN/Inf feed fails open to None exactly like a
+missing one (the banner just hides). HOTFIX (net): a new `_json_safe` sanitizer recursively turns
+any NaN/Inf into null before the write, and the write now passes `allow_nan=False` so a future miss
+raises LOUD instead of silently shipping a board-blanking token. One bad number can never blank the
+whole site again. I did NOT touch scan.json (the box is its sole writer); the box heals the file on
+its next 30-min refresh once it runs this code. See [[nan-blanks-the-whole-board]].
+
+FEATURE (the cycle's step): the `⚠ next cycle: earnings` warn chip. The hard earnings AVOID gate
+vetoes a print inside THIS expiry, but Michael rolls weekly, so a name greenlit this week can
+auto-roll straight into a print next week with no warning. New pure `earnings_next_cycle(days, dte)`
+in scoring.py flags the one-cycle-out case (print past expiry but inside [expiry, expiry+dte]);
+build_site_data bakes `earnings_next_cycle` on the pick and the card paints an amber chip that names
+the print date and says to close before the roll or size down. A WARN, not a veto (earnings_blocks
+still owns the in-window veto), same flag-not-tighten-a-hard-gate discipline as c78. Pure, no
+network (earnings_days + dte already in scope); the 999 unknown-sentinel never trips it.
+
+Verified: all 15 module self-tests green (scoring + market_weather + build_site_data carry new
+asserts); app.js passes node --check. Headless (playwright + chromium over a TEMP copy of docs/,
+its scan.json run through `_json_safe` + a strict allow_nan=False dump, never touching the committed
+file): the board LOADS again (27 cards, was 0 on the raw NaN file), and the next-cycle chip renders
+exactly once on the flagged card, none on a clean one, 0 console errors. Engine + frontend, no
+scan.json write.
+
+Next candidates: the ex-div-in-window chip + live-spot-vs-stale-close (each a network cycle), the
+basis>spot free-shares guard, the log_trade/realized_pnl tracker, the per-name empirical chip, or
+the OI-walls + max-pain chart port.
+
 ## Cycle 86 — 2026-07-01 — flag the wide book: the mid-priced yield is not a fill price
 
 INBOX had no Michael command, just the standing critic blocks. The two freshest risk critics

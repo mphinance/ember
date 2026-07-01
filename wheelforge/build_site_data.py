@@ -17,7 +17,7 @@ import math
 import os
 from datetime import datetime, timezone
 
-from wheelforge.scoring import score_contract, letter_grade
+from wheelforge.scoring import score_contract, letter_grade, earnings_next_cycle
 from wheelforge.freeshares import free_shares_read
 from wheelforge.iv_history import record as _iv_record, iv_rank as _iv_rank_hist
 from wheelforge import results_tracker as _rt
@@ -764,6 +764,12 @@ def build_one(ticker, earnings_days=None, lanes=None, sector=None):
             # board whenever yfinance is flaky), so surface the uncertainty: a visible chip that
             # says "I could not confirm this name is clear of earnings", his call to size or skip.
             "earnings_unknown": earnings_days is None,
+            # NEXT-CYCLE earnings WARN (not a veto): the print clears THIS expiry but lands
+            # in the next weekly-roll window (expiry .. expiry + dte). Michael rolls weekly,
+            # so the hard AVOID gate greenlights week 1 and he auto-rolls straight into the
+            # print on week 2. A visible chip so he sizes/skips on purpose; earnings_blocks
+            # still owns the in-window veto, this only covers the one-cycle-out case.
+            "earnings_next_cycle": earnings_next_cycle(contract["days_to_earnings"], dte),
             # GICS sector (from the screener) + the capital-concentration flag set by the
             # post-sort _sector_crowding pass. sector_crowded starts False here and is filled
             # once the whole ranked list is known; None sector simply never gets flagged.
@@ -825,6 +831,22 @@ def _load_prev():
         return prev, d.get("generated_at")
     except Exception:
         return {}, None
+
+
+def _json_safe(obj):
+    """Recursively replace NaN / Infinity floats with None so the written scan.json is
+    ALWAYS valid JSON. A bare `NaN` token (what json.dump emits by default for a NaN float)
+    is not valid JSON and makes the browser's JSON.parse throw, which blanks the ENTIRE
+    board, not just one field. Belt to market_regime's suspenders: any future field that
+    goes NaN degrades to a hidden/absent value instead of taking the whole site down.
+    (definition-of-best: never blank the site, cf. the empty-scan bail.)"""
+    if isinstance(obj, float):
+        return None if (obj != obj or obj in (float("inf"), float("-inf"))) else obj
+    if isinstance(obj, dict):
+        return {k: _json_safe(v) for k, v in obj.items()}
+    if isinstance(obj, (list, tuple)):
+        return [_json_safe(v) for v in obj]
+    return obj
 
 
 def _compute_changes(prev, tickers):
@@ -912,8 +934,12 @@ def main():
         "regime": _regime(),
     }
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
+    # allow_nan=False + a _json_safe pre-pass: the sanitizer turns any stray NaN/Inf into
+    # null so the file is valid JSON, and allow_nan=False makes a miss LOUD (raises) rather
+    # than silently shipping a board-blanking token. A NaN regime once took the whole site
+    # down; this guarantees a single bad number can never do that again.
     with open(OUT, "w") as f:
-        json.dump(out, f, indent=2)
+        json.dump(_json_safe(out), f, indent=2, allow_nan=False)
     print(f"\nwrote {OUT} ({len(tickers)} names)")
 
 
@@ -1201,8 +1227,17 @@ def _selftest():
     finally:
         _EMP_CACHE = _saved_cache
 
+    # _json_safe: NaN/Inf must degrade to null so scan.json is always valid JSON, and the
+    # sanitized structure must round-trip through a STRICT (allow_nan=False) dump.
+    _nan = float("nan"); _inf = float("inf")
+    _dirty = {"a": _nan, "b": [1.0, _inf, {"c": _nan}], "d": "ok", "e": 3}
+    _clean = _json_safe(_dirty)
+    assert _clean["a"] is None and _clean["b"][1] is None and _clean["b"][2]["c"] is None, _clean
+    assert _clean["b"][0] == 1.0 and _clean["d"] == "ok" and _clean["e"] == 3, _clean
+    json.dumps(_clean, allow_nan=False)  # must NOT raise: proves the board can never blank on a NaN
+
     print("OK: build_site_data DTE-ladder + premium-floor + short-rv-clamp + sector-crowding + "
-          "iv-solve + iv-rank + changes + empirical-flywheel self-test passed.")
+          "iv-solve + iv-rank + changes + empirical-flywheel + json-safe self-test passed.")
 
 
 if __name__ == "__main__":

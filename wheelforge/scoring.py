@@ -162,6 +162,24 @@ def earnings_blocks(days_to_earnings, dte):
     return d <= float(dte or 0)
 
 
+def earnings_next_cycle(days_to_earnings, dte):
+    """WARN (not veto): the print clears THIS expiry but lands in the NEXT weekly-roll
+    window (expiry .. expiry + dte). Michael rolls weekly, so a name greenlit this cycle
+    can auto-roll straight into the print next week. earnings_blocks already vetoes a print
+    inside this expiry; this only flags the one-cycle-out case so he sizes/skips on purpose
+    instead of rolling blind into it. Pure; junk / the 999 unknown-sentinel -> False."""
+    try:
+        d = float(days_to_earnings)
+    except (TypeError, ValueError):
+        return False
+    dte_f = float(dte or 0)
+    if d < 0 or dte_f <= 0:
+        return False
+    if d <= dte_f:            # blocked THIS cycle -> earnings_blocks owns the veto
+        return False
+    return d <= 2.0 * dte_f   # inside [expiry, expiry + dte], the next roll window
+
+
 # ── the letter grade (reads instantly; "63.5" does not) ──────────────────────
 
 # Map the 0-100 Premium Quality Score to a letter so the board reads at a glance.
@@ -343,6 +361,16 @@ def _selftest():
           c["grade"], "| avoid", e["grade"])
     assert g["grade"] in ("A", "B"), "a 70+ setup should grade A or B"
     assert e["grade"] == "F", "an earnings-vetoed (score 0) pick must grade F"
+
+    # NEXT-CYCLE earnings WARN: a print past THIS expiry but inside the next weekly roll.
+    # earnings_blocks owns the veto in-window; this only flags the one-cycle-out case.
+    assert not earnings_next_cycle(4, 7), "a print in-window is a VETO (earnings_blocks), not a warn"
+    assert earnings_next_cycle(10, 7), "a print at 10d past a 7d expiry lands in the next roll -> warn"
+    assert earnings_next_cycle(14, 7), "a print at exactly expiry + dte is still the next window"
+    assert not earnings_next_cycle(15, 7), "a print beyond expiry + dte is too far out to warn"
+    assert not earnings_next_cycle(999, 7), "the unknown-sentinel (999) never trips the warn"
+    assert not earnings_next_cycle(None, 7) and not earnings_next_cycle(20, 0), \
+        "junk days / a zero DTE fail open to no warn"
     assert letter_grade(80) == "A" and letter_grade(79.9) == "B", "A band starts at 80"
     assert letter_grade(50) == "C" and letter_grade(34.9) == "F", "C floor 50, F below 35"
     assert letter_grade(None) == "F" and letter_grade("x") == "F", "junk grades F, fail-open"

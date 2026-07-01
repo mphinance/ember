@@ -38,6 +38,13 @@ def market_regime(vix, vix3m):
         v3 = float(vix3m)
     except (TypeError, ValueError):
         return None
+    # NaN is a valid float (float('nan') does NOT raise) and NaN <= 0 is False, so a NaN
+    # feed slips past the try and the <=0 guard, then rides into scan.json as a bare `NaN`
+    # token that is NOT valid JSON and blanks the ENTIRE board on JSON.parse. Reject it
+    # explicitly and fail open, exactly like a missing feed (a partial VIX3M outage was the
+    # real cause of the live outage this fixes). NaN != NaN is the portable NaN test.
+    if v != v or v3 != v3 or v == float("inf") or v3 == float("inf"):
+        return None
     if v <= 0 or v3 <= 0:
         return None
 
@@ -97,6 +104,12 @@ def _selftest():
     assert market_regime(15.0, None) is None
     assert market_regime(0, 16.0) is None
     assert market_regime("x", "y") is None
+    # NaN / inf must fail open to None, never ride into scan.json as an invalid-JSON token
+    # that blanks the whole board (the live outage this guards against).
+    nan = float("nan"); inf = float("inf")
+    assert market_regime(16.45, nan) is None, "a NaN VIX3M must fail open, not bake NaN"
+    assert market_regime(nan, 19.0) is None, "a NaN VIX must fail open"
+    assert market_regime(16.0, inf) is None and market_regime(inf, 16.0) is None, "inf fails open"
     print("market_weather self-test passed.")
 
 

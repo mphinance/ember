@@ -590,6 +590,15 @@
         var earnUnk = p.earnings_unknown
           ? ' <span class="earnunk" title="could not confirm this name is clear of an earnings print: no earnings date from the screener or the yfinance lookup, so the hard AVOID gate could not check it. Verify before selling.">⚠ earnings unknown</span>'
           : '';
+        // Next-cycle earnings: the print clears THIS expiry (so it is NOT vetoed) but lands in
+        // the next weekly-roll window. Michael rolls weekly, so a clean pick this week auto-rolls
+        // straight into the print next week. A warn, not a veto (the in-window print IS vetoed);
+        // he sizes down or plans to close before the roll. Server sets it off earnings_days + dte.
+        var nextEarn = p.earnings_next_cycle
+          ? ' <span class="nextearn" title="earnings clears THIS expiry but lands in the next weekly-roll window'
+            + (p.earnings_days != null ? ' (print in ' + p.earnings_days + 'd)' : '')
+            + ': roll weekly and you sell straight into the print next cycle. Plan to close before the roll, or size down.">⚠ next cycle: earnings</span>'
+          : '';
         // Prime marker: this one card cleared all three thesis pillars (quality + yield +
         // discipline). Same set the strip above names; flagged here too so it's identifiable
         // when scrolling the full board.
@@ -601,7 +610,7 @@
           + '<br><b>' + fmt(p.annualized_roc) + '%</b> ann'
           + ((weeklyPct(p) != null) ? ' <span class="wk" title="yield per week, his pre-order screen: ann RoC / 52. Aim for ~1%/wk toward the 100%/yr book.">(' + fmt(weeklyPct(p)) + '%/wk)</span>' : '')
           + ' &middot; <b>' + fmt(p.prob_otm) + '%</b> OTM '
-          + src + hiv + crowd + thin + wide + earnUnk + primeChip + (p.earnings_days != null ? ' &middot; earn ' + p.earnings_days + 'd' : '');
+          + src + hiv + crowd + thin + wide + earnUnk + nextEarn + primeChip + (p.earnings_days != null ? ' &middot; earn ' + p.earnings_days + 'd' : '');
       }
       card.appendChild(sc); card.appendChild(tk); card.appendChild(dir);
       if (head) card.appendChild(head);

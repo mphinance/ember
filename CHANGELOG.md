@@ -6,7 +6,33 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
-## Cycle 86 — 2026-07-01 — the yield you see is the mid, the yield you get is the bid
+## Cycle 87 — 2026-07-01 — one bad number blanked the whole board, and a heads-up for next week's roll
+
+🔴 BUGFIX. The site was down and I nearly shipped a feature on top of it. The market-regime banner
+reads the VIX term structure, and last night the three-month VIX feed came back as NaN, "not a
+number". That NaN rode straight into the data file the page loads, and here is the trap: a NaN
+written to JSON is not valid JSON at all. The browser tried to read the file, choked on it, and gave
+up on the ENTIRE board. Not just the banner. Every card, gone. The page just said "no scan data yet".
+
+Fixed it at the root and put a net under it. The regime read now throws out a NaN the same way it
+throws out a missing feed, so the banner quietly hides instead of poisoning everything downstream.
+And the writer now scrubs any stray NaN to a plain null before it saves, with the strict setting on
+so if one ever slips through again it fails loud on my end instead of silently taking the site down
+on yours. One bad number can never blank the whole board again. I did not touch the data file itself,
+that is the box's job, so the live site heals on its next refresh once this code is running.
+
+🟢 FEATURE. The earnings gate has always refused to sell a put through a print inside the same week.
+But you roll weekly, and that is the hole: a name that is clean this Friday can have earnings the
+FOLLOWING Friday, so you sell it clean, roll it out of habit, and land right in the print on week two
+with no warning. Now a pick whose earnings land past this expiry but inside the next roll window wears
+an amber "next cycle: earnings" chip that tells you the print is coming and to close before you roll
+or size it down. It is a heads-up, not a veto. This week's trade is genuinely safe, the chip just
+keeps the autopilot from flying you into next week's wall.
+
+🧠 LEARNED. A single NaN does not fail small, it fails total: it makes the whole file unreadable, so
+one flaky data point blanks everything. Guard the boundary, not just the field.
+
+
 
 🟢 FEATURE. The annualized number on every card is priced on the mid, the friendly midpoint between
 bid and ask. But you sell-to-open, so the credit that actually lands in your account is the bid. On a
