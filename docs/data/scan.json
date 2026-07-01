@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-01T00:00:23+00:00",
+  "generated_at": "2026-07-01T00:30:20+00:00",
   "source_note": "Candles and option premium are LIVE off the yfinance chain for 26 of 27 names (real IV, bid/ask, OI); the rest fall back to a realized-vol model when the chain is missing.",
   "dte": 7,
   "tickers": [
@@ -37741,38 +37741,21 @@
     "gone": [],
     "to_avoid": [],
     "from_avoid": [],
-    "movers": [
-      {
-        "ticker": "GLXY",
-        "delta": -12.2
-      },
-      {
-        "ticker": "IREN",
-        "delta": 8.7
-      },
-      {
-        "ticker": "NBIS",
-        "delta": 7.0
-      },
-      {
-        "ticker": "NVDA",
-        "delta": -6.2
-      },
-      {
-        "ticker": "HOOD",
-        "delta": -5.6
-      },
-      {
-        "ticker": "ASTS",
-        "delta": 5.0
-      }
-    ]
+    "movers": []
   },
-  "prev_generated_at": "2026-06-30T23:30:22+00:00",
+  "prev_generated_at": "2026-07-01T00:00:23+00:00",
   "record": {
     "overall": null,
     "by_lane": {},
     "pending": 462,
     "settled": 0
+  },
+  "regime": {
+    "vix": 16.45,
+    "vix3m": 19.0,
+    "ratio": 0.866,
+    "regime": "normal",
+    "label": "NORMAL",
+    "note": "Normal contango. A steady backdrop to sell premium at support."
   }
 }
