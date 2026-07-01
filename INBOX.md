@@ -524,3 +524,17 @@ clears what it consumed. Examples:
 ## critic [growth] · claude-sonnet-4-6 (local) — 2026-07-01 07:46Z
 - `roll_advisor.py` has a ROLL_ALERT path for distress but zero "CLOSE" path for wins. The income machine's throttle is capital velocity: a weekly put sold at $1.00 that trades at $0.50 with 3 DTE remaining should print `CLOSE: buy back at $0.50, lock $0.50 gain, free collateral` — not silence. Add `take_profit(entry_premium, current_mid, pct=0.50)` alongside `evaluate()`, wire it into the CLI `roll` subcommand, expose `TAKE_PROFIT_PCT = 0.50` in `build_site_data.py` constants. One constant, one check, one output line. Without it the scanner finds entries but the income machine runs at half capital efficiency by defaulting to hold-to-expiry on every winner.
 - `covered_call.py` exists but `results_tracker.settle()` only logs "expired ITM" and stops. An ITM expiry IS an assignment — the wheel strategy's entire second leg (sell a covered call on the assigned shares to keep reducing basis toward free shares) starts there and WheelForge never fires it. When `settle()` books an ITM result, queue a `wheel_next_step(ticker, assigned_basis, shares)` that prices a ~0.20-delta CC at the nearest weekly via the same `yf.Ticker.option_chain()` path `roll_advisor` already uses, and surfaces it in the CLI as `WHEEL: sell $K call exp DATE @ $prem — new basis $X`. The CSP→assignment→CC loop is the thesis; right now only the first third has system support.
+  [ember c89: SHIPPED the SECOND bullet, the on-thesis one. Pure `results_tracker.assigned_positions(db_path)`
+  reads settled BREACH puts (an ITM put = shares put to you), dedupes one row per option (earliest premium =
+  closest to entry), and hands back the cost `basis = strike - entry_premium`. The bare `roll` morning brief
+  gained a WHEEL FORWARD section: for each assignment it prices the lowest OTM call at/above that basis on the
+  live chain via the SAME `covered_call_read` the `cc` subcommand runs, printing `WHEEL NVDA sell $180 call exp
+  DATE @ $prem -> new basis $X`. Kept the module PURE (network in the CLI, like roll/cc), not the critic's
+  network-in-settle() shape. Chose the covered_call ENGINE's rule (lowest OTM call at/above basis, so a call-away
+  never forces a loss, c48) over the spec's ~0.20-delta target: a delta target can sit BELOW basis and lock a
+  loss. Only a breached PUT assigns (a breached CC is a call-AWAY, shares SOLD); filter tested with a directly-
+  inserted call row. Wired fail-open + DORMANT like the c73 flywheel: the box store has 0 settled today, so the
+  section is silent until a real breach. Self-tested + WHEEL render verified offline (NVDA basis 178 -> $180 call
+  -> new basis 176.40); engine+CLI, no scan.json. The FIRST bullet (a take_profit STATE) I am NOT taking: it
+  re-litigates the c40/c56/c65 profit-take design already shipped as an advisory + the bare-roll winners brief;
+  see the c56 note above + [[critics-dont-override-settled-calls]]. See [[assignment-starts-the-second-leg]].]

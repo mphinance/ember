@@ -6,6 +6,29 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 89 — 2026-07-01 — the wheel finally turns: an assignment now tells you what call to sell
+
+🟢 FEATURE. The scanner has always been good at finding the put to sell. But the wheel does not stop
+when you get assigned, that is where the real work begins: you own the shares now, and the income
+machine keeps running by selling a call against them to grind your cost basis down toward free. WheelForge
+had the engine for that second leg since the covered-call mode landed, but nothing ever connected the dots.
+If a put you sold got put to you, the tool went quiet at the exact moment you needed it most.
+
+Now it does not. When a tracked put settles below its strike, that is an assignment, and the morning
+`roll` brief adds a WHEEL FORWARD line for it: it takes your real basis (the strike you paid, minus the
+premium you already kept) and prices the lowest out-of-the-money call at or above that basis, so a
+call-away always sells at or above what you paid, never a forced loss. It reads like a ticket you can
+place: WHEEL NVDA sell $180 call exp Jul 25 at $1.60, new basis $176.40. Close the winners, wheel the
+assignments, all in one place each morning.
+
+It is wired the quiet way, same as the forward record: it only speaks when a put actually breaches, so
+right now with nothing settled it stays silent and turns itself on the first time a trade gets assigned.
+Only a breached PUT counts as an assignment, by the way. A called-away covered call sold the shares, so
+there is nothing to wheel there, and the code knows the difference.
+
+🧠 LEARNED. An assignment is not the end of a trade, it is the start of the next one. A scanner that
+stops at the entry abandons you right when the wheel gets interesting.
+
 ## Cycle 88 — 2026-07-01 — the chart now tells you what shape it is in
 
 🟢 FEATURE. The score already knew whether a name was holding up or falling apart, but it never said

@@ -193,6 +193,44 @@ def open_positions(db_path=None):
     return list(seen.values())
 
 
+def assigned_positions(db_path=None):
+    """Every settled CSP that BREACHED = an assignment: the put closed in-the-money, so the
+    seller was put 100 shares per contract at the strike. Deduped to one row per (ticker,
+    exp, strike), anchored on the EARLIEST snapshot's premium (closest to the real entry).
+    Each row carries the effective cost BASIS = strike - entry_premium (you pay the strike
+    for the shares but keep the premium you sold, so your basis is that much lower). This is
+    the handoff into the wheel's SECOND leg: sell a covered call against the assigned shares
+    to grind that basis toward free. Only a breached PUT counts (a breached covered call is a
+    call-AWAY, which SELLS the shares, not an assignment of them). Fail-open: [] on error."""
+    seen = {}
+    try:
+        con = _con(db_path)
+        rows = con.execute(
+            "SELECT day,ticker,strike,exp,premium,direction,settled_day "
+            "FROM picks WHERE outcome='breach' ORDER BY day ASC"
+        ).fetchall()
+        con.close()
+        for day, tk, strike, exp, prem, direction, settled_day in rows:
+            if "put" not in (direction or "").lower():
+                continue          # a breached CALL is a call-away, not shares assigned to you
+            try:
+                strike = float(strike)
+                key = (str(tk).upper(), str(exp), round(strike, 2))
+            except (TypeError, ValueError):
+                continue
+            if key in seen:
+                continue
+            prem = float(prem or 0.0)
+            seen[key] = {
+                "ticker": str(tk).upper(), "strike": strike, "exp": str(exp),
+                "entry_premium": prem, "basis": round(max(0.0, strike - prem), 2),
+                "settled_day": settled_day,
+            }
+    except Exception:
+        pass
+    return list(seen.values())
+
+
 def _captured_pct(entry, current):
     """Pure: fraction of the max premium captured if you buy the short back NOW. You sold
     for `entry` and can repurchase at `current`, so you keep `entry - current`, i.e. you
@@ -439,6 +477,26 @@ def _selftest():
     assert bt["AAA"]["hit_rate"] == 100.0 and bt["AAA"]["n"] == 2, bt
     assert bt["BBB"]["hit_rate"] == 0.0, bt
     assert "DDD" not in bt, bt          # pending, never in a settled cohort
+
+    # assigned_positions: a breached PUT is an assignment -> hands the wheel's next leg the
+    # cost basis (strike - premium kept). BBB breached (put, $50 strike, $0.90 premium) on
+    # both settled days; deduped to one, basis $49.10. AAA held (otm) so it never assigns.
+    ap = {a["ticker"]: a for a in assigned_positions(db_path=tmp)}
+    assert list(ap) == ["BBB"], ap                     # only the breached put assigns shares
+    assert ap["BBB"]["strike"] == 50.0
+    assert ap["BBB"]["basis"] == round(50 - 0.9, 2), ap["BBB"]   # strike minus premium kept
+    assert ap["BBB"]["entry_premium"] == 0.9, ap["BBB"]
+    # a breached COVERED CALL is a call-away (shares SOLD), not an assignment to wheel. snapshot
+    # only ever stores puts, so insert a call row directly to exercise the direction filter.
+    ct = os.path.join(tempfile.mkdtemp(), "ct_test.db")
+    con = _con(ct)
+    con.execute("INSERT INTO picks (day,ticker,strike,exp,premium,score,prob_otm,lane,"
+                "direction,outcome,settle_price,settled_day) VALUES "
+                "('2026-01-01','GGG',60,'2026-01-10',1.0,55,70.0,'liquid','covered call',"
+                "NULL,NULL,NULL)")
+    con.commit(); con.close()
+    settle({"GGG": 70}, today="2026-01-11", db_path=ct)   # 70 > 60 -> call breached (called away)
+    assert assigned_positions(db_path=ct) == [], "a called-away CC is not a share assignment"
 
     print("results_tracker self-test OK")
 

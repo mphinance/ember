@@ -7,8 +7,9 @@ WheelForge CLI — run the scanner from a terminal, not just the website.
 
   python -m wheelforge roll NVDA --strike 180 --exp 2026-07-03 --entry 2.00 --qty 2
                                                 manage an OPEN put: BTC / HOLD / ROLL
-  python -m wheelforge roll                     morning brief: tracked picks now buyable
-                                                for <= 50% of entry (close + recycle)
+  python -m wheelforge roll                     morning brief: winners now buyable for
+                                                <= 50% of entry (close + recycle) PLUS any
+                                                assigned name to wheel forward (sell a call)
 
   python -m wheelforge cc NVDA --basis 175 [--dte 30] [--shares 100]
                                                 got assigned? sell a call to grind the basis
@@ -17,10 +18,12 @@ Scan prints a ranked table of the best cash-secured puts. Roll closes the OTHER 
 of the trade: feed it a put you already sold and it prices the live mid, computes how
 much premium you have captured and how close spot sits to your strike, and tells you to
 take the win (BTC_NOW), sit tight (HOLD), or defend it (ROLL_ALERT). Bare `roll` (no
-position) scans the tracked results DB and lists every open pick already decayed to <=
-50% of entry, the winners to buy back and recycle the capital into a fresh week. cc runs the wheel's
-SECOND leg: feed it shares you hold and their cost basis and it finds the lowest OTM call
-at or above that basis, prices it live, and tells you how much it grinds the basis down.
+position) scans the tracked results DB: it lists every open pick already decayed to <= 50%
+of entry (winners to buy back and recycle into a fresh week) AND every pick that got
+ASSIGNED (a settled breach = shares put to you), pricing the covered call to sell against
+each so the CSP -> assignment -> covered-call loop reads in one place. cc runs that wheel
+SECOND leg on demand: feed it shares you hold and their cost basis and it finds the lowest
+OTM call at or above that basis, prices it live, and tells you how much it grinds it down.
 Same engine the site runs. No em dashes (Michael's rule).
 """
 
@@ -228,12 +231,48 @@ def _winners_brief():
     return 0
 
 
+def _wheel_brief():
+    """The wheel's SECOND leg in the morning brief: every tracked CSP that got ASSIGNED
+    (settled as a breach = you were put the shares at the strike) becomes a covered call to
+    sell against those shares. For each, price the lowest OTM call at or above the assignment
+    basis on the live chain and print the WHEEL step, so the CSP -> assignment -> covered-call
+    loop the whole thesis is built on has ONE place to read each morning. The engine is the
+    same covered_call_read the `cc` subcommand runs. Fail-open: a name we cannot price live is
+    shown with a fallback `cc` command to run when its chain loads, never crashes the brief."""
+    from wheelforge.results_tracker import assigned_positions
+    from wheelforge.covered_call import covered_call_read
+    assigned = assigned_positions()
+    if not assigned:
+        return 0
+    print(f"\n  WHEEL FORWARD ({len(assigned)} assigned): sell a call to grind the basis\n")
+    for a in assigned:
+        exp, spot, rv, cands = _call_chain(a["ticker"], 21)
+        if spot is None or not cands:
+            print(f"  {a['ticker']:<6} assigned ${a['strike']:.2f}p  basis ${a['basis']:.2f}  "
+                  f"(no live call chain; run `cc {a['ticker']} --basis {a['basis']:.2f}`)")
+            continue
+        dte = (date.fromisoformat(exp) - date.today()).days if exp else 30
+        read = covered_call_read(spot=spot, basis=a["basis"], dte=dte, candidates=cands,
+                                 exp=exp, rv=rv, want_to_own=True)
+        if read is None:
+            print(f"  {a['ticker']:<6} assigned ${a['strike']:.2f}p  basis ${a['basis']:.2f}  "
+                  f"spot ${spot:.2f}  underwater: no OTM call reaches the basis yet, hold")
+            continue
+        print(f"  WHEEL {a['ticker']:<6} sell ${read['strike']:.2f} call exp {exp} "
+              f"@ ${read['premium']:.2f}  -> new basis ${read['new_basis']:.2f}  "
+              f"({read['annualized_roc']}%/yr, keeps {read['prob_otm']}%)")
+    print("\n  Each covered call grinds the assigned basis toward free shares (the endgame).\n")
+    return 0
+
+
 def roll(args):
     o = _roll_parse(args)
-    # Bare `roll` (no position given) = the morning profit-take brief over the tracked DB.
-    # A specific position runs the single-position BTC/HOLD/ROLL manager below.
+    # Bare `roll` (no position given) = the morning brief over the tracked DB: winners to
+    # close (profit-take) + assigned names to wheel forward (covered call). A specific
+    # position runs the single-position BTC/HOLD/ROLL manager below.
     if not any(o[k] is not None for k in ("ticker", "strike", "exp", "entry")):
-        return _winners_brief()
+        _winners_brief()
+        return _wheel_brief()
     if not (o["ticker"] and o["strike"] and o["exp"] and o["entry"] is not None):
         print("usage: python -m wheelforge roll TICKER --strike X --exp YYYY-MM-DD "
               "--entry PREMIUM [--qty N]   (or bare `roll` for the profit-take brief)")

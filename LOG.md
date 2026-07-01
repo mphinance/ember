@@ -1,5 +1,44 @@
 # ember's log (newest on top)
 
+## Cycle 89 — 2026-07-01 — close the wheel: an assignment is the START of the second leg, not the end
+
+INBOX carried no new Michael command, only the standing stack of critic annotations. The freshest
+critic line (07-01 07:46Z, growth) had two bullets. The first (a `take_profit` state on roll_advisor)
+re-litigates a call I settled three times over (c40/c56/c65 already ship the profit-take advisory +
+the bare-`roll` close-the-winners brief); I am not flipping a ticked design on a critic's say-so
+([[critics-dont-override-settled-calls]]). The SECOND bullet was a real, on-thesis hole: `covered_call.py`
+has existed since c48, but nothing ever connected an ASSIGNMENT to it, so the income machine only had
+system support for the first third of the wheel (the entry). That is the step I shipped.
+
+FEATURE: close the CSP -> assignment -> covered-call loop. A settled BREACH in results_tracker is an
+assignment (the put closed ITM, so you were put 100 shares/contract at the strike). New pure
+`results_tracker.assigned_positions(db_path)` reads those breached PUTs, dedupes to one row per option
+(anchored on the earliest snapshot's premium, closest to the real entry), and hands back the effective
+cost `basis = strike - entry_premium` (you pay the strike but keep the premium you sold). The bare
+`roll` morning brief now runs a WHEEL FORWARD section under the close-the-winners list: for each
+assigned name it prices the lowest OTM call at/above that basis on the live chain via the SAME
+`covered_call_read` the `cc` subcommand uses, and prints `WHEEL NVDA sell $180 call exp DATE @ $prem
+-> new basis $X (NN%/yr, keeps NN%)`. One place each morning reads the whole open-position lifecycle:
+winners to close, and assigned shares to grind forward.
+
+Two design calls, both the house style: (1) only a breached PUT is a share assignment, a breached
+COVERED CALL is a call-AWAY (shares SOLD, nothing to wheel), so the reader filters on direction. I
+tested that filter with a directly-inserted call row, since snapshot() only ever stores puts. (2) Same
+discipline as the c73 empirical flywheel: the module stays PURE (network in the CLI, like roll/cc), and
+the loop is wired fail-open + DORMANT. The box's store today has 485 pending / 0 settled, so
+assigned_positions() returns [] and the WHEEL section prints nothing; it engages itself the first time a
+tracked CSP actually breaches, no second deploy needed. See [[assignment-starts-the-second-leg]].
+
+Verified: results_tracker + covered_call self-tests green (added assigned_positions asserts: BBB's
+breached put assigns at basis $49.10, a directly-inserted called-away CC does NOT); build_site_data
+--selftest + scoring green; the bare `roll` brief runs end-to-end on the real 485-position DB (live
+profit-take mids, empty WHEEL section); and the WHEEL render path verified offline with a forced NVDA
+assignment + a stubbed chain (basis 178.00 -> picks the $180 call -> new basis $176.40). Engine + CLI
+only, no scan.json (the box is its sole writer).
+
+Next candidates: surface the assigned/WHEEL brief on the frontend track-record page, the pattern CHART
+annotation, the OI-walls + max-pain chart port, or the ex-div-in-window chip.
+
 ## Cycle 88 — 2026-07-01 — name the chart shape: the price-action PATTERN read a put seller trades on
 
 INBOX carried no new Michael command, just the older critic annotations already consumed in prior
