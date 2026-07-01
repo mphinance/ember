@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-01T05:00:20+00:00",
+  "generated_at": "2026-07-01T05:30:20+00:00",
   "source_note": "Candles and option premium are LIVE off the yfinance chain for 0 of 24 names (real IV, bid/ask, OI); the rest fall back to a realized-vol model when the chain is missing.",
   "dte": 7,
   "tickers": [
@@ -33296,41 +33296,12 @@
   ],
   "changes": {
     "new": [],
-    "gone": [
-      "TSLA",
-      "CIFR",
-      "RIOT"
-    ],
+    "gone": [],
     "to_avoid": [],
     "from_avoid": [],
-    "movers": [
-      {
-        "ticker": "MXL",
-        "delta": 12.4
-      },
-      {
-        "ticker": "IREN",
-        "delta": -10.5
-      },
-      {
-        "ticker": "SMCI",
-        "delta": -7.0
-      },
-      {
-        "ticker": "NBIS",
-        "delta": -6.4
-      },
-      {
-        "ticker": "CRDO",
-        "delta": 5.8
-      },
-      {
-        "ticker": "APP",
-        "delta": 5.7
-      }
-    ]
+    "movers": []
   },
-  "prev_generated_at": "2026-07-01T04:30:20+00:00",
+  "prev_generated_at": "2026-07-01T05:00:20+00:00",
   "record": {
     "overall": null,
     "by_lane": {},
