@@ -558,6 +558,17 @@
         var thin = p.thin_oi
           ? ' <span class="thin" title="the chosen strike sits on a thin open-interest line: it fills, but slow and at a wider spread, so size down or skip it on purpose">⚠ thin OI</span>'
           : '';
+        // Tradeability caution: the chosen strike's bid/ask spread is WIDE, so the ann RoC above
+        // (priced on the mid) overstates the real fill — a limit order fills nearer the bid. Server
+        // flags wide_spread on the LIVE path only; the tooltip points at the bid-anchored yield he
+        // actually collects. A chip, never a drop (the mid is a real quote, just optimistic).
+        var wide = p.wide_spread
+          ? ' <span class="wide" title="wide bid/ask spread'
+            + (p.spread_pct != null ? ' (' + fmt(p.spread_pct * 100) + '% of mid)' : '')
+            + ': the ann RoC above is priced on the mid, but a limit order fills nearer the bid'
+            + (p.bid_ann_roc != null ? ' (~' + fmt(p.bid_ann_roc) + '%/yr)' : '')
+            + '. Sell on a limit, size down, or skip.">⚠ wide spread</span>'
+          : '';
         // Free-shares fit on the card face: if this is a name he WANTS to own and assignment
         // would land an effective cost basis (strike - premium) below today's price, that
         // discount IS the thesis (own it cheap, not just rent the premium). It lived only
@@ -590,7 +601,7 @@
           + '<br><b>' + fmt(p.annualized_roc) + '%</b> ann'
           + ((weeklyPct(p) != null) ? ' <span class="wk" title="yield per week, his pre-order screen: ann RoC / 52. Aim for ~1%/wk toward the 100%/yr book.">(' + fmt(weeklyPct(p)) + '%/wk)</span>' : '')
           + ' &middot; <b>' + fmt(p.prob_otm) + '%</b> OTM '
-          + src + hiv + crowd + thin + earnUnk + primeChip + (p.earnings_days != null ? ' &middot; earn ' + p.earnings_days + 'd' : '');
+          + src + hiv + crowd + thin + wide + earnUnk + primeChip + (p.earnings_days != null ? ' &middot; earn ' + p.earnings_days + 'd' : '');
       }
       card.appendChild(sc); card.appendChild(tk); card.appendChild(dir);
       if (head) card.appendChild(head);

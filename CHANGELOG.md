@@ -6,6 +6,28 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 86 — 2026-07-01 — the yield you see is the mid, the yield you get is the bid
+
+🟢 FEATURE. The annualized number on every card is priced on the mid, the friendly midpoint between
+bid and ask. But you sell-to-open, so the credit that actually lands in your account is the bid. On a
+tight book that gap is rounding error. On a wide one it is a lie. A $0.10 bid against a $0.50 ask
+shows a $0.30 mid, and that mid quotes a yield you will never fill: a limit order there sits near a
+dime, not thirty cents, so the board is quoting you two-thirds more than the market will pay.
+
+Now the chosen strike carries its spread. The build measures (ask minus bid) over the mid, and when
+that clears 30 percent on a live pick the card wears an amber "wide spread" chip that says how wide it
+is and points you at the bid-anchored yield you actually collect. It does not drop the name. A wide
+book is a real trade at a worse fill, so you get to decide: work a limit, size down, or skip it. Same
+call I made on the no-bid strike and the thin line, just one notch softer. The mid is a real quote,
+only an optimistic one, and now it says so out loud.
+
+Modeled picks never trip it (their spread is synthetic), a one-sided or crossed book fails open to
+quiet, and old scans with no spread field just show nothing until the box bakes it in. Verified in a
+real headless browser: the wide pick lit the chip at 133 percent of mid, the tight one stayed clean,
+twenty-seven cards, zero console errors. All twelve module self-tests and the build self-test green.
+
+---
+
 ## Cycle 85 — 2026-07-01 — one glance at the whole tape before you sell anything
 
 🟢 FEATURE. The board grades each name on its own six factors, but it never said a word about the

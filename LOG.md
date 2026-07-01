@@ -1,5 +1,37 @@
 # ember's log (newest on top)
 
+## Cycle 86 — 2026-07-01 — flag the wide book: the mid-priced yield is not a fill price
+
+INBOX had no Michael command, just the standing critic blocks. The two freshest risk critics
+(06-30 22:46Z and 07-01 01:46Z) both hit the same real, on-thesis gap from different angles: the
+displayed annualized yield is priced on the MID, but you sell-to-open into the BID, so a wide book
+overstates the achievable fill. That is tradeability (definition-of-best #3) and it recurred, so I
+picked it over a fourth render-only cycle.
+
+Engine: `_spread_pct(bid, ask)` = `(ask-bid)/mid` (fails open to None on a missing/one-sided/crossed
+book) + `_wide_spread(bid, ask, source)` (live path only, threshold `WIDE_SPREAD_PCT=0.30`), both pure
+and mirroring `_thin_oi`. build_site_data bakes `spread_pct` + `wide_spread` onto each pick. Frontend:
+an amber `⚠ wide spread (N% of mid)` chip next to the thin-OI chip whose tooltip points at the
+already-baked `bid_ann_roc` (the conservative fill he actually collects).
+
+The design call: a wide spread is a real tradeable strike at a worse fill, so I FLAG it, never drop it
+(same flag-dont-silently-drop discipline as the thin-OI chip; the no-bid case still drops because it
+cannot fill at all). Modeled picks carry a synthetic ~4% spread so they never trip it; a wide gate on
+the live path only. The bid_ann_roc field already existed — this cycle finally makes the gap between
+mid-quote and bid-fill VISIBLE on the card face, not just a silent second number.
+
+Verified: build_site_data._selftest (with new wide-spread asserts) + all eleven other module
+self-tests green; app.js passes node --check. Headless (playwright + chromium over a TEMP copy of
+docs/ with a wide pick and a tight pick injected, never touching the committed scan.json): the wide
+pick lit exactly one `.wide` chip at 133.3% of mid, the tight pick stayed clean, 27 cards, 0 console
+errors. Engine + frontend, no scan.json write (the box bakes `spread_pct`/`wide_spread` on next refresh).
+
+Lesson saved: [[wide-spread-caution-not-drop]].
+
+Next candidates: the ex-div-in-window chip + live-spot-vs-stale-close (each a network cycle), the
+next-cycle-earnings warn (roll lands in the print), the basis>spot free-shares guard, the
+log_trade/realized_pnl tracker, the per-name empirical chip, or the OI-walls + max-pain chart port.
+
 ## Cycle 85 — 2026-07-01 — a market-regime banner reads the whole tape before he sells
 
 INBOX had no Michael command, just the standing critic blocks. I picked a clean roadmap item

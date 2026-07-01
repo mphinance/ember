@@ -80,6 +80,12 @@ MIN_STRIKE_OI = 50  # open interest, at the CHOSEN strike, below which the line 
                     # data we cannot re-check in a headless build). Instead it wears a visible
                     # ⚠ thin-OI chip on the LIVE path only, so he sizes or skips it on purpose —
                     # same "flag, never a silent edit" discipline as the sector-crowding chip.
+WIDE_SPREAD_PCT = 0.30  # (ask-bid)/mid above which the CHOSEN strike's book is WIDE. The headline
+                        # ann RoC is priced on the mid, but a wide market fills a limit order nearer
+                        # the bid, so a $0.10 bid / $0.50 ask ($0.30 mid) shown as yield overstates
+                        # the real fill by ~2/3. Same "flag, never drop" discipline as thin OI: the
+                        # mid is a real quote, just optimistic, and bid_ann_roc already shows the
+                        # conservative fill; the chip just makes the gap visible before he sells.
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(HERE, "docs", "data", "scan.json")
 
@@ -368,6 +374,33 @@ def _sellable_premium(bid, ask):
     if bid <= 0:
         return None
     return (bid + ask) / 2.0 if ask > 0 else bid
+
+
+def _spread_pct(bid, ask):
+    """The bid/ask spread as a fraction of the mid, or None when it cannot be computed
+    (missing / non-positive / crossed / one-sided book). `(ask - bid) / mid`: 0.0 is a
+    locked market, 0.30 means the mid the headline RoC is priced on sits ~15% above the
+    bid you sell-to-open into. Pure; junk inputs fail open to None (no caution)."""
+    try:
+        b = float(bid); a = float(ask)
+    except (TypeError, ValueError):
+        return None
+    if b <= 0 or a <= 0 or a < b:
+        return None
+    mid = (b + a) / 2.0
+    return (a - b) / mid if mid > 0 else None
+
+
+def _wide_spread(bid, ask, source):
+    """True when the CHOSEN strike's bid/ask spread is wide enough that the mid-priced yield
+    overstates the achievable fill. LIVE path only: the modeled path carries a synthetic ~4%
+    spread by construction (c39), so flagging it would be noise, not a real book read. A
+    visible caution, never a drop (the mid IS a real quote, just optimistic; bid_ann_roc
+    already shows the conservative fill). Fail-open to not-wide on a missing/one-sided book."""
+    if source != "live":
+        return False
+    sp = _spread_pct(bid, ask)
+    return sp is not None and sp > WIDE_SPREAD_PCT
 
 
 def _thin_oi(open_interest, source):
@@ -740,6 +773,12 @@ def build_one(ticker, earnings_days=None, lanes=None, sector=None):
             # or skips on purpose. A visible chip, never a silent drop (yfinance OI is stale
             # intraday; a hard gate would blank good live picks to MODEL on bad data).
             "thin_oi": _thin_oi(oi, source),
+            # Tradeability caution: the chosen strike's bid/ask spread as a fraction of the
+            # mid, plus a wide-spread flag (live path only). The ann RoC is priced on the mid;
+            # a wide book fills nearer the bid, so the number overstates the real credit. A
+            # visible chip, never a drop (the mid is a real quote; bid_ann_roc shows the fill).
+            "spread_pct": (round(_sp, 3) if (_sp := _spread_pct(bid, ask)) is not None else None),
+            "wide_spread": _wide_spread(bid, ask, source),
             # His method, surfaced: struck AT support (or 1-sigma fallback), and the
             # IV-over-HV edge gate (rich premium = VRP > 1).
             "at_support": at_support, "support": (round(support, 2) if support else None),
@@ -964,6 +1003,22 @@ def _selftest():
     assert not _thin_oi(0, "modeled"), "the modeled path (oi=0) is never thin (it wears MODEL already)"
     assert not _thin_oi(None, "live") and not _thin_oi("x", "live"), "junk OI fails open to not-thin"
     print(f"thin-oi: live OI < {MIN_STRIKE_OI} flagged, modeled never flagged")
+
+    # Wide-spread caution: (ask-bid)/mid measures how far the mid the headline is priced on
+    # sits above the bid a limit order fills into. A $0.10/$0.50 book (mid $0.30) is 133% wide
+    # -> flagged; a $1.00/$1.05 book (~5%) is tight -> clean. As with thin OI, only the LIVE
+    # path can be wide (modeled carries a synthetic ~4% spread), and junk/one-sided books fail
+    # open to None (no caution) rather than crashing the build.
+    assert _spread_pct(1.00, 1.05) is not None and _spread_pct(1.00, 1.05) < WIDE_SPREAD_PCT, "a 5% book is tight"
+    assert _spread_pct(0.10, 0.50) > WIDE_SPREAD_PCT, "a $0.10/$0.50 book is wide"
+    assert _spread_pct(0, 0.50) is None and _spread_pct(1.0, 0) is None, "a one-sided book has no spread pct"
+    assert _spread_pct(1.20, 1.00) is None, "a crossed book fails open to None"
+    assert _spread_pct(None, "x") is None, "junk quotes fail open to None"
+    assert _wide_spread(0.10, 0.50, "live"), "a wide live book is flagged"
+    assert not _wide_spread(1.00, 1.05, "live"), "a tight live book is not flagged"
+    assert not _wide_spread(0.10, 0.50, "modeled"), "the modeled path is never flagged wide"
+    assert not _wide_spread(0, 0.50, "live"), "a one-sided live book fails open to not-wide"
+    print(f"wide-spread: live (ask-bid)/mid > {WIDE_SPREAD_PCT} flagged, modeled never flagged")
 
     # MIN_PREMIUM floor: a $0.06 mid (= $6 a contract) is noise, not a trade, no matter how
     # richly it would score. A $0.30 mid (= $30 a contract) clears. The boundary is inclusive.

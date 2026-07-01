@@ -222,6 +222,13 @@ reference/csp-intelligence.md). Fix the integrity holes first, in this order:
       synthetic-input asserts in build_site_data._selftest; iv_history gained its first `_selftest`
       (iv_rank percentile against a TEMP db, never the gitignored real one). Lane-tagging was already
       covered in universe._selftest, so I only added the three genuinely-uncovered paths. No scan.json.
+- [x] c86: **tradeability honesty: WIDE-SPREAD chip (recurring risk-critic ask).** The displayed
+      ann RoC is priced on the mid, but you sell-to-open into the bid, so a wide book overstates the
+      fill. `_spread_pct(bid,ask)`=(ask-bid)/mid + `_wide_spread(bid,ask,source)` (live-only, >0.30)
+      bake `spread_pct`+`wide_spread` on each pick; the card paints a `⚠ wide spread (N% of mid)` chip
+      pointing at the already-baked `bid_ann_roc`. FLAG not drop (same discipline as thin-OI / no-bid);
+      modeled/one-sided/crossed books never trip it. Self-tested + verified headless; engine+frontend,
+      no scan.json. See [[wide-spread-caution-not-drop]]. (definition-of-best #3, tradeable)
 - [x] c80: chart polish (Michael): SHADE the put-sell zone as a filled translucent band (not
       just lines), tinted by score; keep the Keltner walls. DONE: a one-time `registerOverlay
       ('zoneBand')` polygon spans the chart full width between spot and the strike (the CSP
