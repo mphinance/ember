@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-01T06:00:21+00:00",
+  "generated_at": "2026-07-01T06:30:19+00:00",
   "source_note": "Candles and option premium are LIVE off the yfinance chain for 0 of 24 names (real IV, bid/ask, OI); the rest fall back to a realized-vol model when the chain is missing.",
   "dte": 7,
   "tickers": [
@@ -1348,6 +1348,11 @@
         "support_touches": null,
         "support_floor": null,
         "gap_risk": 0.182,
+        "pattern": {
+          "tag": "none",
+          "bias": "neutral",
+          "read": ""
+        },
         "put_skew": null,
         "empirical_lift": 0.0,
         "empirical": null,
@@ -2735,6 +2740,11 @@
         "support_touches": null,
         "support_floor": null,
         "gap_risk": 0.0,
+        "pattern": {
+          "tag": "none",
+          "bias": "neutral",
+          "read": ""
+        },
         "put_skew": null,
         "empirical_lift": 0.0,
         "empirical": null,
@@ -4122,6 +4132,11 @@
         "support_touches": null,
         "support_floor": null,
         "gap_risk": 0.0,
+        "pattern": {
+          "tag": "none",
+          "bias": "neutral",
+          "read": ""
+        },
         "put_skew": null,
         "empirical_lift": 0.0,
         "empirical": null,
@@ -5509,6 +5524,11 @@
         "support_touches": null,
         "support_floor": null,
         "gap_risk": 0.479,
+        "pattern": {
+          "tag": "support_hold",
+          "bias": "good",
+          "read": "Holding low in its channel and bouncing off a recent low. Buyers are defending the floor you sell under."
+        },
         "put_skew": null,
         "empirical_lift": 0.0,
         "empirical": null,
@@ -6897,6 +6917,11 @@
         "support_touches": null,
         "support_floor": null,
         "gap_risk": 0.338,
+        "pattern": {
+          "tag": "none",
+          "bias": "neutral",
+          "read": ""
+        },
         "put_skew": null,
         "empirical_lift": 0.0,
         "empirical": null,
@@ -8284,6 +8309,11 @@
         "support_touches": null,
         "support_floor": null,
         "gap_risk": 0.215,
+        "pattern": {
+          "tag": "none",
+          "bias": "neutral",
+          "read": ""
+        },
         "put_skew": null,
         "empirical_lift": 0.0,
         "empirical": null,
@@ -9671,6 +9701,11 @@
         "support_touches": null,
         "support_floor": null,
         "gap_risk": 0.307,
+        "pattern": {
+          "tag": "none",
+          "bias": "neutral",
+          "read": ""
+        },
         "put_skew": null,
         "empirical_lift": 0.0,
         "empirical": null,
@@ -11058,6 +11093,11 @@
         "support_touches": null,
         "support_floor": null,
         "gap_risk": 0.287,
+        "pattern": {
+          "tag": "none",
+          "bias": "neutral",
+          "read": ""
+        },
         "put_skew": null,
         "empirical_lift": 0.0,
         "empirical": null,
@@ -12445,6 +12485,11 @@
         "support_touches": null,
         "support_floor": null,
         "gap_risk": 0.0,
+        "pattern": {
+          "tag": "downtrend",
+          "bias": "avoid",
+          "read": "Lower highs and lower closes with no bounce yet. Wait for it to stop falling before selling puts."
+        },
         "put_skew": null,
         "empirical_lift": 0.0,
         "empirical": null,
@@ -13833,6 +13878,11 @@
         "support_touches": null,
         "support_floor": null,
         "gap_risk": 0.206,
+        "pattern": {
+          "tag": "none",
+          "bias": "neutral",
+          "read": ""
+        },
         "put_skew": null,
         "empirical_lift": 0.0,
         "empirical": null,
@@ -15220,6 +15270,11 @@
         "support_touches": null,
         "support_floor": null,
         "gap_risk": 0.0,
+        "pattern": {
+          "tag": "none",
+          "bias": "neutral",
+          "read": ""
+        },
         "put_skew": null,
         "empirical_lift": 0.0,
         "empirical": null,
@@ -16607,6 +16662,11 @@
         "support_touches": 3,
         "support_floor": 0.0,
         "gap_risk": 0.0,
+        "pattern": {
+          "tag": "none",
+          "bias": "neutral",
+          "read": ""
+        },
         "put_skew": null,
         "empirical_lift": 0.0,
         "empirical": null,
@@ -17994,6 +18054,11 @@
         "support_touches": null,
         "support_floor": null,
         "gap_risk": 0.342,
+        "pattern": {
+          "tag": "downtrend",
+          "bias": "avoid",
+          "read": "Lower highs and lower closes with no bounce yet. Wait for it to stop falling before selling puts."
+        },
         "put_skew": null,
         "empirical_lift": 0.0,
         "empirical": null,
@@ -19381,6 +19446,11 @@
         "support_touches": null,
         "support_floor": null,
         "gap_risk": 0.283,
+        "pattern": {
+          "tag": "downtrend",
+          "bias": "avoid",
+          "read": "Lower highs and lower closes with no bounce yet. Wait for it to stop falling before selling puts."
+        },
         "put_skew": null,
         "empirical_lift": 0.0,
         "empirical": null,
@@ -20768,6 +20838,11 @@
         "support_touches": null,
         "support_floor": null,
         "gap_risk": 0.0,
+        "pattern": {
+          "tag": "none",
+          "bias": "neutral",
+          "read": ""
+        },
         "put_skew": null,
         "empirical_lift": 0.0,
         "empirical": null,
@@ -22155,6 +22230,11 @@
         "support_touches": null,
         "support_floor": null,
         "gap_risk": 0.823,
+        "pattern": {
+          "tag": "none",
+          "bias": "neutral",
+          "read": ""
+        },
         "put_skew": null,
         "empirical_lift": 0.0,
         "empirical": null,
@@ -23542,6 +23622,11 @@
         "support_touches": null,
         "support_floor": null,
         "gap_risk": 0.254,
+        "pattern": {
+          "tag": "none",
+          "bias": "neutral",
+          "read": ""
+        },
         "put_skew": null,
         "empirical_lift": 0.0,
         "empirical": null,
@@ -24929,6 +25014,11 @@
         "support_touches": null,
         "support_floor": null,
         "gap_risk": 0.042,
+        "pattern": {
+          "tag": "none",
+          "bias": "neutral",
+          "read": ""
+        },
         "put_skew": null,
         "empirical_lift": 0.0,
         "empirical": null,
@@ -26316,6 +26406,11 @@
         "support_touches": null,
         "support_floor": null,
         "gap_risk": 0.044,
+        "pattern": {
+          "tag": "downtrend",
+          "bias": "avoid",
+          "read": "Lower highs and lower closes with no bounce yet. Wait for it to stop falling before selling puts."
+        },
         "put_skew": null,
         "empirical_lift": 0.0,
         "empirical": null,
@@ -27703,6 +27798,11 @@
         "support_touches": null,
         "support_floor": null,
         "gap_risk": 0.229,
+        "pattern": {
+          "tag": "downtrend",
+          "bias": "avoid",
+          "read": "Lower highs and lower closes with no bounce yet. Wait for it to stop falling before selling puts."
+        },
         "put_skew": null,
         "empirical_lift": 0.0,
         "empirical": null,
@@ -29090,6 +29190,11 @@
         "support_touches": null,
         "support_floor": null,
         "gap_risk": 0.108,
+        "pattern": {
+          "tag": "downtrend",
+          "bias": "avoid",
+          "read": "Lower highs and lower closes with no bounce yet. Wait for it to stop falling before selling puts."
+        },
         "put_skew": null,
         "empirical_lift": 0.0,
         "empirical": null,
@@ -30477,6 +30582,11 @@
         "support_touches": null,
         "support_floor": null,
         "gap_risk": 0.047,
+        "pattern": {
+          "tag": "downtrend",
+          "bias": "avoid",
+          "read": "Lower highs and lower closes with no bounce yet. Wait for it to stop falling before selling puts."
+        },
         "put_skew": null,
         "empirical_lift": 0.0,
         "empirical": null,
@@ -31864,6 +31974,11 @@
         "support_touches": null,
         "support_floor": null,
         "gap_risk": 0.194,
+        "pattern": {
+          "tag": "downtrend",
+          "bias": "avoid",
+          "read": "Lower highs and lower closes with no bounce yet. Wait for it to stop falling before selling puts."
+        },
         "put_skew": null,
         "empirical_lift": 0.0,
         "empirical": null,
@@ -33251,6 +33366,11 @@
         "support_touches": 3,
         "support_floor": 0.0,
         "gap_risk": 0.0,
+        "pattern": {
+          "tag": "none",
+          "bias": "neutral",
+          "read": ""
+        },
         "put_skew": null,
         "empirical_lift": 0.0,
         "empirical": null,
@@ -33301,7 +33421,7 @@
     "from_avoid": [],
     "movers": []
   },
-  "prev_generated_at": "2026-07-01T05:30:20+00:00",
+  "prev_generated_at": "2026-07-01T06:00:21+00:00",
   "record": {
     "overall": null,
     "by_lane": {},
