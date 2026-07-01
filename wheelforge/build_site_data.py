@@ -338,6 +338,43 @@ def _lookup_earnings_days(ticker):
         return None
 
 
+def _ex_div_in_window(ex_div_date, today, exp_date):
+    """Pure: True when the stock goes EX-DIVIDEND inside the option window [today, exp].
+    A name that pays a dividend during the weekly gaps DOWN by the dividend amount on the
+    ex-date, which can push a just-OTM put ITM with no actual move in the tape: the drop is
+    mechanical. (There is also an American-put early-exercise angle around ex-div, but the
+    gap-down is the one a put SELLER feels.) Both dates coerced via _as_date; any missing or
+    unparseable input -> False (no warn), the same fail-open stance as the other cautions."""
+    ex = _as_date(ex_div_date)
+    exp = _as_date(exp_date)
+    if ex is None or exp is None or today is None:
+        return False
+    return today <= ex <= exp
+
+
+def _lookup_ex_div_date(ticker):
+    """Next ex-dividend date for a name (a plain date), or None. yfinance exposes it on
+    `.calendar` under 'Ex-Dividend Date' (a dict in current yfinance, a DataFrame in older
+    builds, so handle both). A non-payer, a stale/missing calendar, or any network error all
+    fail open to None (no chip), never crashing the build. Mirrors _lookup_earnings_days."""
+    try:
+        import yfinance as yf
+        cal = yf.Ticker(ticker).calendar
+        val = None
+        if isinstance(cal, dict):
+            val = cal.get("Ex-Dividend Date")
+        elif cal is not None and hasattr(cal, "loc"):
+            try:
+                val = cal.loc["Ex-Dividend Date"]
+                if hasattr(val, "iloc"):
+                    val = val.iloc[0]
+            except Exception:
+                val = None
+        return _as_date(val)
+    except Exception:
+        return None
+
+
 def _anchor_strike(spot, rv, dte, support):
     """Where to sell the put. Michael's method: sell AT support and trust it (he does not
     trade off delta). So if there is a real support level in a sane band below spot, that
@@ -674,6 +711,14 @@ def build_one(ticker, earnings_days=None, lanes=None, sector=None):
     # site if a whole run somehow falls below the floor.
     if not _tradeable_premium(premium, spot):
         return None
+    # EX-DIVIDEND inside the option window: a name that goes ex-div before this expiry gaps
+    # DOWN by the dividend amount on the ex-date, which can push a just-OTM put ITM with no
+    # actual move in the tape (the drop is mechanical). WARN, do not drop (same discipline as
+    # the earnings-next-cycle and wide-spread cautions): he sizes down, skips, or plans to be
+    # out before the ex-date. Fail-open: no dividend / no calendar / network error -> no chip.
+    ex_div_date = _lookup_ex_div_date(ticker)
+    ex_div_in_window = _ex_div_in_window(ex_div_date, date.today(), exp)
+
     # His edge gate: rich premium = IV over HV (the VRP). A flag he reads at a glance.
     # Judged against vrp_rv (5-day for a live weekly, 20-day for the modeled monthly).
     iv_gt_hv = bool(iv > vrp_rv)
@@ -777,6 +822,12 @@ def build_one(ticker, earnings_days=None, lanes=None, sector=None):
             # print on week 2. A visible chip so he sizes/skips on purpose; earnings_blocks
             # still owns the in-window veto, this only covers the one-cycle-out case.
             "earnings_next_cycle": earnings_next_cycle(contract["days_to_earnings"], dte),
+            # EX-DIV in the window: the stock goes ex-dividend before this expiry, so it gaps
+            # down by the dividend on the ex-date and a just-OTM put can go ITM without a real
+            # move. A visible warn (his call to size/skip/close early), never a drop; the date
+            # rides along for the tooltip. Fail-open None when there's no dividend to warn on.
+            "ex_div_in_window": ex_div_in_window,
+            "ex_div_date": (ex_div_date.isoformat() if (ex_div_in_window and ex_div_date) else None),
             # GICS sector (from the screener) + the capital-concentration flag set by the
             # post-sort _sector_crowding pass. sector_crowded starts False here and is filled
             # once the whole ranked list is known; None sector simply never gets flagged.
@@ -1009,6 +1060,16 @@ def _selftest():
     assert _nearest_future_earnings_days([], _today) is None and \
         _nearest_future_earnings_days(None, _today) is None, "empty / None -> None"
     assert _nearest_future_earnings_days([_today], _today) == 0, "a print TODAY is 0 days out, still vetoed"
+
+    # Ex-div-in-window: warn when the ex-date falls inside [today, exp]. today=Jun 1, exp=Jun 8.
+    assert _ex_div_in_window(_d(2026, 6, 5), _today, "2026-06-08"), "ex-div mid-window warns"
+    assert _ex_div_in_window(_d(2026, 6, 8), _today, _d(2026, 6, 8)), "ex-div ON expiry still warns"
+    assert _ex_div_in_window(_today, _today, "2026-06-08"), "ex-div TODAY warns (gaps before you're out)"
+    assert not _ex_div_in_window(_d(2026, 6, 9), _today, "2026-06-08"), "ex-div past expiry: no warn"
+    assert not _ex_div_in_window(_d(2026, 5, 30), _today, "2026-06-08"), "a past ex-date does not warn"
+    assert _ex_div_in_window(_dt(2026, 6, 5, 9, 0), _today, "2026-06-08"), "datetime ex-date coerces + warns"
+    assert not _ex_div_in_window(None, _today, "2026-06-08"), "no dividend (None) -> no warn"
+    assert not _ex_div_in_window(_d(2026, 6, 5), _today, None), "unparseable expiry -> fail-open no warn"
 
     # RoC denominator stays (strike - premium), the ticked c23 call.
     assert abs(_annualized_roc(2.0, 100.0, 7) - (2.0 / 98.0) * (365.0 / 7)) < 1e-9

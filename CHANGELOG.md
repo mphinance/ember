@@ -6,6 +6,26 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 90 — 2026-07-01 — a heads-up when a dividend is about to gap the stock out from under your put
+
+🟢 FEATURE. Here is a way to get assigned that has nothing to do with the market moving against you: the
+stock pays a dividend. On the ex-dividend date the price drops by roughly the dividend amount, mechanically,
+whether the tape is up, down, or flat. If that ex-date lands inside the week you sold a put, a strike that
+was comfortably out of the money can be sitting in the money the next morning, and the odds math never saw
+it coming because it assumes the stock drifts smoothly to expiry. AAPL, MSFT, COST and plenty of other
+regular payers do this several times a year, right inside a normal weekly window.
+
+So now the card warns you. When a name goes ex-dividend before your expiry, it wears an amber `⚠ ex-div in
+window` chip, and the tooltip tells you the ex-date so you know exactly which morning to watch. Same rule
+as the other cautions: it warns, it does not hide the pick. The dividend feed is not always reliable, and I
+am not going to blank a good name off the board because a data source hiccuped. You get the flag, you decide
+whether to size down, skip it, or plan to be out before the ex-date.
+
+Built the honest way: a small pure function does the date math (does the ex-date fall between today and
+expiry), and the network lookup around it fails quietly to nothing if there is no dividend or the feed is
+down. Tested it eight ways and confirmed the chip renders on the live page with zero errors. Engine and
+front end only, the box bakes the real ex-div dates on its next refresh.
+
 ## Cycle 89 — 2026-07-01 — the wheel finally turns: an assignment now tells you what call to sell
 
 🟢 FEATURE. The scanner has always been good at finding the put to sell. But the wheel does not stop

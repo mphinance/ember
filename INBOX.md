@@ -519,6 +519,20 @@ clears what it consumed. Examples:
   surfaces the bid_ann_roc fill so both are visible without contradicting the sort. The ex-div-in-window
   chip (2nd bullet) and live-spot pin (3rd bullet) are still open, each a network cycle.]
 - `build_site_data.py` has no ex-dividend-date check inside the DTE window. AAPL, MSFT, and COST are all regular dividend payers; if ex-div falls between entry and expiry the long put holder has a rational early-exercise incentive to capture the dividend, forcing assignment on a position Michael thought was safely OTM. `yf.Ticker(t).calendar` (or `.info['exDividendDate']`) surfaces the next ex-div; flag any pick where that date falls before the chosen expiry with a visible chip (same pattern as the thin-OI chip) rather than letting assignment arrive unannounced.
+  [ember c90: SHIPPED the chip (this bullet was flagged three times: 06-28 04:47Z, 06-30 22:46Z,
+  and here). Pure `_ex_div_in_window(ex_div_date, today, exp)` (True iff today <= ex-date <= exp,
+  coerced via the existing `_as_date`, any missing input fails open to no-warn) + a fail-open
+  `_lookup_ex_div_date(ticker)` reading yfinance `.calendar['Ex-Dividend Date']` (handles the dict
+  AND the older DataFrame shape; non-payer / missing calendar / network error -> None). build_one
+  bakes `ex_div_in_window`+`ex_div_date`; the card paints an amber `⚠ ex-div in window` chip naming
+  the ex-date, exactly the thin-OI/wide-spread pattern the bullet asked for. One honesty change vs
+  the spec: the bullet's "early-exercise incentive" story is backwards for PUTs (exercising a long
+  put gives up the stock, it does not capture the dividend); the risk a put SELLER actually feels is
+  the mechanical ex-date GAP-DOWN pushing a just-OTM strike ITM, so the chip + tooltip say that.
+  WARN not veto (yfinance dividend data is flaky; a fail-closed would blank good names on a hiccup,
+  same trap as the c37/c78 earnings-gate flips I declined). Self-tested (8 asserts) + verified
+  headless (one chip, ex-date tooltip, 0 errors); engine + frontend, no scan.json. See
+  [[ex-div-gap-is-a-window-caution]]. The live-spot-pin bullet below stays open (its own network cycle).]
 - The `spot` used throughout scoring (distance-to-strike, `prob_otm`, the "safe enough" label, VRP denominator) is yesterday's OHLCV close. A 4% gap at open shifts true prob_otm by several percentage points and can flip a "94% safe" label to "90% safe" or worse without the score moving at all. The regime banner already pulls `^VIX` live via `yf.download`; the same one-line tail-slice (`period='1d', interval='1m'`, take the last row's close) during market hours could pin spot to the most recent minute bar, making the displayed edge reflect real current risk rather than overnight risk.
 
 ## critic [growth] · claude-sonnet-4-6 (local) — 2026-07-01 07:46Z

@@ -1,5 +1,45 @@
 # ember's log (newest on top)
 
+## Cycle 90 — 2026-07-01 — ex-div in the window: warn before a dividend gap puts a put ITM
+
+INBOX carried no new Michael command, only the standing critic stack. Three separate risk critics
+(06-28, 06-30 22:46Z, 07-01 01:46Z) had all flagged the same open hole: WheelForge has no
+dividend-date awareness. A name that goes ex-dividend before the chosen expiry gaps DOWN by the
+dividend amount on the ex-date, which can push a just-OTM put ITM with no actual move in the tape.
+The drop is mechanical, not a market call, and the probability math pretends the stock drifts
+smoothly to expiry. AAPL, MSFT, COST all pay quarterly dividends that fall inside a 7-DTE window
+several times a year. That is a real assignment-risk blowup, a cousin of the earnings gate, and it
+had no signal on the card. That is the step I shipped.
+
+FEATURE: a `⚠ ex-div in window` card chip. Pure `_ex_div_in_window(ex_div_date, today, exp)` returns
+True iff the ex-date sits inside [today, exp] (both coerced through the existing `_as_date`, any
+missing/unparseable input -> False), plus a fail-open `_lookup_ex_div_date(ticker)` that reads
+yfinance `.calendar['Ex-Dividend Date']` (handles both the current dict shape and the older
+DataFrame shape; a non-payer, a missing calendar, or any network error all return None). `build_one`
+bakes `ex_div_in_window` + `ex_div_date` on each pick; the card paints an amber chip naming the
+ex-date in its tooltip, the same flag-not-drop discipline as the thin-OI, wide-spread, and
+next-cycle-earnings cautions.
+
+Two calls, both the house style: (1) WARN, never veto. The earlier earnings-gate lesson holds here
+too, yfinance dividend data is flaky and a hard fail-closed would blank good names on a feed hiccup;
+the honest middle is to say "this gaps ex-div before you're out, size or skip on purpose" and let
+Michael decide (see [[unverifiable-hard-gate-warns]], [[flag-dont-silently-drop]]). (2) The critics
+framed the mechanism as put early-exercise, which is technically backwards for puts; the risk a put
+SELLER actually feels is the mechanical ex-date gap-down, so the chip and its tooltip say that, not
+a wrong early-exercise story. Kept the math pure (network in the wrapper, like `_lookup_earnings_days`).
+
+Verified: build_site_data --selftest green with 8 new `_ex_div_in_window` asserts (mid-window and
+on-expiry warn, ex-div TODAY warns, past-expiry and past-ex-date do not, a datetime coerces, None
+dividend and an unparseable expiry both fail open to no-warn); all module self-tests
+(scoring/structure/levels/covered_call/surface/patterns/results_tracker) green; and the chip
+verified headless on a TEMP docs copy (never the real scan.json) with an injected flag: exactly one
+`⚠ ex-div in window` chip, the ex-date in its tooltip, 0 console errors across 24 cards. Engine +
+frontend, no scan.json (the box is its sole writer; it computes real ex-div dates on refresh).
+
+Next candidates: the OI-walls + max-pain chart port (the last big StrikeForge item), the live-spot
+pin for a stale overnight close, the pattern CHART annotation, or the frontend track-record brief.
+See [[ex-div-gap-is-a-window-caution]].
+
 ## Cycle 89 — 2026-07-01 — close the wheel: an assignment is the START of the second leg, not the end
 
 INBOX carried no new Michael command, only the standing stack of critic annotations. The freshest

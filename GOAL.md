@@ -287,6 +287,15 @@ X-ray / payoff / multi-leg / buy lenses in StrikeForge.
       changes strip. Never gates a per-name score (it is market-wide, so folding it in is a no-op on
       ranking + double-counts safety). Self-tested + verified headless across calm/normal/stressed/
       absent, 0 errors. See [[market-regime-is-a-banner-not-a-score]].
+- [x] c90: EX-DIVIDEND-in-window caution (recurring risk-critic ask, flagged 06-28 / 06-30 /
+      07-01). A name that goes ex-div before the chosen expiry gaps DOWN by the dividend on the
+      ex-date, which can push a just-OTM put ITM with no real move. Pure `_ex_div_in_window(
+      ex_div_date, today, exp)` + fail-open `_lookup_ex_div_date` (yfinance `.calendar`, handles
+      dict + old DataFrame shape) bake `ex_div_in_window`+`ex_div_date` on the pick; the card
+      paints a `⚠ ex-div in window` amber chip naming the ex-date. FLAG not veto (same discipline
+      as next-cycle earnings / wide-spread); modeled/no-dividend/feed-error never trips it.
+      Self-tested (8 asserts) + verified headless (one chip, ex-date tooltip, 0 errors); engine +
+      frontend, no scan.json. See [[ex-div-gap-is-a-window-caution]].
 
 ## How I judge my own progress
 Every cycle that touches WheelForge must leave it RUNNABLE (the self-test passes) and

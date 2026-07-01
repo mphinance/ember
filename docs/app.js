@@ -599,6 +599,15 @@
             + (p.earnings_days != null ? ' (print in ' + p.earnings_days + 'd)' : '')
             + ': roll weekly and you sell straight into the print next cycle. Plan to close before the roll, or size down.">⚠ next cycle: earnings</span>'
           : '';
+        // EX-DIVIDEND in the window: the stock goes ex-div before this expiry, so it gaps DOWN
+        // by the dividend on the ex-date and a just-OTM put can go ITM with no real move. A warn,
+        // not a veto (same discipline as next-cycle earnings): he sizes down, skips, or plans to
+        // be out before the ex-date. Server sets it off the yfinance ex-div date vs the expiry.
+        var exDiv = p.ex_div_in_window
+          ? ' <span class="exdiv" title="goes ex-dividend inside this option window'
+            + (p.ex_div_date ? ' (ex-date ' + fmtDate(p.ex_div_date) + ')' : '')
+            + ': the stock gaps down by the dividend on the ex-date, which can push a just-OTM put ITM with no real move. Size down, skip, or plan to be out before the ex-date.">⚠ ex-div in window</span>'
+          : '';
         // Prime marker: this one card cleared all three thesis pillars (quality + yield +
         // discipline). Same set the strip above names; flagged here too so it's identifiable
         // when scrolling the full board.
@@ -622,7 +631,7 @@
           + '<br><b>' + fmt(p.annualized_roc) + '%</b> ann'
           + ((weeklyPct(p) != null) ? ' <span class="wk" title="yield per week, his pre-order screen: ann RoC / 52. Aim for ~1%/wk toward the 100%/yr book.">(' + fmt(weeklyPct(p)) + '%/wk)</span>' : '')
           + ' &middot; <b>' + fmt(p.prob_otm) + '%</b> OTM '
-          + src + hiv + crowd + thin + wide + earnUnk + nextEarn + primeChip + patChip + (p.earnings_days != null ? ' &middot; earn ' + p.earnings_days + 'd' : '');
+          + src + hiv + crowd + thin + wide + earnUnk + nextEarn + exDiv + primeChip + patChip + (p.earnings_days != null ? ' &middot; earn ' + p.earnings_days + 'd' : '');
       }
       card.appendChild(sc); card.appendChild(tk); card.appendChild(dir);
       if (head) card.appendChild(head);
