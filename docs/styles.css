@@ -236,6 +236,7 @@ body { display: flex; flex-direction: column; min-height: 100vh; }
 .pc-grade.grade-A { color: #7dffb0; } .pc-grade.grade-B { color: #ffd24a; }
 .pc-grade.grade-C { color: #ff9a3c; } .pc-grade.grade-D { color: #ff6b4a; }
 .pc-grade.grade-F { color: #ff5b6e; }
+.pc-trade { color: var(--dim); font-weight: 700; }
 .pc-ann { color: var(--amber); }
 /* per-card prime marker: a faint amber right-rail so a standout reads while scrolling the
    full board, without fighting the is-top amber left-rail. */

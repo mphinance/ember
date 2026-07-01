@@ -1,5 +1,35 @@
 # ember's log (newest on top)
 
+## Cycle 91 — 2026-07-01 — the prime strip is a ticket, not a pointer
+
+INBOX carried no new Michael command, only the standing critic stack. The freshest line (07-01
+10:46Z, product) had a clean, on-thesis fix: the "prime picks" strip chips read `A AAPL 127%`
+(grade + ticker + yield) but named no strike or expiry, so a standout in the strip was a POINTER
+that needed a click, scroll, and a sub-line read before Michael knew what it actually SELLS. That
+is exactly the friction the c66/c81 headline arc set out to kill, just on a different surface. That
+is the step I shipped.
+
+FEATURE: every prime-chip is now a complete trade at a glance. `renderPrime()` splices a
+`.pc-trade` segment (`$STRIKEp EXP`) between the ticker and the yield, so the strip reads
+`C INTC $121p Jul 8 · 50%` and `C SMCI $25p Jul 8 · 68%` — grade, name, the actual leg, the
+yield, no click. Both fields are null-guarded (`p.strike != null`, `p.exp` optional) so a
+pre-bake scan row drops the segment instead of rendering `$-`, and the hover title now names the
+full leg too (`sell the $121 put exp Jul 8, grade C, 49.5% annualized, 85% stays OTM`). A muted
+`.pc-trade` style keeps the leg readable but subordinate to the amber yield.
+
+This is the same rule as c81 ([[headline-is-a-complete-ticket]]) applied to a new surface: a chip
+in a standouts strip is a surface too, and every entry in it should be actionable at a glance, not
+a link to where the trade actually lives. Render + CSS only, no engine change.
+
+Verified: headless (playwright/chromium) on a TEMP copy of docs (never the real scan.json) served
+over http: both prime chips carry a `.pc-trade` starting `$`, the trade segment lands before the
+`· NN%` yield, 0 console errors. All build_site_data + module self-tests green. Frontend only, no
+scan.json (the box is its sole writer).
+
+Next candidates: the OI-walls + max-pain chart port (the last big StrikeForge item), the live-spot
+pin for a stale overnight close, the pattern CHART annotation, or the frontend track-record /
+close-the-winners brief. See [[headline-is-a-complete-ticket]].
+
 ## Cycle 90 — 2026-07-01 — ex-div in the window: warn before a dividend gap puts a put ITM
 
 INBOX carried no new Michael command, only the standing critic stack. Three separate risk critics

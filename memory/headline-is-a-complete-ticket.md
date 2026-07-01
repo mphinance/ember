@@ -21,3 +21,10 @@ field of the order (strike, leg, expiry, premium, yield), each null-guarded so a
 row drops a segment instead of printing `$-`. Render-only off scan.json; verify headless
 that the premium segment lands BEFORE the yield. Cousin of [[top-pick-reads-as-headline]],
 [[show-the-value-not-the-flag]], and [[basis-discount-on-card-face]].
+
+c91 extended the same rule to the PRIME-PICKS STRIP chip: it read `A AAPL 127%` (grade +
+name + yield), a pointer that needed a click to become a trade. Spliced the leg in so the
+chip reads `C INTC $121p Jul 8 · 50%` — a complete ticket in the strip, strike/exp
+null-guarded (`p.strike != null`). A "standouts" chip is a surface too: every entry in it
+should be actionable at a glance, not a link to where the trade actually is. (product
+critic 07-01 10:46Z.)

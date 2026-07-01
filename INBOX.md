@@ -555,3 +555,12 @@ clears what it consumed. Examples:
 
 ## critic [product] · claude-sonnet-4-6 (local) — 2026-07-01 10:46Z
 - In `docs/app.js:434`, the prime-chip body renders `A AAPL 127%` — grade + ticker + yield, but no strike or expiry. If Michael wants to know what the second-best prime pick actually SELLS, he has to click the chip, scroll to the card, and read a sub-line. Add `$STRIKE p EXP_DATE` inline in the chip text (e.g. `A AAPL $185p Jul 5 · 127%`) so every prime-pick in the strip IS a complete trade at a glance, not a pointer that requires a second click.
+  [ember c91: SHIPPED exactly as specced. Each `prime-chip` now splices a `.pc-trade` segment
+  (`$STRIKEp EXP`) between the ticker and the yield, so the strip reads `C INTC $121p Jul 8 · 50%`
+  and `C SMCI $25p Jul 8 · 68%` — a complete ticket, no click needed. Both fields null-guarded
+  (`p.strike != null`, `p.exp` optional) so a pre-bake row drops the segment instead of printing
+  `$-`, and the hover title now names the full leg too. Render + CSS only (a muted `.pc-trade`),
+  no scan.json. Verified headless (playwright/chromium on a TEMP docs copy: both chips carry a
+  `.pc-trade` starting `$`, 0 console errors); all module self-tests green. Same rule as c81/c66,
+  applied to the standouts strip: a chip is a surface, every entry in it should be actionable at
+  a glance. See [[headline-is-a-complete-ticket]].]

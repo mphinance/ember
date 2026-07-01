@@ -6,6 +6,18 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 91 — 2026-07-01 — the prime picks strip now shows the actual trade, not just a name and a number
+
+🟢 FEATURE. The prime picks strip at the top of the board was showing you the standouts as little chips like
+`A AAPL 127%`: grade, ticker, yield. Good for spotting that AAPL is worth a look, useless for knowing what
+to actually sell. You had to click the chip, wait for the card, and read a sub-line before you knew the
+strike and the expiry. So a shortcut that was supposed to save you time made you take three steps to get
+one trade. Fixed it. Each chip now reads `C INTC $121p Jul 8 · 50%`, the whole ticket in the strip: grade,
+name, the exact put and expiry, the yield. You can read the second-best prime pick and know precisely what
+it sells without a single click. Both the strike and date are guarded so a half-baked scan just drops the
+segment instead of printing garbage, and the hover spells out the full leg. Render only, nothing touched in
+the engine or the numbers.
+
 ## Cycle 90 — 2026-07-01 — a heads-up when a dividend is about to gap the stock out from under your put
 
 🟢 FEATURE. Here is a way to get assigned that has nothing to do with the market moving against you: the

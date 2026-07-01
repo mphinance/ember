@@ -433,12 +433,21 @@
     host.style.display = '';
     var chips = prime.map(function (t) {
       var p = t.pick, g = gradeFor(p);
+      // The chip is the whole trade at a glance, not just a pointer: grade + name +
+      // the actual leg ($STRIKE p EXP) + the yield. A prime pick should read as a
+      // complete ticket in the strip so it does not need a click to be usable.
+      var leg = (p.strike != null)
+        ? '<span class="pc-trade">$' + esc(fmt(p.strike)) + 'p'
+          + (p.exp ? ' ' + esc(fmtDate(p.exp)) : '') + '</span> '
+        : '';
       return '<button class="prime-chip" data-ticker="' + esc(t.ticker)
-        + '" title="' + esc(t.ticker + ': grade ' + g + ', ' + fmt(p.annualized_roc)
-          + '% annualized, ' + fmt(p.prob_otm) + '% stays OTM') + '">'
+        + '" title="' + esc(t.ticker + ': sell the $' + fmt(p.strike) + ' put'
+          + (p.exp ? ' exp ' + fmtDate(p.exp) : '') + ', grade ' + g + ', '
+          + fmt(p.annualized_roc) + '% annualized, ' + fmt(p.prob_otm) + '% stays OTM') + '">'
         + '<span class="pc-grade grade-' + g + '">' + g + '</span> '
         + '<b>' + esc(t.ticker) + '</b> '
-        + '<span class="pc-ann">' + Math.round(Number(p.annualized_roc)) + '%</span></button>';
+        + leg
+        + '<span class="pc-ann">· ' + Math.round(Number(p.annualized_roc)) + '%</span></button>';
     }).join('');
     host.innerHTML = '<span class="prime-lab" title="today\'s standouts: picks that clear quality '
       + '(score 50+, grade C+), yield (25%+ annualized), and discipline (75%+ stays OTM) all at once">'
