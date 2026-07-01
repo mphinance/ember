@@ -23,6 +23,7 @@ from wheelforge.iv_history import record as _iv_record, iv_rank as _iv_rank_hist
 from wheelforge import results_tracker as _rt
 from wheelforge.structure import (keltner_position, keltner_bands,
                                   support_floor_score, structure_with_floor)
+from wheelforge.patterns import read_pattern
 from wheelforge.levels import support_resistance, support_resistance_detail
 from wheelforge.vol_models import composite_realized_vol
 from wheelforge.tail_risk import gap_risk
@@ -704,6 +705,12 @@ def build_one(ticker, earnings_days=None, lanes=None, sector=None):
     floor = support_floor_score(strike, support, spot)
     struct = structure_with_floor(keltner, floor)
 
+    # PATTERN read: the one price-action shape off the OHLCV that changes a put-sell
+    # decision (support hold / breakdown / downtrend / coiling). A VISIBLE per-name tag he
+    # reads, NOT a silent rescore: structure_with_floor already owns the structure factor,
+    # so this only names WHY the chart looks the way it does. Fails open to a neutral no-read.
+    pattern = read_pattern(candles)
+
     # TAIL/GAP RISK: prob_otm is a thin-tailed lognormal, blind to the name that gaps 10%
     # overnight and jumps a far-OTM strike. Read the worst recent downside gaps off the same
     # OHLCV and let it haircut the safety factor (see tail_risk.gap_risk + scoring.gap_haircut).
@@ -796,6 +803,10 @@ def build_one(ticker, earnings_days=None, lanes=None, sector=None):
             # Tail/gap risk read (0..1) off the OHLCV: how hard this name gaps overnight.
             # It haircuts the safety factor above; surfaced so the number is auditable.
             "gap_risk": round(g_risk, 3),
+            # PRICE-ACTION PATTERN off the OHLCV (support_hold / breakdown / downtrend /
+            # coiling / none): a visible tag + one-line read that names the chart shape a
+            # put seller cares about. Flag not rescore; 'none' when no strong read.
+            "pattern": pattern,
             # Put skew (OTM put IV vs ATM, live chain only): positive = downside fear bid into
             # the strike he sells, which lifts the richness factor. None on the modeled path.
             "put_skew": (round(put_skew, 3) if put_skew is not None else None),

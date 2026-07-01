@@ -1,5 +1,43 @@
 # ember's log (newest on top)
 
+## Cycle 88 — 2026-07-01 — name the chart shape: the price-action PATTERN read a put seller trades on
+
+INBOX carried no new Michael command, just the older critic annotations already consumed in prior
+cycles (c35/c44/c46). The board is healthy again after c87's NaN fix, so I picked a real roadmap
+step: Michael's "pattern read" idea. He wanted the few OHLCV shapes a PUT SELLER actually acts on,
+not the textbook pattern zoo, surfaced on each name.
+
+FEATURE: pure `wheelforge/patterns.py::read_pattern(candles)` classifies four shapes and nothing
+else: SUPPORT HOLD (price dipped to a recent low and RECOVERED off it while sitting low in its
+Keltner channel = buyers defending the floor you sell under, good), BREAKDOWN (at/under the lower
+band with the drop concentrated in the last ~3 bars = a fresh violent break, a falling knife, avoid),
+DOWNTREND (a steady grind lower with no bounce yet = wait, avoid), COILING (a tight mid-channel range
+= premium fair on both sides, neutral), else none. It rides each pick as `pattern` {tag, bias, read};
+the card paints a green/red/gray chip with the plain-English read as its tooltip.
+
+The design call, same as every WheelForge signal: this is a VISIBLE tag he reads, NOT a silent
+rescore of the structure factor. structure_with_floor already owns the trend/floor blend, so nudging
+the score off the same OHLCV would double-count the trend (the c85/c68 discipline: inform, don't
+re-rank on a contested measure). The chart annotation and an optional structure nudge are explicit
+open follow-ons.
+
+Two things the build taught me (now in memory): (1) BREAKDOWN and DOWNTREND cannot be told apart by
+Keltner position alone, because in a persistent grind lower price rides ALONG the lower band and kp
+sits near zero the whole way, same as a fresh break. I separate them by the RECENCY of the drop
+(`ret3 <= -0.05` = concentrated recent break vs a steady slide). (2) A sharp synthetic dip inflates
+Wilder ATR and blows the 3-ATR band out below the dip, so "tagged the band" can't be tested with a
+one-bar spike; support_hold keys off a real dip-then-recover (`low <= spot*0.96` then `spot >=
+low*1.02`) plus a low-ish kp instead.
+
+Verified: patterns self-test green (all five shapes) + all 14 module self-tests + build_site_data
+--selftest green; app.js node --check clean. Headless (playwright/chromium in .venv, over a TEMP copy
+of docs/ with the pattern field injected into a scan.json copy, never the committed file): 24 cards
+render, 20 pattern chips paint green/red/gray by bias, `none` renders nothing, 0 console errors.
+Engine + frontend + CSS, no scan.json write (the box computes real patterns on its next refresh).
+
+Next candidates: the pattern CHART annotation (draw the tag on the candles), the OI-walls + max-pain
+chart port, the ex-div-in-window chip, or the live-spot-vs-stale-close cushion check.
+
 ## Cycle 87 — 2026-07-01 — a NaN blanked the whole board; heal it, then warn on the next-cycle print
 
 Started the cycle to ship a clean roadmap step, but the headless verify caught something bigger:

@@ -236,12 +236,18 @@ reference/csp-intelligence.md). Fix the integrity holes first, in this order:
       walls/candles still read through it. Color rides via `extendData` so one template serves
       every pick (and the call-sell zone above price when CC mode lands). Guarded to a real
       cushion (`spot > strike`). Verified headless; frontend only, no scan.json.
-- [ ] **pattern read (Michael idea):** detect the few patterns a PUT SELLER cares about from
-      OHLCV, support test/bounce (price holding Keltner lower) = good, breakdown (slicing
-      through support) = avoid, range/coiling = sell both sides, downtrend = penalize. Port
-      from TraderDaddy bounce_finder (csp_trigger composite), learn from PatternPulse. Surface
-      a per-name pattern TAG + a chart annotation, and let it nudge the structure factor. Skip
-      the textbook-pattern zoo, only the ones that change a sell decision.
+- [x] c88: **pattern read (Michael idea) — the per-name TAG.** Pure `wheelforge/patterns.py::
+      read_pattern(candles)` classifies the four OHLCV shapes that change a put-sell decision:
+      support_hold (dipped to a recent low and RECOVERED, buyers defending the floor = good),
+      breakdown (fresh violent break under the Keltner floor, drop concentrated in the last ~3
+      bars = avoid), downtrend (steady grind lower, no bounce = avoid), coiling (tight mid-channel
+      range = neutral), else none. Reuses structure.keltner_bands/keltner_position (DRY). Rides
+      the pick as `pattern` {tag, bias, read}; the card paints a green/red/gray chip with the
+      one-line read as tooltip. A VISIBLE tag, NOT a structure rescore (structure_with_floor
+      already owns the factor; a nudge would double-count the trend). Self-tested + headless
+      verified (24 cards, chips render green/red/gray, 0 console errors). See [[pattern-read-is-a-tag]].
+      OPEN follow-ons: the CHART annotation (draw the tag on the candles) + optionally let it
+      nudge the structure factor once proven.
 - [ ] **Michael feedback: rework the Pine indicator into a SIGNAL, not a static zone.** Right
       now it just draws a band ~1 sigma (~10%) below price, which is obvious and not actionable.
       Make it fire a "sell-put NOW" marker only when premium is rich (high HV-rank) AND price is

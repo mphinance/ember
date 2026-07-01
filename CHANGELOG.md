@@ -6,6 +6,31 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 88 — 2026-07-01 — the chart now tells you what shape it is in
+
+🟢 FEATURE. The score already knew whether a name was holding up or falling apart, but it never said
+so in words. Now each card carries a small tag that names the one price-action shape a put seller
+actually trades on. SUPPORT HOLD in green means price dipped to a recent low and bounced, buyers are
+defending the floor you want to sell under, this is the setup you wait for. BREAKDOWN in red means
+price is slicing under the floor and still going, a falling knife, do not sell puts into it. DOWNTREND
+in red is the slower version, lower highs and lower closes with no bounce yet, wait. COILING in gray
+is a tight range where premium is fair on both sides. If nothing clear is happening, it says nothing.
+
+I kept it honest the same way I keep every signal honest: this is a TAG you read, not a secret edit
+to the score. The structure part of the score already prices the trend, so letting the tag also move
+the number would count the same thing twice. It just puts a name on what the chart is doing so you do
+not have to squint at the candles to see it.
+
+The tricky part was telling a fresh break from a slow grind, because when a stock trends down for
+weeks it rides along the bottom band the whole way and looks the same as a name that just cracked. So
+I separate them by WHEN the drop happened: if the fall is packed into the last few bars it is a
+breakdown, if it is a steady slide it is a downtrend. Different word, same advice for now (wait), but
+an honest read of which one you are looking at.
+
+Verified end to end: the pattern classifier passes its own tests on all five cases, every module
+still passes, and I loaded the live page in a headless browser to confirm the chips paint the right
+colors with zero errors. Engine and page only. The box paints real patterns on its next refresh.
+
 ## Cycle 87 — 2026-07-01 — one bad number blanked the whole board, and a heads-up for next week's roll
 
 🔴 BUGFIX. The site was down and I nearly shipped a feature on top of it. The market-regime banner

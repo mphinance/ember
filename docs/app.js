@@ -605,12 +605,24 @@
         var primeChip = prime
           ? ' <span class="prime" title="prime pick: clears quality (grade C+), yield (25%+ annualized), and discipline (75%+ stays OTM) all at once">★ prime</span>'
           : '';
+        // PRICE-ACTION PATTERN: the one OHLCV shape that changes a put-sell decision, named
+        // on the card face. support_hold = buyers defending the floor you sell under (green go);
+        // breakdown / downtrend = a falling knife / no bounce yet (red, wait); coiling = a tight
+        // range, fair both sides (neutral). A tag he reads, NOT a score edit — the structure
+        // factor already priced the trend. 'none' (no strong read) renders nothing.
+        var pat = (p.pattern && p.pattern.tag && p.pattern.tag !== 'none') ? p.pattern : null;
+        var PAT_LABEL = { support_hold: '⌂ support hold', breakdown: '✕ breakdown',
+                          downtrend: '↓ downtrend', coiling: '≈ coiling' };
+        var patChip = pat
+          ? ' <span class="pat pat-' + esc(pat.bias) + '" title="' + esc(pat.read) + '">'
+            + esc(PAT_LABEL[pat.tag] || pat.tag) + '</span>'
+          : '';
         sub.innerHTML = 'sell <b>$' + fmt(p.strike) + ' put</b>' + otm + floor + basis
           + (p.exp ? ' &middot; exp <b>' + fmtDate(p.exp) + '</b> (' + p.dte + 'd)' : ' (' + p.dte + 'd)')
           + '<br><b>' + fmt(p.annualized_roc) + '%</b> ann'
           + ((weeklyPct(p) != null) ? ' <span class="wk" title="yield per week, his pre-order screen: ann RoC / 52. Aim for ~1%/wk toward the 100%/yr book.">(' + fmt(weeklyPct(p)) + '%/wk)</span>' : '')
           + ' &middot; <b>' + fmt(p.prob_otm) + '%</b> OTM '
-          + src + hiv + crowd + thin + wide + earnUnk + nextEarn + primeChip + (p.earnings_days != null ? ' &middot; earn ' + p.earnings_days + 'd' : '');
+          + src + hiv + crowd + thin + wide + earnUnk + nextEarn + primeChip + patChip + (p.earnings_days != null ? ' &middot; earn ' + p.earnings_days + 'd' : '');
       }
       card.appendChild(sc); card.appendChild(tk); card.appendChild(dir);
       if (head) card.appendChild(head);
