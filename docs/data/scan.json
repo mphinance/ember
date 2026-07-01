@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-01T03:30:20+00:00",
+  "generated_at": "2026-07-01T04:00:23+00:00",
   "source_note": "Candles and option premium are LIVE off the yfinance chain for 26 of 27 names (real IV, bid/ask, OI); the rest fall back to a realized-vol model when the chain is missing.",
   "dte": 7,
   "tickers": [
@@ -1313,11 +1313,11 @@
         },
         {
           "timestamp": 1782792000000,
-          "open": 132.18,
-          "high": 142.34,
+          "open": 131.99,
+          "high": 142.35,
           "low": 131.52,
           "close": 139.63,
-          "volume": 114824318
+          "volume": 116637300
         }
       ],
       "pick": {
@@ -1391,7 +1391,7 @@
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
-          "richness": 0.436,
+          "richness": 0.437,
           "safety": 0.757,
           "yield": 0.248,
           "liquidity": 0.635,
@@ -2714,11 +2714,11 @@
         },
         {
           "timestamp": 1782792000000,
-          "open": 28.41,
+          "open": 28.42,
           "high": 29.91,
           "low": 28.17,
           "close": 29.33,
-          "volume": 55428991
+          "volume": 56151300
         }
       ],
       "pick": {
@@ -2792,7 +2792,7 @@
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
-          "richness": 0.851,
+          "richness": 0.85,
           "safety": 0.774,
           "yield": 0.185,
           "liquidity": 0.374,
@@ -4116,11 +4116,11 @@
         },
         {
           "timestamp": 1782792000000,
-          "open": 237.43,
+          "open": 237.35,
           "high": 241.54,
           "low": 237.17,
           "close": 238.34,
-          "volume": 65198589
+          "volume": 66087900
         }
       ],
       "pick": {
@@ -5510,11 +5510,11 @@
         },
         {
           "timestamp": 1782792000000,
-          "open": 197.2,
+          "open": 197.24,
           "high": 200.63,
           "low": 195.11,
           "close": 200.09,
-          "volume": 163092701
+          "volume": 165981900
         }
       ],
       "pick": {
@@ -6911,11 +6911,11 @@
         },
         {
           "timestamp": 1782792000000,
-          "open": 45.72,
+          "open": 45.7,
           "high": 46.76,
           "low": 44.5,
           "close": 45.73,
-          "volume": 28100823
+          "volume": 28154200
         }
       ],
       "pick": {
@@ -8316,7 +8316,7 @@
           "high": 424.54,
           "low": 406.0,
           "close": 420.6,
-          "volume": 41757573
+          "volume": 43068300
         }
       ],
       "pick": {
@@ -9710,7 +9710,7 @@
           "high": 290.6,
           "low": 255.8,
           "close": 276.17,
-          "volume": 12809680
+          "volume": 12832900
         }
       ],
       "pick": {
@@ -11107,11 +11107,11 @@
         },
         {
           "timestamp": 1782792000000,
-          "open": 278.34,
+          "open": 278.75,
           "high": 300.0,
           "low": 275.5,
           "close": 297.89,
-          "volume": 34355492
+          "volume": 37080100
         }
       ],
       "pick": {
@@ -11185,7 +11185,7 @@
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
-          "richness": 0.744,
+          "richness": 0.742,
           "safety": 0.802,
           "yield": 0.233,
           "liquidity": 0.431,
@@ -12508,11 +12508,11 @@
         },
         {
           "timestamp": 1782792000000,
-          "open": 114.91,
+          "open": 114.95,
           "high": 118.7,
           "low": 114.57,
           "close": 116.67,
-          "volume": 35240249
+          "volume": 37824000
         }
       ],
       "pick": {
@@ -13914,7 +13914,7 @@
           "high": 65.95,
           "low": 62.37,
           "close": 65.82,
-          "volume": 8648691
+          "volume": 8654100
         }
       ],
       "pick": {
@@ -15315,7 +15315,7 @@
           "high": 89.87,
           "low": 81.92,
           "close": 88.86,
-          "volume": 24033882
+          "volume": 24119900
         }
       ],
       "pick": {
@@ -16712,11 +16712,11 @@
         },
         {
           "timestamp": 1782792000000,
-          "open": 249.49,
+          "open": 249.4,
           "high": 275.43,
           "low": 244.06,
           "close": 271.95,
-          "volume": 7968589
+          "volume": 8053800
         }
       ],
       "pick": {
@@ -18114,10 +18114,10 @@
         {
           "timestamp": 1782792000000,
           "open": 30.49,
-          "high": 33.84,
+          "high": 33.85,
           "low": 30.14,
           "close": 33.13,
-          "volume": 15213013
+          "volume": 15709900
         }
       ],
       "pick": {
@@ -18191,7 +18191,7 @@
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
-          "richness": 0.628,
+          "richness": 0.627,
           "safety": 0.834,
           "yield": 0.216,
           "liquidity": 0.0,
@@ -19518,7 +19518,7 @@
           "high": 175.38,
           "low": 169.75,
           "close": 173.58,
-          "volume": 2469681
+          "volume": 2474100
         }
       ],
       "pick": {
@@ -20915,11 +20915,11 @@
         },
         {
           "timestamp": 1782792000000,
-          "open": 27.58,
+          "open": 27.54,
           "high": 27.96,
           "low": 26.36,
           "close": 27.34,
-          "volume": 8695848
+          "volume": 9044000
         }
       ],
       "pick": {
@@ -22318,22 +22318,22 @@
           "timestamp": 1782792000000,
           "open": 73.59,
           "high": 73.75,
-          "low": 71.36,
+          "low": 71.0,
           "close": 71.4,
-          "volume": 48511560
+          "volume": 49064800
         }
       ],
       "pick": {
         "strike": 68.0,
         "dte": 7,
         "exp": "2026-07-08",
-        "premium": 0.3,
+        "premium": 0.31,
         "strike_pct_otm": 4.8,
-        "annualized_roc": 23.1,
-        "prob_otm": 82.7,
-        "weekly_yield_pct": 0.44,
-        "bid_ann_roc": 22.3,
-        "iv": 36.4,
+        "annualized_roc": 23.7,
+        "prob_otm": 82.5,
+        "weekly_yield_pct": 0.46,
+        "bid_ann_roc": 23.1,
+        "iv": 36.7,
         "iv_rank": 42.5,
         "iv_rank_real": false,
         "source": "modeled",
@@ -22343,7 +22343,7 @@
         "sector": "Technology Services",
         "sector_crowded": false,
         "thin_oi": false,
-        "spread_pct": 0.067,
+        "spread_pct": 0.065,
         "wide_spread": false,
         "at_support": false,
         "support": null,
@@ -22359,32 +22359,32 @@
         "dte_ladder": null,
         "levels": {
           "keltner": {
-            "upper": 85.27,
+            "upper": 85.35,
             "sma": 77.92,
-            "lower": 70.57
+            "lower": 70.49
           },
           "support": null,
           "resistance": 109.34,
           "spot": 71.4
         },
         "free_shares": {
-          "assignment_basis": 67.7,
+          "assignment_basis": 67.69,
           "basis_discount_pct": 5.2,
-          "prob_assigned_pct": 17.3,
-          "wheel_fit": 42.2,
-          "summary": "If assigned you own at $67.70, 5.2% below today, earning 23.1% annualized on the cash while you wait."
+          "prob_assigned_pct": 17.5,
+          "wheel_fit": 42.3,
+          "summary": "If assigned you own at $67.69, 5.2% below today, earning 23.7% annualized on the cash while you wait."
         },
-        "score": 41.9,
+        "score": 42.0,
         "grade": "D",
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
           "richness": 0.32,
-          "safety": 0.828,
-          "yield": 0.079,
-          "liquidity": 0.37,
+          "safety": 0.821,
+          "yield": 0.082,
+          "liquidity": 0.376,
           "free_shares": 1.0,
-          "structure": 0.057
+          "structure": 0.061
         },
         "why": "thin premium, safe distance, but illiquid, hard to fill, good free-shares fit if assigned.",
         "lanes": [
@@ -23704,9 +23704,9 @@
           "timestamp": 1782792000000,
           "open": 51.42,
           "high": 54.26,
-          "low": 50.82,
+          "low": 50.8,
           "close": 53.78,
-          "volume": 19707404
+          "volume": 19716700
         }
       ],
       "pick": {
@@ -23773,7 +23773,7 @@
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
-          "richness": 0.715,
+          "richness": 0.714,
           "safety": 0.736,
           "yield": 0.232,
           "liquidity": 0.0,
@@ -25100,7 +25100,7 @@
           "high": 82.8,
           "low": 80.75,
           "close": 81.55,
-          "volume": 3175957
+          "volume": 3192200
         }
       ],
       "pick": {
@@ -26497,11 +26497,11 @@
         },
         {
           "timestamp": 1782792000000,
-          "open": 101.97,
-          "high": 103.04,
+          "open": 101.87,
+          "high": 103.06,
           "low": 99.66,
           "close": 100.28,
-          "volume": 17141069
+          "volume": 17170200
         }
       ],
       "pick": {
@@ -26555,9 +26555,9 @@
         ],
         "levels": {
           "keltner": {
-            "upper": 113.39,
+            "upper": 113.4,
             "sma": 94.55,
-            "lower": 75.71
+            "lower": 75.7
           },
           "support": null,
           "resistance": 112.5,
@@ -26570,12 +26570,12 @@
           "wheel_fit": 53.3,
           "summary": "Income play, not free shares. This is a high-IV name you sell for the 32.4% annualized premium, not to own; assignment at $88.30 is the risk to manage, not the reward."
         },
-        "score": 39.5,
+        "score": 39.4,
         "grade": "D",
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
-          "richness": 0.454,
+          "richness": 0.452,
           "safety": 0.829,
           "yield": 0.127,
           "liquidity": 0.0,
@@ -27898,11 +27898,11 @@
         },
         {
           "timestamp": 1782792000000,
-          "open": 146.35,
+          "open": 146.5,
           "high": 152.23,
           "low": 144.18,
           "close": 148.16,
-          "volume": 7256943
+          "volume": 7470700
         }
       ],
       "pick": {
@@ -29303,7 +29303,7 @@
           "high": 54.84,
           "low": 52.4,
           "close": 53.26,
-          "volume": 13306155
+          "volume": 14799300
         }
       ],
       "pick": {
@@ -30700,11 +30700,11 @@
         },
         {
           "timestamp": 1782792000000,
-          "open": 148.15,
-          "high": 148.7,
-          "low": 142.36,
+          "open": 148.18,
+          "high": 148.86,
+          "low": 142.3,
           "close": 146.19,
-          "volume": 8536743
+          "volume": 8738100
         }
       ],
       "pick": {
@@ -30758,9 +30758,9 @@
         ],
         "levels": {
           "keltner": {
-            "upper": 190.69,
+            "upper": 190.71,
             "sma": 158.76,
-            "lower": 126.82
+            "lower": 126.81
           },
           "support": null,
           "resistance": 214.34,
@@ -30773,12 +30773,12 @@
           "wheel_fit": 55.4,
           "summary": "Income play, not free shares. This is a high-IV name you sell for the 62.2% annualized premium, not to own; assignment at $130.00 is the risk to manage, not the reward."
         },
-        "score": 37.9,
+        "score": 37.7,
         "grade": "D",
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
-          "richness": 0.588,
+          "richness": 0.583,
           "safety": 0.669,
           "yield": 0.282,
           "liquidity": 0.0,
@@ -32101,11 +32101,11 @@
         },
         {
           "timestamp": 1782792000000,
-          "open": 108.75,
+          "open": 109.28,
           "high": 128.3,
           "low": 103.5,
           "close": 128.03,
-          "volume": 6084666
+          "volume": 6283200
         }
       ],
       "pick": {
@@ -32139,7 +32139,7 @@
         "empirical_lift": 0.0,
         "empirical": null,
         "iv_gt_hv": false,
-        "vrp": 0.97,
+        "vrp": 0.96,
         "vrp_assumed": false,
         "dte_ladder": [
           {
@@ -33497,9 +33497,9 @@
           "timestamp": 1782792000000,
           "open": 24.42,
           "high": 24.75,
-          "low": 23.71,
+          "low": 23.7,
           "close": 24.5,
-          "volume": 16425906
+          "volume": 16510000
         }
       ],
       "pick": {
@@ -33555,7 +33555,7 @@
           "keltner": {
             "upper": 32.85,
             "sma": 25.34,
-            "lower": 17.83
+            "lower": 17.82
           },
           "support": null,
           "resistance": 28.62,
@@ -33573,7 +33573,7 @@
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
-          "richness": 0.331,
+          "richness": 0.33,
           "safety": 0.745,
           "yield": 0.341,
           "liquidity": 0.0,
@@ -34896,11 +34896,11 @@
         },
         {
           "timestamp": 1782792000000,
-          "open": 86.29,
+          "open": 86.21,
           "high": 88.26,
           "low": 83.42,
           "close": 86.93,
-          "volume": 35316516
+          "volume": 35562600
         }
       ],
       "pick": {
@@ -34929,7 +34929,7 @@
         "support": null,
         "support_touches": null,
         "support_floor": null,
-        "gap_risk": 0.191,
+        "gap_risk": 0.194,
         "put_skew": 0.111,
         "empirical_lift": 0.0,
         "empirical": null,
@@ -36297,11 +36297,11 @@
         },
         {
           "timestamp": 1782792000000,
-          "open": 493.75,
+          "open": 494.42,
           "high": 519.46,
           "low": 492.84,
           "close": 515.23,
-          "volume": 5589323
+          "volume": 5593200
         }
       ],
       "pick": {
@@ -36370,12 +36370,12 @@
           "wheel_fit": 53.5,
           "summary": "Income play, not free shares. This is a high-IV name you sell for the 54.4% annualized premium, not to own; assignment at $458.85 is the risk to manage, not the reward."
         },
-        "score": 30.7,
+        "score": 30.6,
         "grade": "F",
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
-          "richness": 0.28,
+          "richness": 0.278,
           "safety": 0.724,
           "yield": 0.241,
           "liquidity": 0.0,
@@ -37698,11 +37698,11 @@
         },
         {
           "timestamp": 1782792000000,
-          "open": 27.33,
+          "open": 27.35,
           "high": 27.53,
           "low": 26.3,
           "close": 27.38,
-          "volume": 16519973
+          "volume": 16737900
         }
       ],
       "pick": {
@@ -37776,7 +37776,7 @@
         "direction": "cash-secured put",
         "avoid": false,
         "factors": {
-          "richness": 0.072,
+          "richness": 0.071,
           "safety": 0.733,
           "yield": 0.289,
           "liquidity": 0.0,
@@ -37797,7 +37797,7 @@
     "from_avoid": [],
     "movers": []
   },
-  "prev_generated_at": "2026-07-01T03:00:21+00:00",
+  "prev_generated_at": "2026-07-01T03:30:20+00:00",
   "record": {
     "overall": null,
     "by_lane": {},
@@ -37806,8 +37806,8 @@
   },
   "regime": {
     "vix": 16.45,
-    "vix3m": 19.0,
-    "ratio": 0.866,
+    "vix3m": NaN,
+    "ratio": NaN,
     "regime": "normal",
     "label": "NORMAL",
     "note": "Normal contango. A steady backdrop to sell premium at support."
