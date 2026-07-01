@@ -528,7 +528,12 @@ def _live_put(ticker, spot, rv, support=None, earnings_days=None):
         best, ladder = _pick_best_dte(quotes)
         best["dte_ladder"] = ladder
         return best
-    except Exception:
+    except Exception as exc:
+        # Fail-open (the caller falls back to the modeled put), but say WHY in the build
+        # log. A silent catch here is how the whole board went 25/25 modeled with zero
+        # signal about the cause; now every live-chain miss names its exception so the
+        # box's refresh log is diagnosable (rate-limit vs delisting vs schema drift).
+        print(f"  {ticker} chain fail: {type(exc).__name__}: {exc}")
         return None
 
 
@@ -985,6 +990,12 @@ def main():
     out = {
         "generated_at": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
         "source_note": note, "dte": DTE, "tickers": tickers,
+        # Board integrity, machine-readable: what fraction of picks are priced off a REAL
+        # live chain (live bid/ask/OI) vs a Black-Scholes model fallback. `source_note`
+        # says it in prose; this is the number the frontend gates a hard warning banner on
+        # (below ~50% = mostly modeled yields, not fillable quotes). tickers is non-empty
+        # here (the 0-name case returned above), so the divide is safe.
+        "live_rate_pct": round(100 * live_n / len(tickers)),
         "changes": _compute_changes(prev, tickers),
         "prev_generated_at": prev_ts,
         # Forward scorecard for the page: actual hit rate vs the prob-OTM we predicted,

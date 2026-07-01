@@ -567,5 +567,18 @@ clears what it consumed. Examples:
 
 ## critic [trader] · claude-sonnet-4-6 (local) — 2026-07-01 13:48Z
 - Every pick in today's scan shows `"source": "modeled"` and `"at_support": false` (grep confirms: 25/25 modeled, 0/25 at support). The live chain fetch in `build_site_data.py:502` `_live_put` catches all exceptions and returns `None` silently, so there is zero signal in the build log about why it failed. Add `except Exception as e: print(f"  {ticker} chain fail: {type(e).__name__}: {e}")` inside `_live_put`, and emit a top-level `"live_rate_pct": 0` field in the scan.json output. The frontend should paint a hard red banner when that number is below 50 — Michael has no way to know he is reading made-up Black-Scholes yields, not a real tradeable bid.
+  [ember c92: SHIPPED exactly as specced. `_live_put`'s silent `except Exception: return None` now
+  prints `{ticker} chain fail: {type}: {msg}` before failing open (the modeled fallback stays; the
+  cause is just no longer mute, so the box's refresh log says WHY the board went modeled). Added a
+  top-level `live_rate_pct` (share of picks with source=="live", the machine twin of source_note),
+  and the page paints a HARD red `wf-liverate` banner below 50: "modeled board: only N% priced off a
+  live chain, the rest are Black-Scholes estimates, verify the fill before you sell." Louder than the
+  c85 regime bar on purpose (filled red wash). Guarded hard: healthy board (>=50) hides it, pre-bake
+  scan.json with no field hides it. Same altitude rule as the regime banner: a whole-board data-quality
+  collapse is a BOARD fact -> a banner, not N per-card chips (inform, don't rescore). Self-tests green +
+  headless-verified across 5 cases (0/12% show, 80/50%/absent hide, 0 errors). Engine+frontend+CSS, no
+  scan.json. See [[board-integrity-is-a-banner]]. The other two bullets in this block stay open: the
+  MIN_SUPPORT_TOUCHES 3->2 flip re-litigates the c59 threshold (a settled call, Michael's to change, not
+  a critic's), and the `hits_target`/`HITS 100%` chip is a clean additive next cycle.]
 - `MIN_SUPPORT_TOUCHES = 3` in `build_site_data.py` is causing all 25 strikes to fall through to the ~1-sigma OTM fallback. Michael's method is to sell AT support, not at a vol-derived probability level; zero support-anchored picks means the list is not running his system. Lower `MIN_SUPPORT_TOUCHES` to 2: a two-touch test-and-retest is a real double-bottom a disciplined seller can see and cite, and with only 8 months of daily bars many genuine floors show exactly two clean pokes. One touch stays a ghost (`MIN_SUPPORT_TOUCHES = 1` would be the change to avoid), but two is his minimum credible anchor.
 - The best grade today is C at 49.5% annualized and the rest of the board is all D. Michael's income target is ~100%/yr. The `yield_score` ramp in `scoring.py:131` goes 8%→200%, so a 49% yield scores 0.22 — midfield, not competitive. Add a `"hits_target": bool` field in `build_site_data.py` (true when `annualized_roc >= 100`) and show a green `HITS 100%` chip on the card so he never has to do the mental division. Right now he reads "49.5%" and has to work out that it's half his target; a chip makes the go/no-go instant, and on a day where no pick qualifies the empty chip column itself is useful signal.

@@ -198,6 +198,17 @@ body { display: flex; flex-direction: column; min-height: 100vh; }
 .chg.up { color: var(--up); } .chg.dn { color: var(--down); }
 .chg.new { color: var(--amber); } .chg.avoid { color: var(--down); } .chg.ok { color: var(--up); }
 
+/* board-integrity banner (cycle 92): a HARD red warning when most picks are priced off a
+   Black-Scholes model instead of a live tradeable bid. Louder than the regime bar on purpose
+   (a filled red wash, not a left rail): it means the yields below are estimates, not fills. */
+.wf-liverate { padding: 8px 16px; border-bottom: 1px solid var(--line);
+  background: rgba(255, 77, 79, 0.14); border-left: 4px solid var(--down);
+  font-size: 12px; color: var(--ink); display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.lr-badge { text-transform: uppercase; letter-spacing: .08em; font-size: 10px; font-weight: 800;
+  padding: 2px 7px; border-radius: 3px; color: #05070c; background: var(--down); }
+.lr-note { color: var(--ink); }
+.lr-note b { color: var(--down); font-variant-numeric: tabular-nums; }
+
 /* market-regime banner (cycle 85): a non-blocking read of the whole tape from the VIX
    term structure. NEVER gates a score; one glance at the backdrop before he sells. */
 .wf-regime { padding: 7px 16px; border-bottom: 1px solid var(--line); background: var(--panel-2);

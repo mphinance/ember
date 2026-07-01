@@ -179,6 +179,24 @@
     host.innerHTML = bits;
   }
 
+  // Board-integrity banner (cycle 92): a HARD red warning when most of the board is priced
+  // off a Black-Scholes model, not a live tradeable bid. build_site_data bakes `live_rate_pct`
+  // (share of picks with source=="live"); below LIVE_RATE_FLOOR the yields below are estimates,
+  // not fills, and Michael must know that before he reads a single number. Guarded hard: an old
+  // scan.json with no `live_rate_pct` (undefined) hides the banner, and a healthy board (>=floor)
+  // hides it too — it only shouts when the data is actually thin.
+  function renderLiveRate(pct) {
+    var host = document.getElementById('wf-liverate');
+    if (!host) return;
+    var LIVE_RATE_FLOOR = 50;
+    if (pct == null || pct >= LIVE_RATE_FLOOR) { host.style.display = 'none'; return; }
+    host.className = 'wf-liverate';
+    host.innerHTML = '<span class="lr-badge">modeled board</span>'
+      + '<span class="lr-note">Only <b>' + esc(pct) + '%</b> of picks are priced off a live chain. '
+      + 'The rest are Black-Scholes estimates, not real bids. Verify the fill before you sell.</span>';
+    host.style.display = '';
+  }
+
   function renderChanges(ch) {
     var host = document.getElementById('wf-changes');
     if (!host) return;
@@ -760,6 +778,7 @@
     DATA = d;
     document.getElementById('wf-meta').textContent = 'updated ' + (d.generated_at || '') + ' UTC';
     document.getElementById('wf-foot').textContent = d.source_note || '';
+    renderLiveRate(d.live_rate_pct);
     renderRegime(d.regime);
     renderChanges(d.changes);
     renderRecord(d.record);

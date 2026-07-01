@@ -1,5 +1,48 @@
 # ember's log (newest on top)
 
+## Cycle 92 — 2026-07-01 — a hard red banner when the board is mostly made-up yields
+
+INBOX carried no new Michael command, only the standing critic stack. The freshest line (07-01
+13:48Z, trader) opened on a real integrity problem, not a polish item: today's live scan is 25/25
+`source: "modeled"` and 0/25 at support (the critic grepped it), because `_live_put` catches every
+exception silently and falls to a Black-Scholes model. So the whole board is quoting theoretical
+yields off a solved IV, not a real tradeable bid, and nothing on the page tells Michael that. He
+could read "49.5% annualized" and have no way to know it is a model estimate he cannot fill. That
+is the single most dangerous thing the site can do, and it is exactly ember's honesty ethos. That
+is the step I shipped.
+
+FEATURE: a board-integrity banner. `build_site_data` now bakes a top-level `live_rate_pct` (the
+share of picks priced off a live chain, the machine-readable twin of the prose `source_note`), and
+the page paints a HARD red `wf-liverate` banner when it drops below 50 — "modeled board: only N% of
+picks are priced off a live chain, the rest are Black-Scholes estimates, not real bids, verify the
+fill before you sell." It is louder than the c85 regime bar on purpose (a filled red wash, not a
+left rail), because it means the numbers below are estimates. Guarded hard: a healthy board (>=50)
+hides it, and a pre-bake scan.json with no field hides it too, so it only shouts when the data is
+actually thin.
+
+Second half, from the same bullet: `_live_put`'s `except Exception: return None` swallowed the
+CAUSE of every live-chain miss. It now prints `{ticker} chain fail: {type}: {msg}` before failing
+open, so the box's refresh log finally says WHY the board went modeled (rate-limit vs delisting vs
+yfinance schema drift) instead of leaving it a silent mystery. I did NOT touch the fallback itself
+(a modeled put is still better than a blank name); I made the failure diagnosable and the result
+honest.
+
+The altitude call, same as the regime banner: a whole-board data-quality collapse is a BOARD-level
+fact, so it wants a board-level banner, not N per-card chips. A per-card `source: modeled` tag
+(c84's "≈ 1σ strike" chip) tells you one pick is modeled; it cannot tell you the entire list is.
+Inform, don't rescore. See [[board-integrity-is-a-banner]], [[market-regime-is-a-banner-not-a-score]].
+
+Verified: all four module self-tests green (build_site_data + scoring + levels + structure), and
+headless (playwright/chromium) on a TEMP docs copy served over http across five cases: 0% and 12%
+live both paint the red banner with the right text, 80% and exactly 50% hide it, and a scan.json
+with no `live_rate_pct` field hides it (backward-compatible), 0 console errors throughout. Engine +
+frontend + CSS, no scan.json (the box is its sole writer; it bakes the field and the banner goes
+live on the next 30-minute refresh).
+
+Next candidates: the OI-walls + max-pain chart port (the last big StrikeForge item), the live-spot
+pin for a stale overnight close, or the `hits_target` / `HITS 100%` chip and the support-touch floor
+from the same 07-01 13:48Z critic block. See [[board-integrity-is-a-banner]].
+
 ## Cycle 91 — 2026-07-01 — the prime strip is a ticket, not a pointer
 
 INBOX carried no new Michael command, only the standing critic stack. The freshest line (07-01

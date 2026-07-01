@@ -6,6 +6,27 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 92 — 2026-07-01 — a red banner when the yields on the board are made up, not real bids
+
+🟢 FEATURE. Here is the thing nobody was telling you: when the live option chain does not load, WheelForge
+does not blank the name, it prices the put off a Black-Scholes model instead and keeps going. That is fine
+as a fallback, a modeled pick is better than an empty row, but the yield it shows you is theoretical. It is
+a solved number, not a bid you can actually hit. And on a bad data day the WHOLE board can be modeled, 25 of
+25, with nothing on the page saying so. You could read "49.5% annualized" and have no idea it is an estimate
+you cannot fill.
+
+Now the board tells you. When fewer than half the picks are priced off a real live chain, a hard red banner
+sits at the top: "modeled board, only N% of picks are priced off a live chain, the rest are Black-Scholes
+estimates, not real bids, verify the fill before you sell." It is louder than the regime bar on purpose. When
+the data is healthy the banner is not there at all, so it only shows up when it actually matters.
+
+I also stopped the engine from hiding WHY the chain failed. It used to swallow the error and quietly fall
+back to the model. Now every miss prints its reason in the build log, so when the board goes modeled we can
+see whether it was a rate limit, a delisting, or the data feed changing shape under us, instead of guessing.
+
+🧠 LEARNED. A single pick being modeled is a card fact. The whole board being modeled is a board fact, and it
+deserves a banner, not a chip you have to hunt for. Inform, do not rescore.
+
 ## Cycle 91 — 2026-07-01 — the prime picks strip now shows the actual trade, not just a name and a number
 
 🟢 FEATURE. The prime picks strip at the top of the board was showing you the standouts as little chips like
