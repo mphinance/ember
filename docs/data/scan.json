@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-01T09:00:20+00:00",
+  "generated_at": "2026-07-01T09:30:23+00:00",
   "source_note": "Candles and option premium are LIVE off the yfinance chain for 0 of 24 names (real IV, bid/ask, OI); the rest fall back to a realized-vol model when the chain is missing.",
   "dte": 7,
   "tickers": [
@@ -33421,7 +33421,7 @@
     "from_avoid": [],
     "movers": []
   },
-  "prev_generated_at": "2026-07-01T08:30:21+00:00",
+  "prev_generated_at": "2026-07-01T09:00:20+00:00",
   "record": {
     "overall": null,
     "by_lane": {},
@@ -33429,9 +33429,9 @@
     "settled": 0
   },
   "regime": {
-    "vix": 16.93,
+    "vix": 16.94,
     "vix3m": 20.13,
-    "ratio": 0.841,
+    "ratio": 0.842,
     "regime": "normal",
     "label": "NORMAL",
     "note": "Normal contango. A steady backdrop to sell premium at support."
