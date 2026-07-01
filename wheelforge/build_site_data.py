@@ -27,8 +27,9 @@ from wheelforge.levels import support_resistance, support_resistance_detail
 from wheelforge.vol_models import composite_realized_vol
 from wheelforge.tail_risk import gap_risk
 from wheelforge.surface import put_skew as _put_skew
+from wheelforge.market_weather import market_regime as _market_regime
 
-WATCHLIST = ["AAPL", "MSFT", "NVDA", "AMD", "GOOGL", "AMZN", "META", "COST"]
+WATCHLIST =["AAPL", "MSFT", "NVDA", "AMD", "GOOGL", "AMZN", "META", "COST"]
 DTE = 7    # target the nearest WEEKLY — how Michael actually sells (e.g. NVDA 190 put,
            # 4 DTE, ~5% OTM). 1-sigma at ~weekly tenor lands ~5% OTM and annualizes ~2x a
            # monthly, into the ~100%/yr range he runs. Earnings veto still guards the week.
@@ -479,6 +480,25 @@ def _fetch(ticker):
     return candles, closes
 
 
+def _last_close(ticker):
+    """Latest close for an index ticker via yfinance, or None. Used for the VIX regime read."""
+    import yfinance as yf
+    df = yf.Ticker(ticker).history(period="5d", interval="1d", auto_adjust=False)
+    if df is None or df.empty:
+        return None
+    return float(df["Close"].iloc[-1])
+
+
+def _regime():
+    """Market-regime banner from the VIX term structure (VIX vs VIX3M). Fail-open to None:
+    a missing feed just hides the banner, it never blocks the scan.json write or a score."""
+    try:
+        return _market_regime(_last_close("^VIX"), _last_close("^VIX3M"))
+    except Exception as exc:
+        print(f"regime: skipped ({exc})")
+        return None
+
+
 def _levels(candles, spot, support=None, resistance=None):
     """Chart levels: Keltner volatility walls + major price-action S/R + spot. S/R can be
     passed in (computed once upstream) to avoid recomputing the pivots."""
@@ -848,6 +868,9 @@ def main():
         # across every settled forward call. The flywheel was tracked since c55 but never
         # shown; this surfaces the proof. None when the tracker hiccups (frontend hides it).
         "record": tr,
+        # Non-blocking market-regime banner from the VIX term structure (calm / normal /
+        # stressed). Informational only, never gates a per-name score. None hides the banner.
+        "regime": _regime(),
     }
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     with open(OUT, "w") as f:

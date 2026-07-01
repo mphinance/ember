@@ -158,6 +158,27 @@
   }
   function label(t) { var s = document.createElement('span'); s.className = 'ctl-lab'; s.textContent = t; return s; }
 
+  // The market-regime banner: a non-blocking read of the whole tape from the VIX term
+  // structure (calm / normal / stressed), baked into scan.json by build_site_data. It
+  // NEVER gates a per-name score; it is one glance at the backdrop before he sells. Null-
+  // guarded hard: an old scan.json with no `regime` (or a missing VIX feed) hides it.
+  function renderRegime(reg) {
+    var host = document.getElementById('wf-regime');
+    if (!host) return;
+    if (!reg || !reg.label) { host.style.display = 'none'; return; }
+    var cls = reg.regime === 'stressed' ? 'reg-stressed'
+      : reg.regime === 'calm' ? 'reg-calm' : 'reg-normal';
+    host.className = 'wf-regime ' + cls;
+    var bits = '<span class="reg-badge">' + esc(reg.label) + '</span>'
+      + '<span class="reg-note">' + esc(reg.note || '') + '</span>';
+    if (reg.vix != null && reg.vix3m != null) {
+      bits += '<span class="reg-nums">VIX ' + esc(reg.vix) + ' / VIX3M ' + esc(reg.vix3m)
+        + (reg.ratio != null ? ' &middot; ' + esc(reg.ratio) + 'x' : '') + '</span>';
+    }
+    host.style.display = '';
+    host.innerHTML = bits;
+  }
+
   function renderChanges(ch) {
     var host = document.getElementById('wf-changes');
     if (!host) return;
@@ -689,6 +710,7 @@
     DATA = d;
     document.getElementById('wf-meta').textContent = 'updated ' + (d.generated_at || '') + ' UTC';
     document.getElementById('wf-foot').textContent = d.source_note || '';
+    renderRegime(d.regime);
     renderChanges(d.changes);
     renderRecord(d.record);
     buildControls();

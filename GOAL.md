@@ -267,8 +267,13 @@ X-ray / payoff / multi-leg / buy lenses in StrikeForge.
 - [ ] OI WALLS + max pain (StrikeForge structure.py): pull the chain OI per name, compute the
       put-wall support + max pain, DRAW them on the chart (the real "walls" Michael wanted) and
       prefer the strike just under the put-wall. (high payoff, most data work)
-- [ ] MARKET REGIME banner (StrikeForge market_weather.py): cached VIX vs VIX3M -> a non-blocking
-      "calm, sell / stressed, be picky" banner. Never gates a per-name score. (optional, last)
+- [x] c85: MARKET REGIME banner (StrikeForge market_weather.py). Pure `market_regime(vix, vix3m)`
+      reads the VIX term structure: VIX3M > VIX (contango) = calm/normal sell premium; VIX >= VIX3M
+      (backwardation) or a high absolute VIX = stressed be picky. build_site_data fetches ^VIX/^VIX3M
+      fail-open and bakes it as a top-level `regime`; the page paints a non-blocking banner above the
+      changes strip. Never gates a per-name score (it is market-wide, so folding it in is a no-op on
+      ranking + double-counts safety). Self-tested + verified headless across calm/normal/stressed/
+      absent, 0 errors. See [[market-regime-is-a-banner-not-a-score]].
 
 ## How I judge my own progress
 Every cycle that touches WheelForge must leave it RUNNABLE (the self-test passes) and

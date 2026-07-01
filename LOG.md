@@ -1,5 +1,39 @@
 # ember's log (newest on top)
 
+## Cycle 85 — 2026-07-01 — a market-regime banner reads the whole tape before he sells
+
+INBOX had no Michael command, just the standing critic blocks. I picked a clean roadmap item
+instead of a fourth straight render-only cycle: the MARKET REGIME banner (StrikeForge
+market_weather port, marked "optional, last" but self-contained and on-thesis).
+
+New pure `wheelforge/market_weather.py::market_regime(vix, vix3m)` reads the VIX term structure.
+VIX3M > VIX (contango, ratio < 1) is the calm/normal state, sell premium. VIX >= VIX3M
+(backwardation) OR a high absolute VIX (>= 28) is stress: premium is rich for a reason, be
+picky. Returns a dict (label + one-line note + raw numbers) or None on a bad/missing feed
+(fail-open). build_site_data got `_last_close` (yfinance index close) + `_regime` (fetches
+^VIX/^VIX3M, fail-open) and bakes the result as a top-level `regime` sibling of `changes`/
+`record`. The page paints a non-blocking banner above the changes strip.
+
+The design call worth noting: the regime is market-WIDE, identical for every name, so I did NOT
+make it a per-name score input. Folding it in would only shift every score by the same amount (a
+no-op on the RANKING) while double-counting risk the per-name safety factor already prices from
+each name's own vol. So it informs, it never rescores. Cousin of the skew/crowding non-gating
+discipline, one rung further: a per-name signal can earn bounded credit; a market-wide one
+shouldn't touch the score at all.
+
+Verified: market_weather self-test + all twelve module self-tests + build_site_data._selftest
+green; app.js passes node --check. Live in-cycle fetch read VIX 16.45 / VIX3M 19.0 -> normal
+contango. Headless (playwright + chromium over a TEMP copy of docs/, never touching the committed
+scan.json) across four regime states: calm -> reg-calm green rail, normal -> reg-normal cyan,
+stressed -> reg-stressed red, and absent -> banner hidden (display:none). 0 console errors each.
+Engine + frontend, no scan.json write (the box fills `regime` on its live refresh).
+
+Lesson saved: [[market-regime-is-a-banner-not-a-score]].
+
+Next candidates: the two open risk bullets (live-spot-vs-stale-close, ex-div-in-window chip, each
+a network cycle), the log_trade/realized_pnl tracker (an engine+CLI cycle), the per-name empirical
+chip on each card, or the heavier OI-walls + max-pain chart port.
+
 ## Cycle 84 — 2026-06-30 — show when a strike is the 1-sigma fallback, not a real floor
 
 INBOX was all standing critic blocks, no Michael command. The freshest (trader, 2026-06-30 19:47Z)

@@ -6,6 +6,25 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 85 — 2026-07-01 — one glance at the whole tape before you sell anything
+
+🟢 FEATURE. The board grades each name on its own six factors, but it never said a word about the
+weather. Some mornings the whole tape is calm and selling premium at support is a steady grind.
+Other mornings fear is front-loaded and that fat premium is fat for a reason. Now there is a
+banner at the top that tells you which one you woke up to.
+
+It reads the VIX term structure, front-month VIX against three-month VIX3M. When VIX3M sits above
+VIX (the normal, contango state) the near-term tape is orderly, so sell. When VIX climbs above
+VIX3M, or the absolute number is just high, the curve is warning you, so be picky and demand a
+fatter cushion. Green rail for calm, cyan for normal, red for stressed, with the raw numbers on
+the right.
+
+One thing I was careful about: this NEVER touches a single name's score. The regime is the same
+for the whole board, so folding it into scores would just nudge everything the same amount and
+change no ranking, while double-counting risk each name's own safety factor already prices. It is
+a heads-up you read before you sell, not a thumb on the scale. Fetched fail-open, so a dead VIX
+feed just hides the banner and leaves everything else standing.
+
 ## Cycle 84 — 2026-06-30 — the card now tells you when the strike is just a math line
 
 🟢 FEATURE. The board has a nice green "⌂ support $383 x4" badge when a strike sits on a real,
