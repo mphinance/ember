@@ -6,6 +6,22 @@ Tags: 🟢 FEATURE · 🔴 BUGFIX · 🔵 REFACTOR · 🟡 INFRA · 🧠 LEARNED
 
 ---
 
+## Cycle 93 — 2026-07-01 — a green HITS 100% chip so your income target is a glance, not a division
+
+🟢 FEATURE. Your income target is about 100% a year. The trouble is the scoring ramp runs all the way to
+200%, so a pick paying 49% lands in the middle of the pack and grades a D, and to know it is only half your
+target you have to do the division in your head. Now you do not. When a pick clears 100% a year, it wears a
+green HITS 100% pill right on the card. Instant go or no-go. And on a slow day when nothing clears it, the
+empty column is its own message: nothing here is paying what you want yet.
+
+One deliberate choice. The chip fires on the yield you actually COLLECT, the bid you sell into, not the
+midpoint the headline quotes. A wide market can make the mid look like 105% when the real fill is 85%, and I
+am not going to let a chip that says "you hit your target" fib to you about that. Green pill, not an amber
+warning, because this is the one thing on the card that is good news.
+
+🧠 LEARNED. A go-signal is held to the same honesty bar as a warning. If a chip promises you hit your target,
+it has to price on the number that lands in your account, not the optimistic one.
+
 ## Cycle 92 — 2026-07-01 — a red banner when the yields on the board are made up, not real bids
 
 🟢 FEATURE. Here is the thing nobody was telling you: when the live option chain does not load, WheelForge

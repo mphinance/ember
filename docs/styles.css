@@ -105,6 +105,9 @@ body { display: flex; flex-direction: column; min-height: 100vh; }
 .exdiv { color: var(--amber); font-weight: 700; font-size: 10px; letter-spacing: .02em; cursor: help; }
 /* free-shares fit: assignment lands a cost basis below today on a name he wants (cycle 79) */
 .basis { color: #22d3ee; font-weight: 700; font-size: 10px; letter-spacing: .02em; cursor: help; }
+/* clears his ~100%/yr income target on the bid yield: a green GO pill, not a warn (cycle 93) */
+.hits { color: #06110b; background: var(--up); font-weight: 800; font-size: 10px; letter-spacing: .04em;
+  padding: 1px 6px; border-radius: 4px; cursor: help; box-shadow: 0 0 10px rgba(38,208,124,.4); }
 /* price-action pattern read off the OHLCV: the one chart shape that changes a put-sell call (cycle 88) */
 .pat { font-weight: 700; font-size: 10px; letter-spacing: .02em; cursor: help; }
 .pat-good { color: var(--up); }

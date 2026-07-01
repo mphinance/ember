@@ -229,6 +229,15 @@ reference/csp-intelligence.md). Fix the integrity holes first, in this order:
       pointing at the already-baked `bid_ann_roc`. FLAG not drop (same discipline as thin-OI / no-bid);
       modeled/one-sided/crossed books never trip it. Self-tested + verified headless; engine+frontend,
       no scan.json. See [[wide-spread-caution-not-drop]]. (definition-of-best #3, tradeable)
+- [x] c93: **HITS 100% target chip (07-01 trader critic; c92 earmarked it).** His income target is
+      ~100%/yr, but the yield_score ramp puts a 49% pick at ~0.22 (a midfield D), so "half your target"
+      reads ambiguous. `INCOME_TARGET_ROC=100.0` + a `hits_target` field bake the go/no-go; the card
+      paints a GREEN filled `HITS 100%` pill so the call is instant, no mental division. Deliberate
+      honesty deviation from the critic's `annualized_roc>=100`: gated on the BID yield (bid_ann_roc),
+      the number he actually collects, so a wide book that flatters the mid can't fake a hit (same bar
+      as the wide-spread chip / integrity banner). Client fallback (`bid_ann_roc>=100`) grades a pre-bake
+      scan.json right. Self-tested + headless-verified across 4 states (server-true/client-fallback show,
+      both misses hide, 0 errors); engine+frontend+CSS, no scan.json. See [[hits-target-chip-uses-honest-yield]].
 - [x] c80: chart polish (Michael): SHADE the put-sell zone as a filled translucent band (not
       just lines), tinted by score; keep the Keltner walls. DONE: a one-time `registerOverlay
       ('zoneBand')` polygon spans the chart full width between spot and the strike (the CSP

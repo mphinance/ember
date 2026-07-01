@@ -87,6 +87,12 @@ WIDE_SPREAD_PCT = 0.30  # (ask-bid)/mid above which the CHOSEN strike's book is 
                         # the real fill by ~2/3. Same "flag, never drop" discipline as thin OI: the
                         # mid is a real quote, just optimistic, and bid_ann_roc already shows the
                         # conservative fill; the chip just makes the gap visible before he sells.
+
+INCOME_TARGET_ROC = 100.0  # Michael's income target is ~100%/yr. A pick whose annualized RoC clears
+                           # this is a GO on the yield pillar; below it he's selling for less than his
+                           # goal. The yield_score ramp (8%->200%) puts a 49% pick at ~0.22, midfield,
+                           # so "half your target" reads as an ambiguous D. hits_target makes the
+                           # go/no-go instant (a green HITS 100% chip) instead of mental division.
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(HERE, "docs", "data", "scan.json")
 
@@ -810,6 +816,11 @@ def build_one(ticker, earnings_days=None, lanes=None, sector=None):
             "weekly_yield_pct": round(roc * 100 / 52.0, 2),
             # The yield you actually RECEIVE: priced on the bid you sell into, not the mid.
             "bid_ann_roc": round(bid_roc * 100, 1),
+            # Does this pick clear his ~100%/yr income target? A green HITS 100% chip so the
+            # go/no-go is instant, no mental "49.5% is half my target" division. Priced on the
+            # honest bid RoC (the fill he'd actually get), so a wide book that flatters the mid
+            # can't fake a target hit; an empty chip column on a weak board is itself signal.
+            "hits_target": bid_roc * 100 >= INCOME_TARGET_ROC,
             "iv": round(iv * 100, 1), "iv_rank": contract["iv_rank"],
             "iv_rank_real": ivr_hist is not None, "source": source,
             "earnings_days": earnings_days, "want_to_own": want_to_own,
@@ -1100,6 +1111,13 @@ def _selftest():
         "bid yield must trail the mid yield you sell into"
     assert _annualized_roc(_bid, 100.0, 7) == _annualized_roc(_sellable_premium(_bid, 0.0), 100.0, 7), \
         "a one-sided book quotes the bid, so bid yield == headline yield"
+
+    # HITS-100% target: the go/no-go chip fires only when the honest BID yield clears his
+    # ~100%/yr income target, so a wide book that flatters the MID can't fake a target hit.
+    # $2.20/wk on a $100 strike ~= 116%/yr bid RoC clears it; $0.90/wk ~= 47% does not; and
+    # the boundary is inclusive (exactly 100 hits).
+    assert (_annualized_roc(2.20, 100.0, 7) * 100) >= INCOME_TARGET_ROC, "a ~116%/yr pick hits target"
+    assert not ((_annualized_roc(0.90, 100.0, 7) * 100) >= INCOME_TARGET_ROC), "a ~47%/yr pick misses target"
 
     # Thin-OI caution: a LIVE strike whose open interest is below MIN_STRIKE_OI fills slow and
     # wide, so it wears a chip; a thick line does not. The MODELED path carries oi=0 by

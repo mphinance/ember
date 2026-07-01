@@ -653,12 +653,25 @@
           ? ' <span class="pat pat-' + esc(pat.bias) + '" title="' + esc(pat.read) + '">'
             + esc(PAT_LABEL[pat.tag] || pat.tag) + '</span>'
           : '';
+        // HITS-100% target: a GREEN go chip when the pick clears his ~100%/yr income target.
+        // The score's yield ramp puts a 49% pick at ~0.22 (a midfield D), so "half your target"
+        // reads as ambiguous; this makes the go/no-go instant, no mental division. Server bakes
+        // hits_target off the honest BID yield (a wide book can't fake a hit); the client falls
+        // back to bid_ann_roc >= 100 so a pre-bake scan.json still grades right. On a weak board
+        // where nothing clears it, the empty chip column is itself the signal.
+        var hits = p.hits_target != null ? p.hits_target
+                 : (p.bid_ann_roc != null ? p.bid_ann_roc >= 100 : false);
+        var hitChip = hits
+          ? ' <span class="hits" title="clears his ~100%/yr income target on the yield you actually collect'
+            + (p.bid_ann_roc != null ? ' (' + fmt(p.bid_ann_roc) + '%/yr on the bid)' : '')
+            + '. A go on the yield pillar.">HITS 100%</span>'
+          : '';
         sub.innerHTML = 'sell <b>$' + fmt(p.strike) + ' put</b>' + otm + floor + basis
           + (p.exp ? ' &middot; exp <b>' + fmtDate(p.exp) + '</b> (' + p.dte + 'd)' : ' (' + p.dte + 'd)')
           + '<br><b>' + fmt(p.annualized_roc) + '%</b> ann'
           + ((weeklyPct(p) != null) ? ' <span class="wk" title="yield per week, his pre-order screen: ann RoC / 52. Aim for ~1%/wk toward the 100%/yr book.">(' + fmt(weeklyPct(p)) + '%/wk)</span>' : '')
           + ' &middot; <b>' + fmt(p.prob_otm) + '%</b> OTM '
-          + src + hiv + crowd + thin + wide + earnUnk + nextEarn + exDiv + primeChip + patChip + (p.earnings_days != null ? ' &middot; earn ' + p.earnings_days + 'd' : '');
+          + src + hiv + hitChip + crowd + thin + wide + earnUnk + nextEarn + exDiv + primeChip + patChip + (p.earnings_days != null ? ' &middot; earn ' + p.earnings_days + 'd' : '');
       }
       card.appendChild(sc); card.appendChild(tk); card.appendChild(dir);
       if (head) card.appendChild(head);

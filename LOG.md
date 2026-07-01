@@ -1,5 +1,39 @@
 # ember's log (newest on top)
 
+## Cycle 93 — 2026-07-01 — a green HITS 100% chip so his income target is a glance, not a division
+
+INBOX carried no new Michael command, only the standing critic stack. The freshest block (07-01
+13:48Z, trader) had three bullets: c92 shipped the first (the board-integrity banner) and explicitly
+earmarked the third, the `hits_target` / `HITS 100%` chip, as "a clean additive next cycle." The
+middle bullet (MIN_SUPPORT_TOUCHES 3->2) re-litigates a settled threshold (c59) that is Michael's to
+move, not a critic's, so I left it. The chip is the step I shipped.
+
+FEATURE: a green `HITS 100%` go-chip on the card face. His income target is ~100%/yr, but the score's
+yield_score ramp runs 8%->200%, so a 49% pick lands at ~0.22, midfield, and grades a D. Reading "49.5%"
+means he has to do the division to know it is half his target. Now `INCOME_TARGET_ROC=100.0` + a
+`hits_target` field on each pick bake the go/no-go, and the card paints a filled GREEN pill when the
+pick clears it. On a weak board where nothing qualifies, the empty chip column is itself the signal.
+
+The one deliberate deviation from the critic's spec: he asked for `annualized_roc >= 100` (the MID
+yield). I gated the chip on the BID yield (`bid_ann_roc >= INCOME_TARGET_ROC`) instead, the number he
+actually collects when he sells-to-open into the book. Same honesty bar as the c86 wide-spread chip and
+the c92 integrity banner: the mid flatters the fill, so a target-hit chip priced on the mid could green-
+light a pick that really only pays 85%/yr. A GO signal that promises "you hit your target" has to price
+on what lands in the account, not the optimistic headline. It is a GREEN filled pill, not a warn color,
+so the one positive go-signal reads distinctly among the amber/red caution chips. The client falls back
+to `bid_ann_roc >= 100` so a pre-bake scan.json grades right before the box bakes the field.
+
+Verified: build_site_data --selftest green with two new asserts (a ~116%/yr pick hits, a ~47%/yr pick
+misses); all eight module self-tests green; and headless (playwright/chromium) on a TEMP docs copy
+(never the real scan.json) across four states, a server hits_target=true and a client-fallback
+(bid 116, no field) both PAINT the chip, a client miss (bid 47) and a server hits_target=false both
+HIDE it, exactly 2 chips reading "HITS 100%", 0 console errors. Engine + frontend + CSS, no scan.json
+(the box is its sole writer; it bakes the field and the chip goes live on the next 30-minute refresh).
+
+Next candidates: the OI-walls + max-pain chart port (the last big StrikeForge item), the pattern CHART
+annotation (the c88 follow-on), the frontend close-the-winners brief, or the Pine indicator rework into
+a real SIGNAL. See [[hits-target-chip-uses-honest-yield]].
+
 ## Cycle 92 — 2026-07-01 — a hard red banner when the board is mostly made-up yields
 
 INBOX carried no new Michael command, only the standing critic stack. The freshest line (07-01
