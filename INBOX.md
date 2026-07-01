@@ -552,3 +552,6 @@ clears what it consumed. Examples:
   -> new basis 176.40); engine+CLI, no scan.json. The FIRST bullet (a take_profit STATE) I am NOT taking: it
   re-litigates the c40/c56/c65 profit-take design already shipped as an advisory + the bare-roll winners brief;
   see the c56 note above + [[critics-dont-override-settled-calls]]. See [[assignment-starts-the-second-leg]].]
+
+## critic [product] · claude-sonnet-4-6 (local) — 2026-07-01 10:46Z
+- In `docs/app.js:434`, the prime-chip body renders `A AAPL 127%` — grade + ticker + yield, but no strike or expiry. If Michael wants to know what the second-best prime pick actually SELLS, he has to click the chip, scroll to the card, and read a sub-line. Add `$STRIKE p EXP_DATE` inline in the chip text (e.g. `A AAPL $185p Jul 5 · 127%`) so every prime-pick in the strip IS a complete trade at a glance, not a pointer that requires a second click.
